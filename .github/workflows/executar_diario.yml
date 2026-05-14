@@ -50,7 +50,6 @@ jobs:
             --execute \
             --ExecutePreprocessor.timeout=1200 \
             --ExecutePreprocessor.kernel_name=python3 \
-            --output PrevisaoCarteira_v5_output.ipynb \
             PrevisaoCarteira_v5.ipynb
         env:
           PYTHONUNBUFFERED: "1"
@@ -64,8 +63,7 @@ jobs:
           git add AnaliseV5/predictions_log.csv
           git add AnaliseV5/ensemble_weights.json
           git add AnaliseV5/resumo_diario.txt
-          git add AnaliseV5/AnaliseGraficos/*.png       2>/dev/null || true
-          git add -f PrevisaoCarteira_v5_output.ipynb  2>/dev/null || true
+          git add AnaliseV5/AnaliseGraficos/*.png 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC"
 
