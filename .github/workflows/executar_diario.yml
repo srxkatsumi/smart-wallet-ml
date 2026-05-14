@@ -2,11 +2,12 @@ name: 📈 Carteira Inteligente — Execução Diária
 
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
-  # 15h30 Barcelona verão  = 13h30 UTC
-  # 15h30 Barcelona inverno= 14h30 UTC
-  # Usamos 13h30 UTC (cobre sempre o verão; no inverno executa às 14h30 Barcelona)
+  # 16h00 Barcelona verão  = 14h00 UTC
+  # 16h00 Barcelona inverno= 15h00 UTC
+  # Usamos 14h00 UTC — executa às 16h00 no verão, 15h00 no inverno (ambos válidos)
+  # 1-5 = Segunda a Sexta apenas (fins de semana excluídos)
   schedule:
-    - cron: '30 13 * * 1-5'   # Seg-Sex às 13h30 UTC = 15h30 Barcelona (verão)
+    - cron: '0 14 * * 1-5'   # Seg-Sex às 14h00 UTC = 16h00 Barcelona (verão)
 
   # Permite executar manualmente pelo GitHub (botão "Run workflow")
   workflow_dispatch:
