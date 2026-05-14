@@ -1,0 +1,21 @@
+Carteira Inteligente v5 — 14/05/2026 15:50 UTC
+=================================================================
+
+PREVISOES ML:
+  Ativo           Preco           D+1          D+2          D+3  Consenso
+  ---------------------------------------------------------------
+  EMIM.AS         47.19       UP(59%)      UP(58%)      UP(59%)  BULLISH
+  BABA           142.69     DOWN(52%)      UP(51%)      UP(55%)  MISTO
+  SGLN.L        6748.13       UP(51%)      UP(53%)    DOWN(52%)  MISTO
+  ICGA.DE          5.11     DOWN(52%)    DOWN(56%)    DOWN(57%)  BEARISH
+  EXUS.L          44.37       UP(58%)      UP(54%)    DOWN(53%)  MISTO
+  ALV.DE         379.90       UP(59%)      UP(71%)      UP(66%)  BULLISH
+  BTC-USD      81042.09       UP(54%)      UP(59%)      UP(61%)  BULLISH
+  LLY           1005.47     DOWN(52%)      UP(52%)    DOWN(53%)  MISTO
+  MEUD.PA        302.05     DOWN(55%)    DOWN(58%)      UP(53%)  MISTO
+  NVDA           235.44     DOWN(57%)    DOWN(55%)    DOWN(60%)  BEARISH
+  SJPA.MI         67.97       UP(60%)      UP(59%)      UP(62%)  BULLISH
+
+Ainda sem previsoes validadas — aguarda os primeiros dias de execucao.
+
+Previsoes sao probabilisticas. Nao tomar decisoes financeiras baseadas exclusivamente neste output.
