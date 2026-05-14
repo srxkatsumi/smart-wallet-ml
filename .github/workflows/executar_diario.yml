@@ -1,0 +1,76 @@
+name: 📈 Carteira Inteligente — Execução Diária
+
+on:
+  # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
+  # 15h30 Barcelona verão  = 13h30 UTC
+  # 15h30 Barcelona inverno= 14h30 UTC
+  # Usamos 13h30 UTC (cobre sempre o verão; no inverno executa às 14h30 Barcelona)
+  schedule:
+    - cron: '30 13 * * 1-5'   # Seg-Sex às 13h30 UTC = 15h30 Barcelona (verão)
+
+  # Permite executar manualmente pelo GitHub (botão "Run workflow")
+  workflow_dispatch:
+
+jobs:
+  executar-notebook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+
+      # 1 — Fazer checkout do repositório (código + dados)
+      - name: 📥 Checkout do repositório
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # 2 — Instalar Python
+      - name: 🐍 Instalar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3 — Instalar dependências
+      - name: 📦 Instalar dependências
+        run: |
+          pip install --upgrade pip
+          pip install yfinance scikit-learn matplotlib pandas numpy openpyxl nbconvert ipykernel
+
+      # 4 — Executar o notebook
+      - name: 🚀 Executar PrevisaoCarteira_v5.ipynb
+        run: |
+          jupyter nbconvert \
+            --to notebook \
+            --execute \
+            --ExecutePreprocessor.timeout=1200 \
+            --ExecutePreprocessor.kernel_name=python3 \
+            --output PrevisaoCarteira_v5_output.ipynb \
+            PrevisaoCarteira_v5.ipynb
+        env:
+          PYTHONUNBUFFERED: "1"
+
+      # 5 — Commit dos ficheiros gerados de volta ao repositório
+      - name: 💾 Guardar resultados no repositório
+        run: |
+          git config user.name  "CarteiraBOT"
+          git config user.email "bot@carteira.auto"
+
+          # Adicionar ficheiros gerados
+          git add AnaliseV5/predictions_log.csv
+          git add AnaliseV5/ensemble_weights.json
+          git add AnaliseV5/AnaliseGraficos/*.png  2>/dev/null || true
+          git add PrevisaoCarteira_v5_output.ipynb
+
+          # Commit só se houver alterações
+          git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC"
+
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 6 — Se falhar, envia email de erro (via GitHub notification)
+      - name: ❌ Notificar falha
+        if: failure()
+        run: echo "O notebook falhou. Verifica os logs no GitHub Actions."
