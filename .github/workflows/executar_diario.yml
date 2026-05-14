@@ -64,8 +64,8 @@ jobs:
           git add AnaliseV5/predictions_log.csv
           git add AnaliseV5/ensemble_weights.json
           git add AnaliseV5/resumo_diario.txt
-          git add AnaliseV5/AnaliseGraficos/*.png  2>/dev/null || true
-          git add PrevisaoCarteira_v5_output.ipynb
+          git add AnaliseV5/AnaliseGraficos/*.png       2>/dev/null || true
+          git add -f PrevisaoCarteira_v5_output.ipynb  2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC"
 
