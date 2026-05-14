@@ -1,5 +1,8 @@
 name: 📈 Carteira Inteligente — Execução Diária
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
   # 16h00 Barcelona verão  = 14h00 UTC
@@ -37,7 +40,7 @@ jobs:
       - name: 📦 Instalar dependências
         run: |
           pip install --upgrade pip
-          pip install yfinance scikit-learn matplotlib pandas numpy openpyxl nbconvert ipykernel
+          pip install -r requirements.txt
 
       # 4 — Executar o notebook
       - name: 🚀 Executar PrevisaoCarteira_v5.ipynb
