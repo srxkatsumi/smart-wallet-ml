@@ -8,7 +8,6 @@ venv/
 
 # Jupyter
 .ipynb_checkpoints/
-*_output.ipynb
 
 # OS
 .DS_Store
