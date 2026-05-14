@@ -58,20 +58,61 @@ jobs:
           git config user.name  "CarteiraBOT"
           git config user.email "bot@carteira.auto"
 
-          # Adicionar ficheiros gerados
           git add AnaliseV5/predictions_log.csv
           git add AnaliseV5/ensemble_weights.json
+          git add AnaliseV5/resumo_diario.txt
           git add AnaliseV5/AnaliseGraficos/*.png  2>/dev/null || true
           git add PrevisaoCarteira_v5_output.ipynb
 
-          # Commit só se houver alterações
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC"
 
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 6 — Se falhar, envia email de erro (via GitHub notification)
-      - name: ❌ Notificar falha
+      # 6 — Ler resumo gerado pelo notebook
+      - name: 📋 Ler resumo diário
+        id: resumo
+        if: success()
+        run: |
+          CONTENT=$(cat AnaliseV5/resumo_diario.txt 2>/dev/null || echo "Resumo nao disponivel")
+          {
+            echo "content<<__EOF__"
+            echo "$CONTENT"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+          echo "date=$(date +'%d/%m/%Y')" >> "$GITHUB_OUTPUT"
+
+      # 7 — Enviar email de sucesso com o resumo das previsões
+      - name: 📧 Enviar resumo por email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "Carteira OK ${{ steps.resumo.outputs.date }} — Previsoes atualizadas"
+          to: ${{ secrets.GMAIL_TO }}
+          from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
+          body: ${{ steps.resumo.outputs.content }}
+
+      # 8 — Enviar email de falha com link para os logs
+      - name: 📧 Notificar falha por email
         if: failure()
-        run: echo "O notebook falhou. Verifica os logs no GitHub Actions."
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "Carteira FALHOU — ver logs"
+          to: ${{ secrets.GMAIL_TO }}
+          from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
+          body: |
+            O notebook falhou hoje. Nenhum dado foi atualizado.
+
+            Ver logs completos em:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
