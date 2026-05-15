@@ -57,7 +57,7 @@ jobs:
       # 5 — Commit dos ficheiros gerados de volta ao repositório
       - name: 💾 Guardar resultados no repositório
         run: |
-          git config user.name  "CarteiraBOT"
+          git config user.name  "CarteiraInteligenteBOT"
           git config user.email "bot@carteira.auto"
 
           git add AnaliseV5/predictions_log.csv
