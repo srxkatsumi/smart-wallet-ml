@@ -1,130 +1,250 @@
-# 📈 Carteira Inteligente v5
+# Carteira Inteligente — ML Portfolio Forecasting System
 
-> Projeto pessoal de análise e previsão de carteira de investimentos, construído do zero por uma analista de dados que investe o seu próprio dinheiro e quis perceber melhor o que está a acontecer com ele.
+> A self-learning investment portfolio analysis and forecasting system built from scratch.
+> Runs automatically every weekday at 15:35 (Barcelona / CET+1) via GitHub Actions.
 
----
-
-## O que é isto?
-
-Tenho uma carteira de investimentos dividida entre ações (eToro) e ETFs de acumulação de longo prazo. Durante um tempo geria tudo manualmente — abria apps, via números a vermelho e a verde, e tomava decisões no feeling.
-
-Decidi mudar isso.
-
-Este projeto é um notebook Python que executa automaticamente todos os dias úteis às 15h30 (Barcelona) e faz três coisas:
-
-1. **Analisa a carteira** — Ganho/Perda real em euros, breakeven com fees incluídos, alvo de saída
-2. **Prevê a direção dos próximos 3 dias** — Usando Machine Learning (Random Forest, Gradient Boosting, Logistic Regression em ensemble) com indicadores técnicos + contexto de mercado (VIX, SPY)
-3. **Aprende com os erros** — Cada previsão é validada quando a data chega. O modelo que acertar mais passa a ter mais peso nas decisões seguintes
-
-Não é um oráculo. É um sistema que fica menos burro a cada dia que passa.
+[![GitHub Actions](https://img.shields.io/badge/Automated-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart_wallet/actions)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikit-learn)](https://scikit-learn.org/)
 
 ---
 
-## Carteira coberta
+## Overview
 
-**eToro (ações):**
-- Eli Lilly (LLY)
-- NVIDIA (NVDA)
-- Allianz (ALV.DE)
-- Bitcoin (BTC-USD)
-- Alibaba ADR (BABA)
+This system tracks a real investment portfolio (eToro equities + long-term accumulation ETFs) and generates daily directional forecasts for the next 3 trading days using an ensemble of machine learning classifiers. Every prediction is stored, validated when the target date arrives, and used to re-weight the ensemble — the system continuously improves on its own mistakes.
 
-**ETFs de acumulação (longo prazo):**
-- MSCI World ex USA (EXUS.L)
-- MSCI China (ICGA.DE)
-- Physical Gold (SGLN.L)
-- MSCI EM IMI (EMIM.AS)
-- Stoxx Europe 600 (MEUD.PA)
-- MSCI Japan IMI (SJPA.MI)
+The output is an HTML email report delivered daily with:
+- Portfolio P&L in EUR (including fees and breakeven)
+- D+1 / D+2 / D+3 directional forecasts per asset
+- Long-term ETF projections (1 / 3 / 5 / 10 years)
+- Model accuracy tracking (last 30 business days)
 
 ---
 
-## Stack técnica
+## Machine Learning Architecture
+
+### Problem formulation
+
+Binary classification: will the closing price be **higher or lower** than today's close in N trading days?
+
+- `target_d1` = `1` if `Close[t+1] > Close[t]` else `0`
+- `target_d2` = `1` if `Close[t+2] > Close[t]` else `0`
+- `target_d3` = `1` if `Close[t+3] > Close[t]` else `0`
+
+### Independent ensembles per horizon
+
+Three separate ensembles are trained — one for D+1, one for D+2, one for D+3. Each learns its own temporal pattern. There is no extrapolation between horizons.
+
+```
+D+1 Ensemble ──► RF_d1 · GB_d1 · SGD_d1  ──► weights_d1
+D+2 Ensemble ──► RF_d2 · GB_d2 · SGD_d2  ──► weights_d2
+D+3 Ensemble ──► RF_d3 · GB_d3 · SGD_d3  ──► weights_d3
+```
+
+### Models
+
+| Model | Role |
+|-------|------|
+| **Random Forest** (n=300, max_depth=6) | Robust baseline, handles non-linearity, low overfitting risk |
+| **Gradient Boosting** (n=200, lr=0.05) | Captures residual patterns RF misses, especially momentum |
+| **SGD Classifier** (log_loss) | Stable linear anchor — prevents the ensemble from overfitting on short-term noise |
+
+The SGD model undergoes **full monthly recalibration**: scaler refit + retrain from scratch. This prevents the standardisation baseline from drifting as market conditions change.
+
+### Feature engineering
+
+| Feature | Description |
+|---------|-------------|
+| `sma_20`, `sma_50` | Simple moving averages — short and medium trend |
+| `rsi_14` | Relative Strength Index — overbought / oversold |
+| `macd`, `macd_signal` | Momentum and signal line crossovers |
+| `bb_upper`, `bb_lower`, `bb_width` | Bollinger Bands — volatility and price position |
+| `atr_14` | Average True Range — expected daily move magnitude |
+| `ret_1d`, `ret_5d` | Recent return (1-day, 5-day) |
+| `spy_ret_1d` | S&P 500 return (T-1) — global market context |
+| `vix_level` | CBOE VIX close (T-1) — market fear level |
+| `vix_change` | VIX daily change (T-1) — fear acceleration |
+
+**Why VIX and SPY?** NVDA in a global panic session behaves differently from NVDA in a neutral session. Adding market context allows each model to condition its forecast on the macro environment.
+
+**Data leakage prevention:** all market context features use T-1 values. When European markets open (15:35 Barcelona), only yesterday's US close is available. Using T-0 would be leakage.
+
+### Adaptive ensemble weights with temporal decay
+
+After each validation cycle, model weights are updated using accuracy over a rolling window with exponential decay:
+
+```
+weight(model) ∝ accuracy(model) · Σ decay^(days_ago)
+```
+
+More recent correct predictions carry more weight than older ones. If a model starts underperforming systematically, the ensemble lowers its vote share automatically.
+
+### Validation and audit trail
+
+Every forecast written to `predictions_log.csv` includes:
+
+| Column | Description |
+|--------|-------------|
+| `pred_date` | Date the forecast was made |
+| `target_date` | Date the forecast refers to |
+| `horizon` | 1, 2, or 3 |
+| `direction` | `up` or `down` |
+| `confidence` | Ensemble probability |
+| `actual_price` | Filled on validation day (initially `NaN`) |
+| `correct` | `True` / `False` (filled on validation day) |
+
+Nothing is deleted or overwritten. The full audit trail is preserved.
+
+### Consensus signal
+
+```
+BULLISH  → all three horizons predict UP
+BEARISH  → all three horizons predict DOWN
+MIXED    → disagreement across horizons
+```
+
+---
+
+## Portfolio covered
+
+**eToro equities:**
+
+| Ticker | Name |
+|--------|------|
+| LLY | Eli Lilly & Co |
+| NVDA | NVIDIA Corporation |
+| ALV.DE | Allianz SE |
+| BTC-USD | Bitcoin |
+| BABA | Alibaba Group ADR |
+
+**Accumulation ETFs (long-term):**
+
+| Ticker | Name |
+|--------|------|
+| EXUS.L | MSCI World ex USA ETF |
+| ICGA.DE | MSCI China ETF |
+| SGLN.L | Physical Gold ETC |
+| EMIM.AS | iShares Core MSCI EM IMI ETF |
+| MEUD.PA | Core Stoxx Europe 600 |
+| SJPA.MI | iShares Core MSCI Japan IMI ETF |
+
+### ML watchlist (macro context universe)
+
+The watchlist expands the training universe beyond the personal portfolio. Models learn cross-asset correlations and market regime signals from this broader dataset.
+
+| Group | Tickers | Purpose |
+|-------|---------|---------|
+| US Tech | AAPL MSFT GOOGL AMZN META TSLA NVDA | Core tech sentiment |
+| Semiconductors | AMD AVGO ASML TSM | Chip sector comparison for NVDA |
+| Swiss Blue Chip | NESN.SW NOVN.SW ROG.SW | Defensive European signal |
+| Pharma / Health | NVO LLY JNJ PFE AZN MRK ABBV UNH IBB | Sector context for LLY |
+| German equities | ALV.DE SIE.DE BMW.DE BAS.DE | European macro proxy |
+| Portfolio ETFs | EXUS.L ICGA.DE SGLN.L EMIM.AS MEUD.PA SJPA.MI | Direct portfolio coverage |
+| Global index ETFs | VWCE.DE IWDA.AS CSPX.L | Broad market regime |
+| Crypto | BTC-USD ETH-USD | Crypto market regime |
+| Emerging markets | BABA TSM BHP RIO VALE | EM macro signal |
+| Traditional commodities | GLD SLV XOM CVX | Geopolitical / inflation proxy |
+| New-economy commodities | URA LIT DBA | AI datacenter energy, EV supply chain, food inflation |
+| Defensives | XLP XLU | Crisis hedge — rise during risk-off rotations |
+
+---
+
+## Notebook structure
+
+| Block | Description |
+|-------|-------------|
+| 1 | Install dependencies (first run only) |
+| 2 | Imports + global seed |
+| 3 | Portfolio configuration |
+| 4 | Paths + CSV + folders |
+| 5 | Price download + FX rates + market context (VIX, SPY) |
+| 6 | Feature engineering |
+| 7 | Independent ML ensembles D+1 / D+2 / D+3 |
+| 7B | Feature importances → `model_metadata.csv` |
+| 7C | Monthly SGD recalibration |
+| 8 | Validate past forecasts + adaptive weight update + save new forecasts |
+| 9 | Portfolio P&L analysis (fees, breakeven, exit targets) |
+| 10 | Exit signals |
+| 11 | 1 / 3 / 5 / 10-year projection |
+| 12 | DCA simulation |
+| 12B | Auto-cleanup of charts older than 30 business days |
+| 13 | Chart generation |
+| 14 | Final summary + HTML email |
+
+---
+
+## Repository structure
+
+```
+├── PrevisaoCarteira.ipynb           ← main notebook
+├── AnaliseV5/
+│   ├── predictions_log.csv          ← full forecast + validation history
+│   ├── ensemble_weights.json        ← current weights per model per horizon
+│   ├── model_metadata.csv           ← daily feature importances (RF + GB)
+│   └── AnaliseGraficos/
+│       └── TICKER_YYYYMMDD.png     ← one chart per asset per day
+├── config/
+│   ├── my_portfolio.json            ← personal portfolio tickers
+│   └── watchlist.json               ← extended ML training universe
+├── .github/
+│   └── workflows/
+│       └── executar_diario.yml      ← daily automation schedule
+├── README.md                        ← this file (English)
+└── README_pt.md                     ← Portuguese version
+```
+
+---
+
+## Automation (GitHub Actions)
+
+```
+Weekdays 15:35 Barcelona (13:35 UTC)
+  │
+  ├─ Clone repository
+  ├─ Install Python dependencies
+  ├─ Execute full notebook (~8 min)
+  │   ├─ Download prices + FX + VIX + SPY
+  │   ├─ Validate previous forecasts
+  │   ├─ Retrain models with updated history
+  │   ├─ Update ensemble weights
+  │   ├─ Save new D+1 / D+2 / D+3 forecasts
+  │   ├─ Generate charts
+  │   └─ Write HTML email report
+  └─ Auto-commit with timestamp → push to repository
+```
+
+Failures trigger an automatic email notification from GitHub.
+
+**Why 15:35?** European and crypto markets have closed. US markets are open but yesterday's data is final. This maximises data coverage without lookahead bias.
+
+---
+
+## Tech stack
 
 ```
 Python 3.11
-├── yfinance          — dados de mercado em tempo real
-├── scikit-learn      — Random Forest, Gradient Boosting, Logistic Regression
-├── pandas / numpy    — processamento de dados
-└── matplotlib        — visualizações
+├── yfinance          — market data (prices, FX, VIX, SPY)
+├── scikit-learn      — RandomForestClassifier, GradientBoostingClassifier, SGDClassifier
+├── pandas / numpy    — data processing and feature computation
+└── matplotlib        — chart generation
 
-GitHub Actions        — execução automática diária (gratuito)
+GitHub Actions        — free daily automation
 ```
 
 ---
 
-## Funcionalidades
+## Accuracy context
 
-### Modelos ML independentes por horizonte
-Ao contrário da maioria dos exemplos que encontras online, este sistema treina **3 ensembles separados** — um para D+1, outro para D+2, outro para D+3. Cada um aprende o seu próprio padrão. Não extrapolam uns dos outros.
-
-### Contexto de mercado
-Além dos indicadores técnicos do próprio ativo, cada modelo recebe o **VIX e o retorno do SPY do dia anterior** como features. A ideia é que a NVDA num dia de pânico global se comporta diferente da NVDA num dia neutro.
-
-### Pesos adaptativos com decay temporal
-O ensemble atualiza os pesos de cada modelo com base no histórico real de acertos. Previsões mais recentes pesam mais do que previsões antigas (decay exponencial). Se o Random Forest começar a errar sistematicamente, o sistema aprende a confiar menos nele.
-
-### Validação automática
-Cada previsão feita fica guardada no CSV com `actual_price = NaN`. Quando a data chega, o sistema preenche o preço real e calcula se acertou. Tudo auditável, nada apagado.
+- A random directional forecast has 50% accuracy by definition.
+- This system targets 55–65% directional accuracy on personal portfolio tickers.
+- Accuracy below 52% over 30+ validations signals model degradation.
+- No single accuracy figure justifies financial decisions on its own — this is a personal analytical tool, not financial advice.
 
 ---
 
-## Estrutura do repositório
+## About
 
-```
-├── PrevisaoCarteira_v5.ipynb        ← notebook principal (14 blocos)
-├── AnaliseV5/
-│   ├── predictions_log.csv          ← histórico completo de previsões
-│   ├── ensemble_weights.json        ← pesos atuais de cada modelo
-│   └── AnaliseGraficos/
-│       └── TICKER_v5_YYYYMMDD.png  ← gráfico por ativo por dia
-├── .github/
-│   └── workflows/
-│       └── executar_diario.yml      ← agendamento automático
-└── README.md
-```
-
----
-
-## Como corre automaticamente
-
-```
-Seg-Sex 15h30 Barcelona
-  │
-  ├─ GitHub Actions clona o repositório
-  ├─ Instala dependências
-  ├─ Executa o notebook completo (~8 minutos)
-  ├─ Valida previsões anteriores
-  ├─ Guarda novas previsões (D+1, D+2, D+3 para cada ativo)
-  ├─ Atualiza gráficos
-  └─ Commit automático com timestamp → push para o repositório
-```
-
-Se falhar, o GitHub envia email de notificação.
-
----
-
-## Output do Bloco 14 (exemplo)
-
-```
-Ativo        Preço       D+1          D+2          D+3      Consenso
-SJPA.MI      67.76    UP(60%)      UP(61%)      UP(66%)   📈 BULLISH
-ALV.DE      380.80    UP(56%)      UP(65%)      UP(66%)   📈 BULLISH
-NVDA        231.60  DOWN(55%)    DOWN(55%)    DOWN(60%)   📉 BEARISH
-BTC-USD   79822.72    UP(59%)      UP(55%)      UP(63%)   📈 BULLISH
-```
-
----
-
-## Aviso importante
-
-> As previsões são probabilísticas. 55–60% de acurácia direcional já está acima do aleatório mas não é suficiente para tomar decisões financeiras isoladamente. Este projeto é uma ferramenta de análise pessoal, não aconselhamento financeiro.
-
----
-
-## Sobre
-
-Construído por **Vicky Costa** — Analista de Dados | Estudante de Ciência de Dados
+Built by **Vicky Costa** — Data Analyst | Data Science student
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycosta/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)
