@@ -1,21 +1,48 @@
-Carteira Inteligente v5 — 14/05/2026 15:50 UTC
+Carteira Inteligente — 15/05/2026 10:53 UTC(Barcelona)
 =================================================================
 
 PREVISOES ML:
-  Ativo           Preco           D+1          D+2          D+3  Consenso
+  Ativo             Preco          D+1        D+2        D+3  Consenso
   ---------------------------------------------------------------
-  EMIM.AS         47.19       UP(59%)      UP(58%)      UP(59%)  BULLISH
-  BABA           142.69     DOWN(52%)      UP(51%)      UP(55%)  MISTO
-  SGLN.L        6748.13       UP(51%)      UP(53%)    DOWN(52%)  MISTO
-  ICGA.DE          5.11     DOWN(52%)    DOWN(56%)    DOWN(57%)  BEARISH
-  EXUS.L          44.37       UP(58%)      UP(54%)    DOWN(53%)  MISTO
-  ALV.DE         379.90       UP(59%)      UP(71%)      UP(66%)  BULLISH
-  BTC-USD      81042.09       UP(54%)      UP(59%)      UP(61%)  BULLISH
-  LLY           1005.47     DOWN(52%)      UP(52%)    DOWN(53%)  MISTO
-  MEUD.PA        302.05     DOWN(55%)    DOWN(58%)      UP(53%)  MISTO
-  NVDA           235.44     DOWN(57%)    DOWN(55%)    DOWN(60%)  BEARISH
-  SJPA.MI         67.97       UP(60%)      UP(59%)      UP(62%)  BULLISH
+❌ ALV.DE           375.30     UP(54%)    UP(84%)    UP(73%)  BULLISH(--)
+   BABA             141.12   DOWN(57%)    UP(50%)  DOWN(54%)  MISTO(--)
+❌ BTC-USD        80627.02   DOWN(54%)    UP(68%)    UP(68%)  MISTO(--)
+   DHER.DE           26.87   DOWN(80%)    UP(75%)  DOWN(54%)  MISTO(--)
+❌ EMIM.AS           45.80     UP(65%)    UP(75%)    UP(75%)  BULLISH(--)
+❌ EXUS.L            43.62     UP(60%)    UP(55%)  DOWN(55%)  MISTO(--)
+✅ ICGA.DE            5.02   DOWN(75%)  DOWN(75%)    UP(51%)  MISTO(--)
+   LLY             1006.70   DOWN(58%)    UP(68%)  DOWN(59%)  MISTO(--)
+✅ MEUD.PA          297.25     UP(51%)    UP(63%)    UP(51%)  BULLISH(--)
+   NVDA             235.74   DOWN(53%)    UP(63%)  DOWN(64%)  MISTO(--)
+❌ SGLN.L          6618.20     UP(69%)  DOWN(65%)    UP(66%)  MISTO(--)
+❌ SJPA.MI           67.27   DOWN(60%)    UP(70%)    UP(71%)  MISTO(--)
 
-Ainda sem previsoes validadas — aguarda os primeiros dias de execucao.
+ACURACIA GLOBAL: 25.0% (8 previsoes validadas)
 
 Previsoes sao probabilisticas. Nao tomar decisoes financeiras baseadas exclusivamente neste output.
+
+
+PREVISOES LONGO PRAZO — ETFs:
+  ETF           Preco Atual      1 ano     3 anos     5 anos    10 anos  Taxa hist
+  ----------------------------------------------------------------------
+  EMIM.AS             45.80€     56.08€     84.09€    126.08€    347.08€  (+22.4%/ano)
+  EXUS.L              50.05€     59.54€     84.28€    119.30€    284.40€  (+19.0%/ano)
+  ICGA.DE              5.02€      5.87€      8.05€     11.03€     24.28€  (+17.1%/ano)
+  MEUD.PA            297.25€    334.89€    425.09€    539.57€    979.42€  (+12.7%/ano)
+  SGLN.L              75.93€    105.46€    203.44€    392.43€   2028.12€  (+38.9%/ano)
+  SJPA.MI             67.27€     78.21€    105.73€    142.93€    303.71€  (+16.3%/ano)
+
+  * Projecao de preco por unidade com taxa historica anualizada.
+  * Nao inclui aportes mensais nem garante retorno futuro.
+
+─────────────────────────────────────────────────────────────────
+ACURACIA DO MODELO (ultimos 30 dias uteis):
+  Modelo em fase de treino — 8 previsoes validadas de 15 necessarias.
+  Estimativa: ~7 dias uteis ate primeira acuracia disponivel.
+─────────────────────────────────────────────────────────────────
+
+─────────────────────────────────────────────────────────────────
+Tenha um excelente dia!
+
+Vicky Costa Sanches
+─────────────────────────────────────────────────────────────────
