@@ -2,13 +2,14 @@
   "watchlist": [
     "AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "NVDA",
     "NESN.SW", "NOVN.SW", "ROG.SW",
-    "NVO", "LLY", "JNJ", "PFE", "AZN",
+    "NVO", "LLY", "JNJ", "PFE", "AZN", "MRK", "ABBV", "UNH", "IBB",
     "ALV.DE", "SIE.DE", "BMW.DE", "BAS.DE",
     "EMIM.AS", "MEUD.PA", "SJPA.MI", "ICGA.DE", "EXUS.L", "SGLN.L",
     "VWCE.DE", "IWDA.AS", "CSPX.L",
     "BTC-USD", "ETH-USD",
-    "BABA", "TSM", "ASML",
-    "GLD", "SLV", "XOM", "CVX",
-    "BHP", "RIO", "VALE"
+    "BABA", "TSM", "ASML", "AMD", "AVGO",
+    "GLD", "SLV", "XOM", "CVX", "URA", "LIT", "DBA",
+    "BHP", "RIO", "VALE",
+    "XLP", "XLU"
   ]
 }
