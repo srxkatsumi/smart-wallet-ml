@@ -6,17 +6,53 @@ env:
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
   # 15h35 Barcelona verão  (CEST = UTC+2) = 13h35 UTC
-  # 15h35 Barcelona inverno (CET  = UTC+1) = 14h35 UTC  ← ajustar manualmente em outubro
-  # Usamos 13h35 UTC — executa às 15h35 no verão
-  # 1-5 = Segunda a Sexta apenas (fins de semana excluídos)
+  # Fallbacks: 14h05 e 14h35 UTC caso o GitHub falhe a tentativa anterior
+  # A verificação no job 'verificar' garante que o notebook só corre uma vez por dia
   schedule:
-    - cron: '35 13 * * 1-5'   # Seg-Sex às 13h35 UTC = 15h35 Barcelona (verão)
+    - cron: '35 13 * * 1-5'   # tentativa 1 — 15h35 Barcelona (verão)
+    - cron: '05 14 * * 1-5'   # tentativa 2 — 16h05 Barcelona (fallback)
+    - cron: '35 14 * * 1-5'   # tentativa 3 — 16h35 Barcelona (fallback)
 
-  # Permite executar manualmente pelo GitHub (botão "Run workflow")
   workflow_dispatch:
+    inputs:
+      forcar:
+        description: 'Forçar execução mesmo que já tenha corrido hoje'
+        type: boolean
+        default: false
 
 jobs:
+
+  # ── JOB 1: verifica se já executou hoje ──────────────────────────────────
+  verificar:
+    runs-on: ubuntu-latest
+    outputs:
+      ja_executou: ${{ steps.check.outputs.ja_executou }}
+
+    steps:
+      - name: 📥 Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: 🔍 Verificar se já executou hoje
+        id: check
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          FORCE="${{ github.event.inputs.forcar }}"
+
+          if [[ "$FORCE" == "true" ]]; then
+            echo "ja_executou=false" >> "$GITHUB_OUTPUT"
+            echo "✅ Forçar=true — vai executar mesmo assim"
+          elif grep -q "^[^,]*,$TODAY," AnaliseV5/predictions_log.csv 2>/dev/null; then
+            echo "ja_executou=true" >> "$GITHUB_OUTPUT"
+            echo "⏭️  Já executou hoje ($TODAY) — a saltar"
+          else
+            echo "ja_executou=false" >> "$GITHUB_OUTPUT"
+            echo "🚀 Ainda não executou hoje ($TODAY) — vai arrancar"
+          fi
+
+  # ── JOB 2: executa o notebook (só se ainda não correu hoje) ──────────────
   executar-notebook:
+    needs: verificar
+    if: needs.verificar.outputs.ja_executou == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
