@@ -94,7 +94,7 @@ jobs:
           secure: true
           username: ${{ secrets.GMAIL_USER }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "Carteira OK ${{ steps.resumo.outputs.date }} — Previsoes atualizadas"
+          subject: "Carteira_Inteligente_BOT"
           to: ${{ secrets.GMAIL_TO }}
           from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
           body: ${{ steps.resumo.outputs.content }}
