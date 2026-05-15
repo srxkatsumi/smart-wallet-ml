@@ -63,9 +63,12 @@ jobs:
           git add AnaliseV5/predictions_log.csv
           git add AnaliseV5/ensemble_weights.json
           git add AnaliseV5/resumo_diario.txt
-          git add AnaliseV5/AnaliseGraficos/*.png 2>/dev/null || true
+          git add AnaliseV5/model_metadata.csv            2>/dev/null || true
+          git add AnaliseV5/ultima_recalibracao.json      2>/dev/null || true
+          git add AnaliseV5/models/                       2>/dev/null || true
+          git add AnaliseV5/AnaliseGraficos/*.png         2>/dev/null || true
 
-          git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC"
+          git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
           git push
         env:

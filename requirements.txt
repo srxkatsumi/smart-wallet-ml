@@ -6,3 +6,4 @@ numpy
 openpyxl
 nbconvert
 ipykernel
+joblib
