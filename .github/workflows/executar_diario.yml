@@ -41,7 +41,7 @@ jobs:
           if [[ "$FORCE" == "true" ]]; then
             echo "ja_executou=false" >> "$GITHUB_OUTPUT"
             echo "✅ Forçar=true — vai executar mesmo assim"
-          elif grep -q "^[^,]*,$TODAY," AnaliseV5/predictions_log.csv 2>/dev/null; then
+          elif grep -q "^[^,]*,$TODAY," output/predictions_log.csv 2>/dev/null; then
             echo "ja_executou=true" >> "$GITHUB_OUTPUT"
             echo "⏭️  Já executou hoje ($TODAY) — a saltar"
           else
@@ -49,7 +49,7 @@ jobs:
             echo "🚀 Ainda não executou hoje ($TODAY) — vai arrancar"
           fi
 
-  # ── JOB 2: executa o notebook (só se ainda não correu hoje) ──────────────
+  # ── JOB 2: executa o pipeline (só se ainda não correu hoje) ─────────────
   executar-notebook:
     needs: verificar
     if: needs.verificar.outputs.ja_executou == 'false'
@@ -78,15 +78,9 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4 — Executar o notebook
-      - name: 🚀 Executar PrevisaoCarteira_v5.ipynb
-        run: |
-          jupyter nbconvert \
-            --to notebook \
-            --execute \
-            --ExecutePreprocessor.timeout=1200 \
-            --ExecutePreprocessor.kernel_name=python3 \
-            PrevisaoCarteira_v5.ipynb
+      # 4 — Executar pipeline principal
+      - name: 🚀 Executar main.py
+        run: python main.py
         env:
           PYTHONUNBUFFERED: "1"
 
@@ -96,13 +90,13 @@ jobs:
           git config user.name  "CarteiraInteligenteBOT"
           git config user.email "bot@carteira.auto"
 
-          git add AnaliseV5/predictions_log.csv
-          git add AnaliseV5/ensemble_weights.json
-          git add AnaliseV5/resumo_diario.html
-          git add AnaliseV5/model_metadata.csv            2>/dev/null || true
-          git add AnaliseV5/ultima_recalibracao.json      2>/dev/null || true
-          git add AnaliseV5/models/                       2>/dev/null || true
-          git add AnaliseV5/AnaliseGraficos/*.png         2>/dev/null || true
+          git add output/predictions_log.csv
+          git add output/ensemble_weights.json
+          git add output/resumo_diario.html
+          git add output/model_metadata.csv         2>/dev/null || true
+          git add output/ultima_recalibracao.json   2>/dev/null || true
+          git add output/models/                    2>/dev/null || true
+          git add output/charts/*.png               2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
@@ -130,7 +124,7 @@ jobs:
           subject: "Carteira Inteligente — ${{ steps.resumo.outputs.date }}"
           to: ${{ secrets.GMAIL_TO }}
           from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
-          html_body: file://AnaliseV5/resumo_diario.html
+          html_body: file://output/resumo_diario.html
           convert_markdown: false
 
       # 8 — Enviar email de falha com link para os logs

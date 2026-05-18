@@ -3,7 +3,4 @@ scikit-learn
 matplotlib
 pandas
 numpy
-openpyxl
-nbconvert
-ipykernel
 joblib
