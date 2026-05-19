@@ -5,13 +5,14 @@ env:
 
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
-  # 15h35 Barcelona verão  (CEST = UTC+2) = 13h35 UTC
-  # Fallbacks: 14h05 e 14h35 UTC caso o GitHub falhe a tentativa anterior
-  # A verificação no job 'verificar' garante que o notebook só corre uma vez por dia
+  # Objetivo: email às 15h35 Barcelona (CEST)
+  # O GitHub atrasa crons ~3h — por isso agendamos 3h mais cedo (UTC)
+  # 10h35 UTC + ~3h delay → disparo real ~13h35 UTC = 15h35 CEST
+  # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
-    - cron: '35 13 * * 1-5'   # tentativa 1 — 15h35 Barcelona (verão)
-    - cron: '05 14 * * 1-5'   # tentativa 2 — 16h05 Barcelona (fallback)
-    - cron: '35 14 * * 1-5'   # tentativa 3 — 16h35 Barcelona (fallback)
+    - cron: '35 10 * * 1-5'   # tentativa 1 — alvo 15h35 Barcelona
+    - cron: '05 11 * * 1-5'   # tentativa 2 — alvo 16h05 Barcelona (fallback)
+    - cron: '35 11 * * 1-5'   # tentativa 3 — alvo 16h35 Barcelona (fallback)
 
   workflow_dispatch:
     inputs:
