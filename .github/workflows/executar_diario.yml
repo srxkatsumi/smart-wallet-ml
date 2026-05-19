@@ -5,14 +5,14 @@ env:
 
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
-  # Objetivo: email às 15h35 Barcelona (CEST)
+  # Objetivo: email às 17h45 Barcelona (após fecho dos mercados europeus)
   # O GitHub atrasa crons ~3h — por isso agendamos 3h mais cedo (UTC)
-  # 10h35 UTC + ~3h delay → disparo real ~13h35 UTC = 15h35 CEST
+  # 12h45 UTC + ~3h delay → disparo real ~15h45 UTC = 17h45 CEST
   # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
-    - cron: '35 10 * * 1-5'   # tentativa 1 — alvo 15h35 Barcelona
-    - cron: '05 11 * * 1-5'   # tentativa 2 — alvo 16h05 Barcelona (fallback)
-    - cron: '35 11 * * 1-5'   # tentativa 3 — alvo 16h35 Barcelona (fallback)
+    - cron: '45 12 * * 1-5'   # tentativa 1 — alvo 17h45 Barcelona
+    - cron: '15 13 * * 1-5'   # tentativa 2 — alvo 18h15 Barcelona (fallback)
+    - cron: '45 13 * * 1-5'   # tentativa 3 — alvo 18h45 Barcelona (fallback)
 
   workflow_dispatch:
     inputs:

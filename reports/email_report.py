@@ -39,6 +39,19 @@ def _consenso_badge(consenso: str) -> str:
     )
 
 
+def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
+    mask = (
+        (df_log["ticker"]    == ticker) &
+        (df_log["pred_date"] == ontem_str) &
+        (df_log["horizon"]   == 1) &
+        (df_log["correct"].notna())
+    )
+    rows = df_log[mask]
+    if rows.empty:
+        return None
+    return bool(rows.iloc[0]["correct"])
+
+
 def _calcular_tendencia(df_log: pd.DataFrame) -> tuple:
     validadas = df_log[df_log["correct"].notna()].copy()
     validadas["target_date"] = pd.to_datetime(validadas["target_date"])
@@ -75,6 +88,8 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     n_val         = len(validadas_all)
     acc_global    = validadas_all["correct"].astype(float).mean() if n_val >= 15 else None
     acc_kpi       = f"{acc_global*100:.0f}" if acc_global is not None else "—"
+    hoje          = pd.Timestamp.now().normalize()
+    ontem_bday    = (hoje - pd.offsets.BDay(1)).strftime("%Y-%m-%d")
 
     # ── ML prediction rows ────────────────────────────────────────────────
     tickers_sorted = sorted([t for t in my_tickers if t in resultados_ml])
@@ -87,6 +102,10 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         consenso = ("BULLISH" if all(x == "up"   for x in dirs) else
                     "BEARISH" if all(x == "down" for x in dirs) else "MISTO")
 
+        ontem_ok = _acertou_ontem(ticker, df_log, ontem_bday)
+        icon     = ("✅" if ontem_ok is True else "❌" if ontem_ok is False else "")
+        icon_td  = f'<span style="font-size:12px;margin-right:4px">{icon}</span>' if icon else ""
+
         d1_dir, _, d1_conf = preds[1]
         d2_dir, _, d2_conf = preds[2]
         d3_dir, _, d3_conf = preds[3]
@@ -94,7 +113,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         border = "border-bottom:1px solid #f0ede5" if i < len(tickers_sorted) - 1 else ""
         ml_rows += f"""
         <tr style="{border}">
-          <td style="padding:14px 8px 14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em">{ticker}</td>
+          <td style="padding:14px 8px 14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em">{icon_td}{ticker}</td>
           <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums">{close:,.2f}</td>
           <td style="padding:14px 8px;text-align:center">{_dir_cell(d1_dir, d1_conf)}</td>
           <td style="padding:14px 8px;text-align:center">{_dir_cell(d2_dir, d2_conf)}</td>
