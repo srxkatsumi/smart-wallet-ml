@@ -273,7 +273,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_ativos} ativos</td>
       </tr>
     </table>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -36px;padding:0 36px">
     <table style="width:100%;border-collapse:collapse;min-width:520px">
       <thead>
         <tr>
@@ -308,7 +308,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_etfs} ETFs</td>
       </tr>
     </table>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -36px;padding:0 36px">
     <table style="width:100%;border-collapse:collapse;min-width:480px">
       <thead>
         <tr>
