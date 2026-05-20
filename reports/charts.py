@@ -76,7 +76,7 @@ def _plot_single(ticker: str, res: dict, df_log: pd.DataFrame,
     pred_x = [last_date]
     pred_y = [close_now]
     for day, (direction, pred_price, conf) in res["preds_dict"].items():
-        fdate  = last_date + pd.Timedelta(days=day)
+        fdate  = last_date + pd.offsets.BDay(day)   # BDay: sexta D+1 → segunda, não sábado
         color  = "#00ff88" if direction == "up" else "#ff4444"
         marker = "^" if direction == "up" else "v"
         ax1.scatter(fdate, pred_price, color=color, s=120, zorder=6, marker=marker,
@@ -85,17 +85,21 @@ def _plot_single(ticker: str, res: dict, df_log: pd.DataFrame,
         pred_y.append(pred_price)
     ax1.plot(pred_x, pred_y, color="gray", linestyle=":", linewidth=1, alpha=0.4)
 
+    # Apenas D+1: uma validação por dia útil, sem sobreposição de horizontes
     df_tick_log = df_log[df_log["ticker"] == ticker].copy()
-    validated   = df_tick_log[df_tick_log["correct"].notna()]
+    validated   = df_tick_log[
+        (df_tick_log["correct"].notna()) &
+        (df_tick_log["horizon"] == 1)
+    ]
     if not validated.empty:
         corr = validated[validated["correct"] == True]
         err  = validated[validated["correct"] == False]
         if not corr.empty:
             ax1.scatter(pd.to_datetime(corr["target_date"]), corr["pred_price"],
-                        marker="o", color="lime", s=50, alpha=0.6, label="Prev. correta")
+                        marker="o", color="lime", s=60, alpha=0.8, label="D+1 correta")
         if not err.empty:
             ax1.scatter(pd.to_datetime(err["target_date"]), err["pred_price"],
-                        marker="x", color="red", s=50, alpha=0.6, label="Prev. errada")
+                        marker="x", color="red", s=60, alpha=0.8, label="D+1 errada")
 
     ax1.set_ylabel("Preço", color="white")
     ax1.legend(fontsize=7, loc="upper left", ncol=4,
