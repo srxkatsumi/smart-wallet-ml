@@ -156,6 +156,8 @@ def train_all(featured_data: dict, ensemble_weights: dict,
                 horizons[day] = _train_horizon(df, target_col, w, ticker, models_dir)
 
             close_now  = float(df["Close"].iloc[-1])
+            close_prev = float(df["Close"].iloc[-2]) if len(df) >= 2 else close_now
+            var_1d     = round((close_now / close_prev - 1) * 100, 2)
             atr        = float(df["ATR14"].iloc[-1])
             preds_dict = {}
             for day in HORIZONS:
@@ -166,6 +168,7 @@ def train_all(featured_data: dict, ensemble_weights: dict,
 
             resultados_ml[ticker] = {
                 "close_now":  close_now,
+                "var_1d":     var_1d,
                 "last_date":  df.index[-1],
                 "direction":  horizons[1]["direction"],
                 "confidence": horizons[1]["confidence"],

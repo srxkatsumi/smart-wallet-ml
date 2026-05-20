@@ -25,6 +25,20 @@ def _dir_cell(direction: str, conf: float) -> str:
     )
 
 
+def _var_cell(var_pct: float) -> str:
+    if var_pct >= 0:
+        return (
+            '<span style="display:inline-block;color:#1e7a4c;font-size:11px;'
+            'font-weight:500;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">'
+            f'▲&nbsp;{abs(var_pct):.1f}</span>'
+        )
+    return (
+        '<span style="color:#b8453a;font-size:11px;font-weight:500;'
+        'font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">'
+        f'▼&nbsp;{abs(var_pct):.1f}</span>'
+    )
+
+
 def _consenso_badge(consenso: str) -> str:
     styles = {
         "BULLISH": ("#e7f3eb", "#1e7a4c"),
@@ -103,6 +117,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     for i, ticker in enumerate(tickers_sorted):
         res      = resultados_ml[ticker]
         close    = res["close_now"]
+        var_1d   = res.get("var_1d", 0.0)
         preds    = res["preds_dict"]
         dirs     = [preds[day][0] for day in [1, 2, 3]]
         consenso = ("BULLISH" if all(x == "up"   for x in dirs) else
@@ -110,7 +125,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
 
         ontem_ok = _acertou_ontem(ticker, df_log, ontem_bday)
         icon     = ("✅" if ontem_ok is True else "❌" if ontem_ok is False else "")
-        icon_td  = f'<span style="font-size:12px;margin-right:4px">{icon}</span>' if icon else ""
+        icon_td  = f'<span style="font-size:12px;margin-right:3px">{icon}</span>' if icon else ""
 
         d1_dir, _, d1_conf = preds[1]
         d2_dir, _, d2_conf = preds[2]
@@ -119,12 +134,13 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         border = "border-bottom:1px solid #f0ede5" if i < len(tickers_sorted) - 1 else ""
         ml_rows += f"""
         <tr style="{border}">
-          <td style="padding:14px 8px 14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em">{icon_td}{ticker}</td>
-          <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums">{close:,.2f}</td>
-          <td style="padding:14px 8px;text-align:center">{_dir_cell(d1_dir, d1_conf)}</td>
-          <td style="padding:14px 8px;text-align:center">{_dir_cell(d2_dir, d2_conf)}</td>
-          <td style="padding:14px 8px;text-align:center">{_dir_cell(d3_dir, d3_conf)}</td>
-          <td style="padding:14px 0 14px 8px;text-align:right;white-space:nowrap">{_consenso_badge(consenso)}</td>
+          <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em;white-space:nowrap">{icon_td}{ticker}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{close:,.2f}</td>
+          <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_var_cell(var_1d)}</td>
+          <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_dir_cell(d1_dir, d1_conf)}</td>
+          <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_dir_cell(d2_dir, d2_conf)}</td>
+          <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_dir_cell(d3_dir, d3_conf)}</td>
+          <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">{_consenso_badge(consenso)}</td>
         </tr>"""
 
     # ── ETF long-term projection rows ─────────────────────────────────────
@@ -154,13 +170,13 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         border = "border-bottom:1px solid #f0ede5" if i < len(etfs_sorted) - 1 else ""
         etf_rows += f"""
         <tr style="{border}">
-          <td style="padding:14px 8px 14px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em">{ticker}</td>
-          <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#7c7c7c;font-variant-numeric:tabular-nums">{preco:,.2f}</td>
-          <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums">{p1:,.2f}</td>
-          <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums">{p3:,.2f}</td>
-          <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums">{p5:,.2f}</td>
-          <td style="padding:14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums">{p10:,.2f}</td>
-          <td style="padding:14px 0 14px 8px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;font-weight:700;color:{taxa_col};font-variant-numeric:tabular-nums">+{taxa_pct:.1f}%</td>
+          <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em;white-space:nowrap">{ticker}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#7c7c7c;font-variant-numeric:tabular-nums;white-space:nowrap">{preco:,.2f}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p1:,.2f}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p3:,.2f}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p5:,.2f}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p10:,.2f}</td>
+          <td style="padding:11px 0 11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;font-weight:700;color:{taxa_col};font-variant-numeric:tabular-nums;white-space:nowrap">+{taxa_pct:.1f}%</td>
         </tr>"""
 
     # ── Accuracy section ──────────────────────────────────────────────────
@@ -257,22 +273,21 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_ativos} ativos</td>
       </tr>
     </table>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-    <table style="width:100%;border-collapse:collapse;min-width:540px">
+    <table style="width:100%;border-collapse:collapse">
       <thead>
         <tr>
-          <th style="text-align:left;padding:0 8px 10px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ativo</th>
-          <th style="text-align:right;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Preço</th>
-          <th style="text-align:center;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+1</th>
-          <th style="text-align:center;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+2</th>
-          <th style="text-align:center;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+3</th>
-          <th style="text-align:right;padding:0 0 10px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Consenso</th>
+          <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ativo</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Preço</th>
+          <th style="text-align:center;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Var%</th>
+          <th style="text-align:center;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+1</th>
+          <th style="text-align:center;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+2</th>
+          <th style="text-align:center;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+3</th>
+          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Consenso</th>
         </tr>
       </thead>
       <tbody>{ml_rows}
       </tbody>
     </table>
-    </div>
     <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.5">
       <span style="color:#1e7a4c;font-weight:600">▲</span> probabilidade de alta &nbsp;·&nbsp;
       <span style="color:#b8453a;font-weight:600">▼</span> probabilidade de queda &nbsp;·&nbsp; valor em % de confiança
@@ -290,23 +305,21 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_etfs} ETFs</td>
       </tr>
     </table>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-    <table style="width:100%;border-collapse:collapse;min-width:560px">
+    <table style="width:100%;border-collapse:collapse">
       <thead>
         <tr>
-          <th style="text-align:left;padding:0 8px 10px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">ETF</th>
-          <th style="text-align:right;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Atual</th>
-          <th style="text-align:right;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">1a</th>
-          <th style="text-align:right;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">3a</th>
-          <th style="text-align:right;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">5a</th>
-          <th style="text-align:right;padding:0 8px 10px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">10a</th>
-          <th style="text-align:right;padding:0 0 10px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Taxa</th>
+          <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">ETF</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Atual</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">1a</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">3a</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">5a</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">10a</th>
+          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Taxa</th>
         </tr>
       </thead>
       <tbody>{etf_rows}
       </tbody>
     </table>
-    </div>
     <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.55;border-left:2px solid #efece4;padding-left:10px">
       Valores em € por unidade · taxa anualizada com base no histórico. Não inclui aportes mensais nem garante retorno futuro.
     </div>

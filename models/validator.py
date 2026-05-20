@@ -149,8 +149,8 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
     for ticker, res in resultados_ml.items():
         df_ticker = res.get("df", pd.DataFrame())
         atr_val = (
-            float(df_ticker["atr_14"].iloc[-1])
-            if "atr_14" in df_ticker.columns and not df_ticker.empty
+            float(df_ticker["ATR14"].iloc[-1])
+            if "ATR14" in df_ticker.columns and not df_ticker.empty
             else np.nan
         )
 
