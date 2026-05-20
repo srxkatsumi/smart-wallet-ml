@@ -128,7 +128,137 @@ jobs:
           html_body: file://output/resumo_diario.html
           convert_markdown: false
 
-      # 8 — Enviar email de falha com link para os logs
+      # 8 — Sincronizar charts com repositório público (janela D-10 a D-19)
+      - name: 🌐 Sincronizar repositório público
+        if: success()
+        run: |
+          DATE_MAX=$(date -d "10 days ago" +%Y%m%d)
+          DATE_MIN=$(date -d "19 days ago" +%Y%m%d)
+          echo "Janela pública: $DATE_MIN → $DATE_MAX"
+
+          git clone --depth=1 \
+            https://x-access-token:${{ secrets.PUBLIC_REPO_PAT }}@github.com/srxkatsumi/smart-wallet-ml.git \
+            /tmp/public_repo
+
+          rm -rf /tmp/public_repo/charts
+          mkdir -p /tmp/public_repo/charts
+
+          COUNT=0
+          for f in output/charts/*.png; do
+            [ -f "$f" ] || continue
+            fname=$(basename "$f")
+            fdate="${fname%.png}"
+            fdate="${fdate: -8}"
+            if [[ "$fdate" -ge "$DATE_MIN" && "$fdate" -le "$DATE_MAX" ]]; then
+              cp "$f" /tmp/public_repo/charts/
+              COUNT=$((COUNT+1))
+            fi
+          done
+          echo "Charts copiados: $COUNT"
+
+          python3 << 'PYEOF'
+          readme = """\
+# smart-wallet-ml
+
+> Daily ML-driven market forecasting pipeline — charts published with a 10-day delay.
+
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikit-learn)](https://scikit-learn.org/)
+[![GitHub Actions](https://img.shields.io/badge/Automated-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart-wallet-ml/actions)
+
+---
+
+## What this is
+
+An automated machine learning pipeline that runs every weekday, downloads fresh market data for 90+ assets, trains independent ensemble models, and generates directional forecasts for the next 3 trading days.
+
+Charts are published here with a **10-day delay**. No prices, positions, or portfolio data are shared.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A["📥 Market Data\nyfinance · 90+ tickers\nVIX · SPY · FX rates"] --> B["⚙️ Feature Engineering\nRSI · MACD · Bollinger Bands\nATR · SMA · Returns"]
+    B --> C["🤖 Ensemble per horizon\nRandom Forest\nGradient Boosting\nSGD Classifier"]
+    C --> D["📊 Forecasts\nD+1 · D+2 · D+3\nper asset"]
+    D --> E["✅ Validation\nActual close vs predicted\ndirection on target date"]
+    E --> F["⚖️ Weight update\nExponential decay —\nrecent accuracy weighted more"]
+    F --> C
+    D --> G["📧 HTML email\n+ charts committed here"]
+```
+
+---
+
+## Why three models in each ensemble
+
+| Model | Role |
+|-------|------|
+| **Random Forest** (300 trees) | Robust generaliser — handles non-linearity, resists overfitting |
+| **Gradient Boosting** (lr 0.05) | Captures residual patterns RF misses, especially momentum |
+| **SGD Classifier** (log loss) | Linear anchor — prevents the ensemble from overreacting to noise |
+
+Each model is trained independently per asset and per horizon (D+1, D+2, D+3 are separate ensembles — the patterns that predict tomorrow differ from those that predict 3 days out).
+
+---
+
+## Adaptive weights
+
+After each validation cycle, model weights are updated with exponential decay:
+
+```
+weight(model) ∝ accuracy(model) · Σ decay^(days_ago)
+```
+
+Recent correct predictions count more than older ones. If a model starts underperforming, the ensemble automatically reduces its vote share.
+
+---
+
+## Charts
+
+One chart per asset per trading day, showing price history with technical indicators.
+Published here with a 10-day sliding window delay.
+
+---
+
+## Accuracy target
+
+| Benchmark | Value |
+|-----------|-------|
+| Random directional forecast | 50% |
+| System target | 55–65% |
+| Degradation threshold | < 52% over 30+ validations |
+
+---
+
+## Stack
+
+```
+Python 3.11 · scikit-learn · pandas · yfinance · matplotlib
+GitHub Actions — free daily automation
+```
+
+---
+
+*This repository contains no financial advice, no portfolio positions, and no entry prices.
+Charts show historical price + indicator data with a deliberate delay.*
+
+Built by [Vicky Costa](https://www.linkedin.com/in/vickycosta/) · [vickycosta.com](https://www.vickycosta.com)
+"""
+          with open('/tmp/public_repo/README.md', 'w') as f:
+              f.write(readme)
+          PYEOF
+
+          cd /tmp/public_repo
+          git config user.name  "CarteiraSyncBot"
+          git config user.email "bot@carteira.auto"
+          git add charts/ README.md
+          git diff --staged --quiet || \
+            git commit -m "sync: $(date +'%Y-%m-%d') · janela ${DATE_MIN}→${DATE_MAX} · ${COUNT} charts"
+          git push
+
+      # 9 — Enviar email de falha com link para os logs
       - name: 📧 Notificar falha por email
         if: failure()
         uses: dawidd6/action-send-mail@v3
