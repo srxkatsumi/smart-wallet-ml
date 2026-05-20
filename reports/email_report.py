@@ -273,7 +273,8 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_ativos} ativos</td>
       </tr>
     </table>
-    <table style="width:100%;border-collapse:collapse">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;min-width:520px">
       <thead>
         <tr>
           <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ativo</th>
@@ -288,9 +289,11 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
       <tbody>{ml_rows}
       </tbody>
     </table>
-    <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.5">
+    </div>
+    <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.7">
       <span style="color:#1e7a4c;font-weight:600">▲</span> probabilidade de alta &nbsp;·&nbsp;
-      <span style="color:#b8453a;font-weight:600">▼</span> probabilidade de queda &nbsp;·&nbsp; valor em % de confiança
+      <span style="color:#b8453a;font-weight:600">▼</span> probabilidade de queda &nbsp;·&nbsp; valor em % de confiança<br>
+      ✅ acertou a previsão D+1 do dia anterior &nbsp;·&nbsp; ❌ errou a previsão D+1 do dia anterior
     </div>
   </div>
 
@@ -305,7 +308,8 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_etfs} ETFs</td>
       </tr>
     </table>
-    <table style="width:100%;border-collapse:collapse">
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;min-width:480px">
       <thead>
         <tr>
           <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">ETF</th>
@@ -320,6 +324,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
       <tbody>{etf_rows}
       </tbody>
     </table>
+    </div>
     <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.55;border-left:2px solid #efece4;padding-left:10px">
       Valores em € por unidade · taxa anualizada com base no histórico. Não inclui aportes mensais nem garante retorno futuro.
     </div>
