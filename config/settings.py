@@ -43,7 +43,8 @@ EUR_GBP_FALLBACK = 0.85
 PRED_COLS = [
     "ticker", "pred_date", "target_date", "horizon",
     "direction", "pred_price", "confidence",
-    "actual_price", "correct",
+    "actual_price", "actual_change_pct", "correct",
+    "atr_at_prediction", "predicted_price",
     "model_rf", "model_gb", "model_sgd",
 ]
 

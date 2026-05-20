@@ -1,5 +1,6 @@
 import json
 import logging
+import numpy as np
 import pandas as pd
 from config.settings import (
     OUTPUT_DIR, CHARTS_DIR, MODELS_DIR,
@@ -26,8 +27,26 @@ def load_predictions_log() -> pd.DataFrame:
     # Migração retrocompatível: model_lr → model_sgd
     if "model_lr" in df.columns and "model_sgd" not in df.columns:
         df.rename(columns={"model_lr": "model_sgd"}, inplace=True)
-        df.to_csv(PRED_LOG, index=False)
         logger.info("CSV migrado: model_lr → model_sgd")
+
+    # Migração: adicionar novas colunas se ausentes
+    new_cols = ["actual_change_pct", "atr_at_prediction", "predicted_price"]
+    added = [c for c in new_cols if c not in df.columns]
+    if added:
+        for col in added:
+            df[col] = np.nan
+        # Retrocompatível: calcular actual_change_pct para linhas já validadas
+        mask = (
+            df["actual_price"].notna() &
+            df["pred_price"].notna() &
+            df["actual_change_pct"].isna()
+        )
+        if mask.any():
+            df.loc[mask, "actual_change_pct"] = (
+                (df.loc[mask, "actual_price"] / df.loc[mask, "pred_price"]) - 1
+            ) * 100
+        df.to_csv(PRED_LOG, index=False)
+        logger.info("CSV migrado: colunas adicionadas — %s", added)
 
     logger.info("predictions_log carregado: %d registos", len(df))
     return df

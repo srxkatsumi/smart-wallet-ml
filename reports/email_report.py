@@ -52,8 +52,11 @@ def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
     return bool(rows.iloc[0]["correct"])
 
 
-def _calcular_tendencia(df_log: pd.DataFrame) -> tuple:
-    validadas = df_log[df_log["correct"].notna()].copy()
+def _calcular_tendencia(df_log: pd.DataFrame, portfolio_tickers: list) -> tuple:
+    validadas = df_log[
+        (df_log["correct"].notna()) &
+        (df_log["ticker"].isin(portfolio_tickers))
+    ].copy()
     validadas["target_date"] = pd.to_datetime(validadas["target_date"])
     validadas = validadas.sort_values("target_date")
     hoje_ts  = pd.Timestamp.today()
@@ -82,11 +85,14 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     data_str     = (f"{dia_semana} · {agora.day} de {mes} de {agora.year} "
                     f"· {agora.strftime('%H:%M')}, Barcelona")
 
-    validadas_all = df_log[df_log["correct"].notna()]
+    validadas_portfolio = df_log[
+        (df_log["correct"].notna()) &
+        (df_log["ticker"].isin(my_tickers))
+    ]
     n_ativos      = len([t for t in my_tickers if t in resultados_ml])
     n_etfs        = len(resumo_etfs)
-    n_val         = len(validadas_all)
-    acc_global    = validadas_all["correct"].astype(float).mean() if n_val >= 15 else None
+    n_val         = len(validadas_portfolio)
+    acc_global    = validadas_portfolio["correct"].astype(float).mean() if n_val >= 15 else None
     acc_kpi       = f"{acc_global*100:.0f}" if acc_global is not None else "—"
     hoje          = pd.Timestamp.now().normalize()
     ontem_bday    = (hoje - pd.offsets.BDay(1)).strftime("%Y-%m-%d")
@@ -158,7 +164,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         </tr>"""
 
     # ── Accuracy section ──────────────────────────────────────────────────
-    estado, n_rec, faltam, acc_rec, delta = _calcular_tendencia(df_log)
+    estado, n_rec, faltam, acc_rec, delta = _calcular_tendencia(df_log, my_tickers)
 
     if estado == "treino":
         acc_number_html = f"""
@@ -166,7 +172,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
             —
           </div>
           <div style="font-size:11.5px;color:#8a8a8a;margin-top:6px;line-height:1.4">
-            {n_rec} previsões validadas · ainda em treino<br>
+            {n_rec} previsões do portfólio validadas · ainda em treino<br>
             Acurácia disponível após {faltam} validações.
           </div>"""
         bar_width = 0
@@ -188,7 +194,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
             {acc_int}<span style="font-size:24px;color:#7d75c4">%</span>
           </div>
           <div style="font-size:11.5px;color:#8a8a8a;margin-top:6px;line-height:1.4">
-            {n_rec} previsões validadas<br>nos últimos 30 dias úteis
+            {n_rec} previsões do portfólio validadas<br>nos últimos 30 dias úteis
           </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -230,7 +236,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         </td>
         <td style="padding:0;vertical-align:top;width:25%;border-left:1px solid rgba(125,117,196,0.25);padding-left:18px">
           <div style="color:#7d75c4;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Validadas</div>
-          <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;color:#f4f2ff;font-size:28px;font-weight:500;line-height:1">{n_val}</div>
+          <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;color:#f4f2ff;font-size:28px;font-weight:500;line-height:1">{n_val}<span style="font-size:12px;color:#7d75c4;margin-left:4px">portf.</span></div>
         </td>
         <td style="padding:0;vertical-align:top;width:25%;border-left:1px solid rgba(125,117,196,0.25);padding-left:18px">
           <div style="color:#7d75c4;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px">Acurácia</div>

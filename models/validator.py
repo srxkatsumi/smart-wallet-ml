@@ -66,8 +66,9 @@ def validate_past_predictions(df_log: pd.DataFrame,
             (row["direction"] == "up"   and actual > row["pred_price"] * 0.995) or
             (row["direction"] == "down" and actual < row["pred_price"] * 1.005)
         )
-        df_log.at[idx, "actual_price"] = actual
-        df_log.at[idx, "correct"]      = float(correct)
+        df_log.at[idx, "actual_price"]      = actual
+        df_log.at[idx, "actual_change_pct"] = round((actual / row["pred_price"] - 1) * 100, 4)
+        df_log.at[idx, "correct"]           = float(correct)
         updated += 1
 
     if updated > 0:
@@ -146,6 +147,13 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
     novas_previsoes= []
 
     for ticker, res in resultados_ml.items():
+        df_ticker = res.get("df", pd.DataFrame())
+        atr_val = (
+            float(df_ticker["atr_14"].iloc[-1])
+            if "atr_14" in df_ticker.columns and not df_ticker.empty
+            else np.nan
+        )
+
         for day, (direction, pred_price, conf) in res["preds_dict"].items():
             # BDay fix: use trading days so Friday D+1 → Monday, not Saturday
             target_date_str = (today + pd.offsets.BDay(day)).strftime("%Y-%m-%d")
@@ -160,18 +168,21 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
 
             h_data = res["horizons"][day]
             novas_previsoes.append({
-                "ticker":       ticker,
-                "pred_date":    hoje_str,
-                "target_date":  target_date_str,
-                "horizon":      day,
-                "direction":    direction,
-                "pred_price":   round(pred_price, 4),
-                "confidence":   round(conf, 4),
-                "actual_price": np.nan,
-                "correct":      np.nan,
-                "model_rf":     h_data["preds_ind"].get("rf", ""),
-                "model_gb":     h_data["preds_ind"].get("gb", ""),
-                "model_sgd":    h_data["preds_ind"].get("sgd", ""),
+                "ticker":            ticker,
+                "pred_date":         hoje_str,
+                "target_date":       target_date_str,
+                "horizon":           day,
+                "direction":         direction,
+                "pred_price":        round(pred_price, 4),
+                "confidence":        round(conf, 4),
+                "actual_price":      np.nan,
+                "actual_change_pct": np.nan,
+                "correct":           np.nan,
+                "atr_at_prediction": round(atr_val, 4) if not np.isnan(atr_val) else np.nan,
+                "predicted_price":   np.nan,
+                "model_rf":          h_data["preds_ind"].get("rf", ""),
+                "model_gb":          h_data["preds_ind"].get("gb", ""),
+                "model_sgd":         h_data["preds_ind"].get("sgd", ""),
             })
 
     if novas_previsoes:
