@@ -121,11 +121,12 @@ Every forecast written to `output/predictions_log.csv` includes:
 | `target_date` | Date the forecast refers to (calendar-adjusted per exchange) |
 | `horizon` | 1, 2, or 3 |
 | `direction` | `up` or `down` |
-| `pred_price` | Reference price at time of forecast |
+| `ref_price` | Closing price on the day the forecast was made — the true reference for the direction check |
+| `pred_price` | ATR-estimated target price (`close ± ATR × 0.5 × √horizon`) — informational only |
 | `confidence` | Ensemble weighted probability |
 | `actual_price` | Filled on validation day (initially `NaN`) |
-| `actual_change_pct` | `(actual_price / pred_price − 1) × 100` — filled on validation |
-| `correct` | `True` / `False` (filled on validation day) |
+| `actual_change_pct` | `(actual_price / ref_price − 1) × 100` — filled on validation |
+| `correct` | `True` if actual ≥ ref_price (UP) or actual ≤ ref_price (DOWN); filled on validation day |
 | `atr_at_prediction` | ATR14 at the time the forecast was made |
 | `predicted_price` | Reserved for future use |
 | `model_rf` | Individual Random Forest vote (`up`/`down`) |
@@ -385,6 +386,10 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **Future arrows: BDay-corrected** — prediction arrows on charts point to correct trading days (Friday → Monday, not Saturday)
 - ✅ **Public repository** — `smart-wallet-ml` with 10-day delayed charts, synced daily by GitHub Actions step 8
 - ✅ **Mobile-optimised email layout** — horizontal scroll tables with negative-margin trick for full-width display on ~412px viewports (Samsung Galaxy S26+)
+- ✅ **`ref_price` column** — stores the actual closing price at prediction time; `actual_change_pct` and the correctness check now use this as the reference instead of the ATR-estimated `pred_price`
+- ✅ **Correctness check fixed** — `correct = actual ≥ ref_price` (UP) / `actual ≤ ref_price` (DOWN); pure direction check, no longer requires the stock to reach the ATR target
+- ✅ **Execution order fixed** — validate past predictions and update ensemble weights *before* training, so models always train with today's accurate weights rather than yesterday's stale ones
+- ✅ **`save_model_metadata()` no longer retrains models** — `feature_importances_` are read from the models already trained in `train_all()`, eliminating a duplicate full training pass
 
 ---
 

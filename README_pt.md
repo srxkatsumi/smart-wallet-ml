@@ -123,11 +123,12 @@ Cada previsão fica guardada no `output/predictions_log.csv` com todos os detalh
 | `target_date` | Data a que a previsão se refere (ajustada por calendário de bolsa) |
 | `horizon` | 1, 2 ou 3 |
 | `direction` | `up` ou `down` |
-| `pred_price` | Preço de referência no momento da previsão |
+| `ref_price` | Preço de fecho no dia em que a previsão foi feita — referência real para verificar a direcção |
+| `pred_price` | Preço-alvo estimado pelo ATR (`fecho ± ATR × 0,5 × √horizonte`) — informativo |
 | `confidence` | Probabilidade ponderada do ensemble |
 | `actual_price` | Preenchido no dia da validação (inicialmente `NaN`) |
-| `actual_change_pct` | `(actual_price / pred_price − 1) × 100` — preenchido na validação |
-| `correct` | `True` / `False` (preenchido no dia da validação) |
+| `actual_change_pct` | `(actual_price / ref_price − 1) × 100` — preenchido na validação |
+| `correct` | `True` se actual ≥ ref_price (UP) ou actual ≤ ref_price (DOWN); preenchido na validação |
 | `atr_at_prediction` | ATR14 no momento em que a previsão foi feita |
 | `predicted_price` | Reservado para uso futuro |
 | `model_rf` | Voto individual do Random Forest (`up`/`down`) |
@@ -387,6 +388,10 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **Setas de previsão: datas corrigidas** — as setas apontam para os dias de negociação corretos (sexta → segunda, não sábado)
 - ✅ **Repositório público** — `smart-wallet-ml` com gráficos com atraso de 10 dias, sincronizado diariamente pelo GitHub Actions (step 8)
 - ✅ **Email otimizado para mobile** — tabelas com scroll horizontal e truque de margem negativa para largura total em viewports de ~412px (Samsung Galaxy S26+)
+- ✅ **Coluna `ref_price`** — guarda o preço de fecho real no dia da previsão; `actual_change_pct` e a verificação de acerto passam a usar esta referência em vez do `pred_price` estimado pelo ATR
+- ✅ **Verificação de acerto corrigida** — `correct = actual ≥ ref_price` (UP) / `actual ≤ ref_price` (DOWN); verificação de direcção pura, sem exigir que o ativo atinja o alvo ATR
+- ✅ **Ordem de execução corrigida** — validar previsões anteriores e actualizar pesos do ensemble *antes* do treino, para que os modelos treinem sempre com os pesos actualizados de hoje e não com os de ontem
+- ✅ **`save_model_metadata()` sem retreino** — `feature_importances_` lidas dos modelos já treinados em `train_all()`, eliminando uma passagem de treino duplicada
 
 ---
 

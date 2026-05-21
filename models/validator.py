@@ -62,13 +62,18 @@ def validate_past_predictions(df_log: pd.DataFrame,
         if future_prices.empty:
             continue
 
-        actual  = float(future_prices.iloc[0])
+        actual = float(future_prices.iloc[0])
+        # Use ref_price (close at prediction time) when available;
+        # fall back to pred_price for rows recorded before this column existed.
+        ref = row.get("ref_price")
+        if pd.isna(ref):
+            ref = row["pred_price"]
         correct = (
-            (row["direction"] == "up"   and actual > row["pred_price"] * 0.995) or
-            (row["direction"] == "down" and actual < row["pred_price"] * 1.005)
+            (row["direction"] == "up"   and actual >= ref) or
+            (row["direction"] == "down" and actual <= ref)
         )
         df_log.at[idx, "actual_price"]      = actual
-        df_log.at[idx, "actual_change_pct"] = round((actual / row["pred_price"] - 1) * 100, 4)
+        df_log.at[idx, "actual_change_pct"] = round((actual / ref - 1) * 100, 4)
         df_log.at[idx, "correct"]           = float(correct)
         updated += 1
 
@@ -174,6 +179,7 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
                 "target_date":       target_date_str,
                 "horizon":           day,
                 "direction":         direction,
+                "ref_price":         round(res["close_now"], 4),
                 "pred_price":        round(pred_price, 4),
                 "confidence":        round(conf, 4),
                 "actual_price":      np.nan,

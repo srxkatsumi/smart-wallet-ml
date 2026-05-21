@@ -194,8 +194,7 @@ def train_all(featured_data: dict, ensemble_weights: dict,
 
 # ── Model metadata ────────────────────────────────────────────────────────
 
-def save_model_metadata(resultados_ml: dict, featured_data: dict,
-                        my_tickers: list[str]):
+def save_model_metadata(resultados_ml: dict, my_tickers: list[str]):
     from config.settings import METADATA_FILE
     METADATA_COLS = (
         ["date", "ticker", "horizon", "model", "n_samples", "acc_cv_mean", "acc_cv_std"]
@@ -205,32 +204,19 @@ def save_model_metadata(resultados_ml: dict, featured_data: dict,
     if not METADATA_FILE.exists():
         pd.DataFrame(columns=METADATA_COLS).to_csv(METADATA_FILE, index=False)
 
-    hoje_str    = pd.Timestamp.now().strftime("%Y-%m-%d")
+    hoje_str     = pd.Timestamp.now().strftime("%Y-%m-%d")
     novas_linhas = []
 
     for ticker, res in resultados_ml.items():
         if ticker not in my_tickers:
             continue
-        df_t = featured_data[ticker]
-        n    = len(df_t)
+        n = len(res.get("df", []))
         for day in HORIZONS:
             h = res["horizons"][day]
-            for model_name in ["rf", "gb"]:
-                target_col = f"target_d{day}"
-                df_train   = df_t.iloc[:-day].copy()
-                X          = df_train[FEATURE_COLS].values
-                y          = df_train[target_col].values
-                sc         = RobustScaler()
-                X_sc       = sc.fit_transform(X)
-                if model_name == "rf":
-                    m = RandomForestClassifier(
-                        n_estimators=N_ESTIMATORS_RF, max_depth=MAX_DEPTH_RF,
-                        random_state=42, n_jobs=-1)
-                else:
-                    m = GradientBoostingClassifier(
-                        n_estimators=N_ESTIMATORS_GB, max_depth=MAX_DEPTH_GB,
-                        learning_rate=LEARNING_RATE_GB, random_state=42)
-                m.fit(X_sc, y)
+            for model_name, model_key in [("rf", "rf_model"), ("gb", "gb_model")]:
+                m = h.get(model_key)
+                if m is None or not hasattr(m, "feature_importances_"):
+                    continue
                 linha = {
                     "date":        hoje_str,
                     "ticker":      ticker,

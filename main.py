@@ -52,22 +52,24 @@ def main():
     from config.settings import MIN_SAMPLES_FEATURES
     featured_data = build_all_features(raw_data, context_data, MIN_SAMPLES_FEATURES)
 
-    # ── ML training ───────────────────────────────────────────────────────
+    # ── Validate past predictions + update weights (before training) ─────
+    from models.validator import (
+        validate_past_predictions, update_ensemble_weights, save_new_predictions,
+    )
+    hoje = pd.Timestamp.now().normalize()
+    df_log           = validate_past_predictions(df_log, featured_data)
+    ensemble_weights = update_ensemble_weights(df_log, ensemble_weights)
+
+    # ── ML training (uses today's updated weights) ────────────────────────
     from config.settings import MODELS_DIR
     from models.ensemble import train_all, save_model_metadata, monthly_recalibration
 
     monthly_recalibration(featured_data, my_tickers, MODELS_DIR)
     resultados_ml = train_all(featured_data, ensemble_weights, MODELS_DIR)
-    save_model_metadata(resultados_ml, featured_data, my_tickers)
+    save_model_metadata(resultados_ml, my_tickers)
 
-    # ── Validate past predictions + save today's ──────────────────────────
-    from models.validator import (
-        validate_past_predictions, update_ensemble_weights, save_new_predictions,
-    )
-    hoje    = pd.Timestamp.now().normalize()
-    df_log  = validate_past_predictions(df_log, featured_data)
-    ensemble_weights = update_ensemble_weights(df_log, ensemble_weights)
-    df_log  = save_new_predictions(df_log, resultados_ml, hoje)
+    # ── Save today's predictions ──────────────────────────────────────────
+    df_log = save_new_predictions(df_log, resultados_ml, hoje)
 
     # ── Portfolio P&L ─────────────────────────────────────────────────────
     from portfolio.pnl import calculate_etoro_pnl, calculate_etf_pnl
