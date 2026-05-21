@@ -39,7 +39,7 @@ E fazemos isso para 3 horizontes de tempo independentes: amanhã (D+1), depois d
 
 ### Por que 3 ensembles separados e não um só modelo?
 
-A maioria dos exemplos online treina um único modelo e depois "extrapola" os resultados para D+2 e D+3. Isso é um erro. O padrão que faz uma ação subir amanhã é estruturalmente diferente do padrão que faz ela subir em 3 dias. O movimento de amanhã é dominado por momentum de curto prazo e sentimento overnight. Um horizonte de 3 dias é mais influenciado pela persistência da tendência e pelo regime macro. Misturar esses horizontes num único modelo conflaciona dinâmicas diferentes. Por isso treinamos ensembles totalmente independentes:
+A maioria dos exemplos online treina um único modelo e depois "extrapola" os resultados para D+2 e D+3. Isso é um erro. O padrão que faz uma ação subir amanhã é estruturalmente diferente do padrão que faz ela subir em 3 dias. O movimento de amanhã é dominado por momentum de curto prazo e sentimento overnight. Um horizonte de 3 dias é mais influenciado pela persistência da tendência e pelo regime macro. Por isso treinamos ensembles totalmente independentes:
 
 ```
 Ensemble D+1 ──► RF_d1 · GB_d1 · SGD_d1  ──► pesos_d1
@@ -55,33 +55,31 @@ Usar um único modelo por horizonte seria um único ponto de falha. Algoritmos d
 
 | Algoritmo | Configuração | Por que foi escolhido |
 |-----------|-------------|----------------------|
-| **Random Forest** | 300 árvores, profundidade máx. 6 | Generalizador robusto. As árvores com bootstrap resistem bem ao overfitting em dados ruidosos de mercado. Funciona bem mesmo quando alguns indicadores são irrelevantes — situação comum em séries temporais financeiras onde a utilidade de cada feature muda com o regime. Funciona como âncora de estabilidade do ensemble. |
-| **Gradient Boosting** | 200 estimadores, taxa 0.05 | Captura padrões que o Random Forest não consegue capturar, corrigindo iterativamente os seus próprios erros residuais. Especialmente bom a detetar sinais de momentum de curto prazo e interações subtis entre indicadores. A taxa de aprendizagem baixa (0.05) atrasa a convergência intencionalmente — impede que o modelo memorize ruído. |
-| **SGD Classifier** | log_loss | Um modelo linear incluído deliberadamente como contrapeso. Quando os dois modelos não-lineares concordam com algo que é na verdade ruído, o SGD — que não consegue modelar interações não-lineares — age como voto discordante e puxa o ensemble para estimativas mais conservadoras. A sua simplicidade é uma feature, não uma limitação. |
+| **Random Forest** | 300 árvores, profundidade máx. 6 | Generalizador robusto. As árvores com bootstrap resistem bem ao overfitting em dados ruidosos de mercado. Funciona bem mesmo quando alguns indicadores são irrelevantes — situação comum em séries temporais financeiras. Funciona como âncora de estabilidade do ensemble. |
+| **Gradient Boosting** | 200 estimadores, taxa 0.05 | Captura padrões que o Random Forest não consegue capturar, corrigindo iterativamente os seus próprios erros residuais. Especialmente bom a detetar sinais de momentum de curto prazo e interações subtis entre indicadores. A taxa de aprendizagem baixa (0.05) impede que o modelo memorize ruído. |
+| **SGD Classifier** | log_loss | Um modelo linear incluído deliberadamente como contrapeso. Quando os dois modelos não-lineares concordam com algo que é na verdade ruído, o SGD age como voto discordante e puxa o ensemble para estimativas mais conservadoras. A sua simplicidade é uma feature, não uma limitação. |
 
-O modelo SGD passa por **recalibração mensal completa**: refit do scaler + retreino do zero. Isso é necessário porque o SGD usa features normalizadas. Se a distribuição de preços e indicadores mudar gradualmente (por exemplo, após uma grande repricing do mercado), o scaler antigo já não representa os dados atuais, e os coeficientes lineares do modelo ficam ancorados a uma baseline obsoleta. A recalibração mensal mantém a âncora linear alinhada com as condições atuais do mercado, sem o overhead de recalibrar diariamente.
+O modelo SGD passa por **recalibração mensal completa**: refit do scaler + retreino do zero. Isso é necessário porque o SGD usa features normalizadas. Se a distribuição de preços e indicadores mudar gradualmente, o scaler antigo já não representa os dados atuais e os coeficientes lineares ficam ancorados a uma baseline obsoleta.
 
 ### As features — o que o modelo "vê" de cada ativo
 
-Além do preço histórico, o modelo recebe uma série de indicadores técnicos calculados automaticamente, mais contexto externo de mercado:
-
 | Feature | O que representa | Por que importa |
 |---------|-----------------|-----------------|
-| `sma_20`, `sma_50` | Médias móveis de 20 e 50 dias | Alinhamento de tendência de curto vs médio prazo. Os cruzamentos entre elas são um sinal clássico de mudança de regime. |
-| `rsi_14` | RSI de 14 dias | Deteta se o ativo está sobreextendido em qualquer direção. RSI > 70 (sobrecomprado) e RSI < 30 (sobrevendido) são historicamente condições de mean-reversion. |
-| `macd`, `macd_signal` | Linha MACD e linha de sinal | Captura momentum e reversões de tendência através de cruzamentos. Útil para detetar quando uma tendência está a ganhar ou a perder força. |
-| `bb_upper`, `bb_lower`, `bb_width` | Bandas de Bollinger (20 dias, 2σ) | Codifica tanto o regime de volatilidade como a extremidade do preço. Quando o preço atinge a banda superior/inferior, o modelo pode fatorar a probabilidade de reversão. A largura da banda sinaliza se o ativo está num período calmo ou explosivo. |
-| `atr_14` | Average True Range de 14 dias | O movimento diário esperado em termos absolutos. Ajuda o modelo a distinguir entre um movimento de +1% que está dentro do intervalo normal e um que é excecional. |
-| `ret_1d`, `ret_5d` | Retorno dos últimos 1 e 5 dias | Features de momentum direto. Os retornos recentes estão entre as features mais preditivas para horizontes curtos. |
-| `spy_ret_1d` | Retorno do S&P 500 (T-1) | Contexto global do mercado. A NVDA num dia após o S&P cair 2% comporta-se de forma diferente da NVDA num dia neutro. Esta feature permite que o modelo condicione a sua previsão ao estado do mercado amplo. |
-| `vix_level` | Nível de fecho do VIX (T-1) | A volatilidade implícita do mercado — o "termômetro do medo". Um VIX de 30 significa um ambiente fundamentalmente diferente de um VIX de 14. Sem isso, o modelo não consegue distinguir comportamentos de bull market e de crise. |
-| `vix_change` | Variação diária do VIX (T-1) | Captura a *aceleração* do medo, não só o seu nível. Um VIX a subir rapidamente frequentemente leva a resultados diferentes do mesmo nível absoluto de VIX que se manteve estável durante semanas. |
+| `sma_20`, `sma_50` | Médias móveis de 20 e 50 dias | Alinhamento de tendência de curto vs médio prazo. |
+| `rsi_14` | RSI de 14 dias | Deteta se o ativo está sobreextendido. RSI > 70 (sobrecomprado) e RSI < 30 (sobrevendido) são historicamente condições de mean-reversion. |
+| `macd`, `macd_signal` | Linha MACD e linha de sinal | Captura momentum e reversões de tendência através de cruzamentos. |
+| `bb_upper`, `bb_lower`, `bb_width` | Bandas de Bollinger (20 dias, 2σ) | Codifica o regime de volatilidade e a extremidade do preço. |
+| `atr_14` | Average True Range de 14 dias | O movimento diário esperado em termos absolutos. |
+| `ret_1d`, `ret_5d` | Retorno dos últimos 1 e 5 dias | Features de momentum direto. |
+| `spy_ret_1d` | Retorno do S&P 500 (T-1) | Contexto global do mercado. |
+| `vix_level` | Nível de fecho do VIX (T-1) | O "termómetro do medo" do mercado. |
+| `vix_change` | Variação diária do VIX (T-1) | Captura a *aceleração* do medo, não só o seu nível. |
 
-**Por que T-1 para as features de contexto externo:** quando o pipeline corre às 17h45 (Barcelona), os mercados europeus acabaram de fechar mas os EUA ainda estão abertos. O fecho de NY do dia anterior (T-1) é o dado mais recente, completo e final disponível para o SPY e o VIX. Usar os valores em progresso de T-0 constituiria data leakage — o modelo estaria a ser treinado com informação que ainda não existia no momento da previsão.
+**Por que T-1 para as features de contexto externo:** quando o pipeline corre às 17h45, os mercados europeus acabaram de fechar mas os EUA ainda estão abertos. O fecho de NY do dia anterior (T-1) é o dado mais recente e completo disponível. Usar os valores em progresso de T-0 constituiria data leakage.
 
 ### Pesos adaptativos com decaimento temporal
 
-Depois de cada ciclo de validação, os pesos de cada modelo no ensemble são atualizados com base no histórico real de acertos, com decaimento exponencial:
+Depois de cada ciclo de validação, os pesos de cada modelo são atualizados com decaimento exponencial:
 
 ```
 peso(modelo) ∝ acurácia(modelo) · Σ decaimento^(dias_atrás)
@@ -89,11 +87,54 @@ peso(modelo) ∝ acurácia(modelo) · Σ decaimento^(dias_atrás)
 
 Acertos mais recentes pesam mais do que acertos antigos. Se um modelo começar a errar sistematicamente, o ensemble automaticamente passa a confiar menos nele — sem intervenção manual.
 
-**Por que decaimento exponencial e não uma janela fixa?** Uma janela fixa dá igual importância a um acerto de 28 dias atrás e a um de ontem. Os mercados mudam. Um modelo que era o melhor preditor em fevereiro pode simplesmente ter encontrado um padrão num mercado em tendência que já não existe depois de uma mudança de regime. O decaimento exponencial garante que a performance recente tenha peso desproporcionalmente maior, tornando o sistema reativo a mudanças de regime em vez de ficar preso no seu próprio passado.
+### Datas-alvo por calendário de mercado — por que isso importa
 
-### Datas-alvo em dias úteis — por que isso importa
+As previsões usam `pandas-market-calendars` com mapeamento por bolsa para calcular as datas-alvo. `pd.offsets.BDay(N)` trata fins de semana mas ignora feriados de mercado. Por exemplo, se hoje é a sexta-feira antes de um feriado bancário dos EUA, `BDay(1)` devolve segunda, mas `pandas-market-calendars` para a NYSE devolve terça — a sessão real seguinte. As bolsas europeias (LSE, XETR, XAMS, XPAR, XMIL, SIX) têm calendários de feriados diferentes da NYSE. Uma data-alvo inválida produziria validações NaN silenciosas que corrompem o histórico de acurácia.
 
-As previsões usam `pd.offsets.BDay(N)` para calcular as datas-alvo, e não `pd.Timedelta(days=N)`. A diferença: se hoje é sexta-feira, D+1 usando Timedelta resolve para sábado — um dia sem negociação, sem preço. D+1 usando BDay resolve para segunda-feira, a próxima sessão real. Usar dias de calendário faria o validador procurar preços que não existem, produzindo validações NaN silenciosas e corrompendo o tracking de acurácia.
+Mapeamento de cada ticker para a sua bolsa:
+
+| Bolsa | Calendário | Tickers |
+|-------|-----------|---------|
+| NYSE (padrão) | `NYSE` | LLY, NVDA, BABA, BTC-USD, watchlist EUA |
+| Londres | `LSE` | EXUS.L, SGLN.L, CSPX.L |
+| Frankfurt / Xetra | `XETR` | ALV.DE, SIE.DE, BMW.DE, BAS.DE, DHER.DE, VWCE.DE, ICGA.DE |
+| Amsterdão | `XAMS` | EMIM.AS, IWDA.AS |
+| Paris | `XPAR` | MEUD.PA |
+| Milão | `XMIL` | SJPA.MI |
+| Bolsa Suíça | `SIX` | NESN.SW, NOVN.SW, ROG.SW |
+
+### Estratificação de acurácia — carteira vs watchlist
+
+A watchlist contém ~90 tickers usados como contexto macroeconómico. Não são ativos detidos — são sinais de treino. A acurácia dos tickers da watchlist é estruturalmente mais baixa e nunca deve ser misturada com a acurácia da carteira. O sistema rastreia e reporta separadamente:
+
+- **Acurácia da carteira** — o número que importa para as decisões do dia a dia
+- **Acurácia da watchlist** — qualidade interna do sinal, não reportada no email
+
+Esta distinção foi introduzida depois de observar uma acurácia misturada de 28% que fazia o sistema parecer aleatório. A figura correta da carteira era 33% — ainda baixa por falta de histórico de validações suficiente (< 30 amostras por ticker nesse momento), mas estruturalmente diferente.
+
+### Validação e auditoria completa
+
+Cada previsão fica guardada no `output/predictions_log.csv` com todos os detalhes:
+
+| Coluna | Descrição |
+|--------|-----------|
+| `ticker` | Identificador do ativo |
+| `pred_date` | Data em que a previsão foi feita |
+| `target_date` | Data a que a previsão se refere (ajustada por calendário de bolsa) |
+| `horizon` | 1, 2 ou 3 |
+| `direction` | `up` ou `down` |
+| `pred_price` | Preço de referência no momento da previsão |
+| `confidence` | Probabilidade ponderada do ensemble |
+| `actual_price` | Preenchido no dia da validação (inicialmente `NaN`) |
+| `actual_change_pct` | `(actual_price / pred_price − 1) × 100` — preenchido na validação |
+| `correct` | `True` / `False` (preenchido no dia da validação) |
+| `atr_at_prediction` | ATR14 no momento em que a previsão foi feita |
+| `predicted_price` | Reservado para uso futuro |
+| `model_rf` | Voto individual do Random Forest (`up`/`down`) |
+| `model_gb` | Voto individual do Gradient Boosting |
+| `model_sgd` | Voto individual do SGD Classifier |
+
+Nada é apagado. O histórico completo fica preservado indefinidamente. Novas colunas são adicionadas via migração retrocompatível em `data/storage.py` — as linhas existentes são preenchidas retroativamente onde possível.
 
 ### Sinal de consenso
 
@@ -103,19 +144,60 @@ BEARISH  → os 3 horizontes preveem QUEDA
 MISTO    → há discordância entre os horizontes
 ```
 
-### Validação e auditoria completa
+---
 
-Cada previsão fica guardada no CSV com todos os detalhes. Quando a data-alvo chega, o sistema preenche o preço real e registra se acertou ou errou. Nada é apagado. O histórico completo fica preservado e auditável.
+## Email diário
 
-| Coluna | Descrição |
-|--------|-----------|
-| `pred_date` | Data em que a previsão foi feita |
-| `target_date` | Data a que a previsão se refere (ajustada para dias úteis) |
-| `horizon` | 1, 2 ou 3 |
-| `direction` | `up` ou `down` |
-| `confidence` | Probabilidade ponderada do ensemble |
-| `actual_price` | Preenchido no dia da validação (inicialmente `NaN`) |
-| `correct` | `True` / `False` (preenchido no dia da validação) |
+O email HTML é desenhado para ser lido em telemóvel. Tem quatro secções:
+
+### 1 — Tabela ML de previsões
+
+| Coluna | Conteúdo |
+|--------|---------|
+| Ativo | Ticker + nome do ativo |
+| Preço | Preço de fecho atual (em EUR onde aplicável via câmbio) |
+| Var% | Variação fecho-a-fecho do dia anterior |
+| D+1 | Previsão direcional + confiança |
+| D+2 | Previsão direcional + confiança |
+| D+3 | Previsão direcional + confiança |
+| Consenso | BULLISH / BEARISH / MISTO |
+
+Cada linha é prefixada com ✅ ou ❌ — se a previsão D+1 de ontem foi correta ou errada.
+
+**Legenda:** ✅ acertou a previsão D+1 do dia anterior · ❌ errou a previsão D+1 do dia anterior
+
+### 2 — Tabela ETFs de acumulação
+
+Projeções de longo prazo para os ETFs de acumulação a 1 / 3 / 5 / 10 anos nos cenários pessimista / base / optimista. Valores em EUR.
+
+### 3 — Painel de acurácia
+
+Acurácia direcional cumulativa **apenas para os tickers da carteira**, nos últimos 30 dias úteis. Com gráfico por ativo e figura global de carteira.
+
+### 4 — Gráficos
+
+Um gráfico por ativo da carteira com os últimos 120 dias úteis:
+- Preço + SMA20 + SMA50 + Bandas de Bollinger
+- Linha de preço de abertura de posição
+- Setas de previsão D+1 / D+2 / D+3 (datas por calendário de bolsa)
+- RSI (14 dias)
+- MACD + histograma
+- Curva de acurácia cumulativa D+1 (depois de ≥ 3 validações disponíveis)
+
+Os marcadores de validação nos gráficos mostram **apenas D+1**: ● para previsão correta e × para errada. D+2 e D+3 são treinados separadamente e aparecem na tabela do email, mas não são plotados no gráfico para evitar sobreposição de marcadores na mesma data-alvo.
+
+---
+
+## Repositório público
+
+Os gráficos são publicados num repositório público separado ([smart-wallet-ml](https://github.com/srxkatsumi/smart-wallet-ml)) com um **atraso de 10 dias em janela deslizante**. O repo público contém:
+
+- Um gráfico por ativo da carteira por dia de negociação, para a janela D-19 a D-10
+- Um README gerado automaticamente com a data da última atualização
+
+Não são divulgados preços de entrada, posições, volumes ou outros dados da carteira. Os nomes dos ficheiros de gráfico contêm os tickers — isso é intencional.
+
+A sincronização corre como step 8 do workflow GitHub Actions. Clona o repo público, copia os gráficos relevantes, gera o README com as datas corretas via `scripts/gen_public_readme.py` e faz push. O atraso de 10 dias impede cópia de sinais em tempo real.
 
 ---
 
@@ -130,6 +212,7 @@ Cada previsão fica guardada no CSV com todos os detalhes. Quando a data-alvo ch
 | ALV.DE | Allianz SE |
 | BTC-USD | Bitcoin |
 | BABA | Alibaba Group ADR |
+| DHER.DE | Delivery Hero SE |
 
 **ETFs de acumulação (longo prazo):**
 
@@ -142,36 +225,36 @@ Cada previsão fica guardada no CSV com todos os detalhes. Quando a data-alvo ch
 | MEUD.PA | Core Stoxx Europe 600 |
 | SJPA.MI | iShares Core MSCI Japan IMI ETF |
 
-### Watchlist ML (universo de contexto macroeconômico)
+### Watchlist ML (universo de contexto macroeconómico)
 
-A watchlist expande o universo de treinamento além da carteira pessoal. Os modelos aprendem correlações entre ativos e sinais de regime de mercado a partir desse dataset mais amplo, produzindo previsões mais contextualmente conscientes para os ativos da carteira.
+A watchlist expande o universo de treinamento além da carteira pessoal. Os modelos aprendem correlações entre ativos e sinais de regime de mercado a partir desse dataset mais amplo.
 
 | Grupo | Tickers | Por que está aqui |
 |-------|---------|-------------------|
-| Big Tech EUA | AAPL MSFT GOOGL AMZN META TSLA NVDA | Sentimento geral do setor de tecnologia |
-| Semicondutores | AMD AVGO ASML TSM | Benchmark setorial para comparar com a NVDA |
+| Big Tech EUA | AAPL MSFT GOOGL AMZN META TSLA NVDA | Sentimento geral do setor tecnológico |
+| Semicondutores | AMD AVGO ASML TSM | Benchmark setorial para a NVDA |
 | Blue Chips Suíças | NESN.SW NOVN.SW ROG.SW | Sinal europeu defensivo |
 | Farmacêuticas / Saúde | NVO LLY JNJ PFE AZN MRK ABBV UNH IBB XBI | Contexto setorial para a LLY |
 | Ações Alemãs | ALV.DE SIE.DE BMW.DE BAS.DE | Proxy do macro europeu |
-| ETFs da carteira | EXUS.L ICGA.DE SGLN.L EMIM.AS MEUD.PA SJPA.MI | Cobertura direta da carteira pessoal |
-| ETFs de índice global | VWCE.DE IWDA.AS CSPX.L | Regime amplo do mercado global |
+| ETFs da carteira | EXUS.L ICGA.DE SGLN.L EMIM.AS MEUD.PA SJPA.MI | Cobertura direta da carteira |
+| ETFs de índice global | VWCE.DE IWDA.AS CSPX.L | Regime amplo do mercado |
 | Cripto | BTC-USD ETH-USD | Regime do mercado cripto |
 | EM tech / recursos | BABA TSM BHP RIO VALE | Sinal macro de emergentes |
 | Commodities tradicionais | GLD SLV XOM CVX COPX | Proxy geopolítico e de inflação |
-| Novas commodities | URA LIT DBA | Urânio (energia para datacenters de IA), Lítio (cadeia da EV), Agricultura (inflação real) |
-| Setores defensivos | XLP XLU | Hedge de crise — sobem quando há rotação para risk-off |
-| Obrigações | TLT AGG HYG TIP EMB LQD SHY | Regime de taxas de juro e condições de crédito |
+| Novas commodities | URA LIT DBA | Urânio (datacenters de IA), Lítio (EV), Agricultura (inflação) |
+| Setores defensivos | XLP XLU | Hedge de crise — sobem em rotações risk-off |
+| Obrigações | TLT AGG HYG TIP EMB LQD SHY | Regime de taxas de juro e crédito |
 | Índia | INDA INFY WIT | Maior EM em crescimento, sinal de outsourcing tecnológico |
 | Brasil | EWZ ITUB | EM ligado a commodities, proxy de risco BRL |
-| REITs | VNQ VNQI O PLD | Indicador de sensibilidade às taxas de juro |
+| REITs | VNQ VNQI O PLD | Indicador de sensibilidade às taxas |
 | Volatilidade | UVXY VXX | Procura de hedging e medo em tempo real |
 | Setores EUA | XLF XLK XLE XLV XLI XLY | Deteção de rotação setorial |
-| China | MCHI FXI | Cobertura direta para contexto BABA e ICGA.DE |
+| China | MCHI FXI | Cobertura para BABA e ICGA.DE |
 | Japão | EWJ | Contexto para SJPA.MI |
 | Europa ampla | VGK | Largura do mercado europeu |
-| América Latina | ILF | Sinal de diversificação EM regional |
+| América Latina | ILF | Sinal EM regional |
 | Temáticos | ICLN CIBR BOTZ ITA PHO | Energia limpa, cibersegurança, robótica, defesa, água |
-| Bancos regionais EUA | KRE | Indicador de stress bancário de pequeno e médio porte |
+| Bancos regionais EUA | KRE | Indicador de stress bancário |
 | Dividendos / qualidade | VYM NOBL | Sinal do fator qualidade |
 | Mercado amplo | QQQ IWM RSP | Rotação crescimento vs valor vs equal-weight |
 | Mercados de fronteira | FM ASEA | Sinal EM periférico |
@@ -183,11 +266,14 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 ```
 ├── main.py                          ← orquestrador do pipeline
 ├── config/
+│   ├── settings.py                  ← constantes, caminhos, hiperparâmetros, TICKER_CALENDAR
 │   ├── my_portfolio.json            ← carteira pessoal (tickers, unidades, preços de entrada)
+│   ├── portfolio.json               ← config da carteira com nomes dos ativos
 │   └── watchlist.json               ← universo estendido de treino ML
 ├── data/
 │   ├── downloader.py                ← download de dados de mercado via yfinance
-│   └── storage.py                   ← leitura/escrita de CSVs
+│   ├── storage.py                   ← leitura/escrita de CSVs + migrações retrocompatíveis
+│   └── calendars.py                 ← cálculo de datas-alvo por calendário de bolsa
 ├── features/
 │   └── engineering.py               ← indicadores técnicos + matriz de features ML
 ├── models/
@@ -201,20 +287,22 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 ├── reports/
 │   ├── charts.py                    ← geração de gráficos (matplotlib)
 │   └── email_report.py              ← construção do email HTML
+├── scripts/
+│   └── gen_public_readme.py         ← gera README do repo público (chamado pelo CI)
 ├── output/
-│   ├── predictions_log.csv          ← histórico completo de previsões e validações
+│   ├── predictions_log.csv          ← histórico completo de previsões e validações (nunca apagado)
 │   ├── ensemble_weights.json        ← pesos atuais por modelo e por horizonte
 │   ├── model_metadata.csv           ← feature importances diárias (RF + GB)
 │   ├── resumo_diario.html           ← email HTML mais recente (commitado diariamente)
 │   ├── ultima_recalibracao.json     ← timestamp da última recalibração do SGD
 │   ├── models/                      ← modelos serializados (.joblib)
-│   └── charts/                      ← um gráfico por ativo por dia (limpeza automática após 30 dias)
+│   └── charts/                      ← um gráfico por ativo por dia (limpeza automática 30 dias)
 ├── .github/
 │   └── workflows/
-│       └── executar_diario.yml      ← agendamento automático diário
+│       └── executar_diario.yml      ← automação diária (9 steps)
 ├── requirements.txt
 ├── README.md                        ← versão em inglês
-└── README_pt.md                     ← este arquivo (português)
+└── README_pt.md                     ← este ficheiro (português)
 ```
 
 ---
@@ -228,26 +316,29 @@ Seg–Sex 17h45 Barcelona (15h45 UTC, compensando ~2h de delay típico do GitHub
   │   └─ lê predictions_log.csv — se a data de hoje já existe, sai em ~10s
   │
   └─ Job 2: executar pipeline (só se ainda não correu hoje)
-      ├─ Clonar repositório
-      ├─ Instalar Python 3.11 + dependências
-      ├─ Executar main.py (~8 minutos)
+      ├─ 1. Checkout do repositório
+      ├─ 2. Instalar Python 3.11
+      ├─ 3. Instalar dependências (pip install -r requirements.txt)
+      ├─ 4. Executar main.py (~8 minutos)
       │   ├─ Baixar preços + câmbio + VIX + SPY
       │   ├─ Calcular features
       │   ├─ Validar previsões anteriores
+      │   ├─ Recalibração mensal do SGD (se necessário)
       │   ├─ Treinar modelos com histórico atualizado
       │   ├─ Atualizar pesos do ensemble
       │   ├─ Guardar novas previsões D+1 / D+2 / D+3
       │   ├─ Gerar gráficos
       │   └─ Construir email HTML
-      ├─ Commit dos ficheiros de output → push
-      └─ Enviar email HTML via Gmail SMTP
+      ├─ 5. Commit dos ficheiros de output → push
+      ├─ 6. Preparar data para assunto do email
+      ├─ 7. Enviar email HTML via Gmail SMTP
+      ├─ 8. Sincronizar repo público (gráficos com atraso 10 dias + README gerado)
+      └─ 9. Em caso de falha: enviar email de notificação de erro
 ```
 
-**Por que três entradas de cron:** o agendador do GitHub Actions está sujeito a delays de fila de 2 a 3 horas sob alta carga. Três gatilhos de cron separados (com 30 minutos de diferença) são registados, mas a verificação anti-duplicação no Job 1 garante que o pipeline só executa uma vez por dia, mesmo que múltiplos crons disparem. Isso garante a entrega sem necessitar de um plano Actions pago com agendamento prioritário.
+**Por que três entradas de cron:** o agendador do GitHub Actions pode atrasar 2–3 horas. Três crons separados (com 30 min de diferença) garantem a execução. A verificação anti-duplicação no Job 1 garante que o pipeline só executa uma vez por dia.
 
-**Por que 17h45 Barcelona:** Frankfurt, Paris, Londres, Milão e Amsterdam fecham às 17h30 CEST. Ao correr às 17h45, o pipeline apanha o fecho real do dia para todos os ETFs europeus da carteira (EMIM.AS, MEUD.PA, SJPA.MI, ICGA.DE, EXUS.L, SGLN.L). As ações americanas (LLY, NVDA, BABA) ainda estão abertas a essa hora — o yfinance devolve o preço intraday mais recente, não o fecho do dia.
-
-Se falhar, o GitHub envia um email de notificação automaticamente.
+**Por que 17h45 Barcelona:** Frankfurt, Paris, Londres, Milão e Amsterdão fecham às 17h30 CEST. Ao correr às 17h45, o pipeline captura o fecho real do dia para todos os ETFs europeus da carteira.
 
 ---
 
@@ -255,14 +346,15 @@ Se falhar, o GitHub envia um email de notificação automaticamente.
 
 ```
 Python 3.11
-├── yfinance          — dados de mercado em tempo real (preços, câmbio, VIX, SPY)
-├── scikit-learn      — RandomForestClassifier, GradientBoostingClassifier, SGDClassifier
-├── pandas / numpy    — processamento de dados e cálculo de features
-├── joblib            — serialização de modelos
-└── matplotlib        — geração de gráficos
+├── yfinance                 — dados de mercado (preços, câmbio, VIX, SPY)
+├── scikit-learn             — RandomForestClassifier, GradientBoostingClassifier, SGDClassifier
+├── pandas / numpy           — processamento de dados e cálculo de features
+├── joblib                   — serialização de modelos
+├── matplotlib               — geração de gráficos
+└── pandas-market-calendars  — calendários de feriados por bolsa para cálculo de datas-alvo
 
-GitHub Actions        — automação diária gratuita
-Gmail SMTP            — entrega de email HTML
+GitHub Actions               — automação diária gratuita
+Gmail SMTP                   — entrega de email HTML
 ```
 
 ---
@@ -270,9 +362,48 @@ Gmail SMTP            — entrega de email HTML
 ## Contexto sobre acurácia
 
 - Uma previsão direcional aleatória tem 50% de acurácia por definição.
-- Este sistema tem como alvo 55–65% de acurácia direcional nos ativos da carteira pessoal.
-- Acurácia abaixo de 52% ao longo de 30+ validações é sinal de degradação do modelo.
+- Este sistema tem como alvo 55–65% de acurácia direcional **apenas nos tickers da carteira**.
+- Acurácia abaixo de 52% ao longo de 30+ validações da carteira é sinal de degradação.
+- A acurácia não tem significado estatístico antes de ~30 validações por ticker — o sistema precisa de tempo para construir uma amostra representativa.
 - Nenhum número de acurácia, por si só, justifica decisões financeiras — este é um projeto de análise pessoal, não aconselhamento financeiro.
+
+---
+
+## Changelog
+
+### Migração: Jupyter Notebook → Python modular
+O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para um package Python modular para permitir execução automática via GitHub Actions, gestão de dependências e manutenibilidade.
+
+### Melhorias implementadas
+- ✅ **Package Python modular** — `main.py` + `data/` + `features/` + `models/` + `portfolio/` + `reports/`
+- ✅ **Tabela ML de 7 colunas no email** — Ativo · Preço · **Var%** · D+1 · D+2 · D+3 · Consenso
+- ✅ **Coluna Var%** — variação fecho-a-fecho do dia anterior por ativo no email
+- ✅ **Legenda ✅/❌ no email** — clarifica o significado dos ícones (acurácia D+1 do dia anterior)
+- ✅ **Estratificação de acurácia** — acurácia da carteira separada da watchlist; reportadas de forma independente
+- ✅ **Novas colunas no predictions_log.csv** — `actual_change_pct`, `atr_at_prediction`, `predicted_price`, `model_rf`, `model_gb`, `model_sgd`; migração retrocompatível em `storage.py`
+- ✅ **ATR no momento da previsão guardado** — `atr_at_prediction` captura o contexto de volatilidade de mercado no momento em que cada previsão foi feita
+- ✅ **Datas-alvo por calendário de bolsa** — `pandas-market-calendars` com mapeamento por bolsa substitui `pd.offsets.BDay` (que ignorava feriados de mercado)
+- ✅ **Marcadores nos gráficos: apenas D+1** — os marcadores de validação nos gráficos mostram só previsões D+1; sobreposição D+2/D+3 na mesma data-alvo eliminada
+- ✅ **Setas de previsão: datas corrigidas** — as setas apontam para os dias de negociação corretos (sexta → segunda, não sábado)
+- ✅ **Repositório público** — `smart-wallet-ml` com gráficos com atraso de 10 dias, sincronizado diariamente pelo GitHub Actions (step 8)
+- ✅ **Email otimizado para mobile** — tabelas com scroll horizontal e truque de margem negativa para largura total em viewports de ~412px (Samsung Galaxy S26+)
+
+---
+
+## Roadmap
+
+| Item | Descrição |
+|------|-----------|
+| ⬜ Walk-Forward Validation | Substituir o split único treino/teste por walk-forward rolling para obter uma estimativa de acurácia fora da amostra mais honesta |
+| ⬜ Regime de mercado como feature explícita | Adicionar uma label de regime (trending / mean-reverting / alta vol) como feature de input para os modelos |
+| ⬜ Features de eventos fundamentalistas | Datas de resultados trimestrais, semanas FOMC, expiração de opções — eventos que alteram estruturalmente o comportamento de curto prazo |
+| ⬜ Feature importance drift como alerta | Monitorizar se as features mais importantes estão a mudar ao longo do tempo; alertar quando o ranking muda significativamente |
+| ⬜ Download em batches com sleep | Rate-limit nos pedidos ao yfinance para evitar falhas transitórias em watchlists grandes |
+| ⬜ Testes unitários | Cobertura pytest para feature engineering, validator e lógica de atualização de pesos |
+| ⬜ Matriz de correlação no email | Heatmap de correlação entre os ativos da carteira para identificar risco de diversificação |
+| ⬜ Correcção projecção SGLN.L | As projeções do Gold ETC usam taxas de crescimento de equity — substituir por premissas de retorno de longo prazo adequadas a commodities |
+| ⬜ Git tags semânticos | Tag em cada milestone de versão (v1, v2, …) para ancorar o changelog no histórico git |
+| ⬜ `predictions_log_public.csv` | Versão pública e anonimizada do log de previsões, sem preços de entrada nem dimensões de posição |
 
 ---
 

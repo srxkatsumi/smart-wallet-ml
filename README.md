@@ -15,9 +15,9 @@ This system tracks a real investment portfolio (eToro equities + long-term accum
 
 The output is an HTML email report delivered daily with:
 - Portfolio P&L in EUR (including fees and breakeven)
-- D+1 / D+2 / D+3 directional forecasts per asset
+- D+1 / D+2 / D+3 directional forecasts per asset with previous-day Var%
 - Long-term ETF projections (1 / 3 / 5 / 10 years)
-- Model accuracy tracking (last 30 business days)
+- Model accuracy tracking, stratified by portfolio vs watchlist
 
 ---
 
@@ -85,9 +85,30 @@ More recent correct predictions carry more weight than older ones. If a model st
 
 **Why exponential decay rather than a flat rolling window:** a flat window gives equal importance to a correct prediction from 28 days ago and one from yesterday. Markets shift. A model that was the best predictor in February may have simply found a pattern in a trending market that no longer exists after a regime change. The exponential decay function ensures recent performance is weighted disproportionately more, making the system reactive to regime changes rather than stuck in its own past.
 
-### Business day target dates — why this matters
+### Calendar-aware target dates — why this matters
 
-Forecasts use `pd.offsets.BDay(N)` to compute target dates, not `pd.Timedelta(days=N)`. The difference: if today is Friday, D+1 using Timedelta resolves to Saturday — a non-trading day with no price. D+1 using BDay resolves to Monday, the next actual trading session. Using calendar days would cause the validator to look for prices that do not exist, producing silent NaN validations and corrupting the accuracy tracking.
+Forecasts use `pandas-market-calendars` with per-exchange mappings to compute target dates. `pd.offsets.BDay(N)` handles weekends but ignores market holidays. For example, if today is the Friday before a US bank holiday, `BDay(1)` returns Monday, but `pandas-market-calendars` for NYSE returns Tuesday — the actual next trading session. European exchanges (LSE, XETR, XAMS, XPAR, XMIL, SIX) have different holiday calendars from NYSE, and holiday-unaware date computation would silently produce target dates with no price data, corrupting the validation audit trail.
+
+Each ticker is mapped to its exchange:
+
+| Exchange | Calendar | Tickers |
+|----------|----------|---------|
+| NYSE (default) | `NYSE` | LLY, NVDA, BABA, BTC-USD, watchlist US |
+| London | `LSE` | EXUS.L, SGLN.L, CSPX.L |
+| Frankfurt / Xetra | `XETR` | ALV.DE, SIE.DE, BMW.DE, BAS.DE, DHER.DE, VWCE.DE, ICGA.DE |
+| Amsterdam | `XAMS` | EMIM.AS, IWDA.AS |
+| Paris | `XPAR` | MEUD.PA |
+| Milan | `XMIL` | SJPA.MI |
+| Swiss Exchange | `SIX` | NESN.SW, NOVN.SW, ROG.SW |
+
+### Accuracy stratification — portfolio vs watchlist
+
+The watchlist contains ~90 tickers used as macro context. These are not held assets — they are training signals. Accuracy figures for watchlist tickers are structurally lower (less data history, no entry-price anchoring) and should never be mixed with portfolio accuracy. The system tracks and reports accuracy separately:
+
+- **Portfolio accuracy** — the number that matters for day-to-day decisions
+- **Watchlist accuracy** — internal signal quality, not reported in the email
+
+This distinction was introduced after observing a 28% blended accuracy figure that made the system appear to be performing at chance. The correct portfolio-only figure was 33% — still low due to limited validation history (< 30 samples per ticker at that point), but structurally different.
 
 ### Validation and audit trail
 
@@ -95,15 +116,23 @@ Every forecast written to `output/predictions_log.csv` includes:
 
 | Column | Description |
 |--------|-------------|
+| `ticker` | Asset identifier |
 | `pred_date` | Date the forecast was made |
-| `target_date` | Date the forecast refers to (BDay-adjusted) |
+| `target_date` | Date the forecast refers to (calendar-adjusted per exchange) |
 | `horizon` | 1, 2, or 3 |
 | `direction` | `up` or `down` |
+| `pred_price` | Reference price at time of forecast |
 | `confidence` | Ensemble weighted probability |
 | `actual_price` | Filled on validation day (initially `NaN`) |
+| `actual_change_pct` | `(actual_price / pred_price − 1) × 100` — filled on validation |
 | `correct` | `True` / `False` (filled on validation day) |
+| `atr_at_prediction` | ATR14 at the time the forecast was made |
+| `predicted_price` | Reserved for future use |
+| `model_rf` | Individual Random Forest vote (`up`/`down`) |
+| `model_gb` | Individual Gradient Boosting vote |
+| `model_sgd` | Individual SGD Classifier vote |
 
-Nothing is deleted or overwritten. The full audit trail is preserved indefinitely.
+Nothing is deleted or overwritten. The full audit trail is preserved indefinitely. New columns are added via a backwards-compatible migration block in `data/storage.py` — existing rows are backfilled where possible (e.g., `actual_change_pct` is derived from already-stored `actual_price` and `pred_price`).
 
 ### Consensus signal
 
@@ -112,6 +141,61 @@ BULLISH  → all three horizons predict UP
 BEARISH  → all three horizons predict DOWN
 MIXED    → disagreement across horizons
 ```
+
+---
+
+## Email report
+
+The daily HTML email is designed to be read on mobile. It contains four sections:
+
+### 1 — ML forecasts table
+
+| Column | Content |
+|--------|---------|
+| Ativo | Ticker + asset name |
+| Preço | Current closing price (EUR where applicable via FX) |
+| Var% | Previous-day close-to-close change |
+| D+1 | Directional forecast + confidence |
+| D+2 | Directional forecast + confidence |
+| D+3 | Directional forecast + confidence |
+| Consenso | BULLISH / BEARISH / MISTO |
+
+Each asset row is prefixed with ✅ or ❌ reflecting whether yesterday's D+1 forecast was correct.
+
+**Legend:** ✅ = yesterday's D+1 prediction was correct · ❌ = yesterday's D+1 prediction was wrong
+
+### 2 — ETF accumulation table
+
+Long-term projections for accumulation ETFs at 1 / 3 / 5 / 10 years under pessimistic / base / optimistic growth scenarios. Values in EUR.
+
+### 3 — Accuracy panel
+
+Cumulative directional accuracy for **portfolio tickers only**, over the last 30 business days. Displayed with a chart-by-chart breakdown and a portfolio-level headline figure.
+
+### 4 — Charts
+
+One chart per portfolio asset, showing the last 120 trading days of price history with:
+- Price + SMA20 + SMA50 + Bollinger Bands
+- Entry price line (opening position)
+- D+1 / D+2 / D+3 prediction arrows (calendar-aware dates)
+- RSI (14-day)
+- MACD + histogram
+- Cumulative D+1 accuracy curve (once ≥ 3 validations are available)
+
+Validation markers on charts show **D+1 only**: a ● for a correct prediction and an × for a wrong one. D+2 and D+3 are trained separately and shown in the email table, but are not plotted on the chart to avoid stacking multiple markers on the same target date.
+
+---
+
+## Public repository
+
+Charts are published to a separate public repository ([smart-wallet-ml](https://github.com/srxkatsumi/smart-wallet-ml)) with a **10-day sliding window delay**. The public repo contains:
+
+- One chart per portfolio asset per trading day, for the window D-19 to D-10
+- An auto-generated README with the date of last update
+
+No prices, positions, entry prices, or portfolio holdings are disclosed in the public repo. Chart filenames contain ticker symbols — that is intentional.
+
+The sync runs as step 8 of the GitHub Actions workflow. It clones the public repo, copies the relevant charts, calls `scripts/gen_public_readme.py` to generate the README with the correct dates, and pushes. The 10-day delay prevents real-time signal copying while still allowing the charts to serve as a technical portfolio showcase.
 
 ---
 
@@ -126,6 +210,7 @@ MIXED    → disagreement across horizons
 | ALV.DE | Allianz SE |
 | BTC-USD | Bitcoin |
 | BABA | Alibaba Group ADR |
+| DHER.DE | Delivery Hero SE |
 
 **Accumulation ETFs (long-term):**
 
@@ -179,11 +264,14 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 ```
 ├── main.py                          ← pipeline orchestrator
 ├── config/
+│   ├── settings.py                  ← all constants, paths, hyperparameters, TICKER_CALENDAR
 │   ├── my_portfolio.json            ← personal portfolio (tickers, units, entry prices)
+│   ├── portfolio.json               ← portfolio config with asset names
 │   └── watchlist.json               ← extended ML training universe
 ├── data/
 │   ├── downloader.py                ← market data download via yfinance
-│   └── storage.py                   ← CSV read/write helpers
+│   ├── storage.py                   ← CSV read/write helpers + backwards-compat migrations
+│   └── calendars.py                 ← calendar-aware target date computation per exchange
 ├── features/
 │   └── engineering.py               ← technical indicators + ML feature matrix
 ├── models/
@@ -197,8 +285,10 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 ├── reports/
 │   ├── charts.py                    ← chart generation (matplotlib)
 │   └── email_report.py              ← HTML email builder
+├── scripts/
+│   └── gen_public_readme.py         ← generates README for the public repo (called by CI)
 ├── output/
-│   ├── predictions_log.csv          ← full forecast + validation history
+│   ├── predictions_log.csv          ← full forecast + validation history (never deleted)
 │   ├── ensemble_weights.json        ← current weights per model per horizon
 │   ├── model_metadata.csv           ← daily feature importances (RF + GB)
 │   ├── resumo_diario.html           ← latest HTML email (committed daily)
@@ -207,7 +297,7 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 │   └── charts/                      ← one chart per asset per day (auto-cleaned after 30 days)
 ├── .github/
 │   └── workflows/
-│       └── executar_diario.yml      ← daily automation schedule
+│       └── executar_diario.yml      ← daily automation (9 steps)
 ├── requirements.txt
 ├── README.md                        ← this file (English)
 └── README_pt.md                     ← Portuguese version
@@ -224,26 +314,29 @@ Mon–Fri 17:45 Barcelona (15:45 UTC, accounting for ~2h GitHub scheduler delay)
   │   └─ reads predictions_log.csv — if today's date exists, skip (~10s)
   │
   └─ Job 2: execute pipeline (only if not yet run today)
-      ├─ Clone repository
-      ├─ Install Python 3.11 + dependencies
-      ├─ Run main.py (~8 minutes)
+      ├─ 1. Checkout repository
+      ├─ 2. Install Python 3.11
+      ├─ 3. Install dependencies (pip install -r requirements.txt)
+      ├─ 4. Run main.py (~8 minutes)
       │   ├─ Download prices + FX + VIX + SPY
       │   ├─ Compute features
       │   ├─ Validate previous forecasts
-      │   ├─ Retrain models with updated history
+      │   ├─ Monthly SGD recalibration (if due)
+      │   ├─ Retrain all models with updated history
       │   ├─ Update ensemble weights
       │   ├─ Save new D+1 / D+2 / D+3 forecasts
       │   ├─ Generate charts
       │   └─ Build HTML email report
-      ├─ Commit updated output files → push
-      └─ Send HTML email via Gmail SMTP
+      ├─ 5. Commit output files → push (predictions_log, weights, charts, html)
+      ├─ 6. Prepare email subject date
+      ├─ 7. Send HTML email via Gmail SMTP
+      ├─ 8. Sync public repo (10-day delayed charts + auto-generated README)
+      └─ 9. On failure: send failure notification email
 ```
 
-**Why three cron entries:** GitHub Actions' scheduler is subject to queue delays of up to 2–3 hours under high load. Three separate cron triggers (30 minutes apart) are registered, but the anti-duplication check in Job 1 ensures the pipeline only executes once per day even if multiple crons fire. This guarantees delivery without requiring a paid Actions plan with priority scheduling.
+**Why three cron entries:** GitHub Actions' scheduler is subject to queue delays of up to 2–3 hours under high load. Three separate cron triggers (30 minutes apart) are registered, but the anti-duplication check in Job 1 ensures the pipeline only executes once per day even if multiple crons fire.
 
-**Why 17:45 Barcelona:** Frankfurt, Paris, London, Milan and Amsterdam all close at 17:30 CEST. Running at 17:45 captures the actual day-close prices for all European ETFs in the portfolio (EMIM.AS, MEUD.PA, SJPA.MI, ICGA.DE, EXUS.L, SGLN.L). US equities (LLY, NVDA, BABA) are still trading at this time — yfinance returns the most recent intraday price, not the day's close.
-
-Failures trigger an automatic email notification from GitHub.
+**Why 17:45 Barcelona:** Frankfurt, Paris, London, Milan and Amsterdam all close at 17:30 CEST. Running at 17:45 captures the actual day-close prices for all European ETFs in the portfolio. US equities (LLY, NVDA, BABA) are still trading at this time — yfinance returns the most recent intraday price, not the day's close.
 
 ---
 
@@ -251,14 +344,15 @@ Failures trigger an automatic email notification from GitHub.
 
 ```
 Python 3.11
-├── yfinance          — market data (prices, FX rates, VIX, SPY)
-├── scikit-learn      — RandomForestClassifier, GradientBoostingClassifier, SGDClassifier
-├── pandas / numpy    — data processing and feature computation
-├── joblib            — model serialisation
-└── matplotlib        — chart generation
+├── yfinance                 — market data (prices, FX rates, VIX, SPY)
+├── scikit-learn             — RandomForestClassifier, GradientBoostingClassifier, SGDClassifier
+├── pandas / numpy           — data processing and feature computation
+├── joblib                   — model serialisation
+├── matplotlib               — chart generation
+└── pandas-market-calendars  — per-exchange holiday calendars for target date computation
 
-GitHub Actions        — free daily automation
-Gmail SMTP            — HTML email delivery
+GitHub Actions               — free daily automation
+Gmail SMTP                   — HTML email delivery
 ```
 
 ---
@@ -266,9 +360,48 @@ Gmail SMTP            — HTML email delivery
 ## Accuracy context
 
 - A random directional forecast has 50% accuracy by definition.
-- This system targets 55–65% directional accuracy on personal portfolio tickers.
-- Accuracy below 52% over 30+ validations signals model degradation.
+- This system targets 55–65% directional accuracy on **portfolio tickers only**.
+- Accuracy below 52% over 30+ portfolio validations signals model degradation.
+- Accuracy figures are meaningless before ~30 validations per ticker — the system needs time to build a statistically meaningful sample.
 - No single accuracy figure justifies financial decisions on its own — this is a personal analytical tool, not financial advice.
+
+---
+
+## Changelog
+
+### Migration: Jupyter Notebook → modular Python
+The original system was a single Jupyter notebook (AnaliseV5). It was migrated to a modular Python package to enable automated GitHub Actions execution, proper dependency management, and maintainability.
+
+### Implemented improvements
+- ✅ **Modular Python package** — `main.py` + `data/` + `features/` + `models/` + `portfolio/` + `reports/`
+- ✅ **7-column email ML table** — Ativo · Preço · **Var%** · D+1 · D+2 · D+3 · Consenso
+- ✅ **Var% column** — previous-day close-to-close change per asset in the email
+- ✅ **✅/❌ legend in email** — clarifies what the icons represent (D+1 accuracy from the day before)
+- ✅ **Accuracy stratification** — portfolio accuracy separated from watchlist; reported independently
+- ✅ **predictions_log.csv new columns** — `actual_change_pct`, `atr_at_prediction`, `predicted_price`, `model_rf`, `model_gb`, `model_sgd`; backwards-compatible migration in `storage.py`
+- ✅ **ATR at prediction stored** — `atr_at_prediction` captures the market volatility context at the time each forecast was made
+- ✅ **Calendar-aware target dates** — `pandas-market-calendars` with per-exchange mapping replaces `pd.offsets.BDay` (which ignores market holidays)
+- ✅ **Chart markers: D+1 only** — validation markers on charts show D+1 predictions only; D+2/D+3 stacking on the same target date removed
+- ✅ **Future arrows: BDay-corrected** — prediction arrows on charts point to correct trading days (Friday → Monday, not Saturday)
+- ✅ **Public repository** — `smart-wallet-ml` with 10-day delayed charts, synced daily by GitHub Actions step 8
+- ✅ **Mobile-optimised email layout** — horizontal scroll tables with negative-margin trick for full-width display on ~412px viewports (Samsung Galaxy S26+)
+
+---
+
+## Roadmap
+
+| Item | Description |
+|------|-------------|
+| ⬜ Walk-Forward Validation | Replace single train/test split with rolling walk-forward to get a more honest out-of-sample accuracy estimate |
+| ⬜ Market regime as explicit feature | Add a regime label (trending / mean-reverting / high-vol) as an input feature so models can adapt behaviour by context |
+| ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry — events that structurally alter short-term price behaviour |
+| ⬜ Feature importance drift alert | Monitor whether the most important features are changing over time; alert when the ranking shifts significantly |
+| ⬜ Batched downloads with sleep | Rate-limit yfinance requests to avoid transient failures on large watchlists |
+| ⬜ Unit tests | pytest coverage for feature engineering, validator, and weight update logic |
+| ⬜ Correlation matrix in email | Heatmap of portfolio asset correlation to surface diversification risk |
+| ⬜ Fix SGLN.L projection | Gold ETC projections use equity growth rates — replace with commodity-appropriate long-run return assumptions |
+| ⬜ Semantic git tags | Tag each version milestone (v1, v2, …) to make the changelog anchored in git history |
+| ⬜ `predictions_log_public.csv` | Delayed, anonymised public version of the predictions log without entry prices or position sizes |
 
 ---
 

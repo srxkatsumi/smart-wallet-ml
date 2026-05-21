@@ -4,6 +4,7 @@ import pandas as pd
 import yfinance as yf
 
 from data.storage import save_predictions_log, save_ensemble_weights
+from data.calendars import target_dates
 from config.settings import HORIZONS, MIN_VALIDATIONS_WEIGHT, WEIGHT_DECAY_FACTOR
 
 logger = logging.getLogger(__name__)
@@ -154,9 +155,9 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
             else np.nan
         )
 
+        tdates = target_dates(today, ticker)
         for day, (direction, pred_price, conf) in res["preds_dict"].items():
-            # BDay fix: use trading days so Friday D+1 → Monday, not Saturday
-            target_date_str = (today + pd.offsets.BDay(day)).strftime("%Y-%m-%d")
+            target_date_str = tdates[day].strftime("%Y-%m-%d")
 
             ja_existe = (
                 (df_log["ticker"]      == ticker) &

@@ -56,3 +56,29 @@ DEFAULT_WEIGHTS = {
 
 # ── Email timezone (Barcelona) ────────────────────────────────────────────
 BARCELONA_UTC_OFFSET = 2  # CEST (verão); alterar para 1 em outubro (CET)
+
+# ── Market calendar mapping (pandas-market-calendars) ────────────────────
+# Tickers not listed here default to NYSE.
+TICKER_CALENDAR: dict[str, str] = {
+    # London Stock Exchange
+    "EXUS.L":  "LSE",
+    "SGLN.L":  "LSE",
+    "CSPX.L":  "LSE",
+    # Euronext (per-exchange MIC codes)
+    "EMIM.AS": "XAMS",   # Amsterdam
+    "IWDA.AS": "XAMS",   # Amsterdam
+    "MEUD.PA": "XPAR",   # Paris
+    "SJPA.MI": "XMIL",   # Milan (Borsa Italiana)
+    # Xetra (Frankfurt)
+    "ALV.DE":  "XETR",
+    "SIE.DE":  "XETR",
+    "BMW.DE":  "XETR",
+    "BAS.DE":  "XETR",
+    "DHER.DE": "XETR",
+    "VWCE.DE": "XETR",
+    "ICGA.DE": "XETR",
+    # Swiss Exchange
+    "NESN.SW": "SIX",
+    "NOVN.SW": "SIX",
+    "ROG.SW":  "SIX",
+}

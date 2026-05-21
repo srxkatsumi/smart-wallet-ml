@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from datetime import date as _date, datetime
 from pathlib import Path
+from data.calendars import target_dates
 
 logger = logging.getLogger(__name__)
 
@@ -75,8 +76,9 @@ def _plot_single(ticker: str, res: dict, df_log: pd.DataFrame,
 
     pred_x = [last_date]
     pred_y = [close_now]
+    tdates = target_dates(last_date, ticker)
     for day, (direction, pred_price, conf) in res["preds_dict"].items():
-        fdate  = last_date + pd.offsets.BDay(day)   # BDay: sexta D+1 → segunda, não sábado
+        fdate  = tdates.get(day, last_date + pd.offsets.BDay(day))
         color  = "#00ff88" if direction == "up" else "#ff4444"
         marker = "^" if direction == "up" else "v"
         ax1.scatter(fdate, pred_price, color=color, s=120, zorder=6, marker=marker,
