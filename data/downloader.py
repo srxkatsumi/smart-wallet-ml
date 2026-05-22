@@ -1,7 +1,11 @@
 import logging
+import time
 import yfinance as yf
 import pandas as pd
-from config.settings import PRICE_PERIOD, EUR_USD_FALLBACK, EUR_GBP_FALLBACK
+from config.settings import (
+    PRICE_PERIOD, EUR_USD_FALLBACK, EUR_GBP_FALLBACK,
+    DOWNLOAD_BATCH_SIZE, DOWNLOAD_BATCH_SLEEP,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -59,28 +63,38 @@ def download_context() -> dict:
 
 
 def download_prices(tickers: list[str], etf_acumulacao: list[dict]) -> dict:
-    raw_data = {}
-    for ticker in tickers:
-        try:
-            df = yf.download(ticker, period=PRICE_PERIOD, interval="1d",
-                             auto_adjust=True, progress=False)
-            if df.empty:
-                logger.warning("%s: sem dados", ticker)
-                continue
-            if isinstance(df.columns, pd.MultiIndex):
-                df.columns = df.columns.get_level_values(0)
-            df.index = pd.to_datetime(df.index).normalize()
-            df = df.sort_index()
-            raw_data[ticker] = df
+    raw_data  = {}
+    n_batches = (len(tickers) + DOWNLOAD_BATCH_SIZE - 1) // DOWNLOAD_BATCH_SIZE
 
-            etf_info = next((e for e in etf_acumulacao if e["ticker"] == ticker), None)
-            if etf_info and etf_info["moeda"] == "GBP":
-                eur_p = to_eur(df["Close"].iloc[-1], "GBP", etf_info.get("gbp_pence", False))
-                logger.info("%s: %dd | raw=%.2f | EUR=%.4f€", ticker, len(df),
-                            df["Close"].iloc[-1], eur_p)
-            else:
-                logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
-        except Exception as e:
-            logger.error("%s: %s", ticker, e)
+    for batch_idx in range(n_batches):
+        batch = tickers[batch_idx * DOWNLOAD_BATCH_SIZE : (batch_idx + 1) * DOWNLOAD_BATCH_SIZE]
+        logger.info("Batch %d/%d (%d tickers)...", batch_idx + 1, n_batches, len(batch))
+
+        for ticker in batch:
+            try:
+                df = yf.download(ticker, period=PRICE_PERIOD, interval="1d",
+                                 auto_adjust=True, progress=False)
+                if df.empty:
+                    logger.warning("%s: sem dados", ticker)
+                    continue
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+                df.index = pd.to_datetime(df.index).normalize()
+                df = df.sort_index()
+                raw_data[ticker] = df
+
+                etf_info = next((e for e in etf_acumulacao if e["ticker"] == ticker), None)
+                if etf_info and etf_info["moeda"] == "GBP":
+                    eur_p = to_eur(df["Close"].iloc[-1], "GBP", etf_info.get("gbp_pence", False))
+                    logger.info("%s: %dd | raw=%.2f | EUR=%.4f€", ticker, len(df),
+                                df["Close"].iloc[-1], eur_p)
+                else:
+                    logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
+            except Exception as e:
+                logger.error("%s: %s", ticker, e)
+
+        if batch_idx < n_batches - 1:
+            time.sleep(DOWNLOAD_BATCH_SLEEP)
+
     logger.info("%d ativos descarregados", len(raw_data))
     return raw_data

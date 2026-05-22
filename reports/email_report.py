@@ -116,7 +116,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     ml_rows = ""
     for i, ticker in enumerate(tickers_sorted):
         res      = resultados_ml[ticker]
-        close    = res["close_now"]
+        close    = res.get("close_eur", res["close_now"])
         var_1d   = res.get("var_1d", 0.0)
         preds    = res["preds_dict"]
         dirs     = [preds[day][0] for day in [1, 2, 3]]

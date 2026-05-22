@@ -390,6 +390,8 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **Correctness check fixed** — `correct = actual ≥ ref_price` (UP) / `actual ≤ ref_price` (DOWN); pure direction check, no longer requires the stock to reach the ATR target
 - ✅ **Execution order fixed** — validate past predictions and update ensemble weights *before* training, so models always train with today's accurate weights rather than yesterday's stale ones
 - ✅ **`save_model_metadata()` no longer retrains models** — `feature_importances_` are read from the models already trained in `train_all()`, eliminating a duplicate full training pass
+- ✅ **Batched downloads with sleep** — yfinance requests split into groups of 20 with a 2-second pause between batches; eliminates silent NaN failures from rate limiting on large watchlists
+- ✅ **SGLN.L price in EUR in email** — GBX (pence) tickers are now converted to EUR before display; price is consistent with all other assets in the ML table
 
 ---
 

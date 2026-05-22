@@ -76,6 +76,11 @@ def main():
     resumo_etoro, totals_etoro = calculate_etoro_pnl(etoro, resultados_ml, EUR_USD)
     resumo_etfs,  totals_etfs  = calculate_etf_pnl(etf_acumul, resultados_ml)
 
+    # Enrich resultados_ml with EUR-converted price for email display
+    close_eur_map = {r["ticker"]: r["close_eur"] for r in resumo_etoro + resumo_etfs}
+    for ticker, res in resultados_ml.items():
+        res["close_eur"] = close_eur_map.get(ticker, res["close_now"])
+
     # ── Charts ────────────────────────────────────────────────────────────
     from config.settings import CHARTS_DIR, CHARTS_RETENTION_DAYS
     from reports.charts import cleanup_old_charts, generate_charts
