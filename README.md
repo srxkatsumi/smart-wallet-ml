@@ -392,6 +392,7 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **`save_model_metadata()` no longer retrains models** — `feature_importances_` are read from the models already trained in `train_all()`, eliminating a duplicate full training pass
 - ✅ **Batched downloads with sleep** — yfinance requests split into groups of 20 with a 2-second pause between batches; eliminates silent NaN failures from rate limiting on large watchlists
 - ✅ **SGLN.L price in EUR in email** — GBX (pence) tickers are now converted to EUR before display; price is consistent with all other assets in the ML table
+- ✅ **Unit tests** — 8 pytest tests across 3 modules: RSI bounds (features), ensemble probability bounds, P&L fee logic; tests run in GitHub Actions before `main.py` and halt the pipeline on failure
 
 ---
 

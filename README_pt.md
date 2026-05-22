@@ -394,6 +394,7 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **`save_model_metadata()` sem retreino** — `feature_importances_` lidas dos modelos já treinados em `train_all()`, eliminando uma passagem de treino duplicada
 - ✅ **Downloads em batches com sleep** — pedidos ao yfinance divididos em grupos de 20 com pausa de 2 segundos entre grupos; elimina falhas silenciosas de NaN por rate limiting em watchlists grandes
 - ✅ **Preço SGLN.L em EUR no email** — tickers em GBX (pence) são agora convertidos para EUR antes de serem mostrados; preço consistente com todos os outros ativos na tabela ML
+- ✅ **Testes unitários** — 8 testes pytest em 3 módulos: limites do RSI (features), limites de probabilidade do ensemble, lógica de fees no P&L; os testes correm no GitHub Actions antes do `main.py` e param o pipeline em caso de falha
 
 ---
 

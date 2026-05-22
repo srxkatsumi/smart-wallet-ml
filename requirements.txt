@@ -5,3 +5,4 @@ pandas
 numpy
 joblib
 pandas-market-calendars
+pytest
