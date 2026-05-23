@@ -360,6 +360,24 @@ Gmail SMTP                   — entrega de email HTML
 
 ---
 
+## Testes unitários
+
+8 testes automáticos correm no GitHub Actions **antes** do `main.py`. Se algum falhar, o pipeline pára — os modelos não treinam com dados potencialmente corrompidos.
+
+```
+pytest tests/ -v
+```
+
+| Ficheiro | Testes | O que valida |
+|----------|--------|--------------|
+| `tests/test_features.py` | 2 | RSI14 sempre em [0, 100] com dados aleatórios e monotónicos |
+| `tests/test_ensemble.py` | 2 | Probabilidades do ensemble e por modelo sempre em [0, 1]; direcção coerente com probabilidade |
+| `tests/test_pnl.py` | 4 | Breakeven > preço de compra quando fees > 0; breakeven == preço de compra quando fees = 0; conversão USD→EUR correcta |
+
+Todos os testes usam dados sintéticos — sem chamadas de rede, sem ficheiros em disco.
+
+---
+
 ## Contexto sobre acurácia
 
 - Uma previsão direcional aleatória tem 50% de acurácia por definição.
@@ -407,7 +425,6 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 | ⬜ Features de eventos fundamentalistas | Datas de resultados trimestrais, semanas FOMC, expiração de opções — eventos que alteram estruturalmente o comportamento de curto prazo |
 | ⬜ Feature importance drift como alerta | Monitorizar se as features mais importantes estão a mudar ao longo do tempo; alertar quando o ranking muda significativamente |
 | ⬜ Download em batches com sleep | Rate-limit nos pedidos ao yfinance para evitar falhas transitórias em watchlists grandes |
-| ⬜ Testes unitários | Cobertura pytest para feature engineering, validator e lógica de atualização de pesos |
 | ⬜ Matriz de correlação no email | Heatmap de correlação entre os ativos da carteira para identificar risco de diversificação |
 | ⬜ Correcção projecção SGLN.L | As projeções do Gold ETC usam taxas de crescimento de equity — substituir por premissas de retorno de longo prazo adequadas a commodities |
 | ⬜ Git tags semânticos | Tag em cada milestone de versão (v1, v2, …) para ancorar o changelog no histórico git |

@@ -358,6 +358,24 @@ Gmail SMTP                   — HTML email delivery
 
 ---
 
+## Unit tests
+
+8 automated tests run in GitHub Actions **before** `main.py`. If any test fails, the pipeline halts — the models do not train on potentially corrupt data.
+
+```
+pytest tests/ -v
+```
+
+| File | Tests | What it validates |
+|------|-------|-------------------|
+| `tests/test_features.py` | 2 | RSI14 always in [0, 100] on random and monotone price data |
+| `tests/test_ensemble.py` | 2 | Ensemble and per-model probabilities always in [0, 1]; direction consistent with probability |
+| `tests/test_pnl.py` | 4 | Breakeven > purchase price when fees > 0; breakeven == purchase price when fees = 0; USD→EUR conversion correct |
+
+All tests use synthetic data — no network calls, no files on disk.
+
+---
+
 ## Accuracy context
 
 - A random directional forecast has 50% accuracy by definition.
@@ -405,7 +423,6 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 | ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry — events that structurally alter short-term price behaviour |
 | ⬜ Feature importance drift alert | Monitor whether the most important features are changing over time; alert when the ranking shifts significantly |
 | ⬜ Batched downloads with sleep | Rate-limit yfinance requests to avoid transient failures on large watchlists |
-| ⬜ Unit tests | pytest coverage for feature engineering, validator, and weight update logic |
 | ⬜ Correlation matrix in email | Heatmap of portfolio asset correlation to surface diversification risk |
 | ⬜ Fix SGLN.L projection | Gold ETC projections use equity growth rates — replace with commodity-appropriate long-run return assumptions |
 | ⬜ Semantic git tags | Tag each version milestone (v1, v2, …) to make the changelog anchored in git history |
