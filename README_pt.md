@@ -418,17 +418,39 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 
 ## Roadmap
 
+### 🔴 Implementar agora — maior impacto, menor esforço
+
+| Item | Descrição |
+|------|-----------|
+| ⬜ Feature importance drift como alerta | O `model_metadata.csv` já guarda as feature importances diárias — ~30 linhas para ler o ficheiro e adicionar um alerta no email. Melhor relação esforço/valor de toda a lista. |
+| ⬜ Retry no git push | 5 linhas no YAML do workflow. Elimina perda de dados por falha transitória no push. |
+| ⬜ Artefacto GitHub em push falhado | Fazer upload do `predictions_log.csv` como artefacto do workflow se o push falhar — safety net para recuperar as previsões do dia manualmente. |
+| ⬜ Forward fill para NaN em VIX/SPY | Usar o valor T-1 se T-0 devolver NaN; adicionar aviso no email quando acontece. |
+| ⬜ Detecção de stock split | Variação anómala de preço (ex: >40% num dia) marca as validações em aberto como `NaN` em vez de `False` — evita penalizar os modelos por uma acção corporativa. |
+
+### 🟡 Curto prazo
+
 | Item | Descrição |
 |------|-----------|
 | ⬜ Walk-Forward Validation | Substituir o split único treino/teste por walk-forward rolling para obter uma estimativa de acurácia fora da amostra mais honesta |
-| ⬜ Regime de mercado como feature explícita | Adicionar uma label de regime (trending / mean-reverting / alta vol) como feature de input para os modelos |
-| ⬜ Features de eventos fundamentalistas | Datas de resultados trimestrais, semanas FOMC, expiração de opções — eventos que alteram estruturalmente o comportamento de curto prazo |
-| ⬜ Feature importance drift como alerta | Monitorizar se as features mais importantes estão a mudar ao longo do tempo; alertar quando o ranking muda significativamente |
-| ⬜ Download em batches com sleep | Rate-limit nos pedidos ao yfinance para evitar falhas transitórias em watchlists grandes |
-| ⬜ Matriz de correlação no email | Heatmap de correlação entre os ativos da carteira para identificar risco de diversificação |
-| ⬜ Correcção projecção SGLN.L | As projeções do Gold ETC usam taxas de crescimento de equity — substituir por premissas de retorno de longo prazo adequadas a commodities |
-| ⬜ Git tags semânticos | Tag em cada milestone de versão (v1, v2, …) para ancorar o changelog no histórico git |
-| ⬜ `predictions_log_public.csv` | Versão pública e anonimizada do log de previsões, sem preços de entrada nem dimensões de posição |
+| ⬜ Regime de mercado como feature | Adicionar uma label de regime baseada no VIX (baixo / médio / alto) como feature de input para os modelos aprenderem padrões específicos por contexto |
+| ⬜ Telegram como fallback de email | ~20 linhas; activa quando o Gmail falha — garante que o relatório diário é sempre entregue |
+| ⬜ Badge dinâmico no repo público | Mostrar a data real do último update em vez de um badge estático |
+| ⬜ `predictions_log_public.csv` | Versão anonimizada do log (sem tickers, sem preços) — prova de acurácia real para qualquer pessoa que abra o repo público |
+
+### 🟢 Médio prazo
+
+| Item | Descrição |
+|------|-----------|
+| ⬜ Matriz de correlação no email | Heatmap simples de correlação entre os ativos da carteira para identificar concentração de risco real em cenários de stress |
+| ⬜ Correcção projecção SGLN.L | As projeções do Gold ETC usam taxas de crescimento de equity — substituir por três cenários (pessimista / base / optimista) em vez de uma taxa histórica única |
+| ⬜ Git tags semânticos | Tag em cada marco de versão (v1.0, v1.1, …) para ancorar o changelog no histórico git |
+
+### 🔵 Requer planeamento
+
+| Item | Descrição |
+|------|-----------|
+| ⬜ Features de eventos fundamentalistas | Datas de earnings, semanas FOMC, expiração de opções — eventos que alteram estruturalmente o comportamento de curto prazo. Requer API externa fiável; cobertura para ativos europeus é limitada. |
 
 ---
 

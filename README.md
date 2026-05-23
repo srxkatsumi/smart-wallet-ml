@@ -416,17 +416,39 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 
 ## Roadmap
 
+### 🔴 Implement now — highest impact, lowest effort
+
+| Item | Description |
+|------|-------------|
+| ⬜ Feature importance drift alert | `model_metadata.csv` already stores daily feature importances — ~30 lines to read it and add a drift alert to the email. Best effort/value ratio on the list. |
+| ⬜ Retry on git push | 5 lines in the YAML workflow. Eliminates data loss from a transient push failure. |
+| ⬜ GitHub artifact on failed push | Upload `predictions_log.csv` as a workflow artifact if the push fails — safety net to recover the day's predictions manually. |
+| ⬜ Forward fill for NaN in VIX/SPY | Use T-1 value if T-0 returns NaN; add a warning in the email when this happens. |
+| ⬜ Stock split detection | Anomalous price variation (e.g. >40% in one day) marks open validations as `NaN` instead of `False` — avoids incorrectly penalising models for a corporate action. |
+
+### 🟡 Short term
+
 | Item | Description |
 |------|-------------|
 | ⬜ Walk-Forward Validation | Replace single train/test split with rolling walk-forward to get a more honest out-of-sample accuracy estimate |
-| ⬜ Market regime as explicit feature | Add a regime label (trending / mean-reverting / high-vol) as an input feature so models can adapt behaviour by context |
-| ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry — events that structurally alter short-term price behaviour |
-| ⬜ Feature importance drift alert | Monitor whether the most important features are changing over time; alert when the ranking shifts significantly |
-| ⬜ Batched downloads with sleep | Rate-limit yfinance requests to avoid transient failures on large watchlists |
-| ⬜ Correlation matrix in email | Heatmap of portfolio asset correlation to surface diversification risk |
-| ⬜ Fix SGLN.L projection | Gold ETC projections use equity growth rates — replace with commodity-appropriate long-run return assumptions |
-| ⬜ Semantic git tags | Tag each version milestone (v1, v2, …) to make the changelog anchored in git history |
-| ⬜ `predictions_log_public.csv` | Delayed, anonymised public version of the predictions log without entry prices or position sizes |
+| ⬜ Market regime as explicit feature | Add a VIX-based regime label (low / medium / high volatility) as an input feature so models can learn patterns specific to each market context |
+| ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered |
+| ⬜ Dynamic badge in public repo | Show the real last-update date instead of a static badge |
+| ⬜ `predictions_log_public.csv` | Delayed, anonymised version of the predictions log (no tickers, no prices) — proves real accuracy to anyone who opens the public repo |
+
+### 🟢 Medium term
+
+| Item | Description |
+|------|-------------|
+| ⬜ Correlation matrix in email | Simple heatmap of portfolio asset correlation to surface real concentration risk in stress scenarios |
+| ⬜ Fix SGLN.L projection | Gold ETC projections use equity growth rates — replace with three scenarios (pessimistic / base / optimistic) instead of a single historical rate |
+| ⬜ Semantic git tags | Tag each version milestone (v1.0, v1.1, …) to anchor the changelog in git history |
+
+### 🔵 Requires planning
+
+| Item | Description |
+|------|-------------|
+| ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry — events that structurally alter short-term price behaviour. Requires a reliable external API; coverage for European assets is limited. |
 
 ---
 
