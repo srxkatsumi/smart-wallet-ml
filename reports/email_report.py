@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 from datetime import datetime, timezone, timedelta
-from config.settings import HTML_REPORT, BARCELONA_UTC_OFFSET
+from config.settings import HTML_REPORT, BARCELONA_UTC_OFFSET, METADATA_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +86,50 @@ def _calcular_tendencia(df_log: pd.DataFrame, portfolio_tickers: list) -> tuple:
     acc_ant = ant["correct"].astype(float).mean() if len(ant) >= MIN_VAL else None
     delta   = acc_rec - acc_ant if acc_ant is not None else None
     return "ok", len(recentes), None, acc_rec, delta
+
+
+def _compute_drift() -> dict:
+    try:
+        df = pd.read_csv(METADATA_FILE)
+    except Exception:
+        return {"enough_data": False}
+
+    feat_cols = [c for c in df.columns if c.startswith("feat_")]
+    if not feat_cols or "date" not in df.columns:
+        return {"enough_data": False}
+
+    df = df[df["model"] == "rf"].copy()
+    dates = sorted(df["date"].unique())
+    if len(dates) < 2:
+        return {"enough_data": False}
+
+    today_imp = df[df["date"] == dates[-1]][feat_cols].mean()
+    ref_imp   = df[df["date"].isin(dates[:-1])][feat_cols].mean()
+
+    corr = float(today_imp.corr(ref_imp, method="spearman"))
+
+    def label(name):
+        return name.replace("feat_", "")
+
+    today_ranked = [label(f) for f in today_imp.sort_values(ascending=False).index]
+    ref_ranked   = [label(f) for f in ref_imp.sort_values(ascending=False).index]
+    ref_rank_map = {f: i + 1 for i, f in enumerate(ref_ranked)}
+
+    top5 = []
+    for rank_today, feat in enumerate(today_ranked[:5], start=1):
+        rank_ref = ref_rank_map.get(feat, len(feat_cols))
+        delta    = rank_ref - rank_today
+        top5.append((feat, rank_today, rank_ref, delta))
+
+    is_drift = corr < 0.70 or today_ranked[0] != ref_ranked[0]
+
+    return {
+        "enough_data": True,
+        "is_drift":    is_drift,
+        "corr":        corr,
+        "top5":        top5,
+        "n_ref_days":  len(dates) - 1,
+    }
 
 
 def build_html(resultados_ml: dict, resumo_etfs: list[dict],
@@ -212,6 +256,60 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
           <div style="font-size:11.5px;color:#8a8a8a;margin-top:6px;line-height:1.4">
             {n_rec} previsões do portfólio validadas<br>nos últimos 30 dias úteis
           </div>"""
+
+    # ── Feature importance drift ──────────────────────────────────────────
+    drift = _compute_drift()
+    if not drift["enough_data"]:
+        drift_html = ""
+    else:
+        corr      = drift["corr"]
+        is_drift  = drift["is_drift"]
+        n_ref     = drift["n_ref_days"]
+        badge_bg  = "#f7e8e5" if is_drift else "#e7f3eb"
+        badge_col = "#b8453a" if is_drift else "#1e7a4c"
+        badge_txt = f"⚠️ Drift detectado · ρ={corr:.2f}" if is_drift else f"✅ Estável · ρ={corr:.2f}"
+
+        rows_drift = ""
+        for feat, rank_today, rank_ref, delta in drift["top5"]:
+            if delta > 0:
+                delta_html = f'<span style="color:#1e7a4c;font-weight:600">↑ +{delta}</span>'
+            elif delta < 0:
+                delta_html = f'<span style="color:#b8453a;font-weight:600">↓ {delta}</span>'
+            else:
+                delta_html = '<span style="color:#a0a0a0">→</span>'
+            rows_drift += f"""
+            <tr>
+              <td style="padding:5px 8px 5px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#1a1740">{feat}</td>
+              <td style="padding:5px 8px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#1a1740;font-weight:600">#{rank_today}</td>
+              <td style="padding:5px 8px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#8a8a8a">#{rank_ref}</td>
+              <td style="padding:5px 0 5px 8px;text-align:center;font-size:11px">{delta_html}</td>
+            </tr>"""
+
+        drift_html = f"""
+  <div style="padding:20px 36px;border-top:1px solid #efece4;background:#f6f3eb">
+    <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:12px">
+      <tr>
+        <td style="vertical-align:middle">
+          <span style="font-size:10px;font-weight:600;color:#a89e85;letter-spacing:0.14em;text-transform:uppercase">Feature importance drift</span>
+        </td>
+        <td style="vertical-align:middle;text-align:right">
+          <span style="display:inline-block;background:{badge_bg};color:{badge_col};border-radius:3px;padding:3px 9px;font-size:10px;font-weight:700;letter-spacing:0.06em">{badge_txt}</span>
+        </td>
+      </tr>
+    </table>
+    <table style="border-collapse:collapse">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:0 8px 6px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Feature</th>
+          <th style="text-align:center;padding:0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Hoje</th>
+          <th style="text-align:center;padding:0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ref. ({n_ref}d)</th>
+          <th style="text-align:center;padding:0 0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Δ rank</th>
+        </tr>
+      </thead>
+      <tbody>{rows_drift}
+      </tbody>
+    </table>
+  </div>"""
 
     html = f"""<!DOCTYPE html>
 <html lang="pt">
@@ -353,6 +451,9 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
       </tr>
     </table>
   </div>
+
+  <!-- FEATURE IMPORTANCE DRIFT -->
+  {drift_html}
 
   <!-- AVISO LEGAL -->
   <div style="padding:18px 36px;border-top:1px solid #efece4">

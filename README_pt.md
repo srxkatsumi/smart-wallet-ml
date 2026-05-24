@@ -413,44 +413,75 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **Downloads em batches com sleep** — pedidos ao yfinance divididos em grupos de 20 com pausa de 2 segundos entre grupos; elimina falhas silenciosas de NaN por rate limiting em watchlists grandes
 - ✅ **Preço SGLN.L em EUR no email** — tickers em GBX (pence) são agora convertidos para EUR antes de serem mostrados; preço consistente com todos os outros ativos na tabela ML
 - ✅ **Testes unitários** — 8 testes pytest em 3 módulos: limites do RSI (features), limites de probabilidade do ensemble, lógica de fees no P&L; os testes correm no GitHub Actions antes do `main.py` e param o pipeline em caso de falha
+- ✅ **Feature importance drift como alerta** — painel diário no email com correlação de Spearman (ρ) entre o ranking de features de hoje e o período de referência; sinaliza drift quando ρ < 0,70 ou a feature principal muda
 
 ---
 
 ## Roadmap
 
-### 🔴 Implementar agora — maior impacto, menor esforço
+> **Princípio:** Estabilidade → Observabilidade → Publicação → Modelo → Features avançadas. Nunca o contrário. Um modelo melhor num pipeline instável produz resultados melhores em que não podes confiar.
 
-| Item | Descrição |
-|------|-----------|
-| ⬜ Feature importance drift como alerta | O `model_metadata.csv` já guarda as feature importances diárias — ~30 linhas para ler o ficheiro e adicionar um alerta no email. Melhor relação esforço/valor de toda a lista. |
-| ⬜ Retry no git push | 5 linhas no YAML do workflow. Elimina perda de dados por falha transitória no push. |
-| ⬜ Artefacto GitHub em push falhado | Fazer upload do `predictions_log.csv` como artefacto do workflow se o push falhar — safety net para recuperar as previsões do dia manualmente. |
-| ⬜ Forward fill para NaN em VIX/SPY | Usar o valor T-1 se T-0 devolver NaN; adicionar aviso no email quando acontece. |
-| ⬜ Detecção de stock split | Variação anómala de preço (ex: >40% num dia) marca as validações em aberto como `NaN` em vez de `False` — evita penalizar os modelos por uma acção corporativa. |
+### Semana 1 — Estabilidade do pipeline
 
-### 🟡 Curto prazo
+Antes de qualquer melhoria de modelo, o pipeline tem de ser à prova de falha.
 
-| Item | Descrição |
-|------|-----------|
-| ⬜ Walk-Forward Validation | Substituir o split único treino/teste por walk-forward rolling para obter uma estimativa de acurácia fora da amostra mais honesta |
-| ⬜ Regime de mercado como feature | Adicionar uma label de regime baseada no VIX (baixo / médio / alto) como feature de input para os modelos aprenderem padrões específicos por contexto |
-| ⬜ Telegram como fallback de email | ~20 linhas; activa quando o Gmail falha — garante que o relatório diário é sempre entregue |
-| ⬜ Badge dinâmico no repo público | Mostrar a data real do último update em vez de um badge estático |
-| ⬜ `predictions_log_public.csv` | Versão anonimizada do log (sem tickers, sem preços) — prova de acurácia real para qualquer pessoa que abra o repo público |
+| # | Item | Descrição |
+|---|------|-----------|
+| 1 | ⬜ Retry no git push | 5 linhas no YAML. Elimina perda de dados por falha transitória no push. |
+| 2 | ⬜ Artefacto GitHub em push falhado | Upload do `predictions_log.csv` como artefacto do workflow se o push falhar — safety net para recuperação manual. |
+| 3 | ⬜ Forward fill para NaN em VIX/SPY | Usar o valor T-1 se T-0 devolver NaN; adicionar aviso no email quando acontece. |
+| 4 | ⬜ Detecção de stock split | Variação >40% num dia marca validações em aberto como `NaN` em vez de `False` — evita penalizar modelos por acção corporativa. |
 
-### 🟢 Médio prazo
+### Semana 2 — Observabilidade
 
-| Item | Descrição |
-|------|-----------|
-| ⬜ Matriz de correlação no email | Heatmap simples de correlação entre os ativos da carteira para identificar concentração de risco real em cenários de stress |
-| ⬜ Correcção projecção SGLN.L | As projeções do Gold ETC usam taxas de crescimento de equity — substituir por três cenários (pessimista / base / optimista) em vez de uma taxa histórica única |
-| ⬜ Git tags semânticos | Tag em cada marco de versão (v1.0, v1.1, …) para ancorar o changelog no histórico git |
+O pipeline corre mas não te diz quando está a degradar. Isso muda aqui.
 
-### 🔵 Requer planeamento
+| # | Item | Descrição |
+|---|------|-----------|
+| 5 | ✅ Feature importance drift como alerta | O `model_metadata.csv` já guarda as importances diárias — lê o ficheiro e adiciona um painel de drift no email com correlação de Spearman. |
+| 6 | ⬜ Telegram como fallback de email | ~20 linhas; activa quando o Gmail falha — garante que o relatório diário é sempre entregue. |
+| 7 | ⬜ Badge dinâmico no repo público | Mostrar a data real do último update em vez de um badge estático. |
 
-| Item | Descrição |
-|------|-----------|
-| ⬜ Features de eventos fundamentalistas | Datas de earnings, semanas FOMC, expiração de opções — eventos que alteram estruturalmente o comportamento de curto prazo. Requer API externa fiável; cobertura para ativos europeus é limitada. |
+### Semana 3 — Repo público completo
+
+Preparar tudo para a publicação.
+
+| # | Item | Descrição |
+|---|------|-----------|
+| 8 | ⬜ `predictions_log_public.csv` | Versão anonimizada do log (sem tickers, sem preços) — prova de acurácia real para qualquer pessoa que abra o repo público. |
+| 9 | ⬜ Secção "Reliability" no README | Agrupar testes unitários + fallbacks + retry numa secção única. |
+| 10 | ⬜ Git tags semânticos | Tag em cada marco de versão (`v1.0.0`, `v1.1.0`, …) para ancorar o changelog no histórico git. |
+
+### Semanas 4–5 — Qualidade do modelo
+
+Só aqui. Não antes. O pipeline tem de estar estável antes de mexer no modelo.
+
+| # | Item | Descrição |
+|---|------|-----------|
+| 11 | ⬜ Walk-Forward Validation | Substituir o split único por walk-forward rolling para acurácia honesta fora da amostra. |
+| 12 | ⬜ Regime de mercado como feature | Label de regime baseada no VIX (baixo / médio / alto) como input do modelo — aprendizagem por contexto. |
+
+### Semana 6 — Relatório
+
+| # | Item | Descrição |
+|---|------|-----------|
+| 13 | ⬜ Matriz de correlação no email | Heatmap de correlação da carteira — exposição real em cenários de stress. |
+| 14 | ⬜ Correcção projecção SGLN.L | Três cenários (pessimista / base / optimista) em vez de taxa histórica linear. |
+
+### Semanas 7–8 — Publicação
+
+| # | Item | Descrição |
+|---|------|-----------|
+| 15 | ⬜ READMEs finais (EN + PT) | Revisão completa de ambos antes do lançamento público. |
+| 16 | ⬜ Lançamento do repo público | Publicar `smart-wallet-ml` como projecto completo e documentado. |
+| 17 | ⬜ Artigo LinkedIn | Contar a história do projecto — do notebook ao pipeline ML automatizado. |
+
+### Depois da publicação — sem prazo fixo
+
+| # | Item | Descrição |
+|---|------|-----------|
+| 18 | ⬜ Features de eventos fundamentalistas | Datas de earnings, semanas FOMC, expiração de opções. Requer API externa fiável; cobertura europeia é limitada. |
+| 19 | ⬜ Regressor de preço D+1 | Só com 1 ano de dados limpos acumulados. |
 
 ---
 

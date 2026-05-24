@@ -411,44 +411,75 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **Batched downloads with sleep** — yfinance requests split into groups of 20 with a 2-second pause between batches; eliminates silent NaN failures from rate limiting on large watchlists
 - ✅ **SGLN.L price in EUR in email** — GBX (pence) tickers are now converted to EUR before display; price is consistent with all other assets in the ML table
 - ✅ **Unit tests** — 8 pytest tests across 3 modules: RSI bounds (features), ensemble probability bounds, P&L fee logic; tests run in GitHub Actions before `main.py` and halt the pipeline on failure
+- ✅ **Feature importance drift alert** — daily email panel with Spearman rank correlation (ρ) between today's feature ranking and the reference period; flags drift when ρ < 0.70 or the top feature changes
 
 ---
 
 ## Roadmap
 
-### 🔴 Implement now — highest impact, lowest effort
+> **Principle:** Stability → Observability → Publication → Model → Advanced features. Never the other way around. A better model on an unstable pipeline produces better results you can't trust.
 
-| Item | Description |
-|------|-------------|
-| ⬜ Feature importance drift alert | `model_metadata.csv` already stores daily feature importances — ~30 lines to read it and add a drift alert to the email. Best effort/value ratio on the list. |
-| ⬜ Retry on git push | 5 lines in the YAML workflow. Eliminates data loss from a transient push failure. |
-| ⬜ GitHub artifact on failed push | Upload `predictions_log.csv` as a workflow artifact if the push fails — safety net to recover the day's predictions manually. |
-| ⬜ Forward fill for NaN in VIX/SPY | Use T-1 value if T-0 returns NaN; add a warning in the email when this happens. |
-| ⬜ Stock split detection | Anomalous price variation (e.g. >40% in one day) marks open validations as `NaN` instead of `False` — avoids incorrectly penalising models for a corporate action. |
+### Week 1 — Pipeline stability
 
-### 🟡 Short term
+Before any model improvement, the pipeline must be fail-safe. Low effort, high impact.
 
-| Item | Description |
-|------|-------------|
-| ⬜ Walk-Forward Validation | Replace single train/test split with rolling walk-forward to get a more honest out-of-sample accuracy estimate |
-| ⬜ Market regime as explicit feature | Add a VIX-based regime label (low / medium / high volatility) as an input feature so models can learn patterns specific to each market context |
-| ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered |
-| ⬜ Dynamic badge in public repo | Show the real last-update date instead of a static badge |
-| ⬜ `predictions_log_public.csv` | Delayed, anonymised version of the predictions log (no tickers, no prices) — proves real accuracy to anyone who opens the public repo |
+| # | Item | Description |
+|---|------|-------------|
+| 1 | ⬜ Retry on git push | 5 lines in the YAML. Eliminates data loss from a transient push failure. |
+| 2 | ⬜ GitHub artifact on failed push | Upload `predictions_log.csv` as a workflow artifact if the push fails — manual recovery safety net. |
+| 3 | ⬜ Forward fill for NaN in VIX/SPY | Use T-1 value if T-0 returns NaN; add a warning in the email when this happens. |
+| 4 | ⬜ Stock split detection | Price variation >40% in one day marks open validations as `NaN` instead of `False` — avoids penalising models for a corporate action. |
 
-### 🟢 Medium term
+### Week 2 — Observability
 
-| Item | Description |
-|------|-------------|
-| ⬜ Correlation matrix in email | Simple heatmap of portfolio asset correlation to surface real concentration risk in stress scenarios |
-| ⬜ Fix SGLN.L projection | Gold ETC projections use equity growth rates — replace with three scenarios (pessimistic / base / optimistic) instead of a single historical rate |
-| ⬜ Semantic git tags | Tag each version milestone (v1.0, v1.1, …) to anchor the changelog in git history |
+The pipeline runs but doesn't tell you when it's degrading. That changes here.
 
-### 🔵 Requires planning
+| # | Item | Description |
+|---|------|-------------|
+| 5 | ✅ Feature importance drift alert | `model_metadata.csv` already stores daily importances — reads it and adds a drift panel to the email with Spearman rank correlation. |
+| 6 | ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered. |
+| 7 | ⬜ Dynamic badge in public repo | Show the real last-update date instead of a static badge. |
 
-| Item | Description |
-|------|-------------|
-| ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry — events that structurally alter short-term price behaviour. Requires a reliable external API; coverage for European assets is limited. |
+### Week 3 — Public repo completion
+
+Prepare everything for publication.
+
+| # | Item | Description |
+|---|------|-------------|
+| 8 | ⬜ `predictions_log_public.csv` | Anonymised version of the log (no tickers, no prices) — proves real accuracy to anyone who opens the public repo. |
+| 9 | ⬜ "Reliability" section in README | Group unit tests + fallbacks + retry logic in a single section. |
+| 10 | ⬜ Semantic git tags | Tag each version milestone (`v1.0.0`, `v1.1.0`, …) to anchor the changelog in git history. |
+
+### Weeks 4–5 — Model quality
+
+Only here. Not before. The pipeline must be stable before touching the model.
+
+| # | Item | Description |
+|---|------|-------------|
+| 11 | ⬜ Walk-Forward Validation | Replace single train/test split with rolling walk-forward for honest out-of-sample accuracy. |
+| 12 | ⬜ Market regime as explicit feature | VIX-based regime label (low / medium / high volatility) as model input — context-specific pattern learning. |
+
+### Week 6 — Reporting
+
+| # | Item | Description |
+|---|------|-------------|
+| 13 | ⬜ Correlation matrix in email | Portfolio asset correlation heatmap — real concentration risk in stress scenarios. |
+| 14 | ⬜ Fix SGLN.L projection | Three scenarios (pessimistic / base / optimistic) instead of a single historical growth rate. |
+
+### Weeks 7–8 — Publication
+
+| # | Item | Description |
+|---|------|-------------|
+| 15 | ⬜ Final READMEs (EN + PT) | Full revision of both READMEs before public launch. |
+| 16 | ⬜ Public repo launch | Publish `smart-wallet-ml` as a complete, documented project. |
+| 17 | ⬜ LinkedIn article | Tell the story of the project — from notebook to automated ML pipeline. |
+
+### After publication — no fixed deadline
+
+| # | Item | Description |
+|---|------|-------------|
+| 18 | ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry. Requires a reliable external API; European coverage is limited. |
+| 19 | ⬜ D+1 price regressor | Only with 1 year of clean accumulated data. |
 
 ---
 
