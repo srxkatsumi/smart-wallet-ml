@@ -105,7 +105,17 @@ jobs:
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
-          git push
+          for i in 1 2 3; do
+            git push && break
+            if [ $i -lt 3 ]; then
+              echo "Push falhou (tentativa $i/3) — rebase e nova tentativa em 15s"
+              git pull --rebase
+              sleep 15
+            else
+              echo "Push falhou após 3 tentativas"
+              exit 1
+            fi
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
