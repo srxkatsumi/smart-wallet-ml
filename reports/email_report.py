@@ -134,7 +134,8 @@ def _compute_drift() -> dict:
 
 def build_html(resultados_ml: dict, resumo_etfs: list[dict],
                df_log: pd.DataFrame, my_tickers: list[str],
-               ensemble_weights: dict) -> str:
+               ensemble_weights: dict,
+               context_warnings: list[str] | None = None) -> str:
 
     barcelona_tz = timezone(timedelta(hours=BARCELONA_UTC_OFFSET))
     agora        = datetime.now(barcelona_tz)
@@ -257,6 +258,20 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
             {n_rec} previsões do portfólio validadas<br>nos últimos 30 dias úteis
           </div>"""
 
+    # ── Context data warnings (VIX/SPY NaN forward-filled) ───────────────
+    if context_warnings:
+        warning_items = "".join(
+            f'<div style="margin-bottom:3px">⚠️ {w}</div>' for w in context_warnings
+        )
+        ctx_warning_html = f"""
+  <div style="padding:12px 36px;background:#fffbea;border-top:2px solid #f0c040">
+    <div style="font-size:11px;color:#7a6010;line-height:1.6;font-weight:500">
+      {warning_items}
+    </div>
+  </div>"""
+    else:
+        ctx_warning_html = ""
+
     # ── Feature importance drift ──────────────────────────────────────────
     drift = _compute_drift()
     if not drift["enough_data"]:
@@ -359,6 +374,8 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
       </tr>
     </table>
   </div>
+
+  {ctx_warning_html}
 
   <!-- PREVISÕES ML -->
   <div style="padding:32px 36px 24px">

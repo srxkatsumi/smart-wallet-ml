@@ -43,8 +43,9 @@ def to_eur(preco: float, moeda: str, gbp_pence: bool = False) -> float:
     return preco
 
 
-def download_context() -> dict:
+def download_context() -> tuple[dict, list[str]]:
     context_data = {}
+    warnings     = []
     for ctx_ticker, ctx_name in [("^VIX", "vix"), ("SPY", "spy")]:
         try:
             df = yf.download(ctx_ticker, period=PRICE_PERIOD, interval="1d",
@@ -55,11 +56,23 @@ def download_context() -> dict:
                 df.columns = df.columns.get_level_values(0)
             df.index = pd.to_datetime(df.index).normalize()
             df = df.sort_index()
-            context_data[ctx_name] = df["Close"].rename(ctx_name)
+            series = df["Close"].rename(ctx_name)
+
+            # Forward fill any NaN in the last 3 days; warn if applied
+            nan_recent = series.tail(3)
+            nan_dates  = nan_recent[nan_recent.isna()].index
+            if len(nan_dates) > 0:
+                series = series.ffill()
+                dates_str = ", ".join(d.strftime("%Y-%m-%d") for d in nan_dates)
+                msg = f"{ctx_ticker}: dados em falta ({dates_str}) — valor anterior usado"
+                warnings.append(msg)
+                logger.warning(msg)
+
+            context_data[ctx_name] = series
             logger.info("%s: %d dias | último=%.2f", ctx_ticker, len(df), df["Close"].iloc[-1])
         except Exception as e:
             logger.warning("%s: %s — features de contexto usarão valores neutros", ctx_ticker, e)
-    return context_data
+    return context_data, warnings
 
 
 def download_prices(tickers: list[str], etf_acumulacao: list[dict]) -> dict:

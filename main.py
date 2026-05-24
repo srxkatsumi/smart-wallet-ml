@@ -42,7 +42,7 @@ def main():
 
     # ── Market data download ──────────────────────────────────────────────
     logger.info("Downloading context (VIX, SPY)...")
-    context_data = download_context()
+    context_data, ctx_warnings = download_context()
 
     logger.info("Downloading %d tickers...", len(all_tickers))
     raw_data = download_prices(all_tickers, etf_acumul)
@@ -89,7 +89,8 @@ def main():
 
     # ── Email report ──────────────────────────────────────────────────────
     from reports.email_report import build_html, save_html
-    html = build_html(resultados_ml, resumo_etfs, df_log, my_tickers, ensemble_weights)
+    html = build_html(resultados_ml, resumo_etfs, df_log, my_tickers, ensemble_weights,
+                      context_warnings=ctx_warnings)
     save_html(html)
 
     logger.info("=== Completed successfully ===")
