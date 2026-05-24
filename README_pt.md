@@ -414,6 +414,10 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **Preço SGLN.L em EUR no email** — tickers em GBX (pence) são agora convertidos para EUR antes de serem mostrados; preço consistente com todos os outros ativos na tabela ML
 - ✅ **Testes unitários** — 8 testes pytest em 3 módulos: limites do RSI (features), limites de probabilidade do ensemble, lógica de fees no P&L; os testes correm no GitHub Actions antes do `main.py` e param o pipeline em caso de falha
 - ✅ **Feature importance drift como alerta** — painel diário no email com correlação de Spearman (ρ) entre o ranking de features de hoje e o período de referência; sinaliza drift quando ρ < 0,70 ou a feature principal muda
+- ✅ **Retry no git push** — até 3 tentativas com `git pull --rebase` + pausa de 15s entre cada uma; elimina perda de dados por falha transitória no push
+- ✅ **Artefacto GitHub em push falhado** — `predictions_log.csv` e `ensemble_weights.json` guardados como artefacto do workflow (retido 7 dias) se todas as tentativas falharem
+- ✅ **Forward fill para NaN em VIX/SPY** — detecta NaN nos últimos 3 dias, aplica ffill e mostra banda âmbar no email quando activado
+- ✅ **Detecção de stock split** — variação >40% face ao `ref_price` marca a validação como `NaN` em vez de `False`; threshold configurável via `SPLIT_DETECTION_THRESHOLD`
 
 ---
 
@@ -427,10 +431,10 @@ Antes de qualquer melhoria de modelo, o pipeline tem de ser à prova de falha.
 
 | # | Item | Descrição |
 |---|------|-----------|
-| 1 | ⬜ Retry no git push | 5 linhas no YAML. Elimina perda de dados por falha transitória no push. |
-| 2 | ⬜ Artefacto GitHub em push falhado | Upload do `predictions_log.csv` como artefacto do workflow se o push falhar — safety net para recuperação manual. |
-| 3 | ⬜ Forward fill para NaN em VIX/SPY | Usar o valor T-1 se T-0 devolver NaN; adicionar aviso no email quando acontece. |
-| 4 | ⬜ Detecção de stock split | Variação >40% num dia marca validações em aberto como `NaN` em vez de `False` — evita penalizar modelos por acção corporativa. |
+| 1 | ✅ Retry no git push | 5 linhas no YAML. Elimina perda de dados por falha transitória no push. |
+| 2 | ✅ Artefacto GitHub em push falhado | Upload do `predictions_log.csv` como artefacto do workflow se o push falhar — safety net para recuperação manual. |
+| 3 | ✅ Forward fill para NaN em VIX/SPY | Usar o valor T-1 se T-0 devolver NaN; adicionar aviso no email quando acontece. |
+| 4 | ✅ Detecção de stock split | Variação >40% num dia marca validações em aberto como `NaN` em vez de `False` — evita penalizar modelos por acção corporativa. |
 
 ### Semana 2 — Observabilidade
 
