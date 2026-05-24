@@ -5,7 +5,7 @@ import yfinance as yf
 
 from data.storage import save_predictions_log, save_ensemble_weights
 from data.calendars import target_dates
-from config.settings import HORIZONS, MIN_VALIDATIONS_WEIGHT, WEIGHT_DECAY_FACTOR
+from config.settings import HORIZONS, MIN_VALIDATIONS_WEIGHT, WEIGHT_DECAY_FACTOR, SPLIT_DETECTION_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +13,9 @@ logger = logging.getLogger(__name__)
 def validate_past_predictions(df_log: pd.DataFrame,
                                featured_data: dict) -> pd.DataFrame:
     hoje  = pd.Timestamp.now().normalize()
-    updated     = 0
-    skipped_open= 0
+    updated      = 0
+    skipped_open = 0
+    split_count  = 0
 
     # Fetch data for tickers that left the portfolio but still have open predictions
     tickers_ativos    = set(featured_data.keys())
@@ -68,6 +69,21 @@ def validate_past_predictions(df_log: pd.DataFrame,
         ref = row.get("ref_price")
         if pd.isna(ref):
             ref = row["pred_price"]
+
+        # Detect probable stock split / reverse split: >40% move from reference
+        if ref and ref > 0 and abs(actual / ref - 1) > SPLIT_DETECTION_THRESHOLD:
+            logger.warning(
+                "%s D+%s: variação de %.1f%% em %s — provável split, correct ignorado (NaN)",
+                ticker, int(row.get("horizon", 0)),
+                (actual / ref - 1) * 100,
+                pd.to_datetime(row["target_date"]).strftime("%Y-%m-%d"),
+            )
+            df_log.at[idx, "actual_price"]      = actual
+            df_log.at[idx, "actual_change_pct"] = round((actual / ref - 1) * 100, 4)
+            split_count += 1
+            updated += 1
+            continue
+
         correct = (
             (row["direction"] == "up"   and actual >= ref) or
             (row["direction"] == "down" and actual <= ref)
@@ -80,6 +96,8 @@ def validate_past_predictions(df_log: pd.DataFrame,
     if updated > 0:
         save_predictions_log(df_log)
         logger.info("%d previsões validadas", updated)
+    if split_count > 0:
+        logger.warning("%d validação(ões) ignoradas por provável stock split", split_count)
     if skipped_open > 0:
         logger.info("%d previsões aguardam fecho de mercado", skipped_open)
     if updated == 0 and skipped_open == 0:
