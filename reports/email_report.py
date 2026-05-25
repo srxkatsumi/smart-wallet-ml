@@ -55,9 +55,9 @@ def _consenso_badge(consenso: str) -> str:
 
 def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
     mask = (
-        (df_log["ticker"]    == ticker) &
-        (df_log["pred_date"] == ontem_str) &
-        (df_log["horizon"]   == 1) &
+        (df_log["ticker"]      == ticker) &
+        (df_log["target_date"] == ontem_str) &
+        (df_log["horizon"]     == 1) &
         (df_log["correct"].notna())
     )
     rows = df_log[mask]
@@ -302,7 +302,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
 
         drift_html = f"""
   <div style="padding:20px 36px;border-top:1px solid #efece4;background:#f6f3eb">
-    <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:12px">
+    <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:6px">
       <tr>
         <td style="vertical-align:middle">
           <span style="font-size:10px;font-weight:600;color:#a89e85;letter-spacing:0.14em;text-transform:uppercase">Feature importance drift</span>
@@ -312,6 +312,11 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         </td>
       </tr>
     </table>
+    <div style="font-size:10.5px;color:#a89e85;margin-bottom:12px;line-height:1.5">
+      Compara o ranking de importância das features de hoje com os últimos {n_ref} dias (RF, média por horizonte).<br>
+      <strong style="color:#7a6a5a">ρ</strong> = correlação de Spearman entre os dois rankings · ρ próximo de 1 = padrão estável · ρ &lt; 0,70 = sinal de drift.<br>
+      <strong style="color:#1e7a4c">↑</strong> subiu no ranking &nbsp;·&nbsp; <strong style="color:#b8453a">↓</strong> desceu no ranking &nbsp;·&nbsp; → sem alteração
+    </div>
     <table style="border-collapse:collapse">
       <thead>
         <tr>
