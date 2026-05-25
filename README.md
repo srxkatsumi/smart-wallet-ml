@@ -416,6 +416,8 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **GitHub artifact on failed push** — `predictions_log.csv` and `ensemble_weights.json` uploaded as a workflow artifact (retained 7 days) if all push attempts fail
 - ✅ **Forward fill for NaN in VIX/SPY** — detects NaN in the last 3 days, applies ffill, and shows an amber warning band in the email when activated
 - ✅ **Stock split detection** — price variation >40% from `ref_price` marks the validation as `NaN` instead of `False`; threshold configurable via `SPLIT_DETECTION_THRESHOLD`
+- ✅ **✅/❌ icon fix** — `_acertou_ontem()` now filters by `target_date` instead of `pred_date`; shows whether the prediction *targeting* yesterday was correct, not the one *made* yesterday — fixes missing icons on Mondays and for tickers whose markets close after the pipeline runs
+- ✅ **Feature drift panel legend** — added description of ρ, the reference period, and arrow meaning (↑ ↓ →) to the drift section in the email
 
 ---
 
@@ -441,7 +443,7 @@ The pipeline runs but doesn't tell you when it's degrading. That changes here.
 | # | Item | Description |
 |---|------|-------------|
 | 5 | ✅ Feature importance drift alert | `model_metadata.csv` already stores daily importances — reads it and adds a drift panel to the email with Spearman rank correlation. |
-| 6 | ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered. |
+| 6 | ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered. *(deferred to end)* |
 | 7 | ⬜ Dynamic badge in public repo | Show the real last-update date instead of a static badge. |
 
 ### Week 3 — Public repo completion
