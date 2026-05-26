@@ -1,10 +1,11 @@
 # smart-wallet-ml
 
-> **Last updated:** 2026-05-25 &nbsp;·&nbsp; Charts from 2026-05-06 to 2026-05-15 (23 charts)
+> **Last updated:** 2026-05-26 &nbsp;·&nbsp; Charts from 2026-05-07 to 2026-05-16 (23 charts)
 
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikit-learn)](https://scikit-learn.org/)
 [![GitHub Actions](https://img.shields.io/badge/Automated-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart-wallet-ml/actions)
+[![Last sync](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20sync&color=4c8f6b&logo=github)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
 
 ---
 
