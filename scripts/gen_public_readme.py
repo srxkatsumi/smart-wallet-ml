@@ -20,6 +20,7 @@ readme = f"""\
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikit-learn)](https://scikit-learn.org/)
 [![GitHub Actions](https://img.shields.io/badge/Automated-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart-wallet-ml/actions)
+[![Last sync](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20sync&color=4c8f6b&logo=github)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
 
 ---
 

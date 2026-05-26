@@ -418,6 +418,7 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **Stock split detection** — price variation >40% from `ref_price` marks the validation as `NaN` instead of `False`; threshold configurable via `SPLIT_DETECTION_THRESHOLD`
 - ✅ **✅/❌ icon fix** — `_acertou_ontem()` now filters by `target_date` instead of `pred_date`; shows whether the prediction *targeting* yesterday was correct, not the one *made* yesterday — fixes missing icons on Mondays and for tickers whose markets close after the pipeline runs
 - ✅ **Feature drift panel legend** — added description of ρ, the reference period, and arrow meaning (↑ ↓ →) to the drift section in the email
+- ✅ **Dynamic badge in public repo** — `last sync` badge powered by `shields.io/github/last-commit`; updates automatically on every page view without any JSON file or extra configuration
 
 ---
 
@@ -444,7 +445,7 @@ The pipeline runs but doesn't tell you when it's degrading. That changes here.
 |---|------|-------------|
 | 5 | ✅ Feature importance drift alert | `model_metadata.csv` already stores daily importances — reads it and adds a drift panel to the email with Spearman rank correlation. |
 | 6 | ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered. *(deferred to end)* |
-| 7 | ⬜ Dynamic badge in public repo | Show the real last-update date instead of a static badge. |
+| 7 | ✅ Dynamic badge in public repo | `shields.io/github/last-commit` badge — updates automatically on every page view. |
 
 ### Week 3 — Public repo completion
 
