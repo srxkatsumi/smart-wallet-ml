@@ -1,7 +1,7 @@
 # Carteira Inteligente — ML Portfolio Forecasting System
 
 > A self-learning investment portfolio analysis and forecasting system built from scratch.
-> Runs automatically every weekday at 17:45 (Barcelona / CEST) via GitHub Actions.
+> Runs automatically every weekday at ~22:30 (Barcelona / CEST) — after all markets close — via GitHub Actions.
 
 [![GitHub Actions](https://img.shields.io/badge/Automated-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart_wallet/actions)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
@@ -71,7 +71,7 @@ Each model receives a set of technical indicators computed from historical price
 | `vix_level` | CBOE VIX closing level (T-1) | The market's implied volatility — the "fear gauge". A VIX of 30 means a fundamentally different environment from a VIX of 14. Without this, the model cannot distinguish bull-market and crisis-regime behaviour. |
 | `vix_change` | VIX daily change (T-1) | Captures fear *acceleration*, not just fear level. A VIX that is rising sharply often leads different outcomes than the same absolute VIX level that has been stable for weeks. |
 
-**Why T-1 for external context features:** when the pipeline runs at 17:45 Barcelona time, European markets have just closed but US markets are still open. Yesterday's US close (T-1) is the most recent complete and final data point for SPY and VIX. Using the in-progress T-0 values would constitute lookahead bias — the model would be trained on information that did not yet exist at forecast time.
+**Why T-1 for external context features:** T-1 values are used to maintain consistency with how the models were trained. During training, every row uses T-1 context (the SPY/VIX data available *before* the trading session being predicted). Using T-0 at inference time would introduce a train/inference mismatch — the model would be fed a temporal structure it was never trained on.
 
 ### Adaptive ensemble weights with temporal decay
 
@@ -309,7 +309,7 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 ## Automation (GitHub Actions)
 
 ```
-Mon–Fri 17:45 Barcelona (15:45 UTC, accounting for ~2h GitHub scheduler delay)
+Mon–Fri ~22:30 Barcelona CEST (20:30 UTC — after all markets close)
   │
   ├─ Job 1: check if pipeline already ran today
   │   └─ reads predictions_log.csv — if today's date exists, skip (~10s)
@@ -318,26 +318,26 @@ Mon–Fri 17:45 Barcelona (15:45 UTC, accounting for ~2h GitHub scheduler delay)
       ├─ 1. Checkout repository
       ├─ 2. Install Python 3.11
       ├─ 3. Install dependencies (pip install -r requirements.txt)
-      ├─ 4. Run main.py (~8 minutes)
+      ├─ 4. Run unit tests (pytest tests/ -v) — halts pipeline on failure
+      ├─ 5. Run main.py (~8 minutes)
       │   ├─ Download prices + FX + VIX + SPY
       │   ├─ Compute features
       │   ├─ Validate previous forecasts
-      │   ├─ Monthly SGD recalibration (if due)
-      │   ├─ Retrain all models with updated history
       │   ├─ Update ensemble weights
+      │   ├─ Monthly SGD recalibration (if due)
+      │   ├─ Retrain all models with updated weights
       │   ├─ Save new D+1 / D+2 / D+3 forecasts
       │   ├─ Generate charts
       │   └─ Build HTML email report
-      ├─ 5. Commit output files → push (predictions_log, weights, charts, html)
-      ├─ 6. Prepare email subject date
+      ├─ 6. Commit output files → push (with up to 3 retries + git pull --rebase)
       ├─ 7. Send HTML email via Gmail SMTP
       ├─ 8. Sync public repo (10-day delayed charts + auto-generated README)
-      └─ 9. On failure: send failure notification email
+      └─ 9. On failure: upload emergency artifact + send failure notification email
 ```
 
 **Why three cron entries:** GitHub Actions' scheduler is subject to queue delays of up to 2–3 hours under high load. Three separate cron triggers (30 minutes apart) are registered, but the anti-duplication check in Job 1 ensures the pipeline only executes once per day even if multiple crons fire.
 
-**Why 17:45 Barcelona:** Frankfurt, Paris, London, Milan and Amsterdam all close at 17:30 CEST. Running at 17:45 captures the actual day-close prices for all European ETFs in the portfolio. US equities (LLY, NVDA, BABA) are still trading at this time — yfinance returns the most recent intraday price, not the day's close.
+**Why after US market close:** NYSE and NASDAQ close at 20:00 UTC (16:00 ET). By running at ~20:30 UTC, the pipeline has access to the actual day-close price for every asset in the portfolio — including US equities (LLY, NVDA, BABA) and crypto (BTC-USD). This means same-day forecast validation is possible for all tickers, and the ✅/❌ accuracy icons in the email are always populated when the report arrives.
 
 ---
 
@@ -419,6 +419,7 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **✅/❌ icon fix** — `_acertou_ontem()` now filters by `target_date` instead of `pred_date`; shows whether the prediction *targeting* yesterday was correct, not the one *made* yesterday — fixes missing icons on Mondays and for tickers whose markets close after the pipeline runs
 - ✅ **Feature drift panel legend** — added description of ρ, the reference period, and arrow meaning (↑ ↓ →) to the drift section in the email
 - ✅ **Dynamic badge in public repo** — `last sync` badge powered by `shields.io/github/last-commit`; updates automatically on every page view without any JSON file or extra configuration
+- ✅ **Schedule moved to after US market close** — cron retargeted to ~20:30 UTC (22:30 Barcelona CEST); NYSE/NASDAQ close at 20:00 UTC so all tickers now have their day-close price available at validation time — fixes missing ✅/❌ icons for US equities and crypto
 
 ---
 

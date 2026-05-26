@@ -1,7 +1,7 @@
 # Carteira Inteligente — Sistema de Previsão de Carteira com Machine Learning
 
 > Um sistema de análise e previsão de carteira de investimentos que aprende sozinho, construído do zero.
-> Executa automaticamente todos os dias úteis às 17h45 (Barcelona / CEST) via GitHub Actions.
+> Executa automaticamente todos os dias úteis às ~22h30 (Barcelona / CEST) — após o fecho de todos os mercados — via GitHub Actions.
 
 [![GitHub Actions](https://img.shields.io/badge/Automatizado-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart_wallet/actions)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
@@ -15,7 +15,7 @@ Tenho uma carteira de investimentos dividida entre ações (eToro) e ETFs de acu
 
 Decidi mudar isso.
 
-Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às 17h45 (Barcelona) e faz três coisas:
+Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às ~22h30 (Barcelona) e faz três coisas:
 
 1. **Analisa a carteira** — Ganho/Perda real em euros, breakeven com fees incluídos, alvo de saída
 2. **Prevê a direção dos próximos 3 dias** — Usando Machine Learning (Random Forest, Gradient Boosting, SGD em ensemble) com indicadores técnicos + contexto de mercado (VIX, SPY)
@@ -75,7 +75,7 @@ O modelo SGD passa por **recalibração mensal completa**: refit do scaler + ret
 | `vix_level` | Nível de fecho do VIX (T-1) | O "termómetro do medo" do mercado. |
 | `vix_change` | Variação diária do VIX (T-1) | Captura a *aceleração* do medo, não só o seu nível. |
 
-**Por que T-1 para as features de contexto externo:** quando o pipeline corre às 17h45, os mercados europeus acabaram de fechar mas os EUA ainda estão abertos. O fecho de NY do dia anterior (T-1) é o dado mais recente e completo disponível. Usar os valores em progresso de T-0 constituiria data leakage.
+**Por que T-1 para as features de contexto externo:** os valores T-1 são usados para garantir consistência com o processo de treino. Durante o treino, cada linha usa contexto T-1 (os dados SPY/VIX disponíveis *antes* da sessão que está a ser prevista). Usar T-0 em produção introduziria um desfasamento treino/inferência — o modelo receberia uma estrutura temporal para a qual nunca foi treinado.
 
 ### Pesos adaptativos com decaimento temporal
 
@@ -311,7 +311,7 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 ## Como funciona a automação (GitHub Actions)
 
 ```
-Seg–Sex 17h45 Barcelona (15h45 UTC, compensando ~2h de delay típico do GitHub)
+Seg–Sex ~22h30 Barcelona CEST (20h30 UTC — após o fecho de todos os mercados)
   │
   ├─ Job 1: verificar se já executou hoje
   │   └─ lê predictions_log.csv — se a data de hoje já existe, sai em ~10s
@@ -320,26 +320,26 @@ Seg–Sex 17h45 Barcelona (15h45 UTC, compensando ~2h de delay típico do GitHub
       ├─ 1. Checkout do repositório
       ├─ 2. Instalar Python 3.11
       ├─ 3. Instalar dependências (pip install -r requirements.txt)
-      ├─ 4. Executar main.py (~8 minutos)
+      ├─ 4. Correr testes unitários (pytest tests/ -v) — pára o pipeline se falhar
+      ├─ 5. Executar main.py (~8 minutos)
       │   ├─ Baixar preços + câmbio + VIX + SPY
       │   ├─ Calcular features
       │   ├─ Validar previsões anteriores
-      │   ├─ Recalibração mensal do SGD (se necessário)
-      │   ├─ Treinar modelos com histórico atualizado
       │   ├─ Atualizar pesos do ensemble
+      │   ├─ Recalibração mensal do SGD (se necessário)
+      │   ├─ Treinar modelos com os pesos actualizados
       │   ├─ Guardar novas previsões D+1 / D+2 / D+3
       │   ├─ Gerar gráficos
       │   └─ Construir email HTML
-      ├─ 5. Commit dos ficheiros de output → push
-      ├─ 6. Preparar data para assunto do email
+      ├─ 6. Commit dos ficheiros de output → push (até 3 tentativas + git pull --rebase)
       ├─ 7. Enviar email HTML via Gmail SMTP
       ├─ 8. Sincronizar repo público (gráficos com atraso 10 dias + README gerado)
-      └─ 9. Em caso de falha: enviar email de notificação de erro
+      └─ 9. Em caso de falha: artefacto de emergência + email de notificação de erro
 ```
 
 **Por que três entradas de cron:** o agendador do GitHub Actions pode atrasar 2–3 horas. Três crons separados (com 30 min de diferença) garantem a execução. A verificação anti-duplicação no Job 1 garante que o pipeline só executa uma vez por dia.
 
-**Por que 17h45 Barcelona:** Frankfurt, Paris, Londres, Milão e Amsterdão fecham às 17h30 CEST. Ao correr às 17h45, o pipeline captura o fecho real do dia para todos os ETFs europeus da carteira.
+**Por que após o fecho dos EUA:** a NYSE e o NASDAQ fecham às 20h00 UTC (16h00 ET). Ao correr às ~20h30 UTC, o pipeline tem acesso ao preço real de fecho do dia para todos os ativos da carteira — incluindo ações americanas (LLY, NVDA, BABA) e crypto (BTC-USD). Isto permite validar as previsões no próprio dia em que os mercados fecham, e os ícones ✅/❌ de acurácia no email aparecem sempre preenchidos quando o relatório chega.
 
 ---
 
@@ -421,6 +421,7 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **Correcção dos ícones ✅/❌** — `_acertou_ontem()` passa a filtrar por `target_date` em vez de `pred_date`; mostra se a previsão que *apontava* para ontem acertou, não a que foi *feita* ontem — corrige ícones em falta às segundas-feiras e para tickers cujo mercado fecha depois do pipeline correr
 - ✅ **Legenda no painel drift** — adicionada descrição de ρ, do período de referência e do significado das setas (↑ ↓ →) na secção de drift do email
 - ✅ **Badge dinâmico no repo público** — badge `last sync` via `shields.io/github/last-commit`; actualiza automaticamente em cada visualização, sem ficheiro JSON nem configuração extra
+- ✅ **Horário movido para após o fecho dos mercados EUA** — cron reajustado para ~20h30 UTC (22h30 Barcelona CEST); NYSE/NASDAQ fecham às 20h00 UTC, por isso todos os tickers têm o preço de fecho disponível no momento da validação — corrige os ícones ✅/❌ em falta para ações americanas e crypto
 
 ---
 
