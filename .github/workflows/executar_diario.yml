@@ -96,6 +96,7 @@ jobs:
           git config user.email "bot@carteira.auto"
 
           git add output/predictions_log.csv
+          git add output/predictions_log_public.csv 2>/dev/null || true
           git add output/ensemble_weights.json
           git add output/resumo_diario.html
           git add output/model_metadata.csv         2>/dev/null || true
@@ -171,6 +172,9 @@ jobs:
           rm -rf /tmp/public_repo/charts
           mkdir -p /tmp/public_repo/charts
 
+          # Copy anonymised predictions log
+          cp output/predictions_log_public.csv /tmp/public_repo/ 2>/dev/null || true
+
           COUNT=0
           for f in output/charts/*.png; do
             [ -f "$f" ] || continue
@@ -189,7 +193,7 @@ jobs:
           cd /tmp/public_repo
           git config user.name  "CarteiraSyncBot"
           git config user.email "bot@carteira.auto"
-          git add charts/ README.md
+          git add charts/ README.md predictions_log_public.csv
           git diff --staged --quiet || \
             git commit -m "sync: $TODAY · $DATE_MIN_FMT → $DATE_MAX_FMT · $COUNT charts"
           git push

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from config.settings import (
     OUTPUT_DIR, CHARTS_DIR, MODELS_DIR,
-    PRED_LOG, WEIGHTS_FILE, PRED_COLS, DEFAULT_WEIGHTS,
+    PRED_LOG, PUBLIC_LOG, WEIGHTS_FILE, PRED_COLS, DEFAULT_WEIGHTS,
 )
 
 logger = logging.getLogger(__name__)
@@ -55,6 +55,23 @@ def load_predictions_log() -> pd.DataFrame:
 def save_predictions_log(df: pd.DataFrame):
     df.to_csv(PRED_LOG, index=False)
     logger.info("predictions_log guardado: %d registos", len(df))
+
+
+_PUBLIC_COLS = [
+    "asset_type", "pred_date", "target_date", "horizon",
+    "direction", "confidence", "actual_change_pct", "correct",
+    "model_rf", "model_gb", "model_sgd",
+]
+
+def save_public_log(df: pd.DataFrame, portfolio_tickers: list) -> None:
+    portfolio_set = set(portfolio_tickers)
+    df_pub = df.copy()
+    df_pub["asset_type"] = df_pub["ticker"].apply(
+        lambda t: "portfolio" if t in portfolio_set else "watchlist"
+    )
+    cols = [c for c in _PUBLIC_COLS if c in df_pub.columns]
+    df_pub[cols].to_csv(PUBLIC_LOG, index=False)
+    logger.info("predictions_log_public guardado: %d registos", len(df_pub))
 
 
 def load_ensemble_weights() -> dict:

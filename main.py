@@ -23,7 +23,7 @@ def main():
     from data.storage import (
         ensure_dirs, load_predictions_log, load_ensemble_weights,
         load_portfolio_config, load_my_tickers, load_watchlist,
-        build_ticker_order,
+        build_ticker_order, save_public_log,
     )
     ensure_dirs()
     df_log          = load_predictions_log()
@@ -70,6 +70,7 @@ def main():
 
     # ── Save today's predictions ──────────────────────────────────────────
     df_log = save_new_predictions(df_log, resultados_ml, hoje)
+    save_public_log(df_log, my_tickers)
 
     # ── Portfolio P&L ─────────────────────────────────────────────────────
     from portfolio.pnl import calculate_etoro_pnl, calculate_etf_pnl

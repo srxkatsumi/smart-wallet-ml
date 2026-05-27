@@ -6,6 +6,7 @@ OUTPUT_DIR   = Path("output")
 CHARTS_DIR   = OUTPUT_DIR / "charts"
 MODELS_DIR   = OUTPUT_DIR / "models"
 PRED_LOG     = OUTPUT_DIR / "predictions_log.csv"
+PUBLIC_LOG   = OUTPUT_DIR / "predictions_log_public.csv"
 WEIGHTS_FILE = OUTPUT_DIR / "ensemble_weights.json"
 METADATA_FILE= OUTPUT_DIR / "model_metadata.csv"
 RECALIB_FILE = OUTPUT_DIR / "ultima_recalibracao.json"

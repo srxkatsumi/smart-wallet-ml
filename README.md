@@ -420,6 +420,7 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **Feature drift panel legend** — added description of ρ, the reference period, and arrow meaning (↑ ↓ →) to the drift section in the email
 - ✅ **Dynamic badge in public repo** — `last sync` badge powered by `shields.io/github/last-commit`; updates automatically on every page view without any JSON file or extra configuration
 - ✅ **Schedule moved to after US market close** — cron retargeted to ~20:30 UTC (22:30 Barcelona CEST); NYSE/NASDAQ close at 20:00 UTC so all tickers now have their day-close price available at validation time — fixes missing ✅/❌ icons for US equities and crypto
+- ✅ **`predictions_log_public.csv`** — anonymised version of the audit log (no tickers, no prices) published daily to the public repo; contains `asset_type` (portfolio/watchlist), direction, confidence, outcome, and individual model votes — allows anyone to verify real accuracy
 
 ---
 
@@ -454,7 +455,7 @@ Prepare everything for publication.
 
 | # | Item | Description |
 |---|------|-------------|
-| 8 | ⬜ `predictions_log_public.csv` | Anonymised version of the log (no tickers, no prices) — proves real accuracy to anyone who opens the public repo. |
+| 8 | ✅ `predictions_log_public.csv` | Anonymised version of the log (no tickers, no prices) — proves real accuracy to anyone who opens the public repo. |
 | 9 | ⬜ "Reliability" section in README | Group unit tests + fallbacks + retry logic in a single section. |
 | 10 | ⬜ Semantic git tags | Tag each version milestone (`v1.0.0`, `v1.1.0`, …) to anchor the changelog in git history. |
 
