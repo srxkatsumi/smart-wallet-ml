@@ -2,7 +2,6 @@ import json
 import logging
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 from config import PREDICTIONS_FILE, WEIGHTS_FILE, DEFAULT_WEIGHTS, OUTPUT_DIR
 
@@ -11,7 +10,7 @@ logger = logging.getLogger(__name__)
 PRED_COLS = [
     "prediction_date", "target_concurso", "target_date", "draw_day",
     "seq_num", "n1", "n2", "n3", "n4", "n5", "n6",
-    "matches", "best_prize", "validated",
+    "matches", "prize", "acertou", "acuracia", "validated",
     "actual_n1", "actual_n2", "actual_n3", "actual_n4", "actual_n5", "actual_n6",
 ]
 
@@ -46,5 +45,5 @@ def load_weights() -> dict:
 def save_weights(weights: dict):
     with open(WEIGHTS_FILE, "w") as f:
         json.dump(weights, f, indent=2)
-    logger.info("Pesos guardados: RF=%.3f GB=%.3f SGD=%.3f",
+    logger.info("Pesos: RF=%.3f GB=%.3f SGD=%.3f",
                 weights["rf"], weights["gb"], weights["sgd"])

@@ -89,6 +89,20 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
 
+      # 5b — Mega Sena ML Experiment (apenas às segundas-feiras, sem notificação)
+      - name: 🎱 Mega Sena ML (só segunda-feira)
+        if: success() && (github.event_name == 'workflow_dispatch' || startsWith(github.event.schedule, '30 17') || startsWith(github.event.schedule, '0 18') || startsWith(github.event.schedule, '30 18'))
+        run: |
+          DAY=$(date +%u)   # 1=Segunda … 7=Domingo
+          if [ "$DAY" = "1" ]; then
+            echo "É segunda-feira — a correr experimento Mega Sena"
+            cd test_ml/analisenumerica
+            python main.py || echo "Mega Sena falhou (não bloqueia pipeline principal)"
+            cd ../..
+          else
+            echo "Não é segunda-feira (dia $DAY) — a saltar Mega Sena"
+          fi
+
       # 5 — Commit dos ficheiros gerados de volta ao repositório
       - name: 💾 Guardar resultados no repositório
         run: |
@@ -103,6 +117,9 @@ jobs:
           git add output/ultima_recalibracao.json   2>/dev/null || true
           git add output/models/                    2>/dev/null || true
           git add output/charts/*.png               2>/dev/null || true
+          git add test_ml/analisenumerica/output/  2>/dev/null || true
+          git add test_ml/analisenumerica/README.md   2>/dev/null || true
+          git add test_ml/analisenumerica/README_pt.md 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 

@@ -6,6 +6,7 @@ OUTPUT_DIR      = BASE_DIR / "output"
 RESULTS_FILE    = OUTPUT_DIR / "mega_sena_results.csv"
 PREDICTIONS_FILE= OUTPUT_DIR / "predictions_log.csv"
 WEIGHTS_FILE    = OUTPUT_DIR / "ensemble_weights.json"
+OUTPUT_MD       = OUTPUT_DIR / "previsoes.md"
 
 # ── Mega Sena settings ────────────────────────────────────────────────────
 N_BALLS         = 60        # numbers in pool
@@ -15,7 +16,9 @@ DRAW_DAYS       = ["Monday", "Thursday", "Saturday"]
 
 # ── Feature windows ───────────────────────────────────────────────────────
 FREQ_WINDOWS    = [5, 10, 20, 50]   # last N draws for frequency features
-MIN_DRAWS_TRAIN = 30                # minimum draws needed to train
+MIN_DRAWS_TRAIN  = 30               # minimum draws needed to train
+BACKFILL_WINDOW  = 300              # historical draws to backfill (≈2 years)
+RETRAIN_INTERVAL = 50               # retrain every N draws during backfill
 
 # ── Model hyperparameters (same family as stock system) ───────────────────
 N_ESTIMATORS_RF  = 100

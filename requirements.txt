@@ -6,3 +6,6 @@ numpy
 joblib
 pandas-market-calendars
 pytest
+requests
+beautifulsoup4
+lxml
