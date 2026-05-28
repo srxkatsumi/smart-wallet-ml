@@ -360,21 +360,43 @@ Gmail SMTP                   — entrega de email HTML
 
 ---
 
-## Testes unitários
+## Confiabilidade
 
-8 testes automáticos correm no GitHub Actions **antes** do `main.py`. Se algum falhar, o pipeline pára — os modelos não treinam com dados potencialmente corrompidos.
+O pipeline tem múltiplas camadas independentes de proteção, desde antes da primeira linha de código rodar até depois do último arquivo ser enviado ao repositório.
+
+### Antes da execução: testes unitários
+
+8 testes automáticos correm no GitHub Actions **antes** do `main.py`. Se algum falhar, o pipeline para imediatamente — os modelos não treinam com dados potencialmente corrompidos.
 
 ```
 pytest tests/ -v
 ```
 
-| Ficheiro | Testes | O que valida |
-|----------|--------|--------------|
-| `tests/test_features.py` | 2 | RSI14 sempre em [0, 100] com dados aleatórios e monotónicos |
-| `tests/test_ensemble.py` | 2 | Probabilidades do ensemble e por modelo sempre em [0, 1]; direcção coerente com probabilidade |
-| `tests/test_pnl.py` | 4 | Breakeven > preço de compra quando fees > 0; breakeven == preço de compra quando fees = 0; conversão USD→EUR correcta |
+| Arquivo | Testes | O que valida |
+|---------|--------|--------------|
+| `tests/test_features.py` | 2 | RSI14 sempre em [0, 100] com dados aleatórios e monotônicos |
+| `tests/test_ensemble.py` | 2 | Probabilidades do ensemble e por modelo sempre em [0, 1]; direção coerente com a probabilidade |
+| `tests/test_pnl.py` | 4 | Breakeven > preço de compra quando fees > 0; breakeven == preço de compra quando fees = 0; conversão USD→EUR correta |
 
-Todos os testes usam dados sintéticos — sem chamadas de rede, sem ficheiros em disco.
+Todos os testes usam dados sintéticos — sem chamadas de rede, sem arquivos em disco.
+
+### Durante a execução: validação dos dados de mercado
+
+| Proteção | Gatilho | Comportamento |
+|----------|---------|---------------|
+| Forward fill do VIX/SPY | VIX ou SPY retorna NaN nos últimos 3 dias | Usa o valor de T-1; exibe faixa âmbar de aviso no email |
+| Detecção de stock split | `abs(actual / ref_price - 1) > 40%` | Marca a validação como `NaN` em vez de `False`; não penaliza o modelo por evento corporativo |
+
+### Após a execução: rede de segurança do push
+
+O git push usa um loop de tentativas: até 3 tentativas, com `git pull --rebase` e pausa de 15 segundos entre cada uma. Se todas as 3 falharem, `predictions_log.csv` e `ensemble_weights.json` são salvos como artifact do GitHub Actions (retidos por 7 dias), permitindo recuperação manual sem perda de dados.
+
+```
+for i in 1 2 3; do
+    git push && break
+    git pull --rebase && sleep 15
+done
+```
 
 ---
 
@@ -423,6 +445,8 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **Badge dinâmico no repo público** — badge `last sync` via `shields.io/github/last-commit`; actualiza automaticamente em cada visualização, sem ficheiro JSON nem configuração extra
 - ✅ **Horário movido para após o fecho dos mercados EUA** — cron reajustado para ~20h30 UTC (22h30 Barcelona CEST); NYSE/NASDAQ fecham às 20h00 UTC, por isso todos os tickers têm o preço de fecho disponível no momento da validação — corrige os ícones ✅/❌ em falta para ações americanas e crypto
 - ✅ **`predictions_log_public.csv`** — versão anonimizada do log de auditoria (sem tickers, sem preços) publicada diariamente no repo público; contém `asset_type` (portfolio/watchlist), direção, confiança, resultado e votos individuais dos modelos — permite a qualquer pessoa verificar a acurácia real
+- ✅ **Seção Confiabilidade** — todos os mecanismos de proteção reunidos num único lugar: testes unitários (antes da execução), forward fill VIX/SPY e detecção de split (durante a execução), retry do push e artifact de emergência (após a execução)
+- ✅ **Tags semânticos no git** — `v1.0.0` (Semana 1: estabilidade), `v1.1.0` (Semana 2: observabilidade), `v1.2.0` (Semana 3: repo público); cada tag ancora um marco no histórico git com mensagem descritiva
 
 ---
 
@@ -458,8 +482,8 @@ Preparar tudo para a publicação.
 | # | Item | Descrição |
 |---|------|-----------|
 | 8 | ✅ `predictions_log_public.csv` | Versão anonimizada do log (sem tickers, sem preços) — prova de acurácia real para qualquer pessoa que abra o repo público. |
-| 9 | ⬜ Secção "Reliability" no README | Agrupar testes unitários + fallbacks + retry numa secção única. |
-| 10 | ⬜ Git tags semânticos | Tag em cada marco de versão (`v1.0.0`, `v1.1.0`, …) para ancorar o changelog no histórico git. |
+| 9 | ✅ Secção "Confiabilidade" no README | Agrupar testes unitários + fallbacks + retry numa secção única. |
+| 10 | ✅ Git tags semânticos | Tag em cada marco de versão (`v1.0.0`, `v1.1.0`, …) para ancorar o changelog no histórico git. |
 
 ### Semanas 4–5 — Qualidade do modelo
 

@@ -358,9 +358,13 @@ Gmail SMTP                   — HTML email delivery
 
 ---
 
-## Unit tests
+## Reliability
 
-8 automated tests run in GitHub Actions **before** `main.py`. If any test fails, the pipeline halts — the models do not train on potentially corrupt data.
+The pipeline has multiple independent layers of protection, from before the first line of code runs to after the last file is pushed.
+
+### Pre-run: unit tests
+
+8 automated tests run in GitHub Actions **before** `main.py`. If any test fails, the pipeline halts immediately — the models do not train on potentially corrupt data.
 
 ```
 pytest tests/ -v
@@ -373,6 +377,24 @@ pytest tests/ -v
 | `tests/test_pnl.py` | 4 | Breakeven > purchase price when fees > 0; breakeven == purchase price when fees = 0; USD→EUR conversion correct |
 
 All tests use synthetic data — no network calls, no files on disk.
+
+### Runtime: data quality guards
+
+| Guard | Trigger | Behaviour |
+|-------|---------|-----------|
+| VIX/SPY forward fill | VIX or SPY returns NaN in the last 3 days | Uses T-1 value; shows amber warning band in the email |
+| Stock split detection | `abs(actual / ref_price - 1) > 40%` | Marks validation as `NaN` instead of `False`; does not penalise the model for a corporate event |
+
+### Post-run: push safety net
+
+Git push uses a retry loop: up to 3 attempts, with `git pull --rebase` and a 15-second pause between each. If all 3 attempts fail, `predictions_log.csv` and `ensemble_weights.json` are uploaded as a GitHub Actions artifact (retained 7 days), allowing manual recovery without data loss.
+
+```
+for i in 1 2 3; do
+    git push && break
+    git pull --rebase && sleep 15
+done
+```
 
 ---
 
@@ -421,6 +443,8 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **Dynamic badge in public repo** — `last sync` badge powered by `shields.io/github/last-commit`; updates automatically on every page view without any JSON file or extra configuration
 - ✅ **Schedule moved to after US market close** — cron retargeted to ~20:30 UTC (22:30 Barcelona CEST); NYSE/NASDAQ close at 20:00 UTC so all tickers now have their day-close price available at validation time — fixes missing ✅/❌ icons for US equities and crypto
 - ✅ **`predictions_log_public.csv`** — anonymised version of the audit log (no tickers, no prices) published daily to the public repo; contains `asset_type` (portfolio/watchlist), direction, confidence, outcome, and individual model votes — allows anyone to verify real accuracy
+- ✅ **Reliability section** — all protection mechanisms grouped in one place: unit tests (pre-run), VIX/SPY forward fill and stock split detection (runtime), git push retry and emergency artifact (post-run)
+- ✅ **Semantic git tags** — `v1.0.0` (Week 1: stability), `v1.1.0` (Week 2: observability), `v1.2.0` (Week 3: public repo); each tag anchors a milestone in git history with a descriptive message
 
 ---
 
@@ -456,8 +480,8 @@ Prepare everything for publication.
 | # | Item | Description |
 |---|------|-------------|
 | 8 | ✅ `predictions_log_public.csv` | Anonymised version of the log (no tickers, no prices) — proves real accuracy to anyone who opens the public repo. |
-| 9 | ⬜ "Reliability" section in README | Group unit tests + fallbacks + retry logic in a single section. |
-| 10 | ⬜ Semantic git tags | Tag each version milestone (`v1.0.0`, `v1.1.0`, …) to anchor the changelog in git history. |
+| 9 | ✅ "Reliability" section in README | Group unit tests + fallbacks + retry logic in a single section. |
+| 10 | ✅ Semantic git tags | Tag each version milestone (`v1.0.0`, `v1.1.0`, …) to anchor the changelog in git history. |
 
 ### Weeks 4–5 — Model quality
 
