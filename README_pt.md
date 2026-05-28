@@ -74,6 +74,7 @@ O modelo SGD passa por **recalibração mensal completa**: refit do scaler + ret
 | `spy_ret_1d` | Retorno do S&P 500 (T-1) | Contexto global do mercado. |
 | `vix_level` | Nível de fecho do VIX (T-1) | O "termómetro do medo" do mercado. |
 | `vix_change` | Variação diária do VIX (T-1) | Captura a *aceleração* do medo, não só o seu nível. |
+| `vix_regime` | Label de regime do VIX: 0 = baixo (VIX < 15), 1 = médio (15 ≤ VIX < 25), 2 = alto (VIX ≥ 25) | Sinal discreto de regime de mercado — permite ao modelo aprender padrões diferentes por contexto de volatilidade. Sem ela, um mercado calmo e uma crise parecem iguais para o vetor de features. |
 
 **Por que T-1 para as features de contexto externo:** os valores T-1 são usados para garantir consistência com o processo de treino. Durante o treino, cada linha usa contexto T-1 (os dados SPY/VIX disponíveis *antes* da sessão que está a ser prevista). Usar T-0 em produção introduziria um desfasamento treino/inferência — o modelo receberia uma estrutura temporal para a qual nunca foi treinado.
 
@@ -447,6 +448,12 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **`predictions_log_public.csv`** — versão anonimizada do log de auditoria (sem tickers, sem preços) publicada diariamente no repo público; contém `asset_type` (portfolio/watchlist), direção, confiança, resultado e votos individuais dos modelos — permite a qualquer pessoa verificar a acurácia real
 - ✅ **Seção Confiabilidade** — todos os mecanismos de proteção reunidos num único lugar: testes unitários (antes da execução), forward fill VIX/SPY e detecção de split (durante a execução), retry do push e artifact de emergência (após a execução)
 - ✅ **Tags semânticos no git** — `v1.0.0` (Semana 1: estabilidade), `v1.1.0` (Semana 2: observabilidade), `v1.2.0` (Semana 3: repo público); cada tag ancora um marco no histórico git com mensagem descritiva
+- ✅ **Gap no Walk-Forward Validation** — `TimeSeriesSplit(n_splits=5, gap=1)`; `gap=1` insere um dia entre cada fold de treino e o de validação, evitando lookahead no mesmo dia e produzindo estimativas de acurácia mais honestas
+- ✅ **Feature de regime de mercado (`vix_regime`)** — label discreta baseada no VIX (0 = baixo, 1 = médio, 2 = alto) adicionada a `FEATURE_COLS`; os modelos SGD detetam automaticamente a mudança no número de features ao carregar e reinicializam — nunca corrompem modelos existentes silenciosamente
+- ✅ **Matriz de correlação no email** — heatmap de retornos diários da carteira (janela 120 dias) embebido diretamente como PNG base64 no email HTML; sem anexos; fallback silencioso se matplotlib não estiver disponível
+- ✅ **Cenários de projeção ETF para longo prazo** — a coluna 10 anos mostra três cenários fixos (Pess = 3% · Base = 8% · Otim = 15%) em vez de uma única taxa histórica; elimina projeções enganadoras para tickers com historial curto ou não representativo (e.g., SGLN.L em GBX)
+- ✅ **README educativo** — `README_educativo.md` (PT-BR): documentação detalhada de todas as features com fórmulas e autores originais, exemplo numérico de pesos adaptativos, historial de bugs, e explicação completa do pipeline
+- ✅ **`predictions_log_public.csv` no repo público** — log de auditoria anonimizado publicado diariamente a par dos gráficos com atraso de 10 dias; contém `asset_type` (portfolio/watchlist), direção, confiança, resultado e votos individuais dos modelos — acurácia verificável por qualquer pessoa
 
 ---
 
@@ -491,23 +498,23 @@ Só aqui. Não antes. O pipeline tem de estar estável antes de mexer no modelo.
 
 | # | Item | Descrição |
 |---|------|-----------|
-| 11 | ⬜ Walk-Forward Validation | Substituir o split único por walk-forward rolling para acurácia honesta fora da amostra. |
-| 12 | ⬜ Regime de mercado como feature | Label de regime baseada no VIX (baixo / médio / alto) como input do modelo — aprendizagem por contexto. |
+| 11 | ✅ Walk-Forward Validation | `TimeSeriesSplit(n_splits=5, gap=1)` — `gap=1` impede lookahead entre o fold de treino e o de validação, produzindo estimativas de acurácia mais honestas. |
+| 12 | ✅ Regime de mercado como feature | Label `vix_regime` (0 / 1 / 2) com base em thresholds de VIX (< 15 / 15–25 / ≥ 25); adicionada a `FEATURE_COLS`; os modelos SGD reinicializam automaticamente ao detectar mudança no número de features. |
 
 ### Semana 6 — Relatório
 
 | # | Item | Descrição |
 |---|------|-----------|
-| 13 | ⬜ Matriz de correlação no email | Heatmap de correlação da carteira — exposição real em cenários de stress. |
-| 14 | ⬜ Correcção projecção SGLN.L | Três cenários (pessimista / base / optimista) em vez de taxa histórica linear. |
+| 13 | ✅ Matriz de correlação no email | Heatmap de correlação de retornos diários da carteira (janela de 120 dias) embebido como PNG base64 no email HTML; fallback silencioso se matplotlib não estiver disponível. |
+| 14 | ✅ Cenários de projeção ETF | A coluna 10 anos mostra três cenários fixos: Pess = 3% · Base = 8% · Otim = 15%; elimina a taxa histórica enganadora para tickers com historial curto ou não representativo. |
 
 ### Semanas 7–8 — Publicação
 
 | # | Item | Descrição |
 |---|------|-----------|
-| 15 | ⬜ READMEs finais (EN + PT) | Revisão completa de ambos antes do lançamento público. |
-| 16 | ⬜ Lançamento do repo público | Publicar `smart-wallet-ml` como projecto completo e documentado. |
-| 17 | ⬜ Artigo LinkedIn | Contar a história do projecto — do notebook ao pipeline ML automatizado. |
+| 15 | ✅ READMEs finais (EN + PT) | Revisão completa de ambos os READMEs, incluindo `README_educativo.md` (PT-BR) com todas as features novas e roadmap atualizado. |
+| 16 | ✅ Lançamento do repo público | `smart-wallet-ml` publicado com `predictions_log_public.csv`, gráficos com atraso de 10 dias e README gerado automaticamente. |
+| 17 | ⬜ Artigo LinkedIn | Contar a história do projecto — do notebook ao pipeline ML automatizado. *(conteúdo externo, não código — sem prazo fixo)* |
 
 ### Depois da publicação — sem prazo fixo
 

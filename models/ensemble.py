@@ -13,7 +13,7 @@ from features.engineering import FEATURE_COLS
 from config.settings import (
     N_ESTIMATORS_RF, MAX_DEPTH_RF,
     N_ESTIMATORS_GB, MAX_DEPTH_GB, LEARNING_RATE_GB,
-    N_SPLITS_CV, SGD_ALPHA, SGD_MAX_ITER,
+    N_SPLITS_CV, CV_GAP, SGD_ALPHA, SGD_MAX_ITER,
     SGD_PARTIAL_FIT_DAYS, HORIZONS,
     METADATA_FILE, RECALIB_FILE, RECALIBRATION_DAYS,
 )
@@ -38,6 +38,10 @@ def _load_sgd(ticker: str, day: int, models_dir):
     model = joblib.load(sgd_path)
     with open(scaler_path) as f:
         sc_data = json.load(f)
+    if len(sc_data["center"]) != len(FEATURE_COLS):
+        logger.info("SGD %s D+%s: feature count changed (%d→%d), reinitializing",
+                    sgd_path.stem, day, len(sc_data["center"]), len(FEATURE_COLS))
+        return None, None, True
     scaler = RobustScaler()
     scaler.center_ = np.array(sc_data["center"])
     scaler.scale_  = np.array(sc_data["scale"])
@@ -67,7 +71,7 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
     scaler   = RobustScaler()
     X_scaled = scaler.fit_transform(X)
 
-    tscv      = TimeSeriesSplit(n_splits=N_SPLITS_CV)
+    tscv      = TimeSeriesSplit(n_splits=N_SPLITS_CV, gap=CV_GAP)
     acuracias = {"rf": [], "gb": [], "sgd": []}
 
     rf_model = RandomForestClassifier(

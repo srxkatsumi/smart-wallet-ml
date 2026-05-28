@@ -90,6 +90,7 @@ Recent correct predictions count more than older ones. If a model starts underpe
 | `spy_ret_1d` | S&P 500 return (T-1) — global market context |
 | `vix_level` | CBOE VIX close (T-1) — market fear level |
 | `vix_change` | VIX daily change (T-1) — fear acceleration |
+| `vix_regime` | VIX regime label: 0 = low (< 15), 1 = medium (15–25), 2 = high (≥ 25) |
 
 All external context features use T-1 values to prevent data leakage.
 
@@ -117,6 +118,27 @@ GitHub Actions     — free daily automation
 | Random directional forecast | 50% |
 | System target | 55–65% |
 | Degradation signal | < 52% over 30+ validations |
+
+---
+
+## Verifiable accuracy
+
+`predictions_log_public.csv` is published in this repository alongside the charts.
+It contains every forecast made since the system went live, with the actual outcome filled in once the target date passes.
+
+| Column | Content |
+|--------|---------|
+| `asset_type` | `portfolio` or `watchlist` — no ticker names disclosed |
+| `pred_date` | Date the forecast was made |
+| `target_date` | Date the forecast refers to |
+| `direction` | `up` or `down` |
+| `confidence` | Ensemble weighted probability |
+| `correct` | `True` / `False` / `NaN` (NaN = stock split detected) |
+| `model_rf` | Individual Random Forest vote |
+| `model_gb` | Individual Gradient Boosting vote |
+| `model_sgd` | Individual SGD Classifier vote |
+
+No prices, tickers, or portfolio weights are included.
 
 ---
 

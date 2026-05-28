@@ -1,0 +1,4 @@
+asset_type,pred_date,target_date,horizon,direction,confidence,actual_change_pct,correct,model_rf,model_gb,model_sgd
+portfolio,2026-05-26,2026-05-27,1,up,0.65,1.1,1.0,up,up,down
+watchlist,2026-05-26,2026-05-27,1,down,0.58,-2.5,1.0,down,up,down
+portfolio,2026-05-26,2026-05-27,1,up,0.72,,,up,up,up

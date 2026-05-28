@@ -70,6 +70,7 @@ Each model receives a set of technical indicators computed from historical price
 | `spy_ret_1d` | S&P 500 return (T-1) | Global market context. NVDA on a day after the S&P dropped 2% behaves differently from NVDA on a neutral day. This feature allows the model to condition its forecast on the broad market state. |
 | `vix_level` | CBOE VIX closing level (T-1) | The market's implied volatility — the "fear gauge". A VIX of 30 means a fundamentally different environment from a VIX of 14. Without this, the model cannot distinguish bull-market and crisis-regime behaviour. |
 | `vix_change` | VIX daily change (T-1) | Captures fear *acceleration*, not just fear level. A VIX that is rising sharply often leads different outcomes than the same absolute VIX level that has been stable for weeks. |
+| `vix_regime` | VIX regime label: 0 = low (VIX < 15), 1 = medium (15 ≤ VIX < 25), 2 = high (VIX ≥ 25) | A discrete market-regime signal that lets the model learn different patterns per volatility environment. Without it, a calm bull market and a crisis period look the same to the feature vector — they should not. |
 
 **Why T-1 for external context features:** T-1 values are used to maintain consistency with how the models were trained. During training, every row uses T-1 context (the SPY/VIX data available *before* the trading session being predicted). Using T-0 at inference time would introduce a train/inference mismatch — the model would be fed a temporal structure it was never trained on.
 
@@ -445,6 +446,12 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 - ✅ **`predictions_log_public.csv`** — anonymised version of the audit log (no tickers, no prices) published daily to the public repo; contains `asset_type` (portfolio/watchlist), direction, confidence, outcome, and individual model votes — allows anyone to verify real accuracy
 - ✅ **Reliability section** — all protection mechanisms grouped in one place: unit tests (pre-run), VIX/SPY forward fill and stock split detection (runtime), git push retry and emergency artifact (post-run)
 - ✅ **Semantic git tags** — `v1.0.0` (Week 1: stability), `v1.1.0` (Week 2: observability), `v1.2.0` (Week 3: public repo); each tag anchors a milestone in git history with a descriptive message
+- ✅ **Walk-Forward Validation gap** — `TimeSeriesSplit(n_splits=5, gap=1)`; `gap=1` inserts one day between each training fold and the validation fold, preventing same-day lookahead and producing more honest cross-validated accuracy estimates
+- ✅ **Market regime feature (`vix_regime`)** — discrete VIX-based label (0 = low, 1 = medium, 2 = high) added to `FEATURE_COLS`; SGD models detect a feature count mismatch on load and reinitialise automatically, so adding new features never silently corrupts existing models
+- ✅ **Correlation matrix in email** — portfolio asset return heatmap (120-day daily returns) embedded directly as a base64 PNG in the HTML email; no file attachments; graceful no-op if matplotlib is unavailable
+- ✅ **ETF long-term projection scenarios** — 10-year column now shows three fixed growth scenarios (Pess = 3% · Base = 8% · Otim = 15%) instead of a single historical rate; eliminates misleading projections for tickers with limited or unrepresentative price history (e.g., SGLN.L in GBX)
+- ✅ **Educational README** — `README_educativo.md` (PT-BR): in-depth documentation of every feature with formulas and original authors, adaptive weight numerical example, bug history, and full pipeline explanation
+- ✅ **`predictions_log_public.csv` in public repo** — anonymised audit log published daily alongside the 10-day delayed charts; contains `asset_type` (portfolio/watchlist), direction, confidence, outcome, and individual model votes — verifiable accuracy for anyone
 
 ---
 
@@ -489,23 +496,23 @@ Only here. Not before. The pipeline must be stable before touching the model.
 
 | # | Item | Description |
 |---|------|-------------|
-| 11 | ⬜ Walk-Forward Validation | Replace single train/test split with rolling walk-forward for honest out-of-sample accuracy. |
-| 12 | ⬜ Market regime as explicit feature | VIX-based regime label (low / medium / high volatility) as model input — context-specific pattern learning. |
+| 11 | ✅ Walk-Forward Validation | `TimeSeriesSplit(n_splits=5, gap=1)` — gap=1 prevents same-day lookahead between training and validation folds. |
+| 12 | ✅ Market regime as explicit feature | `vix_regime` label (0 / 1 / 2) based on VIX thresholds (< 15 / 15–25 / ≥ 25); added to FEATURE_COLS; SGD models reinitialise automatically on feature count change. |
 
 ### Week 6 — Reporting
 
 | # | Item | Description |
 |---|------|-------------|
-| 13 | ⬜ Correlation matrix in email | Portfolio asset correlation heatmap — real concentration risk in stress scenarios. |
-| 14 | ⬜ Fix SGLN.L projection | Three scenarios (pessimistic / base / optimistic) instead of a single historical growth rate. |
+| 13 | ✅ Correlation matrix in email | Portfolio asset return correlation heatmap (120-day window) embedded as base64 PNG; graceful fallback if matplotlib unavailable. |
+| 14 | ✅ ETF projection scenarios | 10-year column shows three fixed scenarios: Pess = 3% / Base = 8% / Otim = 15%; eliminates the misleading single historical rate. |
 
 ### Weeks 7–8 — Publication
 
 | # | Item | Description |
 |---|------|-------------|
-| 15 | ⬜ Final READMEs (EN + PT) | Full revision of both READMEs before public launch. |
-| 16 | ⬜ Public repo launch | Publish `smart-wallet-ml` as a complete, documented project. |
-| 17 | ⬜ LinkedIn article | Tell the story of the project — from notebook to automated ML pipeline. |
+| 15 | ✅ Final READMEs (EN + PT) | Full revision of both READMEs including educational deep-dive (`README_educativo.md`), all new features, and updated roadmap. |
+| 16 | ✅ Public repo launch | `smart-wallet-ml` published with `predictions_log_public.csv`, 10-day delayed charts, and auto-generated README. |
+| 17 | ⬜ LinkedIn article | Tell the story of the project — from notebook to automated ML pipeline. *(external content, not code — no fixed deadline)* |
 
 ### After publication — no fixed deadline
 

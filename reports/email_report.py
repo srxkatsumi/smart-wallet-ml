@@ -1,12 +1,74 @@
 import logging
 import pandas as pd
 from datetime import datetime, timezone, timedelta
-from config.settings import HTML_REPORT, BARCELONA_UTC_OFFSET, METADATA_FILE
+from config.settings import (
+    HTML_REPORT, BARCELONA_UTC_OFFSET, METADATA_FILE, TAXA_CRESCIMENTO_BASE,
+)
 
 logger = logging.getLogger(__name__)
 
-_DIAS_PT  = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira',
-             'Sexta-feira','Sábado','Domingo']
+_DIAS_PT  = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira",
+             "Sexta-feira", "Sábado", "Domingo"]
+
+_TAXA_PESS = TAXA_CRESCIMENTO_BASE["pessimista"]   # 0.03
+_TAXA_BASE = TAXA_CRESCIMENTO_BASE["base"]          # 0.08
+_TAXA_OTIM = TAXA_CRESCIMENTO_BASE["optimista"]     # 0.15
+
+
+def _build_correlation_chart(resultados_ml: dict, my_tickers: list) -> str:
+    try:
+        import io, base64
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        closes = {}
+        for ticker in my_tickers:
+            if ticker in resultados_ml:
+                closes[ticker] = resultados_ml[ticker]["df"]["Close"].tail(120)
+        if len(closes) < 2:
+            return ""
+
+        df_c  = pd.DataFrame(closes).pct_change().dropna()
+        corr  = df_c.corr()
+        n     = len(corr)
+        ticks = list(corr.columns)
+
+        fig, ax = plt.subplots(figsize=(max(4, n * 0.7), max(3.5, n * 0.6)))
+        fig.patch.set_facecolor("#f6f3eb")
+        ax.set_facecolor("#f6f3eb")
+
+        vals = corr.values
+        cmap = plt.cm.RdYlGn
+        im   = ax.imshow(vals, cmap=cmap, vmin=-1, vmax=1, aspect="auto")
+
+        ax.set_xticks(range(n))
+        ax.set_yticks(range(n))
+        ax.set_xticklabels(ticks, rotation=45, ha="right", fontsize=8, color="#5a5a5a")
+        ax.set_yticklabels(ticks, fontsize=8, color="#5a5a5a")
+
+        for i in range(n):
+            for j in range(n):
+                v    = vals[i, j]
+                col  = "white" if abs(v) > 0.6 else "#2a2a2a"
+                ax.text(j, i, f"{v:.2f}", ha="center", va="center",
+                        fontsize=7, color=col, fontweight="500")
+
+        ax.set_title("Correlação — retornos diários 120d", fontsize=9,
+                     color="#1a1740", pad=10, fontweight="600")
+        plt.colorbar(im, ax=ax, fraction=0.03, pad=0.04)
+        plt.tight_layout()
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", dpi=130, bbox_inches="tight",
+                    facecolor=fig.get_facecolor())
+        plt.close(fig)
+        buf.seek(0)
+        return base64.b64encode(buf.read()).decode("utf-8")
+    except Exception as e:
+        logger.warning("Correlation chart failed: %s", e)
+        return ""
 _MESES_PT = ['janeiro','fevereiro','março','abril','maio','junho',
              'julho','agosto','setembro','outubro','novembro','dezembro']
 
@@ -50,6 +112,37 @@ def _consenso_badge(consenso: str) -> str:
         f'<span style="display:inline-block;background:{bg};color:{col};border-radius:3px;'
         f'padding:3px 8px;font-size:10px;font-weight:700;letter-spacing:0.08em">'
         f'{consenso}</span>'
+    )
+
+
+def _alvo_cell(close_eur: float, alvo_15_eur: float) -> str:
+    if close_eur >= alvo_15_eur:
+        pct = (close_eur / (alvo_15_eur / 1.15) - 1) * 100
+        return (
+            '<span style="display:inline-block;background:#e7f3eb;color:#1e7a4c;border-radius:3px;'
+            'padding:3px 7px;font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,'
+            f'Menlo,Consolas,monospace;white-space:nowrap">✅ +{pct:.0f}%</span>'
+        )
+    falta_pct = (alvo_15_eur - close_eur) / alvo_15_eur * 100
+    if falta_pct <= 5:
+        return (
+            '<span style="display:inline-block;background:#fffbea;color:#7a6010;border-radius:3px;'
+            'padding:3px 7px;font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,'
+            f'Menlo,Consolas,monospace;white-space:nowrap">⚠️ −{falta_pct:.1f}%</span>'
+        )
+    return (
+        f'<span style="font-size:11px;color:#a0a0a0;font-family:ui-monospace,SFMono-Regular,'
+        f'Menlo,Consolas,monospace;white-space:nowrap">−{falta_pct:.0f}%</span>'
+    )
+
+
+def _pred_price_cell(pred_price: float, close_eur: float, direction: str) -> str:
+    color = "#1e7a4c" if direction == "up" else "#b8453a"
+    arrow = "▲" if direction == "up" else "▼"
+    return (
+        f'<span style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;'
+        f'font-size:11px;color:{color};font-variant-numeric:tabular-nums;white-space:nowrap">'
+        f'{arrow}&nbsp;{pred_price:,.2f}</span>'
     )
 
 
@@ -135,6 +228,7 @@ def _compute_drift() -> dict:
 def build_html(resultados_ml: dict, resumo_etfs: list[dict],
                df_log: pd.DataFrame, my_tickers: list[str],
                ensemble_weights: dict,
+               resumo_etoro: list[dict] | None = None,
                context_warnings: list[str] | None = None) -> str:
 
     barcelona_tz = timezone(timedelta(hours=BARCELONA_UTC_OFFSET))
@@ -203,14 +297,11 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         else:
             taxa = 0.08
 
-        p1  = preco * (1 + taxa) ** 1
-        p3  = preco * (1 + taxa) ** 3
-        p5  = preco * (1 + taxa) ** 5
-        p10 = preco * (1 + taxa) ** 10
-
-        taxa_pct = taxa * 100
-        taxa_col = ("#b8453a" if taxa_pct > 30 else
-                    "#c2891c" if taxa_pct > 15 else "#1e7a4c")
+        p1         = preco * (1 + taxa) ** 1
+        p5         = preco * (1 + taxa) ** 5
+        p10_pess   = preco * (1 + _TAXA_PESS) ** 10
+        p10_base   = preco * (1 + _TAXA_BASE) ** 10
+        p10_otim   = preco * (1 + _TAXA_OTIM) ** 10
 
         border = "border-bottom:1px solid #f0ede5" if i < len(etfs_sorted) - 1 else ""
         etf_rows += f"""
@@ -218,11 +309,71 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
           <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em;white-space:nowrap">{ticker}</td>
           <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#7c7c7c;font-variant-numeric:tabular-nums;white-space:nowrap">{preco:,.2f}</td>
           <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p1:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p3:,.2f}</td>
           <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p5:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{p10:,.2f}</td>
-          <td style="padding:11px 0 11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;font-weight:700;color:{taxa_col};font-variant-numeric:tabular-nums;white-space:nowrap">+{taxa_pct:.1f}%</td>
+          <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">
+            <span style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#b8453a;font-variant-numeric:tabular-nums">{p10_pess:,.0f}</span>
+            <span style="font-size:10px;color:#c8c0b0;margin:0 2px">/</span>
+            <span style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1a1a;font-variant-numeric:tabular-nums">{p10_base:,.0f}</span>
+            <span style="font-size:10px;color:#c8c0b0;margin:0 2px">/</span>
+            <span style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#1e7a4c;font-variant-numeric:tabular-nums">{p10_otim:,.0f}</span>
+          </td>
         </tr>"""
+
+    # ── Price forecast table (eToro stocks only) ──────────────────────────
+    prev_rows = ""
+    if resumo_etoro:
+        etoro_sorted = sorted(resumo_etoro, key=lambda x: x["ticker"])
+        for i, r in enumerate(etoro_sorted):
+            ticker = r["ticker"]
+            if ticker not in resultados_ml:
+                continue
+            close  = r["close_eur"]
+            alvo   = r["alvo_15_eur"]
+            preds  = resultados_ml[ticker]["preds_dict"]
+            border = "border-bottom:1px solid #f0ede5" if i < len(etoro_sorted) - 1 else ""
+            prev_rows += f"""
+        <tr style="{border}">
+          <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em;white-space:nowrap">{ticker}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#7c7c7c;font-variant-numeric:tabular-nums;white-space:nowrap">{close:,.2f}</td>
+          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pred_price_cell(preds[1][1], close, preds[1][0])}</td>
+          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pred_price_cell(preds[2][1], close, preds[2][0])}</td>
+          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pred_price_cell(preds[3][1], close, preds[3][0])}</td>
+          <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">{_alvo_cell(close, alvo)}</td>
+        </tr>"""
+
+    if prev_rows:
+        prev_section_html = f"""
+  <div style="padding:24px 36px;border-top:1px solid #efece4">
+    <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:18px">
+      <tr>
+        <td style="vertical-align:baseline">
+          <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;font-size:20px;font-weight:500;color:#1a1740;letter-spacing:-0.005em">Previsões de preço</div>
+          <div style="font-size:12px;color:#8a8a8a;margin-top:2px">Ações eToro · estimativa ATR por horizonte</div>
+        </td>
+      </tr>
+    </table>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -36px;padding:0 36px">
+    <table style="width:100%;border-collapse:collapse;min-width:500px">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ativo</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Fecho</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+1</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+2</th>
+          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+3</th>
+          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Alvo +15%</th>
+        </tr>
+      </thead>
+      <tbody>{prev_rows}
+      </tbody>
+    </table>
+    </div>
+    <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.55;border-left:2px solid #efece4;padding-left:10px">
+      Preço estimado = fecho ± ATR × 0,5 × √horizonte &nbsp;·&nbsp; Alvo +15% calculado sobre o teu preço de entrada incluindo fees
+    </div>
+  </div>"""
+    else:
+        prev_section_html = ""
 
     # ── Accuracy section ──────────────────────────────────────────────────
     estado, n_rec, faltam, acc_rec, delta = _calcular_tendencia(df_log, my_tickers)
@@ -271,6 +422,20 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
   </div>"""
     else:
         ctx_warning_html = ""
+
+    # ── Correlation matrix ────────────────────────────────────────────────
+    corr_img = _build_correlation_chart(resultados_ml, my_tickers)
+    if corr_img:
+        corr_html = f"""
+  <div style="padding:20px 36px;border-top:1px solid #efece4;background:#f6f3eb">
+    <div style="font-size:10px;font-weight:600;color:#a89e85;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Correlação de retornos</div>
+    <img src="data:image/png;base64,{corr_img}" alt="Matriz de correlação" style="max-width:100%;height:auto;border-radius:4px;display:block">
+    <div style="margin-top:10px;font-size:10.5px;color:#a8a39a;line-height:1.55">
+      Retornos diários dos últimos 120 dias úteis. Verde = correlação positiva · Vermelho = correlação negativa.
+    </div>
+  </div>"""
+    else:
+        corr_html = ""
 
     # ── Feature importance drift ──────────────────────────────────────────
     drift = _compute_drift()
@@ -435,10 +600,8 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
           <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">ETF</th>
           <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Atual</th>
           <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">1a</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">3a</th>
           <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">5a</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">10a</th>
-          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Taxa</th>
+          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">10a Pess / Base / Otim</th>
         </tr>
       </thead>
       <tbody>{etf_rows}
@@ -446,9 +609,12 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     </table>
     </div>
     <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.55;border-left:2px solid #efece4;padding-left:10px">
-      Valores em € por unidade · taxa anualizada com base no histórico. Não inclui aportes mensais nem garante retorno futuro.
+      Valores em € por unidade. 1a e 5a: taxa histórica anualizada. 10a: <span style="color:#b8453a;font-weight:600">Pess = 3%</span> · <span style="font-weight:600">Base = 8%</span> · <span style="color:#1e7a4c;font-weight:600">Otim = 15%</span>. Não inclui aportes mensais nem garante retorno futuro.
     </div>
   </div>
+
+  <!-- PREVISÕES DE PREÇO -->
+  {prev_section_html}
 
   <!-- ACURÁCIA DO MODELO -->
   <div style="padding:28px 36px;border-top:1px solid #efece4;background:#f6f3eb">
@@ -476,6 +642,9 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
 
   <!-- FEATURE IMPORTANCE DRIFT -->
   {drift_html}
+
+  <!-- CORRELAÇÃO DE RETORNOS -->
+  {corr_html}
 
   <!-- AVISO LEGAL -->
   <div style="padding:18px 36px;border-top:1px solid #efece4">

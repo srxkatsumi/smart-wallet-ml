@@ -91,7 +91,7 @@ def main():
     # ── Email report ──────────────────────────────────────────────────────
     from reports.email_report import build_html, save_html
     html = build_html(resultados_ml, resumo_etfs, df_log, my_tickers, ensemble_weights,
-                      context_warnings=ctx_warnings)
+                      resumo_etoro=resumo_etoro, context_warnings=ctx_warnings)
     save_html(html)
 
     logger.info("=== Completed successfully ===")

@@ -19,6 +19,7 @@ N_ESTIMATORS_GB  = 100
 MAX_DEPTH_GB     = 3
 LEARNING_RATE_GB = 0.05
 N_SPLITS_CV      = 5
+CV_GAP           = 1          # gap between train and val to prevent same-day lookahead
 SGD_ALPHA        = 0.0001
 SGD_MAX_ITER     = 1000
 

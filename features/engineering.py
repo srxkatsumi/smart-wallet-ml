@@ -9,7 +9,7 @@ FEATURE_COLS = [
     "RSI14", "MACD", "MACD_sig", "MACD_hist",
     "BB_width", "BB_pos", "ATR14",
     "ret_1d", "ret_5d", "vol_10d",
-    "spy_ret_1d", "vix_level", "vix_change",
+    "spy_ret_1d", "vix_level", "vix_change", "vix_regime",
 ]
 
 
@@ -63,9 +63,14 @@ def build_features(df: pd.DataFrame, context_data: dict) -> pd.DataFrame:
         vix_chg         = context_data["vix"].pct_change(1).shift(1)
         d["vix_level"]  = vix.reindex(d.index, method="ffill").values
         d["vix_change"] = vix_chg.reindex(d.index, method="ffill").values
+        vix_vals        = vix.reindex(d.index, method="ffill")
+        d["vix_regime"] = pd.cut(
+            vix_vals, bins=[-np.inf, 15, 25, np.inf], labels=[0, 1, 2]
+        ).astype(float).values
     else:
         d["vix_level"]  = 20.0
         d["vix_change"] = 0.0
+        d["vix_regime"] = 1.0
 
     # Targets por horizonte (dias de calendário — convertidos a dias úteis no validator)
     d["target_d1"] = (d["Close"].shift(-1) > d["Close"]).astype(int)
