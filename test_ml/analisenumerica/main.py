@@ -46,12 +46,20 @@ def _prize(matches: int) -> str:
     return PRIZE_TIERS.get(matches, "—")
 
 
-def _next_saturday() -> pd.Timestamp:
+_DRAW_WEEKDAYS = {0: "Monday", 3: "Thursday", 5: "Saturday"}
+
+
+def _next_draw_dates(n: int = 3) -> list[tuple[pd.Timestamp, str]]:
+    """Return the next n upcoming Mega Sena draw dates as (date, day_name) tuples."""
     today = pd.Timestamp.today().normalize()
-    days_until_sat = (5 - today.weekday()) % 7
-    if days_until_sat == 0:
-        days_until_sat = 7
-    return today + pd.Timedelta(days=days_until_sat)
+    result = []
+    delta = 1
+    while len(result) < n:
+        candidate = today + pd.Timedelta(days=delta)
+        if candidate.weekday() in _DRAW_WEEKDAYS:
+            result.append((candidate, _DRAW_WEEKDAYS[candidate.weekday()]))
+        delta += 1
+    return result
 
 
 def _estimate_concurso(results: pd.DataFrame, target_date: pd.Timestamp) -> int:
@@ -67,49 +75,58 @@ def _estimate_concurso(results: pd.DataFrame, target_date: pd.Timestamp) -> int:
 # ── Backfill ─────────────────────────────────────────────────────────────
 
 def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
-                        weights: dict) -> pd.DataFrame:
+                        weights: dict) -> tuple[pd.DataFrame, bool]:
     """
-    For each historical draw in the backfill window:
-      1. Train on all draws BEFORE that draw (no lookahead)
-      2. Generate 5 sequences
-      3. Validate immediately against the actual result
+    Walk-forward backfill of all historical draws not yet in pred_df.
+    Processes at most DAILY_BATCH_SIZE new draws per run so each daily
+    execution adds one batch and the full history fills in over ~10 days.
 
-    Retrains every RETRAIN_INTERVAL draws to balance accuracy vs speed.
+    Returns (updated_pred_df, backfill_complete).
     """
     from features.engineering import build_training_data, build_prediction_features
     from models.ensemble     import train, predict_sequences
-    from config              import MIN_DRAWS_TRAIN, BACKFILL_WINDOW, RETRAIN_INTERVAL
+    from config              import MIN_DRAWS_TRAIN, DAILY_BATCH_SIZE, RETRAIN_INTERVAL
 
     known_concursos = set(pred_df["target_concurso"].dropna().astype(int).values)
 
-    # Window: backfill the last BACKFILL_WINDOW draws
-    start_idx = max(MIN_DRAWS_TRAIN, len(results) - BACKFILL_WINDOW)
+    # Find first draw not yet processed (chronological order, skip early ones)
+    start_idx = MIN_DRAWS_TRAIN
     new_rows  = []
     models    = None
+    processed = 0
+    last_train_idx = -RETRAIN_INTERVAL  # force first retrain
 
-    logger.info("Backfill: concursos %d → %d (%d sorteios)",
-                int(results.iloc[start_idx]["concurso"]),
-                int(results.iloc[-1]["concurso"]),
-                len(results) - start_idx)
+    total_pending = sum(
+        1 for i in range(start_idx, len(results))
+        if int(results.iloc[i]["concurso"]) not in known_concursos
+    )
+    if total_pending == 0:
+        logger.info("Backfill completo — nenhum sorteio histórico pendente")
+        return pred_df, True
+
+    logger.info("Backfill: %d sorteios históricos pendentes (batch=%d)",
+                total_pending, DAILY_BATCH_SIZE)
 
     for i in range(start_idx, len(results)):
+        if processed >= DAILY_BATCH_SIZE:
+            break
+
         concurso = int(results.iloc[i]["concurso"])
         if concurso in known_concursos:
             continue
 
-        # Retrain every RETRAIN_INTERVAL draws
-        if models is None or (i - start_idx) % RETRAIN_INTERVAL == 0:
+        # Retrain every RETRAIN_INTERVAL new draws processed
+        if models is None or (i - last_train_idx) >= RETRAIN_INTERVAL:
             history_slice = results.iloc[:i]
             X, y = build_training_data(history_slice)
             models = train(X, y)
+            last_train_idx = i
             logger.info("  Retreinado em concurso %d (treino: %d draws)", concurso, i)
 
         draw_row = results.iloc[i]
         draw_day = pd.Timestamp(draw_row["data"]).day_name()
         actual   = _actual_balls(draw_row)
-
-        seqs = predict_sequences(results.iloc[:i], draw_day, models, weights)
-
+        seqs     = predict_sequences(results.iloc[:i], draw_day, models, weights)
         pred_date = pd.Timestamp(draw_row["data"]) - pd.Timedelta(days=1)
 
         for seq_num, seq in enumerate(seqs, 1):
@@ -133,13 +150,16 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
                 "actual_n3": actual[2], "actual_n4": actual[3],
                 "actual_n5": actual[4], "actual_n6": actual[5],
             })
+        processed += 1
 
+    remaining = total_pending - processed
     if new_rows:
         new_df  = pd.DataFrame(new_rows)
         pred_df = pd.concat([pred_df, new_df], ignore_index=True)
-        logger.info("Backfill: %d novas linhas adicionadas", len(new_rows))
+        logger.info("Backfill: +%d linhas | restam ~%d sorteios históricos",
+                    len(new_rows), remaining)
 
-    return pred_df
+    return pred_df, remaining == 0
 
 
 # ── Validate pending ──────────────────────────────────────────────────────
@@ -171,43 +191,46 @@ def validate_pending(pred_df: pd.DataFrame, results: pd.DataFrame) -> pd.DataFra
 
 # ── Predict next Saturday ─────────────────────────────────────────────────
 
-def predict_saturday(results: pd.DataFrame, models, weights: dict,
-                     pred_df: pd.DataFrame) -> pd.DataFrame:
+def predict_upcoming_draws(results: pd.DataFrame, models, weights: dict,
+                           pred_df: pd.DataFrame) -> pd.DataFrame:
+    """Predict the next 3 upcoming draws (Mon/Thu/Sat) if not already predicted."""
     from models.ensemble import predict_sequences
-    from config          import N_SEQUENCES
 
-    saturday    = _next_saturday()
-    concurso    = _estimate_concurso(results, saturday)
-    draw_day    = "Saturday"
-    today_str   = pd.Timestamp.today().strftime("%Y-%m-%d")
+    today_str  = pd.Timestamp.today().strftime("%Y-%m-%d")
+    new_rows   = []
+    added      = 0
 
-    # Don't duplicate if we already predicted this concurso
-    if not pred_df.empty and concurso in pred_df["target_concurso"].values:
-        logger.info("Previsão para concurso %d já existe — ignorando", concurso)
-        return pred_df
+    for target_date, draw_day in _next_draw_dates(n=3):
+        concurso = _estimate_concurso(results, target_date)
 
-    seqs = predict_sequences(results, draw_day, models, weights)
-    new_rows = []
-    for seq_num, seq in enumerate(seqs, 1):
-        new_rows.append({
-            "prediction_date":  today_str,
-            "target_concurso":  concurso,
-            "target_date":      saturday.strftime("%Y-%m-%d"),
-            "draw_day":         draw_day,
-            "seq_num":          seq_num,
-            "n1": seq[0], "n2": seq[1], "n3": seq[2],
-            "n4": seq[3], "n5": seq[4], "n6": seq[5],
-            "matches":   None, "prize": "⏳", "acertou": "⏳ Pendente",
-            "acuracia":  None, "validated": False,
-            "actual_n1": None, "actual_n2": None, "actual_n3": None,
-            "actual_n4": None, "actual_n5": None, "actual_n6": None,
-        })
+        if not pred_df.empty and concurso in pred_df["target_concurso"].values:
+            logger.info("Concurso ~%d (%s) já previsto — ignorando",
+                        concurso, target_date.strftime("%d/%m/%Y"))
+            continue
 
-    seqs_str = " | ".join(f"[{' '.join(f'{n:02d}' for n in s)}]" for s in seqs)
-    logger.info("Previsão Sábado %s (concurso ~%d): %s",
-                saturday.strftime("%d/%m/%Y"), concurso, seqs_str)
+        seqs = predict_sequences(results, draw_day, models, weights)
+        for seq_num, seq in enumerate(seqs, 1):
+            new_rows.append({
+                "prediction_date":  today_str,
+                "target_concurso":  concurso,
+                "target_date":      target_date.strftime("%Y-%m-%d"),
+                "draw_day":         draw_day,
+                "seq_num":          seq_num,
+                "n1": seq[0], "n2": seq[1], "n3": seq[2],
+                "n4": seq[3], "n5": seq[4], "n6": seq[5],
+                "matches":   None, "prize": "⏳", "acertou": "⏳ Pendente",
+                "acuracia":  None, "validated": False,
+                "actual_n1": None, "actual_n2": None, "actual_n3": None,
+                "actual_n4": None, "actual_n5": None, "actual_n6": None,
+            })
+        seqs_str = " | ".join(f"[{' '.join(f'{n:02d}' for n in s)}]" for s in seqs)
+        logger.info("Previsão %s %s (concurso ~%d): %s",
+                    draw_day, target_date.strftime("%d/%m/%Y"), concurso, seqs_str)
+        added += 1
 
-    pred_df = pd.concat([pred_df, pd.DataFrame(new_rows)], ignore_index=True)
+    if new_rows:
+        pred_df = pd.concat([pred_df, pd.DataFrame(new_rows)], ignore_index=True)
+        logger.info("%d sorteios futuros previstos", added)
     return pred_df
 
 
@@ -236,22 +259,27 @@ def main(force_download: bool = False):
     pred_df = load_predictions()
     pred_df = validate_pending(pred_df, results)
 
-    # 3 — Backfill historical predictions (only runs for new draws)
+    # 3 — Backfill historical predictions (300 draws per run until complete)
     weights = load_weights()
-    pred_df = backfill_historical(results, pred_df, weights)
+    pred_df, backfill_done = backfill_historical(results, pred_df, weights)
     save_predictions(pred_df)
 
     # 4 — Update weights from validated history
     weights = update_weights(pred_df, weights)
     save_weights(weights)
 
-    # 5 — Train on full history and predict next Saturday
+    # 5 — Train on full history and predict upcoming draws (Mon/Thu/Sat)
     logger.info("Treinando modelo final sobre %d sorteios...", len(results))
     X, y = build_training_data(results)
     models = train(X, y)
 
-    pred_df = predict_saturday(results, models, weights, pred_df)
+    pred_df = predict_upcoming_draws(results, models, weights, pred_df)
     save_predictions(pred_df)
+
+    if not backfill_done:
+        pending = sum(1 for c in range(1, int(results["concurso"].min()))
+                      if c not in set(pred_df["target_concurso"].dropna().astype(int)))
+        logger.info("Backfill em progresso — retoma amanhã")
 
     # 6 — Generate output .md
     save_md(pred_df, results)

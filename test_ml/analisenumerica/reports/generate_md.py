@@ -109,12 +109,8 @@ def save_md(pred_df: pd.DataFrame, results: pd.DataFrame):
     else:
         pending_block = header + "\n" + sep + "\n" + _table_rows(pending)
 
-    # History block (most recent first, last 200 rows to keep file manageable)
-    hist = validated.sort_values(["target_date", "seq_num"], ascending=False).head(200)
-    if hist.empty:
-        history_block = "_Sem histórico validado ainda._"
-    else:
-        history_block = header + "\n" + sep + "\n" + _table_rows(hist)
+    n_validated = len(validated)
+    n_concursos = validated["target_concurso"].nunique() if not validated.empty else 0
 
     md = f"""# Mega Sena — Previsões ML
 
@@ -134,14 +130,13 @@ def save_md(pred_df: pd.DataFrame, results: pd.DataFrame):
 
 ---
 
-## 📋 Histórico de previsões (últimas 200)
+## 📋 Histórico completo
 
-> Acertos: 0 a 6 — quantos números da sequência foram sorteados
-> Acurácia: acertos / 6 × 100%
-> Prêmio: Terno (3) · Quadra (4) · Quina (5) · Sena (6)
-> Baseline aleatório esperado: 0,60 acertos/sequência
+O histórico completo de previsões ({n_validated} sequências · {n_concursos} sorteios validados) está disponível em formato CSV:
 
-{history_block}
+→ **[predictions_log.csv](predictions_log.csv)**
+
+Colunas: `prediction_date` · `target_concurso` · `target_date` · `draw_day` · `seq_num` · `n1`–`n6` · `matches` · `prize` · `acuracia` · `validated` · `actual_n1`–`actual_n6`
 """
 
     OUTPUT_MD.parent.mkdir(parents=True, exist_ok=True)

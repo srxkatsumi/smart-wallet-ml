@@ -17,7 +17,7 @@ DRAW_DAYS       = ["Monday", "Thursday", "Saturday"]
 # ── Feature windows ───────────────────────────────────────────────────────
 FREQ_WINDOWS    = [5, 10, 20, 50]   # last N draws for frequency features
 MIN_DRAWS_TRAIN  = 30               # minimum draws needed to train
-BACKFILL_WINDOW  = 300              # historical draws to backfill (≈2 years)
+DAILY_BATCH_SIZE = 300              # max new historical draws to process per daily run
 RETRAIN_INTERVAL = 50               # retrain every N draws during backfill
 
 # ── Model hyperparameters (same family as stock system) ───────────────────
