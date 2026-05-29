@@ -2,96 +2,117 @@ import numpy as np
 import pandas as pd
 from config import N_BALLS, BALLS_PER_DRAW, FREQ_WINDOWS
 
-# Features computed per number (1-60) per draw
 FEATURE_COLS = (
-    [f"freq_{w}d" for w in FREQ_WINDOWS]      # frequency in last N draws
-    + ["draws_since_last"]                      # how many draws since last appeared
-    + ["freq_trend"]                            # freq_5 / freq_20 — acceleration
-    + ["deviation"]                             # freq vs expected 10%
-    + ["decade"]                                # 0-5 group of 10
-    + ["is_even", "is_prime"]                   # numeric properties
-    + ["prev_sum", "prev_mean", "prev_spread"]  # previous draw stats
-    + ["day_mon", "day_thu", "day_sat"]         # draw day one-hot
+    [f"freq_{w}d" for w in FREQ_WINDOWS]
+    + ["draws_since_last"]
+    + ["freq_trend"]
+    + ["deviation"]
+    + ["decade"]
+    + ["is_even", "is_prime"]
+    + ["prev_sum", "prev_mean", "prev_spread"]
+    + ["day_mon", "day_thu", "day_sat"]
 )
 
 _PRIMES = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59}
+_BALL_COLS = ["b1", "b2", "b3", "b4", "b5", "b6"]
+
+# Precomputed static number properties (indexed 0..59)
+_DECADE    = np.array([(n - 1) // 10 for n in range(1, N_BALLS + 1)], dtype=float)
+_IS_EVEN   = np.array([n % 2 == 0    for n in range(1, N_BALLS + 1)], dtype=float)
+_IS_PRIME  = np.array([n in _PRIMES  for n in range(1, N_BALLS + 1)], dtype=float)
 
 
-def _number_features(number: int, history: pd.DataFrame, draw_day: str) -> dict:
-    """Compute features for a single number given the draw history up to (not including) target draw."""
-    n_draws = len(history)
-    ball_cols = ["b1", "b2", "b3", "b4", "b5", "b6"]
+def _build_appeared_matrix(results: pd.DataFrame) -> np.ndarray:
+    """Return bool matrix of shape (n_draws, N_BALLS). appeared[i, j] = 1 if ball j+1 drawn in row i."""
+    balls = results[_BALL_COLS].values.astype(int)  # (n, 6)
+    mat = np.zeros((len(results), N_BALLS), dtype=np.int8)
+    for col in range(6):
+        mat[np.arange(len(results)), balls[:, col] - 1] = 1
+    return mat
 
-    def appeared_in(row):
-        return int(number in row[ball_cols].values)
 
-    appeared = history.apply(appeared_in, axis=1).values  # 1 if appeared, 0 if not
+def _draw_features(appeared_mat: np.ndarray, i: int, draw_day: str,
+                   prev_numbers: np.ndarray) -> np.ndarray:
+    """
+    Build feature matrix of shape (N_BALLS, len(FEATURE_COLS)) for draw i
+    using appeared_mat[:i] as history. Fully vectorized over all 60 numbers.
+    """
+    hist = appeared_mat[:i].astype(float)  # (i, 60)
+    n_hist = i
 
-    feats = {}
+    # Frequency windows — shape (N_BALLS,) each
+    freq = {}
     for w in FREQ_WINDOWS:
-        feats[f"freq_{w}d"] = appeared[-w:].mean() if n_draws >= w else appeared.mean()
+        if n_hist >= w:
+            freq[w] = hist[-w:].mean(axis=0)
+        else:
+            freq[w] = hist.mean(axis=0)
 
-    # Draws since last appearance
-    last_idx = np.where(appeared[::-1] == 1)[0]
-    feats["draws_since_last"] = int(last_idx[0]) if len(last_idx) else n_draws
+    # Draws since last appearance — vectorized
+    # Reverse the history and find first occurrence for each number
+    rev = hist[::-1]  # (i, 60)
+    # For each number: argmax of first 1 (or n_hist if never appeared)
+    has_appeared = hist.sum(axis=0) > 0           # (60,) bool
+    draws_since  = np.where(
+        has_appeared,
+        np.argmax(rev, axis=0).astype(float),
+        float(n_hist),
+    )
 
-    # Trend: recent frequency vs medium-term
-    f5  = feats["freq_5d"]
-    f20 = feats["freq_20d"]
-    feats["freq_trend"] = f5 / f20 if f20 > 0 else 1.0
+    f5  = freq[5]
+    f20 = freq[20]
+    trend     = np.where(f20 > 0, f5 / np.maximum(f20, 1e-10), 1.0)
+    deviation = f20 - (BALLS_PER_DRAW / N_BALLS)
 
-    # Deviation from expected frequency
-    feats["deviation"] = feats["freq_20d"] - (BALLS_PER_DRAW / N_BALLS)
+    # Draw-level scalars (same for all 60 numbers)
+    prev_sum    = float(prev_numbers.sum())
+    prev_mean   = float(prev_numbers.mean())
+    prev_spread = float(prev_numbers.max() - prev_numbers.min())
+    day_mon = float(draw_day == "Monday")
+    day_thu = float(draw_day == "Thursday")
+    day_sat = float(draw_day == "Saturday")
 
-    # Number properties
-    feats["decade"]   = (number - 1) // 10          # 0,1,2,3,4,5
-    feats["is_even"]  = int(number % 2 == 0)
-    feats["is_prime"] = int(number in _PRIMES)
-
-    # Previous draw stats
-    last = history.iloc[-1]
-    prev_numbers = [int(last[c]) for c in ball_cols]
-    feats["prev_sum"]    = sum(prev_numbers)
-    feats["prev_mean"]   = np.mean(prev_numbers)
-    feats["prev_spread"] = max(prev_numbers) - min(prev_numbers)
-
-    # Draw day one-hot
-    feats["day_mon"] = int(draw_day == "Monday")
-    feats["day_thu"] = int(draw_day == "Thursday")
-    feats["day_sat"] = int(draw_day == "Saturday")
-
-    return feats
+    # Stack into (N_BALLS, n_features)
+    X = np.column_stack([
+        freq[5], freq[10], freq[20], freq[50],
+        draws_since,
+        trend,
+        deviation,
+        _DECADE, _IS_EVEN, _IS_PRIME,
+        np.full(N_BALLS, prev_sum),
+        np.full(N_BALLS, prev_mean),
+        np.full(N_BALLS, prev_spread),
+        np.full(N_BALLS, day_mon),
+        np.full(N_BALLS, day_thu),
+        np.full(N_BALLS, day_sat),
+    ])
+    return X
 
 
 def build_training_data(results: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Build X, y for training.
+    """Build X, y for training. Vectorized over all 60 numbers per draw."""
+    appeared_mat = _build_appeared_matrix(results)
+    n = len(results)
 
-    For each draw (row i in results), for each number 1-60:
-    - X = features computed from history[:i]
-    - y = 1 if number was drawn in draw i, else 0
-    """
-    X_rows, y_rows = [], []
-    ball_cols = ["b1", "b2", "b3", "b4", "b5", "b6"]
+    X_list, y_list = [], []
+    balls_vals = results[_BALL_COLS].values.astype(int)
 
-    for i in range(10, len(results)):   # need at least 10 draws for history
-        history = results.iloc[:i]
-        row     = results.iloc[i]
-        drawn   = set(int(row[c]) for c in ball_cols)
-        day     = pd.Timestamp(row["data"]).day_name()
+    for i in range(10, n):
+        draw_day     = pd.Timestamp(results.iloc[i]["data"]).day_name()
+        prev_numbers = balls_vals[i - 1]
+        X_draw       = _draw_features(appeared_mat, i, draw_day, prev_numbers)  # (60, F)
 
-        for number in range(1, N_BALLS + 1):
-            feats = _number_features(number, history, day)
-            X_rows.append([feats[f] for f in FEATURE_COLS])
-            y_rows.append(1 if number in drawn else 0)
+        drawn = set(balls_vals[i])
+        y_draw = np.array([1 if (j + 1) in drawn else 0 for j in range(N_BALLS)], dtype=int)
 
-    return np.array(X_rows, dtype=float), np.array(y_rows, dtype=int)
+        X_list.append(X_draw)
+        y_list.append(y_draw)
+
+    return np.vstack(X_list), np.concatenate(y_list)
 
 
 def build_prediction_features(results: pd.DataFrame, draw_day: str) -> np.ndarray:
     """Build X for inference: features for each number 1-60 using all available history."""
-    X = []
-    for number in range(1, N_BALLS + 1):
-        feats = _number_features(number, results, draw_day)
-        X.append([feats[f] for f in FEATURE_COLS])
-    return np.array(X, dtype=float)
+    appeared_mat = _build_appeared_matrix(results)
+    prev_numbers = results[_BALL_COLS].values[-1].astype(int)
+    return _draw_features(appeared_mat, len(results), draw_day, prev_numbers)

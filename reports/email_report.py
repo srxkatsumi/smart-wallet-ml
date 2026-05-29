@@ -147,6 +147,7 @@ def _pred_price_cell(pred_price: float, close_eur: float, direction: str) -> str
 
 
 def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
+    """Returns 'up_correct' | 'down_correct' | 'wrong' | None."""
     mask = (
         (df_log["ticker"]      == ticker) &
         (df_log["target_date"] == ontem_str) &
@@ -156,7 +157,10 @@ def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
     rows = df_log[mask]
     if rows.empty:
         return None
-    return bool(rows.iloc[0]["correct"])
+    row = rows.iloc[0]
+    if not bool(row["correct"]):
+        return "wrong"
+    return "up_correct" if row.get("direction") == "up" else "down_correct"
 
 
 def _calcular_tendencia(df_log: pd.DataFrame, portfolio_tickers: list) -> tuple:
@@ -174,11 +178,17 @@ def _calcular_tendencia(df_log: pd.DataFrame, portfolio_tickers: list) -> tuple:
                          (validadas["target_date"] <  corte30)]
     MIN_VAL  = 15
     if len(recentes) < MIN_VAL:
-        return "treino", len(recentes), MIN_VAL - len(recentes), None, None
+        return "treino", len(recentes), MIN_VAL - len(recentes), None, None, None, 0, None, 0
     acc_rec = recentes["correct"].astype(float).mean()
     acc_ant = ant["correct"].astype(float).mean() if len(ant) >= MIN_VAL else None
     delta   = acc_rec - acc_ant if acc_ant is not None else None
-    return "ok", len(recentes), None, acc_rec, delta
+
+    up_preds = recentes[recentes["direction"] == "up"]
+    dn_preds = recentes[recentes["direction"] == "down"]
+    prec_up  = up_preds["correct"].astype(float).mean() if len(up_preds) >= 5 else None
+    prec_dn  = dn_preds["correct"].astype(float).mean() if len(dn_preds) >= 5 else None
+
+    return "ok", len(recentes), None, acc_rec, delta, prec_up, len(up_preds), prec_dn, len(dn_preds)
 
 
 def _compute_drift() -> dict:
@@ -263,7 +273,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
                     "BEARISH" if all(x == "down" for x in dirs) else "MISTO")
 
         ontem_ok = _acertou_ontem(ticker, df_log, ontem_bday)
-        icon     = ("✅" if ontem_ok is True else "❌" if ontem_ok is False else "")
+        icon     = {"up_correct": "✅", "down_correct": "📉", "wrong": "❌"}.get(ontem_ok, "")
         icon_td  = f'<span style="font-size:12px;margin-right:3px">{icon}</span>' if icon else ""
 
         d1_dir, _, d1_conf = preds[1]
@@ -376,7 +386,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         prev_section_html = ""
 
     # ── Accuracy section ──────────────────────────────────────────────────
-    estado, n_rec, faltam, acc_rec, delta = _calcular_tendencia(df_log, my_tickers)
+    estado, n_rec, faltam, acc_rec, delta, prec_up, n_up, prec_dn, n_dn = _calcular_tendencia(df_log, my_tickers)
 
     if estado == "treino":
         acc_number_html = f"""
@@ -401,6 +411,14 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
             tendencia_html = f'<div style="margin-top:14px;font-size:11px;color:#b8453a;font-weight:600">↓ {delta:.1%} vs período anterior</div>'
         else:
             tendencia_html = '<div style="margin-top:14px;font-size:11px;color:#8a8a8a">→ Estável vs período anterior</div>'
+
+        prec_up_str = f'{prec_up*100:.0f}%' if prec_up is not None else '—'
+        prec_dn_str = f'{prec_dn*100:.0f}%' if prec_dn is not None else '—'
+        tendencia_html += f"""
+        <div style="margin-top:14px;font-size:11px;color:#5a5a5a;line-height:2.1;border-top:1px solid #ede9e0;padding-top:12px">
+          <div>Quando prevê <span style="color:#1e7a4c;font-weight:700">▲</span> &nbsp;→&nbsp; <strong>{prec_up_str}</strong> de precisão <span style="color:#a0a0a0">({n_up} prev.)</span></div>
+          <div>Quando prevê <span style="color:#b8453a;font-weight:700">▼</span> &nbsp;→&nbsp; <strong>{prec_dn_str}</strong> de precisão <span style="color:#a0a0a0">({n_dn} prev.)</span></div>
+        </div>"""
         acc_number_html = f"""
           <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;font-size:48px;font-weight:500;color:#1a1740;line-height:1;letter-spacing:-0.02em">
             {acc_int}<span style="font-size:24px;color:#7d75c4">%</span>
@@ -578,7 +596,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.7">
       <span style="color:#1e7a4c;font-weight:600">▲</span> probabilidade de alta &nbsp;·&nbsp;
       <span style="color:#b8453a;font-weight:600">▼</span> probabilidade de queda &nbsp;·&nbsp; valor em % de confiança<br>
-      ✅ acertou a previsão D+1 do dia anterior &nbsp;·&nbsp; ❌ errou a previsão D+1 do dia anterior
+      ✅ previu ▲ e subiu &nbsp;·&nbsp; 📉 previu ▼ e caiu &nbsp;·&nbsp; ❌ errou a previsão D+1 do dia anterior
     </div>
   </div>
 

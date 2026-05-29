@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 import joblib
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import RobustScaler
@@ -74,11 +75,12 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
     tscv      = TimeSeriesSplit(n_splits=N_SPLITS_CV, gap=CV_GAP)
     acuracias = {"rf": [], "gb": [], "sgd": []}
 
-    rf_model = RandomForestClassifier(
+    # Plain RF/GB used only for CV accuracy tracking
+    rf_cv = RandomForestClassifier(
         n_estimators=N_ESTIMATORS_RF, max_depth=MAX_DEPTH_RF,
         random_state=42, n_jobs=-1,
     )
-    gb_model = GradientBoostingClassifier(
+    gb_cv = GradientBoostingClassifier(
         n_estimators=N_ESTIMATORS_GB, max_depth=MAX_DEPTH_GB,
         learning_rate=LEARNING_RATE_GB, random_state=42,
     )
@@ -102,16 +104,29 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
     for train_idx, val_idx in tscv.split(X_scaled):
         X_tr, X_val = X_scaled[train_idx], X_scaled[val_idx]
         y_tr, y_val = y[train_idx], y[val_idx]
-        rf_model.fit(X_tr, y_tr)
-        gb_model.fit(X_tr, y_tr)
-        acuracias["rf"].append(accuracy_score(y_val, rf_model.predict(X_val)))
-        acuracias["gb"].append(accuracy_score(y_val, gb_model.predict(X_val)))
+        rf_cv.fit(X_tr, y_tr)
+        gb_cv.fit(X_tr, y_tr)
+        acuracias["rf"].append(accuracy_score(y_val, rf_cv.predict(X_val)))
+        acuracias["gb"].append(accuracy_score(y_val, gb_cv.predict(X_val)))
 
     for train_idx, val_idx in tscv.split(X_scaled):
         X_val_sgd = scaler_sgd.transform(df_train[FEATURE_COLS].values[val_idx])
         acuracias["sgd"].append(accuracy_score(y[val_idx], sgd_model.predict(X_val_sgd)))
 
+    # Final calibrated models for prediction — TimeSeriesSplit preserves temporal order
+    cal_cv = TimeSeriesSplit(n_splits=3)
+    rf_model = CalibratedClassifierCV(
+        RandomForestClassifier(n_estimators=N_ESTIMATORS_RF, max_depth=MAX_DEPTH_RF,
+                               random_state=42, n_jobs=-1),
+        cv=cal_cv, method="isotonic",
+    )
     rf_model.fit(X_scaled, y)
+
+    gb_model = CalibratedClassifierCV(
+        GradientBoostingClassifier(n_estimators=N_ESTIMATORS_GB, max_depth=MAX_DEPTH_GB,
+                                   learning_rate=LEARNING_RATE_GB, random_state=42),
+        cv=cal_cv, method="isotonic",
+    )
     gb_model.fit(X_scaled, y)
 
     acc_media = {k: float(np.mean(v)) for k, v in acuracias.items()}
@@ -219,7 +234,12 @@ def save_model_metadata(resultados_ml: dict, my_tickers: list[str]):
             h = res["horizons"][day]
             for model_name, model_key in [("rf", "rf_model"), ("gb", "gb_model")]:
                 m = h.get(model_key)
-                if m is None or not hasattr(m, "feature_importances_"):
+                if m is None:
+                    continue
+                # Unwrap CalibratedClassifierCV to access feature_importances_
+                if hasattr(m, "calibrated_classifiers_"):
+                    m = m.calibrated_classifiers_[0].estimator
+                if not hasattr(m, "feature_importances_"):
                     continue
                 linha = {
                     "date":        hoje_str,

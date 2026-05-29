@@ -10,10 +10,11 @@ FEATURE_COLS = [
     "BB_width", "BB_pos", "ATR14",
     "ret_1d", "ret_5d", "vol_10d",
     "spy_ret_1d", "vix_level", "vix_change", "vix_regime",
+    "asset_class",
 ]
 
 
-def build_features(df: pd.DataFrame, context_data: dict) -> pd.DataFrame:
+def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -> pd.DataFrame:
     d = df.copy()
 
     d["SMA20"]      = d["Close"].rolling(20).mean()
@@ -72,6 +73,8 @@ def build_features(df: pd.DataFrame, context_data: dict) -> pd.DataFrame:
         d["vix_change"] = 0.0
         d["vix_regime"] = 1.0
 
+    d["asset_class"] = float(asset_class)
+
     # Targets por horizonte (dias de calendário — convertidos a dias úteis no validator)
     d["target_d1"] = (d["Close"].shift(-1) > d["Close"]).astype(int)
     d["target_d2"] = (d["Close"].shift(-2) > d["Close"]).astype(int)
@@ -82,10 +85,12 @@ def build_features(df: pd.DataFrame, context_data: dict) -> pd.DataFrame:
 
 def build_all_features(raw_data: dict, context_data: dict,
                        min_samples: int = 60) -> dict:
+    from config.settings import ASSET_CLASSES
     featured_data = {}
     for ticker, df in raw_data.items():
         try:
-            fd = build_features(df, context_data)
+            ac = ASSET_CLASSES.get(ticker, 0)
+            fd = build_features(df, context_data, asset_class=ac)
             if len(fd) >= min_samples:
                 featured_data[ticker] = fd
                 logger.info("%s: %d dias com features completas", ticker, len(fd))

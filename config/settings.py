@@ -62,6 +62,17 @@ DEFAULT_WEIGHTS = {
 # ── Email timezone (Barcelona) ────────────────────────────────────────────
 BARCELONA_UTC_OFFSET = 2  # CEST (verão); alterar para 1 em outubro (CET)
 
+# ── Asset class per ticker ────────────────────────────────────────────────
+# 0 = individual stock  1 = equity ETF  2 = crypto  3 = commodity ETF
+ASSET_CLASSES: dict[str, int] = {
+    "ALV.DE":  0, "BABA":    0, "BTC-USD": 2, "DHER.DE": 0,
+    "LLY":     0, "NVDA":    0, "SIE.DE":  0, "BMW.DE":  0,
+    "BAS.DE":  0, "NESN.SW": 0, "NOVN.SW": 0, "ROG.SW":  0,
+    "EMIM.AS": 1, "EXUS.L":  1, "IWDA.AS": 1, "MEUD.PA": 1,
+    "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
+    "SGLN.L":  3,
+}
+
 # ── Market calendar mapping (pandas-market-calendars) ────────────────────
 # Tickers not listed here default to NYSE.
 TICKER_CALENDAR: dict[str, str] = {
