@@ -5,6 +5,8 @@ import pandas as pd
 
 from config import PREDICTIONS_FILE, WEIGHTS_FILE, DEFAULT_WEIGHTS, OUTPUT_DIR
 
+BASELINES_FILE = OUTPUT_DIR / "baselines_log.csv"
+
 logger = logging.getLogger(__name__)
 
 PRED_COLS = [
@@ -32,6 +34,24 @@ def load_predictions() -> pd.DataFrame:
 def save_predictions(df: pd.DataFrame):
     df.to_csv(PREDICTIONS_FILE, index=False)
     logger.info("Previsões guardadas: %d linhas", len(df))
+
+
+BASELINE_COLS = PRED_COLS + ["strategy"]
+
+
+def load_baselines() -> pd.DataFrame:
+    if not BASELINES_FILE.exists():
+        return pd.DataFrame(columns=BASELINE_COLS)
+    df = pd.read_csv(BASELINES_FILE)
+    for col in BASELINE_COLS:
+        if col not in df.columns:
+            df[col] = np.nan
+    return df
+
+
+def save_baselines(df: pd.DataFrame):
+    df.to_csv(BASELINES_FILE, index=False)
+    logger.info("Baselines guardados: %d linhas", len(df))
 
 
 def load_weights() -> dict:

@@ -9,6 +9,7 @@ FEATURE_COLS = [
     "RSI14", "MACD", "MACD_sig", "MACD_hist",
     "BB_width", "BB_pos", "ATR14",
     "ret_1d", "ret_5d", "vol_10d",
+    "vol_ratio", "obv_trend",
     "spy_ret_1d", "vix_level", "vix_change", "vix_regime",
     "asset_class",
 ]
@@ -53,6 +54,17 @@ def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -
     d["ret_5d"]  = d["Close"].pct_change(5)
     d["vol_10d"] = d["ret_1d"].rolling(10).std()
 
+    if "Volume" in d.columns and d["Volume"].notna().any():
+        vol_ma20        = d["Volume"].rolling(20).mean()
+        d["vol_ratio"]  = (d["Volume"] / vol_ma20.replace(0, np.nan)).fillna(1.0)
+        direction       = np.sign(d["Close"].diff())
+        obv             = (direction * d["Volume"]).cumsum()
+        obv_ma20        = obv.rolling(20).mean()
+        d["obv_trend"]  = (obv / obv_ma20.replace(0, np.nan)).fillna(1.0)
+    else:
+        d["vol_ratio"] = 1.0
+        d["obv_trend"] = 1.0
+
     if "spy" in context_data:
         spy_ret         = context_data["spy"].pct_change(1).shift(1)
         d["spy_ret_1d"] = spy_ret.reindex(d.index, method="ffill").values
@@ -75,12 +87,17 @@ def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -
 
     d["asset_class"] = float(asset_class)
 
-    # Targets por horizonte (dias de calendário — convertidos a dias úteis no validator)
-    d["target_d1"] = (d["Close"].shift(-1) > d["Close"]).astype(int)
-    d["target_d2"] = (d["Close"].shift(-2) > d["Close"]).astype(int)
-    d["target_d3"] = (d["Close"].shift(-3) > d["Close"]).astype(int)
+    # Targets com threshold ATR: NaN para dias "neutros" (movimento pequeno demais)
+    atr = d["ATR14"]
+    for horizon, days in [(1, 1), (2, 2), (3, 3)]:
+        thr  = atr * 0.3 * np.sqrt(days)
+        move = d["Close"].shift(-days) - d["Close"]
+        d[f"target_d{horizon}"] = np.where(
+            move > thr, 1.0,
+            np.where(move < -thr, 0.0, np.nan)
+        )
 
-    return d.dropna()
+    return d.dropna(subset=FEATURE_COLS)
 
 
 def build_all_features(raw_data: dict, context_data: dict,

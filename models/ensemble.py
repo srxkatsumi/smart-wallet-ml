@@ -67,8 +67,9 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
                    ticker: str, models_dir) -> dict:
     day      = int(target_col[-1])
     df_train = df.iloc[:-day].copy() if day > 0 else df.copy()
+    df_train = df_train.dropna(subset=[target_col])
     X        = df_train[FEATURE_COLS].values
-    y        = df_train[target_col].values
+    y        = df_train[target_col].values.astype(int)
     scaler   = RobustScaler()
     X_scaled = scaler.fit_transform(X)
 
@@ -289,8 +290,9 @@ def monthly_recalibration(featured_data: dict, my_tickers: list[str],
         for day in HORIZONS:
             target_col = f"target_d{day}"
             df_train   = df_t.iloc[:-day].copy()
+            df_train   = df_train.dropna(subset=[target_col])
             X          = df_train[FEATURE_COLS].values
-            y          = df_train[target_col].values
+            y          = df_train[target_col].values.astype(int)
             scaler_new = RobustScaler()
             X_sc       = scaler_new.fit_transform(X)
             model_new  = SGDClassifier(

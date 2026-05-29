@@ -47,6 +47,24 @@ def _prize(matches: int) -> str:
 
 
 _DRAW_WEEKDAYS = {0: "Monday", 3: "Thursday", 5: "Saturday"}
+_RNG = np.random.RandomState(42)
+
+
+def _compute_baselines(appeared_mat: np.ndarray, i: int,
+                       prev_numbers: np.ndarray) -> dict:
+    """Return {strategy_name: [6 numbers 1-indexed]} for hot, cold, random."""
+    hist = appeared_mat[:i].astype(float)
+    freq = hist.mean(axis=0)  # (60,) long-term frequency per number
+
+    hot_idx  = np.argsort(freq)[-6:]
+    cold_idx = np.argsort(freq)[:6]
+    rand_idx = _RNG.choice(60, size=6, replace=False)
+
+    return {
+        "hot":    sorted((hot_idx  + 1).tolist()),
+        "cold":   sorted((cold_idx + 1).tolist()),
+        "random": sorted((rand_idx + 1).tolist()),
+    }
 
 
 def _next_draw_dates(n: int = 3) -> list[tuple[pd.Timestamp, str]]:
@@ -75,23 +93,28 @@ def _estimate_concurso(results: pd.DataFrame, target_date: pd.Timestamp) -> int:
 # ── Backfill ─────────────────────────────────────────────────────────────
 
 def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
-                        weights: dict) -> tuple[pd.DataFrame, bool]:
+                        weights: dict) -> tuple[pd.DataFrame, bool, pd.DataFrame]:
     """
     Walk-forward backfill of all historical draws not yet in pred_df.
     Processes at most DAILY_BATCH_SIZE new draws per run so each daily
     execution adds one batch and the full history fills in over ~10 days.
 
-    Returns (updated_pred_df, backfill_complete).
+    Returns (updated_pred_df, backfill_complete, new_baselines_df).
     """
-    from features.engineering import build_training_data, build_prediction_features
+    from features.engineering import build_training_data, build_prediction_features, _build_appeared_matrix
     from models.ensemble     import train, predict_sequences
     from config              import MIN_DRAWS_TRAIN, DAILY_BATCH_SIZE, RETRAIN_INTERVAL
+    from data.storage        import BASELINE_COLS
 
     known_concursos = set(pred_df["target_concurso"].dropna().astype(int).values)
 
+    appeared_mat = _build_appeared_matrix(results)
+    balls_vals   = results[["b1", "b2", "b3", "b4", "b5", "b6"]].values.astype(int)
+
     # Find first draw not yet processed (chronological order, skip early ones)
     start_idx = MIN_DRAWS_TRAIN
-    new_rows  = []
+    new_rows      = []
+    baseline_rows = []
     models    = None
     processed = 0
     last_train_idx = -RETRAIN_INTERVAL  # force first retrain
@@ -123,20 +146,21 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
             last_train_idx = i
             logger.info("  Retreinado em concurso %d (treino: %d draws)", concurso, i)
 
-        draw_row = results.iloc[i]
-        draw_day = pd.Timestamp(draw_row["data"]).day_name()
-        actual   = _actual_balls(draw_row)
-        seqs     = predict_sequences(results.iloc[:i], draw_day, models, weights)
+        draw_row  = results.iloc[i]
+        draw_day  = pd.Timestamp(draw_row["data"]).day_name()
+        actual    = _actual_balls(draw_row)
+        seqs      = predict_sequences(results.iloc[:i], draw_day, models, weights)
         pred_date = pd.Timestamp(draw_row["data"]) - pd.Timedelta(days=1)
+        target_date_str = (draw_row["data"].strftime("%Y-%m-%d")
+                           if hasattr(draw_row["data"], "strftime")
+                           else str(draw_row["data"])[:10])
 
         for seq_num, seq in enumerate(seqs, 1):
             matches = _count_matches(seq, actual)
             new_rows.append({
                 "prediction_date":  pred_date.strftime("%Y-%m-%d"),
                 "target_concurso":  concurso,
-                "target_date":      draw_row["data"].strftime("%Y-%m-%d")
-                                    if hasattr(draw_row["data"], "strftime")
-                                    else str(draw_row["data"])[:10],
+                "target_date":      target_date_str,
                 "draw_day":         draw_day,
                 "seq_num":          seq_num,
                 "n1": seq[0], "n2": seq[1], "n3": seq[2],
@@ -150,16 +174,41 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
                 "actual_n3": actual[2], "actual_n4": actual[3],
                 "actual_n5": actual[4], "actual_n6": actual[5],
             })
+
+        # Naive baselines for the same draw
+        prev_numbers = balls_vals[i - 1]
+        baselines = _compute_baselines(appeared_mat, i, prev_numbers)
+        for strategy, seq in baselines.items():
+            matches = _count_matches(seq, actual)
+            baseline_rows.append({
+                "prediction_date":  pred_date.strftime("%Y-%m-%d"),
+                "target_concurso":  concurso,
+                "target_date":      target_date_str,
+                "draw_day":         draw_day,
+                "seq_num":          1,
+                "n1": seq[0], "n2": seq[1], "n3": seq[2],
+                "n4": seq[3], "n5": seq[4], "n6": seq[5],
+                "matches":          matches,
+                "prize":            _prize(matches),
+                "acertou":          "Sim" if matches >= 1 else "Não",
+                "acuracia":         round(matches / 6 * 100, 1),
+                "validated":        True,
+                "actual_n1": actual[0], "actual_n2": actual[1],
+                "actual_n3": actual[2], "actual_n4": actual[3],
+                "actual_n5": actual[4], "actual_n6": actual[5],
+                "strategy":         strategy,
+            })
         processed += 1
 
-    remaining = total_pending - processed
+    remaining    = total_pending - processed
+    new_baselines = pd.DataFrame(baseline_rows, columns=BASELINE_COLS) if baseline_rows else pd.DataFrame(columns=BASELINE_COLS)
     if new_rows:
         new_df  = pd.DataFrame(new_rows)
         pred_df = pd.concat([pred_df, new_df], ignore_index=True)
         logger.info("Backfill: +%d linhas | restam ~%d sorteios históricos",
                     len(new_rows), remaining)
 
-    return pred_df, remaining == 0
+    return pred_df, remaining == 0, new_baselines
 
 
 # ── Validate pending ──────────────────────────────────────────────────────
@@ -240,7 +289,7 @@ def main(force_download: bool = False):
     logger.info("=== Mega Sena ML Experiment — %s ===", date.today())
 
     from data.storage    import ensure_dirs, load_predictions, save_predictions
-    from data.storage    import load_weights, save_weights
+    from data.storage    import load_weights, save_weights, load_baselines, save_baselines
     from data.downloader import download_results
     from features.engineering import build_training_data
     from models.ensemble import train, update_weights
@@ -261,8 +310,12 @@ def main(force_download: bool = False):
 
     # 3 — Backfill histórico: 300 draws/dia até cobrir todo o histórico
     weights = load_weights()
-    pred_df, backfill_done = backfill_historical(results, pred_df, weights)
+    baselines_df = load_baselines()
+    pred_df, backfill_done, new_baselines = backfill_historical(results, pred_df, weights)
     save_predictions(pred_df)
+    if not new_baselines.empty:
+        baselines_df = pd.concat([baselines_df, new_baselines], ignore_index=True)
+        save_baselines(baselines_df)
 
     # 4 — Actualizar pesos com base no histórico validado (todos os dias)
     weights = update_weights(pred_df, weights)

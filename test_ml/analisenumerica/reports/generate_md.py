@@ -2,6 +2,7 @@
 import pandas as pd
 from pathlib import Path
 from config import OUTPUT_MD, BALLS_PER_DRAW, RANDOM_EXPECTED_MATCHES, PRIZE_TIERS
+from data.storage import load_baselines
 
 
 def _dezenas(row) -> str:
@@ -66,6 +67,35 @@ def _stats_block(validated: pd.DataFrame) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _baseline_comparison(validated: pd.DataFrame) -> str:
+    baselines_df = load_baselines()
+    if validated.empty:
+        return "_Sem dados suficientes para comparação._\n"
+
+    ml_avg = validated["matches"].mean()
+    lines = [
+        "| Estratégia | Média acertos/seq | vs Teórico (0.60) |",
+        "|-----------|------------------|-------------------|",
+        f"| 🤖 ML Ensemble | **{ml_avg:.3f}** | **{ml_avg - RANDOM_EXPECTED_MATCHES:+.3f}** |",
+    ]
+
+    for strategy, label, emoji in [
+        ("hot",    "Hot (+ frequentes)",     "🔥"),
+        ("cold",   "Cold (- frequentes)",    "❄️"),
+        ("random", "Aleatório (Monte Carlo)", "🎲"),
+    ]:
+        b_val = baselines_df[
+            (baselines_df.get("strategy") == strategy) &
+            (baselines_df.get("validated") == True)
+        ] if not baselines_df.empty else pd.DataFrame()
+        if not b_val.empty:
+            avg = pd.to_numeric(b_val["matches"], errors="coerce").mean()
+            lines.append(f"| {emoji} {label} | {avg:.3f} | {avg - RANDOM_EXPECTED_MATCHES:+.3f} |")
+
+    lines.append(f"| 📊 Baseline teórico | 0.600 | +0.000 |")
+    return "\n".join(lines) + "\n"
+
+
 def _table_rows(df: pd.DataFrame) -> str:
     rows = []
     for _, row in df.iterrows():
@@ -121,6 +151,12 @@ def save_md(pred_df: pd.DataFrame, results: pd.DataFrame):
 ## Estatísticas acumuladas
 
 {_stats_block(validated)}
+
+---
+
+## Comparação com baselines
+
+{_baseline_comparison(validated)}
 
 ---
 

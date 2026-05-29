@@ -11,6 +11,7 @@ FEATURE_COLS = (
     + ["is_even", "is_prime"]
     + ["prev_sum", "prev_mean", "prev_spread"]
     + ["day_mon", "day_thu", "day_sat"]
+    + ["pair_freq_prev"]
 )
 
 _PRIMES = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59}
@@ -72,6 +73,16 @@ def _draw_features(appeared_mat: np.ndarray, i: int, draw_day: str,
     day_thu = float(draw_day == "Thursday")
     day_sat = float(draw_day == "Saturday")
 
+    # Co-occurrence: how often each number appears in draws that also contained a prev-draw number
+    prev_0     = prev_numbers - 1  # 0-indexed
+    h_window   = hist[-50:] if n_hist >= 50 else hist
+    prev_mask  = h_window[:, prev_0].any(axis=1)
+    n_prev     = float(prev_mask.sum())
+    if n_prev > 0:
+        pair_freq_prev = h_window[prev_mask].sum(axis=0) / n_prev  # (60,)
+    else:
+        pair_freq_prev = np.full(N_BALLS, BALLS_PER_DRAW / N_BALLS)
+
     # Stack into (N_BALLS, n_features)
     X = np.column_stack([
         freq[5], freq[10], freq[20], freq[50],
@@ -85,6 +96,7 @@ def _draw_features(appeared_mat: np.ndarray, i: int, draw_day: str,
         np.full(N_BALLS, day_mon),
         np.full(N_BALLS, day_thu),
         np.full(N_BALLS, day_sat),
+        pair_freq_prev,
     ])
     return X
 
