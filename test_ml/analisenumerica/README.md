@@ -3,13 +3,19 @@
 > **Hypothesis:** Can machine learning predict lottery numbers better than random chance?
 > **Expected answer:** No. And we have the data to prove it.
 
-[![Automated](https://img.shields.io/badge/Updated-Every%20Sunday-4c8f6b?logo=github-actions)](../../.github/workflows/analise_numerica.yml)
+[![Automated](https://img.shields.io/badge/Updated-Every%20Monday-4c8f6b?logo=github-actions)](../../.github/workflows/executar_diario.yml)
+
+| | |
+|---|---|
+| **Started** | 28 May 2026 |
+| **Horizon** | 5 years — material for PhD research |
+| **Author** | Vicky Costa |
 
 ---
 
 ## What is this?
 
-This sub-project applies the same adaptive ensemble ML pipeline used for stock forecasting to an unambiguously random process: the Brazilian Mega Sena lottery. Every week it downloads official results, retrains three classifiers, generates 5 candidate sequences of 6 numbers, and then — after the real draw — checks how many numbers it got right.
+This sub-project applies the same adaptive ensemble ML pipeline used for stock forecasting to an unambiguously random process: the Brazilian Mega Sena lottery. Every Monday it downloads official results, retrains three classifiers, generates 5 candidate sequences of 6 numbers, and then — after the real draw — checks how many numbers it got right.
 
 The purpose is not to win the lottery. The purpose is to produce a quantitative, reproducible demonstration that machine learning cannot extract predictive signal from a process with no signal to extract.
 
@@ -131,7 +137,9 @@ _Loading..._
 
 ## Why this matters (the PhD angle)
 
-This experiment is a concrete instantiation of a broader research question:
+This experiment began on **28 May 2026** as a long-term personal research project. The goal over the next **5 years** is to accumulate enough rigorous, timestamped data to use as empirical foundation for doctoral research in Machine Learning and predictive modelling.
+
+The central research question:
 
 > *Can supervised machine learning identify exploitable structure in a process that is provably random by design?*
 
@@ -141,7 +149,17 @@ The experimental design is rigorous:
 - Pre-registered hypothesis (impossible to predict > baseline)
 - Objective outcome metric (number of matches vs theoretical expectation)
 - Reproducible: all data, code, and predictions are public and timestamped
-- Longitudinal: results accumulate weekly without manual intervention
+- Longitudinal: results accumulate weekly without manual intervention — no cherry-picking
+
+**5-year roadmap toward PhD:**
+
+| Year | Milestone |
+|------|-----------|
+| 2026 | Baseline established — first 100 draws, walk-forward backfill |
+| 2027 | Statistical significance test — t-test against μ = 0.60 with N ≥ 150 |
+| 2028 | Feature ablation study — which features are genuine noise vs artefact |
+| 2029 | Comparative study — Mega Sena vs stock market: can the same model architecture distinguish random from non-random domains? |
+| 2030 | PhD dissertation material — full longitudinal dataset, reproducible pipeline, peer-reviewed methodology |
 
 After 1–2 years of data, this becomes a statistically meaningful test. With N = 150 draws and 5 sequences each (750 sequence-evaluations), a one-sample t-test against the null hypothesis of μ = 0.60 matches would have power > 80% to detect an effect size of Δ = 0.15 matches — a 25% improvement over random, which would already be extraordinary.
 
@@ -189,4 +207,5 @@ If the automatic download fails, download the results manually:
 
 *This project does not encourage gambling. It is a data science experiment with a predetermined conclusion. Use the lottery numbers at your own risk — which is to say, do not.*
 
-Built by **Vicky Costa** — Data Analyst | Data Science student
+Built by **Vicky Costa** — Data Analyst · Data Science student · future PhD candidate
+Started **28 May 2026** · 5-year longitudinal experiment

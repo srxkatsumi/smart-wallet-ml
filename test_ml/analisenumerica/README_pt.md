@@ -3,13 +3,19 @@
 > **Hipótese:** O Machine Learning consegue prever os números da Mega Sena melhor do que o acaso?
 > **Resposta esperada:** Não. E temos os dados para provar.
 
-[![Automatizado](https://img.shields.io/badge/Atualizado-Todo%20Domingo-4c8f6b?logo=github-actions)](../../.github/workflows/analise_numerica.yml)
+[![Automatizado](https://img.shields.io/badge/Atualizado-Toda%20Segunda-4c8f6b?logo=github-actions)](../../.github/workflows/executar_diario.yml)
+
+| | |
+|---|---|
+| **Início** | 28 de maio de 2026 |
+| **Horizonte** | 5 anos — material para investigação de doutoramento |
+| **Autora** | Vicky Costa |
 
 ---
 
 ## O que é isto?
 
-Este sub-projeto aplica o mesmo pipeline de ensemble adaptativo usado para previsão de ações a um processo declaradamente aleatório: a Mega Sena. Toda semana faz o download dos resultados oficiais, retreina três classificadores, gera 5 sequências candidatas de 6 números e, após o sorteio real, verifica quantos números acertou.
+Este sub-projeto aplica o mesmo pipeline de ensemble adaptativo usado para previsão de ações a um processo declaradamente aleatório: a Mega Sena. Toda segunda-feira faz o download dos resultados oficiais, retreina três classificadores, gera 5 sequências candidatas de 6 números e, após o sorteio real, verifica quantos números acertou.
 
 O objetivo não é ganhar na loteria. O objetivo é produzir uma demonstração quantitativa e reproduzível de que o Machine Learning não consegue extrair sinal preditivo de um processo sem sinal a extrair.
 
@@ -129,9 +135,11 @@ _A carregar..._
 
 ---
 
-## Por que isso importa (o ângulo do doutorado)
+## Por que isso importa (o ângulo do doutoramento)
 
-Este experimento é uma instância concreta de uma questão de investigação mais ampla:
+Este experimento começou em **28 de maio de 2026** como um projeto de investigação pessoal de longo prazo. O objetivo ao longo dos próximos **5 anos** é acumular dados rigorosos e com timestamp suficientes para usar como base empírica numa investigação de doutoramento em Machine Learning e modelagem preditiva.
+
+A questão central de investigação:
 
 > *O Machine Learning supervisionado consegue identificar estrutura explorável num processo que é provadamente aleatório por design?*
 
@@ -141,7 +149,17 @@ O design experimental é rigoroso:
 - Hipótese pré-registada (impossível prever acima do baseline)
 - Métrica de resultado objetiva (acertos vs expectativa teórica)
 - Reproduzível: todos os dados, código e previsões são públicos e com timestamp
-- Longitudinal: os resultados acumulam semanalmente sem intervenção manual
+- Longitudinal: os resultados acumulam semanalmente sem intervenção manual — sem cherry-picking
+
+**Roteiro de 5 anos em direção ao doutoramento:**
+
+| Ano | Marco |
+|-----|-------|
+| 2026 | Baseline estabelecido — primeiros 100 sorteios, backfill walk-forward |
+| 2027 | Teste de significância estatística — t-test contra μ = 0,60 com N ≥ 150 |
+| 2028 | Estudo de ablação de features — quais features são ruído genuíno vs artefacto |
+| 2029 | Estudo comparativo — Mega Sena vs mercado financeiro: o mesmo modelo distingue o aleatório do não-aleatório? |
+| 2030 | Material de tese de doutoramento — dataset longitudinal completo, pipeline reproduzível, metodologia para publicação |
 
 Após 1–2 anos de dados, isto torna-se um teste estatisticamente significativo. Com N = 150 sorteios e 5 sequências cada (750 avaliações de sequência), um t-test de uma amostra contra a hipótese nula de μ = 0,60 acertos teria poder > 80% para detetar um effect size de Δ = 0,15 acertos — uma melhoria de 25% sobre o aleatório, que já seria extraordinária.
 
@@ -199,4 +217,5 @@ Se o download automático falhar:
 
 *Este projeto não incentiva jogos de azar. É um experimento de ciência de dados com uma conclusão predeterminada. Use os números da loteria por sua própria conta e risco — ou melhor, não use.*
 
-Construído por **Vicky Costa** — Data Analyst | Estudante de Ciência de Dados
+Construído por **Vicky Costa** — Data Analyst · Estudante de Ciência de Dados · futura doutoranda
+Início **28 de maio de 2026** · experimento longitudinal de 5 anos
