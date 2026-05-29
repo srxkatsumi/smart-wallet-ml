@@ -3,7 +3,7 @@
 > **Hipótese:** O Machine Learning consegue prever os números da Mega Sena melhor do que o acaso?
 > **Resposta esperada:** Não. E temos os dados para provar.
 
-[![Automatizado](https://img.shields.io/badge/Atualizado-Toda%20Segunda-4c8f6b?logo=github-actions)](../../.github/workflows/executar_diario.yml)
+[![Automatizado](https://img.shields.io/badge/Atualizado-Seg%20a%20Sex-4c8f6b?logo=github-actions)](../../.github/workflows/executar_diario.yml)
 
 | | |
 |---|---|
@@ -15,7 +15,9 @@
 
 ## O que é isto?
 
-Este sub-projeto aplica o mesmo pipeline de ensemble adaptativo usado para previsão de ações a um processo declaradamente aleatório: a Mega Sena. Toda segunda-feira faz o download dos resultados oficiais, retreina três classificadores, gera 5 sequências candidatas de 6 números e, após o sorteio real, verifica quantos números acertou.
+Este sub-projeto aplica o mesmo pipeline de ensemble adaptativo usado para previsão de ações a um processo declaradamente aleatório: a Mega Sena. De segunda a sexta faz o download dos resultados oficiais, retreina três classificadores, gera 5 sequências candidatas para cada um dos próximos 3 sorteios (Seg/Qui/Sab) e, após cada sorteio real, verifica quantos números acertou.
+
+Durante a fase inicial (≈10 dias úteis a partir de 28 de maio de 2026), cada execução também processa 300 sorteios históricos por dia, construindo um dataset longitudinal desde o concurso 1 (1996) até ao presente. Concluída essa fase, a execução diária prevê apenas os próximos sorteios.
 
 O objetivo não é ganhar na loteria. O objetivo é produzir uma demonstração quantitativa e reproduzível de que o Machine Learning não consegue extrair sinal preditivo de um processo sem sinal a extrair.
 
@@ -202,8 +204,8 @@ test_ml/analisenumerica/
 
 ```bash
 cd test_ml/analisenumerica
-pip install pandas numpy scikit-learn requests beautifulsoup4 lxml
-python main.py           # execução normal
+pip install pandas numpy scikit-learn requests beautifulsoup4 lxml openpyxl
+python main.py           # execução normal (300 draws históricos + previsão próximos sorteios)
 python main.py --force   # forçar novo download dos resultados
 ```
 

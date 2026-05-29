@@ -3,7 +3,7 @@
 > **Hypothesis:** Can machine learning predict lottery numbers better than random chance?
 > **Expected answer:** No. And we have the data to prove it.
 
-[![Automated](https://img.shields.io/badge/Updated-Every%20Monday-4c8f6b?logo=github-actions)](../../.github/workflows/executar_diario.yml)
+[![Automated](https://img.shields.io/badge/Updated-Daily%20Mon–Fri-4c8f6b?logo=github-actions)](../../.github/workflows/executar_diario.yml)
 
 | | |
 |---|---|
@@ -15,7 +15,9 @@
 
 ## What is this?
 
-This sub-project applies the same adaptive ensemble ML pipeline used for stock forecasting to an unambiguously random process: the Brazilian Mega Sena lottery. Every Monday it downloads official results, retrains three classifiers, generates 5 candidate sequences of 6 numbers, and then — after the real draw — checks how many numbers it got right.
+This sub-project applies the same adaptive ensemble ML pipeline used for stock forecasting to an unambiguously random process: the Brazilian Mega Sena lottery. Every weekday (Mon–Fri) it downloads official results, retrains three classifiers, generates 5 candidate sequences for each of the next 3 upcoming draws (Mon/Thu/Sat), and then — after each real draw — checks how many numbers it got right.
+
+During the initial phase (≈10 weekdays from 28 May 2026), each run also backfills 300 historical draws at a time, building a longitudinal dataset from concurso 1 (1996) to the present. Once complete, the daily run only predicts upcoming draws.
 
 The purpose is not to win the lottery. The purpose is to produce a quantitative, reproducible demonstration that machine learning cannot extract predictive signal from a process with no signal to extract.
 
@@ -192,8 +194,8 @@ test_ml/analisenumerica/
 
 ```bash
 cd test_ml/analisenumerica
-pip install pandas numpy scikit-learn requests beautifulsoup4 lxml
-python main.py          # normal run
+pip install pandas numpy scikit-learn requests beautifulsoup4 lxml openpyxl
+python main.py          # normal run (processes next 300 historical draws + predicts upcoming)
 python main.py --force  # force re-download of results
 ```
 
