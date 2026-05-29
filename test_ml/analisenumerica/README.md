@@ -15,9 +15,12 @@
 
 ## What is this?
 
-This sub-project applies the same adaptive ensemble ML pipeline used for stock forecasting to an unambiguously random process: the Brazilian Mega Sena lottery. Every weekday (Mon–Fri) it downloads official results, retrains three classifiers, generates 5 candidate sequences for each of the next 3 upcoming draws (Mon/Thu/Sat), and then — after each real draw — checks how many numbers it got right.
+This sub-project applies the same adaptive ensemble ML pipeline used for stock forecasting to an unambiguously random process: the Brazilian Mega Sena lottery. The pipeline runs every weekday (Mon–Fri) with two distinct roles:
 
-During the initial phase (≈10 weekdays from 28 May 2026), each run also backfills 300 historical draws at a time, building a longitudinal dataset from concurso 1 (1996) to the present. Once complete, the daily run only predicts upcoming draws.
+- **Daily (Mon–Fri):** downloads results and processes 300 historical draws at a time — the model learns from the past. No future predictions are made.
+- **Monday only:** validates last week's draw outcomes, then uses everything learned to generate 5 sequences for each of the 3 upcoming draws (Mon/Thu/Sat).
+
+This separation is intentional: the model accumulates knowledge from the full historical record before making any forward-looking prediction. Over ≈10 weekdays from 28 May 2026, the backfill builds a longitudinal dataset from concurso 1 (1996) to the present.
 
 The purpose is not to win the lottery. The purpose is to produce a quantitative, reproducible demonstration that machine learning cannot extract predictive signal from a process with no signal to extract.
 

@@ -259,26 +259,27 @@ def main(force_download: bool = False):
     pred_df = load_predictions()
     pred_df = validate_pending(pred_df, results)
 
-    # 3 — Backfill historical predictions (300 draws per run until complete)
+    # 3 — Backfill histórico: 300 draws/dia até cobrir todo o histórico
     weights = load_weights()
     pred_df, backfill_done = backfill_historical(results, pred_df, weights)
     save_predictions(pred_df)
 
-    # 4 — Update weights from validated history
+    # 4 — Actualizar pesos com base no histórico validado (todos os dias)
     weights = update_weights(pred_df, weights)
     save_weights(weights)
 
-    # 5 — Train on full history and predict upcoming draws (Mon/Thu/Sat)
-    logger.info("Treinando modelo final sobre %d sorteios...", len(results))
-    X, y = build_training_data(results)
-    models = train(X, y)
-
-    pred_df = predict_upcoming_draws(results, models, weights, pred_df)
-    save_predictions(pred_df)
+    # 5 — Previsões futuras: APENAS às segundas-feiras
+    is_monday = pd.Timestamp.today().weekday() == 0
+    if is_monday:
+        logger.info("Segunda-feira — treinando modelo final e prevendo próximos sorteios...")
+        X, y = build_training_data(results)
+        models = train(X, y)
+        pred_df = predict_upcoming_draws(results, models, weights, pred_df)
+        save_predictions(pred_df)
+    else:
+        logger.info("Não é segunda-feira — só backfill hoje (previsões futuras apenas às segundas)")
 
     if not backfill_done:
-        pending = sum(1 for c in range(1, int(results["concurso"].min()))
-                      if c not in set(pred_df["target_concurso"].dropna().astype(int)))
         logger.info("Backfill em progresso — retoma amanhã")
 
     # 6 — Generate output .md

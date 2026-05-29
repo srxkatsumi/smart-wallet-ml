@@ -15,9 +15,12 @@
 
 ## O que é isto?
 
-Este sub-projeto aplica o mesmo pipeline de ensemble adaptativo usado para previsão de ações a um processo declaradamente aleatório: a Mega Sena. De segunda a sexta faz o download dos resultados oficiais, retreina três classificadores, gera 5 sequências candidatas para cada um dos próximos 3 sorteios (Seg/Qui/Sab) e, após cada sorteio real, verifica quantos números acertou.
+Este sub-projeto aplica o mesmo pipeline de ensemble adaptativo usado para previsão de ações a um processo declaradamente aleatório: a Mega Sena. O pipeline corre de segunda a sexta com dois papéis distintos:
 
-Durante a fase inicial (≈10 dias úteis a partir de 28 de maio de 2026), cada execução também processa 300 sorteios históricos por dia, construindo um dataset longitudinal desde o concurso 1 (1996) até ao presente. Concluída essa fase, a execução diária prevê apenas os próximos sorteios.
+- **Diariamente (Seg–Sex):** faz o download dos resultados e processa 300 sorteios históricos por execução — o modelo aprende com o passado. Nenhuma previsão futura é feita.
+- **Apenas às segundas:** valida os sorteios da semana passada e, com tudo o que aprendeu, gera 5 sequências para cada um dos 3 próximos sorteios (Seg/Qui/Sab).
+
+Esta separação é intencional: o modelo acumula conhecimento a partir do histórico completo antes de fazer qualquer previsão futura. Em ≈10 dias úteis a partir de 28 de maio de 2026, o backfill constrói um dataset longitudinal desde o concurso 1 (1996) até ao presente.
 
 O objetivo não é ganhar na loteria. O objetivo é produzir uma demonstração quantitativa e reproduzível de que o Machine Learning não consegue extrair sinal preditivo de um processo sem sinal a extrair.
 
