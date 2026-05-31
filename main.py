@@ -73,9 +73,12 @@ def main():
     save_public_log(df_log, my_tickers)
 
     # ── Portfolio P&L ─────────────────────────────────────────────────────
-    from portfolio.pnl import calculate_etoro_pnl, calculate_etf_pnl
+    from portfolio.pnl import (calculate_etoro_pnl, calculate_etf_pnl,
+                               expand_etoro_lots, expand_etf_lots)
     resumo_etoro, totals_etoro = calculate_etoro_pnl(etoro, resultados_ml, EUR_USD)
     resumo_etfs,  totals_etfs  = calculate_etf_pnl(etf_acumul, resultados_ml)
+    resumo_etoro_lotes         = expand_etoro_lots(etoro, resultados_ml, EUR_USD)
+    resumo_etf_lotes           = expand_etf_lots(etf_acumul, resultados_ml)
 
     # Enrich resultados_ml with EUR-converted price for email display
     close_eur_map = {r["ticker"]: r["close_eur"] for r in resumo_etoro + resumo_etfs}
@@ -91,7 +94,10 @@ def main():
     # ── Email report ──────────────────────────────────────────────────────
     from reports.email_report import build_html, save_html
     html = build_html(resultados_ml, resumo_etfs, df_log, my_tickers, ensemble_weights,
-                      resumo_etoro=resumo_etoro, context_warnings=ctx_warnings)
+                      resumo_etoro=resumo_etoro,
+                      resumo_etoro_lotes=resumo_etoro_lotes,
+                      resumo_etf_lotes=resumo_etf_lotes,
+                      context_warnings=ctx_warnings)
     save_html(html)
 
     logger.info("=== Completed successfully ===")

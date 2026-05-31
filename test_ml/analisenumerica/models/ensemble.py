@@ -17,6 +17,7 @@ from features.engineering import FEATURE_COLS, build_prediction_features
 
 logger = logging.getLogger(__name__)
 
+_RNG = np.random.default_rng(seed=42)
 
 def train(X: np.ndarray, y: np.ndarray) -> tuple:
     """Train RF, GB, SGD. Returns (rf, gb, sgd, scaler)."""
@@ -71,10 +72,9 @@ def predict_sequences(results: pd.DataFrame, draw_day: str,
     sequences.append(sorted(top6))
 
     # Seqs 2-5: weighted sampling without replacement (using ensemble probs as weights)
-    rng = np.random.default_rng(seed=42)
     for _ in range(N_SEQUENCES - 1):
         probs = p_ens / p_ens.sum()
-        drawn = rng.choice(numbers, size=BALLS_PER_DRAW, replace=False, p=probs)
+        drawn = _RNG.choice(numbers, size=BALLS_PER_DRAW, replace=False, p=probs)
         sequences.append(sorted(drawn.tolist()))
 
     return sequences

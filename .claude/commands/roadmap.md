@@ -4,15 +4,210 @@ Quando esta skill for invocada, execute todos os passos abaixo em ordem. Nunca p
 
 ---
 
+## EQUIPA DE SKILLS — PROTOCOLO DE GOVERNANÇA
+
+Este projeto é gerido por uma equipa de skills especializadas. O `/roadmap` é a fonte de verdade. Nenhuma skill age sem consultar o roadmap primeiro.
+
+**Skills disponíveis:**
+- `/roadmap` — Guardião. Audita, aprova, reporta estado. Nunca implementa código.
+- `/model-add` — Implementa um modelo específico num projeto. Requer aprovação do roadmap.
+- `/eval` — Corre testes estatísticos e métricas de avaliação. Nunca modifica modelos.
+- `/xai` — Gera relatórios de explicabilidade (SHAP, attention, LIME). Nunca treina modelos.
+- `/experiment` — Gere MLflow e DVC. Nunca altera experimentos passados.
+- `/sync-check` — Audita o que falta por projeto. Apenas lê, nunca implementa.
+
+**Protocolo obrigatório para todas as skills:**
+1. Ler o roadmap e verificar se a tarefa está na lista aprovada
+2. Se não está na lista: parar e pedir aprovação ao utilizador
+3. Se está aprovada: executar
+4. Após concluir: correr testes e verificar que nada quebrou
+5. Reportar resultado — só depois o utilizador decide se faz commit
+
+**Regra de ouro — NADA vai para git sem passar nos testes:**
+- Carteira: `pytest tests/` deve passar a 100%
+- Mega Sena: `pytest test_ml/analisenumerica/tests/` deve passar a 100%
+- Qualquer novo modelo deve ter o seu próprio ficheiro de teste antes de ser considerado implementado
+- Se os testes falharem: corrigir antes de reportar conclusão. Nunca reportar "feito" com testes a falhar.
+
+---
+
+## REGISTO MESTRE DE MODELOS
+
+Estes são os 25 modelos aprovados organizados em 7 famílias. Este registo é a fonte de verdade para `/sync-check` e `/model-add`.
+
+| # | Família | Modelos | Projectos alvo |
+|---|---------|---------|----------------|
+| 1 | Clássico | RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM | Carteira, Mega Sena |
+| 2 | Séries temporais | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Carteira, Mega Sena, E-commerce |
+| 3 | Estado oculto | Markov, HMM | Carteira, Mega Sena |
+| 4 | Redes neurais | LSTM, GRU, Transformer, TFT, N-BEATS | Carteira, Mega Sena |
+| 5 | Bayesiano | Gaussian Process, BNN | Carteira, Mega Sena |
+| 6 | Generativo | VAE, GAN | Carteira, Mega Sena |
+| 7 | Reinforcement | Q-Learning, PPO | Carteira |
+
+**Estado de implementação por projecto:**
+
+| Modelo | Carteira | Mega Sena | E-commerce |
+|--------|----------|-----------|------------|
+| RF | ✅ | ✅ | ⬜ |
+| GB | ✅ | ✅ | ⬜ |
+| SGD | ✅ | ✅ | ⬜ |
+| XGBoost | ⬜ | ⬜ | ⬜ |
+| LightGBM | ⬜ | ⬜ | ⬜ |
+| CatBoost | ⬜ | ⬜ | ⬜ |
+| SVM | ⬜ | ⬜ | ⬜ |
+| ARIMA | ⬜ | ⬜ | ⬜ |
+| SARIMA | ⬜ | ⬜ | ⬜ |
+| ETS | ⬜ | ⬜ | ⬜ |
+| Holt-Winters | ⬜ | ⬜ | ⬜ |
+| Prophet | ⬜ | ⬜ | ⬜ |
+| Markov | ⬜ | ⬜ | ⬜ |
+| HMM | ⬜ | ⬜ | ⬜ |
+| LSTM | ⬜ | ⬜ | ⬜ |
+| GRU | ⬜ | ⬜ | ⬜ |
+| Transformer | ⬜ | ⬜ | ⬜ |
+| TFT | ⬜ | ⬜ | ⬜ |
+| N-BEATS | ⬜ | ⬜ | ⬜ |
+| Gaussian Process | ⬜ | ⬜ | ⬜ |
+| BNN | ⬜ | ⬜ | ⬜ |
+| VAE | ⬜ | ⬜ | ⬜ |
+| GAN | ⬜ | ⬜ | ⬜ |
+| Q-Learning | ⬜ | — | ⬜ |
+| PPO | ⬜ | — | ⬜ |
+
+**Camadas transversais (além dos modelos):**
+
+| Camada | Componente | Estado |
+|--------|-----------|--------|
+| Avaliação | Diebold-Mariano test | ⬜ |
+| Avaliação | McNemar test | ⬜ |
+| Avaliação | Ljung-Box test | ⬜ |
+| Avaliação | Métricas por domínio | ⬜ |
+| Explicabilidade | SHAP values | ⬜ |
+| Explicabilidade | Attention weights | ⬜ |
+| Explicabilidade | LIME | ⬜ |
+| Meta-learning | Stacking com meta-learner | ⬜ |
+| Meta-learning | Optuna (hyperopt) | ⬜ |
+| Rastreamento | MLflow | ⬜ |
+| Rastreamento | DVC | ⬜ |
+| Teoria | Entropia de Shannon | ⬜ |
+| Teoria | Informação Mútua | ⬜ |
+| Transferência | Transfer Learning entre domínios | ⬜ |
+
+---
+
+## ROADMAP DE IMPLEMENTAÇÃO — 14 FASES
+
+Este é o plano de execução oficial. Todas as skills devem seguir esta ordem. Nenhuma fase deve ser iniciada sem aprovação explícita do utilizador.
+
+**Princípio de ordenação:** dependências mínimas primeiro. Cada fase reutiliza o que a anterior instalou.
+
+| Fase | O que implementar | Família | Dependências novas | Projectos | Estado |
+|------|------------------|---------|-------------------|-----------|--------|
+| **0** | RF, GB, SGD | Clássico | nenhuma | Carteira, Mega Sena | ✅ |
+| **1** | Markov, HMM | Estado oculto | nenhuma | Carteira, Mega Sena | ⬜ |
+| **2** | XGBoost, LightGBM, CatBoost, SVM | Clássico avançado | `xgboost`, `lightgbm`, `catboost` | Carteira, Mega Sena | ⬜ |
+| **3** | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Séries temporais | `statsmodels`, `prophet` | Carteira, Mega Sena | ⬜ |
+| **4** | LSTM, GRU | Neural básico | `torch` | Carteira, Mega Sena | ⬜ |
+| **5** | Transformer, TFT, N-BEATS | Neural avançado | `torch` (já tem) | Carteira, Mega Sena | ⬜ |
+| **6** | Gaussian Process, BNN | Bayesiano | `torch` (já tem) | Carteira, Mega Sena | ⬜ |
+| **7** | VAE, GAN | Generativo | `torch` (já tem) | Carteira, Mega Sena | ⬜ |
+| **8** | Q-Learning, PPO | Reinforcement | `gymnasium`, `stable-baselines3` | Carteira | ⬜ |
+| **9** | Diebold-Mariano, McNemar, Ljung-Box, métricas por domínio | Avaliação | `scipy` | Todos | ⬜ |
+| **10** | SHAP, Attention weights, LIME | Explicabilidade | `shap`, `lime` | Todos | ⬜ |
+| **11** | Stacking com meta-learner, Optuna | Meta-learning | `optuna` | Todos | ⬜ |
+| **12** | MLflow, DVC | Rastreamento | `mlflow`, `dvc` | Todos | ⬜ |
+| **13** | Entropia de Shannon, Informação Mútua | Teoria da informação | `scipy` (já tem) | Todos | ⬜ |
+| **14** | Transfer Learning entre domínios | Transferência | nenhuma nova | Todos | ⬜ |
+| **15** | Reestruturação do email: secção acções + ETFs + recomendação mensal | Relatório | nenhuma nova | Carteira | ⬜ |
+
+**Contagem total:**
+- Modelos: 25 (3 já implementados + 22 a implementar em fases 1-8)
+- Famílias: 7
+- Testes estatísticos: 3 (Fase 9)
+- Ferramentas XAI: 3 (Fase 10)
+- Meta-learning: 2 componentes (Fase 11)
+- Rastreamento: 2 ferramentas (Fase 12)
+- Teoria: 2 componentes (Fase 13)
+- Transfer Learning: 1 (Fase 14)
+
+**Domínios alvo:** Loteria (Mega Sena) → Acções (Carteira) → E-commerce (futuro)
+
+**Regra para os agentes:** antes de iniciar qualquer fase, verificar se a fase anterior está marcada como ✅. Nunca saltar fases sem aprovação explícita do utilizador.
+
+---
+
+### ESPECIFICAÇÃO DETALHADA — FASE 15: Email
+
+#### Secção 1: Acções (eToro)
+
+Colunas obrigatórias na tabela HTML do email:
+
+| Coluna | Origem | Cálculo |
+|--------|--------|---------|
+| Ativo | portfolio/transactions.csv ou equivalente | — |
+| Data compra | registo de compra | — |
+| Preço compra | registo de compra | valor pago por unidade na data |
+| Fecho ontem | yfinance | preço de fecho do dia anterior |
+| D+1 | predictions_log.csv | previsão com seta ▲/▼ |
+| D+2 | predictions_log.csv | previsão com seta ▲/▼ |
+| D+3 | predictions_log.csv | previsão com seta ▲/▼ |
+| Alvo 15% (€) | calculado | preço_compra × 1,15 |
+| % feito | calculado | (fecho_ontem - preço_compra) / preço_compra × 100 |
+| % pendente | calculado | (alvo_15 - fecho_ontem) / preço_compra × 100 |
+
+Regras:
+- Um lote de compra = uma linha. NVDA comprado em datas diferentes = linhas separadas.
+- Se % feito >= 15%: destacar célula em verde (alvo atingido).
+- Se % pendente < 0: o ativo já ultrapassou o alvo — destacar em dourado.
+
+#### Secção 2: ETFs (longo prazo)
+
+Colunas obrigatórias:
+
+| Coluna | Origem | Cálculo |
+|--------|--------|---------|
+| ETF | portfolio/transactions.csv | — |
+| Ticker | portfolio/transactions.csv | — |
+| Data compra | registo de compra | — |
+| Preço compra | registo de compra | valor pago por unidade |
+| Fecho ontem | yfinance | — |
+| D+1 | predictions_log.csv | ▲/▼ + preço estimado |
+| D+2 | predictions_log.csv | ▲/▼ + preço estimado |
+| D+3 | predictions_log.csv | ▲/▼ + preço estimado |
+| Δ vs compra (%) | calculado | (fecho_ontem - preço_compra) / preço_compra × 100 |
+
+Regras:
+- Label da secção: "ETFs — Visão de Longo Prazo"
+- Separada visualmente da secção de acções.
+- Sem coluna de Alvo 15% (ETFs são longo prazo, sem alvo de saída fixo).
+
+#### Secção 3: Recomendação mensal de compra ETF
+
+Condição de activação: apenas se hoje for a 1.ª semana útil do mês (dias 1 a 7, dias úteis apenas).
+
+Conteúdo:
+- Para cada ETF da carteira (SGLN.L, EXUS.L, ICGA.DE):
+  - Analisar previsões D+1 a D+5 da semana
+  - Identificar o dia com menor preço previsto
+  - Apresentar: "Melhor dia para comprar [ETF]: [dia da semana] ([data]) — preço estimado [€]"
+- Label da secção: "Recomendação de Compra — Esta Semana"
+- Aparece uma vez por mês, no topo do email, antes das tabelas de previsões.
+
+---
+
 ## CONTEXTO DO PROJETO
 
-Este repositório contém dois projetos independentes que correm no mesmo pipeline GitHub Actions:
+Este repositório contém dois projetos independentes que correm no mesmo pipeline GitHub Actions. Um terceiro projecto (e-commerce) está planeado para 2026.
 
 **Carteira Inteligente (projeto principal):**
 Pipeline MLOps de previsão de carteira de investimentos. Escrito em Python 3.11, corre todos os dias úteis às 22h00 (Barcelona) via GitHub Actions. Ensemble de RF + GB + SGD com pesos adaptativos e decaimento temporal para prever a direção de preços em D+1, D+2 e D+3.
 
 **Mega Sena ML Experiment (subprojeto em `test_ml/analisenumerica/`):**
 Experimento científico negativo controlado. Aplica o mesmo ensemble adaptativo a um processo declaradamente aleatório (Mega Sena). Iniciado em 28/05/2026. Horizonte de 5 anos para uso como base de doutoramento. Corre diariamente (backfill de 300 sorteios por execução). Previsões apenas às segundas-feiras.
+
+**E-commerce (planeado):**
+Terceiro domínio para previsão de sazonalidades e tendências de preço. Domínio com padrões reais, contraste com Mega Sena (aleatório) e Carteira (ruidoso).
 
 ---
 
@@ -94,6 +289,22 @@ Leia `README.md` e `README_pt.md` do projeto principal e conte:
 - O horário de execução está como 22h00 em ambos os READMEs? (Não "~22h30", não "20h30 UTC sozinho", não outra variação.)
 - A data de início da Mega Sena está como 28 de maio de 2026 em ambos os READMEs do subprojeto?
 - O horizonte de 5 anos está mencionado?
+
+### 0-H: Completude de modelos por projecto
+
+Ler o REGISTO MESTRE DE MODELOS acima e verificar em cada projecto quais ficheiros de modelo existem:
+
+- `models/` na Carteira: listar ficheiros .py presentes
+- `test_ml/analisenumerica/models/` na Mega Sena: listar ficheiros .py presentes
+
+Para cada modelo do registo, verificar se existe um ficheiro correspondente. Produzir tabela:
+
+| Família | Modelo | Carteira | Mega Sena | E-commerce |
+|---------|--------|----------|-----------|------------|
+
+Marcar ✅ se o ficheiro existe e tem implementação, ⬜ se falta, — se não aplicável ao projecto.
+
+---
 
 ### 0-G: Audit de travessões
 
@@ -457,6 +668,22 @@ Features:             [pair_freq_prev documentado / Falta]
 Baselines:            [hot/cold/random documentados / Faltam]
 READMEs:              [Sincronizados / Divergências: listar]
 Travessões:           [Nenhum / Encontrados em: arquivo linha X]
+
+MODELOS — CARTEIRA
+Implementados:      [listar]
+Pendentes:          [X de 25]
+
+MODELOS — MEGA SENA
+Implementados:      [listar]
+Pendentes:          [X de 25]
+
+CAMADAS TRANSVERSAIS
+Avaliação:          [X de 4 componentes]
+Explicabilidade:    [X de 3 componentes]
+Meta-learning:      [X de 2 componentes]
+Rastreamento:       [MLflow / DVC: estado]
+Teoria:             [X de 2 componentes]
+Transferência:      [estado]
 
 ACAO IMEDIATA RECOMENDADA:
 [uma frase clara e direta sobre o que fazer agora]
