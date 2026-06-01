@@ -63,15 +63,23 @@ _PUBLIC_COLS = [
     "model_rf", "model_gb", "model_sgd",
 ]
 
+_PUBLIC_DELAY_BDAYS = 10
+
 def save_public_log(df: pd.DataFrame, portfolio_tickers: list) -> None:
     portfolio_set = set(portfolio_tickers)
+    cutoff = (pd.Timestamp.today() - pd.offsets.BDay(_PUBLIC_DELAY_BDAYS)).normalize()
+
     df_pub = df.copy()
+    df_pub["pred_date"] = pd.to_datetime(df_pub["pred_date"])
+    df_pub = df_pub[df_pub["pred_date"] <= cutoff].copy()
+
     df_pub["asset_type"] = df_pub["ticker"].apply(
         lambda t: "portfolio" if t in portfolio_set else "watchlist"
     )
     cols = [c for c in _PUBLIC_COLS if c in df_pub.columns]
     df_pub[cols].to_csv(PUBLIC_LOG, index=False)
-    logger.info("predictions_log_public guardado: %d registos", len(df_pub))
+    logger.info("predictions_log_public guardado: %d registos (corte: %s)",
+                len(df_pub), cutoff.strftime("%Y-%m-%d"))
 
 
 def load_ensemble_weights() -> dict:
