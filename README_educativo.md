@@ -235,6 +235,33 @@ A tese não é "ML consegue prever a loteria". A tese é "apliquei o mesmo frame
 
 ---
 
+### As 7 famílias e o que cada uma acrescenta
+
+| Família | Modelos | O que diferencia |
+|---------|---------|-----------------|
+| Clássico (RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM) | Aprende padrões tabulares pontuais. Baseline obrigatório em qualquer estudo. |
+| Estado oculto (Markov, HMM) | Modela regimes ocultos. Testa se o mercado ou a loteria têm "estados" não observáveis que influenciam o comportamento. |
+| Séries temporais (ARIMA, SARIMA, ETS, Holt-Winters, Prophet) | Testa autocorrelação temporal directamente. Modelos desenhados para dados com memória. |
+| Neural recorrente (LSTM, GRU) | Memória de longo alcance. Aprende dependências entre observações distantes na sequência. |
+| Neural com atenção (Transformer, TFT, N-BEATS) | Atenção selectiva. O modelo aprende a "olhar" para os momentos do passado mais relevantes para cada previsão. |
+| Bayesiano (GP, BNN) | Incerteza calibrada. Além da previsão, quantifica o quão confiante está — academicamente exige justificação quando a confiança é alta. |
+| Generativo (VAE, GAN) | Aprende a distribuição dos dados. Testa se existe estrutura latente separável entre UP e DOWN. |
+| Reinforcement (DQN, PPO) | Optimiza política, não previsão. Trata a decisão de compra/venda como uma sequência de acções com recompensa — completamente diferente de todas as outras famílias. |
+
+---
+
+### Reinforcement Learning — o ângulo diferente
+
+Todas as outras famílias resolvem o mesmo problema: "dado X hoje, qual é a probabilidade de UP amanhã?" O RL resolve um problema diferente: "dada a sequência de observações até agora, qual é a melhor política de decisão para maximizar a recompensa acumulada?"
+
+**DQN (Mnih et al., 2015 — Nature):** aprende Q(estado, acção) — o valor esperado de tomar a acção UP ou DOWN em cada estado. A política emerge implicitamente: escolhe a acção com maior Q-value.
+
+**PPO (Schulman et al., 2017 — arXiv):** aprende a política π(acção|estado) directamente com um Actor-Critic. O Actor decide o que fazer; o Crítico avalia se foi boa decisão. O clipping ε=0.2 impede que a política mude demasiado de uma vez, tornando o treino estável.
+
+A diferença conceptual é o argumento do Capítulo 8 da tese: modelos supervisionados minimizam uma loss pontual. Modelos de RL optimizam recompensa acumulada sobre uma sequência de decisões. Para trading, esta distinção é real — uma decisão errada hoje pode ter consequências que se estendem pelos dias seguintes.
+
+---
+
 ## 5. As features: o que o modelo vê
 
 O modelo não vê os preços brutos. Ele recebe 16 indicadores derivados do histórico de preços e do contexto de mercado. Esses indicadores são chamados de **features** em Machine Learning.
@@ -876,6 +903,24 @@ O roadmap técnico traduzido para o que cada item significa na prática:
 
 - ⬜ Features de eventos fundamentalistas: calendário de earnings, semanas do FOMC, expiração de opções. Requer uma API externa confiável com cobertura europeia, o que ainda é limitado.
 - ⬜ Regressor de preço para D+1: em vez de prever apenas a direção, prever o preço. Mas só faz sentido com pelo menos um ano de dados limpos acumulados.
+
+**Framework de investigação (doutoramento) — fases de modelos**
+
+Além do pipeline operacional acima, este projeto implementa um framework de investigação com 25 modelos em 7 famílias, aplicado em domínios de previsibilidade crescente.
+
+| Fase | O que significa na prática |
+|------|---------------------------|
+| ✅ Fase 0 — RF, GB, SGD | O sistema operacional que corre todos os dias. Baseline. |
+| ✅ Fase 1 — Markov, HMM | Testa se existem "regimes" ocultos nos dados. |
+| ✅ Fase 2 — XGBoost, LightGBM, CatBoost, SVM | Versões mais poderosas dos modelos clássicos. |
+| ✅ Fase 3 — ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Testa se existe autocorrelação temporal. |
+| ✅ Fase 4 — LSTM, GRU | Redes com memória de longo alcance. |
+| ✅ Fase 5 — Transformer, TFT, N-BEATS | Atenção selectiva — o modelo escolhe o que "lembrar". |
+| ✅ Fase 6 — Gaussian Process, BNN | Modelos que também dizem "quão confiantes estão". |
+| ✅ Fase 7 — VAE, GAN | Modelos generativos que aprendem a distribuição dos dados. |
+| ✅ Fase 8 — DQN, PPO | Reinforcement Learning — decisões como política, não previsão. |
+| ⬜ Fases 9-14 | Avaliação estatística, explicabilidade, meta-learning, tracking, teoria da informação, transfer learning entre domínios. |
+| ✅ Fase 15 | Reestruturação do email com tabelas por lote de compra e recomendação mensal ETF. |
 
 ---
 

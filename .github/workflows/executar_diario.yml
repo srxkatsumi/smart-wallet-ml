@@ -111,6 +111,8 @@ jobs:
           git add output/ultima_recalibracao.json   2>/dev/null || true
           git add output/models/                    2>/dev/null || true
           git add output/charts/*.png               2>/dev/null || true
+          git add output/xai/                       2>/dev/null || true
+          git add output/predictions_research_log.csv 2>/dev/null || true
           git add test_ml/analisenumerica/output/predictions_log.csv 2>/dev/null || true
           git add test_ml/analisenumerica/output/baselines_log.csv   2>/dev/null || true
           git add test_ml/analisenumerica/output/ensemble_weights.json 2>/dev/null || true

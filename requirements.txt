@@ -11,3 +11,16 @@ beautifulsoup4
 lxml
 openpyxl
 hmmlearn
+xgboost
+lightgbm
+catboost
+statsmodels
+prophet
+torch
+gymnasium
+scipy
+shap
+lime
+optuna
+mlflow
+dvc

@@ -346,12 +346,110 @@ def _compute_drift() -> dict:
     }
 
 
+def _build_research_section(research_data: dict) -> str:
+    """Secção de segunda-feira com comparação de famílias e consenso."""
+    if not research_data:
+        return ""
+
+    comparison = research_data.get("comparison", [])
+    consensus  = research_data.get("consensus", [])
+
+    # ── tabela de famílias ────────────────────────────────────────────────
+    family_labels = {
+        "classico_avancado": "Clássico avançado",
+        "estado_oculto":     "Estado oculto (HMM)",
+        "series_temporais":  "Séries temporais",
+        "neural_recorrente": "Neural recorrente",
+        "neural_atencao":    "Neural com atenção",
+        "bayesiano":         "Bayesiano (GP+BNN)",
+        "generativo":        "Generativo (VAE+GAN)",
+        "reinforcement":     "Reinforcement (DQN+PPO)",
+    }
+    comp_rows = ""
+    for r in comparison:
+        acc_pct  = r["accuracy"] * 100
+        vs_pct   = r["vs_acaso"] * 100
+        sign     = "+" if vs_pct >= 0 else ""
+        vs_color = "#1e7a4c" if vs_pct >= 0 else "#b8453a"
+        star     = " ★" if r == comparison[0] else ""
+        comp_rows += (
+            f'<tr><td style="padding:7px 8px 7px 0;font-size:12px;color:#1a1a1a">'
+            f'{family_labels.get(r["family"], r["family"])}{star}</td>'
+            f'<td style="padding:7px 8px;text-align:right;font-family:ui-monospace,'
+            f'SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;'
+            f'color:#1a1740">{acc_pct:.0f}%</td>'
+            f'<td style="padding:7px 0 7px 8px;text-align:right;font-size:12px;'
+            f'color:{vs_color};font-weight:600">{sign}{vs_pct:.0f}%</td></tr>'
+        )
+
+    # ── tabela de consenso ────────────────────────────────────────────────
+    cons_rows = ""
+    for r in consensus:
+        arrows   = "▲▲▲" if r["pct_up"] >= 0.75 else ("▲▲" if r["pct_up"] >= 0.6
+                   else ("▲" if r["pct_up"] >= 0.5 else "▼"))
+        color    = "#1e7a4c" if r["direction"] == "ALTA" else "#b8453a"
+        strength = f'({r["strength"]})' if r["strength"] == "fraco" else ""
+        cons_rows += (
+            f'<tr><td style="padding:7px 8px 7px 0;font-family:ui-monospace,'
+            f'SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;'
+            f'color:#1a1740">{r["ticker"]}</td>'
+            f'<td style="padding:7px 8px;text-align:center;font-size:12px;'
+            f'color:{color};font-weight:700">{r["direction"]} {strength}</td>'
+            f'<td style="padding:7px 8px;text-align:center;font-size:11px;'
+            f'color:#5a5a5a">{r["up_count"]}/{r["total"]} modelos</td>'
+            f'<td style="padding:7px 0 7px 8px;text-align:right;font-size:13px;'
+            f'color:{color}">{arrows}</td></tr>'
+        )
+
+    if not comp_rows and not cons_rows:
+        return ""
+
+    comp_html = f"""
+    <table style="width:100%;border-collapse:collapse;margin-bottom:8px">
+      <thead><tr>
+        <th style="text-align:left;padding:0 8px 6px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Família</th>
+        <th style="text-align:right;padding:0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Acurácia D+1</th>
+        <th style="text-align:right;padding:0 0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">vs Acaso</th>
+      </tr></thead>
+      <tbody>{comp_rows}</tbody>
+    </table>""" if comp_rows else "<p style='font-size:12px;color:#a0a0a0'>Dados de comparação disponíveis após a primeira semana completa.</p>"
+
+    cons_html = f"""
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th style="text-align:left;padding:0 8px 6px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ativo</th>
+        <th style="text-align:center;padding:0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Direção</th>
+        <th style="text-align:center;padding:0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Consenso</th>
+        <th style="text-align:right;padding:0 0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Força</th>
+      </tr></thead>
+      <tbody>{cons_rows}</tbody>
+    </table>""" if cons_rows else ""
+
+    return f"""
+  <div style="padding:24px 36px;border-top:2px solid #e0d8f0;background:#faf8ff">
+    <div style="font-size:10px;font-weight:600;color:#7d75c4;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:16px">Segunda-feira · Análise de investigação semanal</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#1a1740;margin-bottom:10px">Comparação de famílias — semana anterior</div>
+        {comp_html}
+        <div style="margin-top:8px;font-size:10px;color:#a8a39a">★ melhor família da semana &nbsp;·&nbsp; vs Acaso = diferença face a 50%</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#1a1740;margin-bottom:10px">Consenso dos 25 modelos — amanhã</div>
+        {cons_html}
+        <div style="margin-top:8px;font-size:10px;color:#a8a39a">Consenso abaixo de 60% = sinal fraco &nbsp;·&nbsp; ▲▲▲ = ≥75% modelos de acordo</div>
+      </div>
+    </div>
+  </div>"""
+
+
 def build_html(resultados_ml: dict, resumo_etfs: list[dict],
                df_log: pd.DataFrame, my_tickers: list[str],
                ensemble_weights: dict,
                resumo_etoro: list[dict] | None = None,
                resumo_etoro_lotes: list[dict] | None = None,
                resumo_etf_lotes: list[dict] | None = None,
+               research_data: dict | None = None,
                context_warnings: list[str] | None = None) -> str:
 
     barcelona_tz = timezone(timedelta(hours=BARCELONA_UTC_OFFSET))
@@ -785,6 +883,9 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
 
   <!-- CORRELAÇÃO DE RETORNOS -->
   {corr_html}
+
+  <!-- INVESTIGAÇÃO SEMANAL (apenas segunda-feira) -->
+  {_build_research_section(research_data) if research_data else ""}
 
   <!-- AVISO LEGAL -->
   <div style="padding:18px 36px;border-top:1px solid #efece4">

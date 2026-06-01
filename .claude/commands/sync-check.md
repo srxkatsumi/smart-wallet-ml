@@ -37,10 +37,32 @@ Para cada camada transversal, verificar se existe implementação:
 |--------|---------------|
 | SHAP | `pip show shap` + ficheiros em `output/xai/` |
 | LIME | `pip show lime` + ficheiros em `output/xai/` |
-| MLflow | `pip show mlflow` + directório `mlruns/` |
+| MLflow | `pip show mlflow` + `mlflow.db` ou `mlruns/` |
 | DVC | `pip show dvc` + ficheiros `.dvc` no projecto |
 | Testes estatísticos | Verificar se existe `eval/` ou equivalente no código |
 | Entropia / Info Mútua | Procurar em `features/engineering.py` |
+
+### PASSO 3B — Auditoria de integração sistémica
+
+**Esta é a verificação que distingue "código existe" de "código funciona no sistema real."**
+
+Para cada camada transversal marcada como implementada, verificar os três níveis:
+
+| Nível | Pergunta | Como verificar |
+|-------|----------|---------------|
+| Código | A função existe no módulo? | `grep -n "def "` no ficheiro |
+| Pipeline | É chamada em `main.py`? | `grep -n "from evaluation\|import tracking\|log_run\|shap_tree\|dvc_track"` em `main.py` |
+| CI/CD | O output é persistido no GitHub Actions? | Ler `.github/workflows/executar_diario.yml` e verificar se o ficheiro gerado aparece num `git add` |
+
+Verificar também:
+- **`.gitignore`**: ficheiros gerados pelas camadas (ex: `mlflow.db`, `output/xai/`) estão ignorados acidentalmente ou faltam ser ignorados?
+- **Hiperparâmetros no MLflow**: os `params` registados incluem os valores reais de `config/settings.py`, ou apenas metadados genéricos (ticker, horizon)?
+- **Código morto**: existem ficheiros em `models/` que não constam do roadmap e não são chamados em nenhum pipeline? Listar.
+
+Reportar cada camada com três estados possíveis:
+- ✅ **Integrado** — código existe, é chamado no pipeline, o output é persistido no CI
+- ⚠️ **Parcial** — código existe e é chamado, mas o output não é persistido (ou vice-versa)
+- ⬜ **Apenas código** — módulo existe mas não é chamado em `main.py` nem no CI
 
 ### PASSO 4 — Calcular gaps
 
@@ -80,13 +102,19 @@ Modelos pendentes:      [25-X]
 E-COMMERCE
 Estado:                 [Não iniciado / X de 25]
 
-CAMADAS TRANSVERSAIS
-Avaliação estatística:  [X de 4]
-Explicabilidade:        [X de 3]
-Meta-learning:          [X de 2]
-Rastreamento:           [MLflow: ✅/⬜ | DVC: ✅/⬜]
-Teoria da informação:   [X de 2]
-Transfer Learning:      [✅/⬜]
+CAMADAS TRANSVERSAIS          Código    Pipeline  CI/git
+Avaliação estatística:        [✅/⬜]   [✅/⬜]   [✅/⬜]
+Explicabilidade (SHAP/LIME):  [✅/⬜]   [✅/⬜]   [✅/⬜]
+Meta-learning:                [✅/⬜]   [✅/⬜]   [✅/⬜]
+MLflow:                       [✅/⬜]   [✅/⬜]   [✅/⬜]
+DVC:                          [✅/⬜]   [✅/⬜]   [✅/⬜]
+Teoria da informação:         [✅/⬜]   [✅/⬜]   [✅/⬜]
+Transfer Learning:            [✅/⬜]   [✅/⬜]   [✅/⬜]
+
+INTEGRAÇÃO — PROBLEMAS DETECTADOS
+.gitignore:         [OK / Falta: listar ficheiros]
+MLflow params:      [Hiperparâmetros reais: ✅/⬜ | Só metadados: listar]
+Código morto:       [Nenhum / Ficheiros sem pipeline: listar]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 PRÓXIMOS 3 MODELOS SUGERIDOS (por ordem de complexidade crescente):

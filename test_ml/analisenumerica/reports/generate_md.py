@@ -10,7 +10,6 @@ def _dezenas(row) -> str:
 
 
 def _acertos_str(row) -> str:
-    """Return the raw match count, or ⏳ if pending."""
     if row.get("validated") == True:
         return str(int(row["matches"])) if pd.notna(row.get("matches")) else "—"
     return "⏳"
@@ -31,6 +30,96 @@ def _premio_str(row) -> str:
 
 def _day_pt(day: str) -> str:
     return {"Monday": "Seg", "Thursday": "Qui", "Saturday": "Sab"}.get(day, day[:3])
+
+
+def _hall_of_fame_block(validated: pd.DataFrame) -> str:
+    """
+    Destaque para acertos >= 4. Aparece no topo do README.
+    Actualizado diariamente à medida que previsões são validadas.
+    """
+    if validated.empty:
+        n4 = n5 = n6 = 0
+    else:
+        n6 = int((validated["matches"] == 6).sum())
+        n5 = int((validated["matches"] == 5).sum())
+        n4 = int((validated["matches"] == 4).sum())
+
+    n_total = len(validated)
+
+    # linha de sequências previstas
+    lines = [f"**Sequências previstas:** {n_total}"]
+
+    if n6 > 0:
+        lines.append(f"🏆🏆🏆 **Sequência 6 acertada: {n6}×** (SENA)")
+    else:
+        lines.append("Sequência 6 acertada: 0")
+
+    if n5 > 0:
+        lines.append(f"🏆🏆 **Sequência 5 acertada: {n5}×** (Quina)")
+    else:
+        lines.append("Sequência 5 acertada: 0")
+
+    if n4 > 0:
+        lines.append(f"🏆 **Sequência 4 acertada: {n4}×** (Quadra)")
+    else:
+        lines.append("Sequência 4 acertada: 0")
+
+    # bloco de destaque se atingiu 4+
+    if n4 > 0 or n5 > 0 or n6 > 0:
+        best_n  = 6 if n6 > 0 else (5 if n5 > 0 else 4)
+        best_ct = n6 if n6 > 0 else (n5 if n5 > 0 else n4)
+        header  = f"> 🎯 **Destaque:** {best_ct}× Sequência com {best_n} acertos registada!"
+        return header + "\n\n" + "\n".join(lines)
+
+    return "\n".join(lines)
+
+
+def _esta_semana_block(pending: pd.DataFrame) -> str:
+    """
+    Mostra apenas os sorteios da semana actual com as 5 sequências previstas.
+    Cada sorteio é apresentado como um bloco separado.
+    """
+    if pending.empty:
+        return "_Sem previsões para esta semana._"
+
+    # agrupa por sorteio (target_concurso)
+    sorteios = sorted(pending["target_concurso"].unique())
+    # mostra apenas os próximos 3 (semana actual)
+    sorteios = sorteios[:3]
+
+    blocks = []
+    for concurso in sorteios:
+        rows = pending[pending["target_concurso"] == concurso].sort_values("seq_num")
+        if rows.empty:
+            continue
+        data    = str(rows.iloc[0]["target_date"])[:10]
+        dia     = _day_pt(str(rows.iloc[0]["draw_day"]))
+        n_seqs  = len(rows)
+        seq_lines = []
+        for _, row in rows.iterrows():
+            acertos = _acertos_str(row)
+            premio  = _premio_str(row)
+            icon    = ""
+            if row.get("validated") == True and pd.notna(row.get("matches")):
+                m = int(row["matches"])
+                if m >= 6:
+                    icon = " 🏆🏆🏆"
+                elif m >= 5:
+                    icon = " 🏆🏆"
+                elif m >= 4:
+                    icon = " 🏆"
+            seq_lines.append(
+                f"  Seq {int(row['seq_num'])}: `{_dezenas(row)}` "
+                f"— {acertos} acertos · {premio}{icon}"
+            )
+        block = (
+            f"**Concurso {int(concurso)} · {dia} {data}** "
+            f"({n_seqs} sequências previstas)\n" +
+            "\n".join(seq_lines)
+        )
+        blocks.append(block)
+
+    return "\n\n".join(blocks)
 
 
 def _stats_block(validated: pd.DataFrame) -> str:
@@ -124,27 +213,24 @@ def save_md(pred_df: pd.DataFrame, results: pd.DataFrame):
     pending   = pred_df[pred_df["validated"] != True].copy()
     pending   = pending.sort_values(["target_date", "seq_num"])
 
-    header = (
-        "| Data Previsão | Data Sorteio | Dia | Concurso | Seq "
-        "| Dezenas | Acertos | Acurácia | Prêmio |"
-    )
-    sep = (
-        "|--------------|-------------|-----|----------|-----"
-        "|---------|---------|---------|--------|"
-    )
-
-    # Pending block
-    if pending.empty:
-        pending_block = "_Sem previsões pendentes._"
-    else:
-        pending_block = header + "\n" + sep + "\n" + _table_rows(pending)
-
     n_validated = len(validated)
     n_concursos = validated["target_concurso"].nunique() if not validated.empty else 0
 
     md = f"""# Mega Sena — Previsões ML
 
 > Gerado automaticamente · {today} · Último sorteio registado: Concurso {last_c} ({last_date})
+
+---
+
+## Resultados
+
+{_hall_of_fame_block(validated)}
+
+---
+
+## Previsões desta semana
+
+{_esta_semana_block(pending)}
 
 ---
 
@@ -160,13 +246,7 @@ def save_md(pred_df: pd.DataFrame, results: pd.DataFrame):
 
 ---
 
-## ⏳ Próximos sorteios (pendentes)
-
-{pending_block}
-
----
-
-## 📋 Histórico completo
+## Histórico completo
 
 O histórico completo de previsões ({n_validated} sequências · {n_concursos} sorteios validados) está disponível em formato CSV:
 

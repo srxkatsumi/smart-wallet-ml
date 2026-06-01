@@ -523,6 +523,31 @@ Só aqui. Não antes. O pipeline tem de estar estável antes de mexer no modelo.
 | 18 | ⬜ Features de eventos fundamentalistas | Datas de earnings, semanas FOMC, expiração de opções. Requer API externa fiável; cobertura europeia é limitada. |
 | 19 | ⬜ Regressor de preço D+1 | Só com 1 ano de dados limpos acumulados. |
 
+### Framework de investigação — 25 modelos em 7 famílias (base do doutoramento)
+
+Este projeto é o domínio principal de um framework de investigação ML multi-domínio desenvolvido no âmbito de um programa de doutoramento. As mesmas famílias de modelos são aplicadas em três domínios de previsibilidade crescente: loteria (aleatório por definição), mercado financeiro (ruidoso) e e-commerce (padrões sazonais). A hipótese central é que a performance dos modelos escala com a previsibilidade do domínio.
+
+Todos os 25 modelos estão implementados e testados. As fases 9-14 (framework de avaliação, XAI, meta-learning, rastreamento, teoria da informação e transfer learning) estão pendentes.
+
+| Fase | Família | Modelos | Carteira | Mega Sena |
+|------|---------|---------|----------|-----------|
+| 0 | Clássico base | RF, GB, SGD | ✅ | ✅ |
+| 1 | Estado oculto | Markov, HMM | ✅ | ✅ |
+| 2 | Clássico avançado | XGBoost, LightGBM, CatBoost, SVM | ✅ | ✅ |
+| 3 | Séries temporais | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | ✅ | ✅ |
+| 4 | Neural recorrente | LSTM, GRU | ✅ | ✅ |
+| 5 | Neural com atenção | Transformer, TFT, N-BEATS | ✅ | ✅ |
+| 6 | Bayesiano | Gaussian Process, BNN (MC Dropout) | ✅ | ✅ |
+| 7 | Generativo | VAE, GAN | ✅ | ✅ |
+| 8 | Reinforcement | DQN, PPO | ✅ | — |
+| 9 | Avaliação | Diebold-Mariano, McNemar, Ljung-Box | ⬜ | ⬜ |
+| 10 | Explicabilidade | SHAP, Attention weights, LIME | ⬜ | ⬜ |
+| 11 | Meta-learning | Stacking, Optuna | ⬜ | ⬜ |
+| 12 | Rastreamento | MLflow, DVC | ⬜ | ⬜ |
+| 13 | Teoria da informação | Entropia de Shannon, Informação Mútua | ⬜ | ⬜ |
+| 14 | Transfer Learning | Adaptação entre domínios | ⬜ | ⬜ |
+| 15 | Email report | Tabela eToro por lote, secção ETF, recomendação mensal | ✅ | — |
+
 ---
 
 ## Sobre

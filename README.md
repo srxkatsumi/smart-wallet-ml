@@ -521,6 +521,31 @@ Only here. Not before. The pipeline must be stable before touching the model.
 | 18 | ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry. Requires a reliable external API; European coverage is limited. |
 | 19 | ⬜ D+1 price regressor | Only with 1 year of clean accumulated data. |
 
+### Research framework — 25 models across 7 families (PhD foundation)
+
+This project serves as the primary domain for a multi-domain ML research framework being developed as part of a doctoral programme. The same model families are applied across three domains of increasing predictability: lottery (random by design), financial markets (noisy), and e-commerce (seasonal patterns). The hypothesis is that model performance scales with the predictability of the domain, which constitutes the central argument of the thesis.
+
+All 25 models are implemented and tested. Phases 9-14 (evaluation framework, XAI, meta-learning, tracking, information theory, and transfer learning) remain pending.
+
+| Phase | Family | Models | Carteira | Mega Sena |
+|-------|--------|--------|----------|-----------|
+| 0 | Classic baseline | RF, GB, SGD | ✅ | ✅ |
+| 1 | Hidden state | Markov, HMM | ✅ | ✅ |
+| 2 | Advanced classic | XGBoost, LightGBM, CatBoost, SVM | ✅ | ✅ |
+| 3 | Time series | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | ✅ | ✅ |
+| 4 | Recurrent neural | LSTM, GRU | ✅ | ✅ |
+| 5 | Attention neural | Transformer, TFT, N-BEATS | ✅ | ✅ |
+| 6 | Bayesian | Gaussian Process, BNN (MC Dropout) | ✅ | ✅ |
+| 7 | Generative | VAE, GAN | ✅ | ✅ |
+| 8 | Reinforcement | DQN, PPO | ✅ | — |
+| 9 | Evaluation | Diebold-Mariano, McNemar, Ljung-Box | ⬜ | ⬜ |
+| 10 | Explainability | SHAP, Attention weights, LIME | ⬜ | ⬜ |
+| 11 | Meta-learning | Stacking, Optuna | ⬜ | ⬜ |
+| 12 | Tracking | MLflow, DVC | ⬜ | ⬜ |
+| 13 | Information theory | Shannon entropy, Mutual information | ⬜ | ⬜ |
+| 14 | Transfer learning | Cross-domain adaptation | ⬜ | ⬜ |
+| 15 | Email report | Per-lot eToro table, ETF section, monthly buy recommendation | ✅ | — |
+
 ---
 
 ## About

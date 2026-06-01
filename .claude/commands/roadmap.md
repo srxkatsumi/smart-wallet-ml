@@ -44,6 +44,7 @@ Estes são os 25 modelos aprovados organizados em 7 famílias. Este registo é a
 | 5 | Bayesiano | Gaussian Process, BNN | Carteira, Mega Sena |
 | 6 | Generativo | VAE, GAN | Carteira, Mega Sena |
 | 7 | Reinforcement | Q-Learning, PPO | Carteira |
+| 8 | Contrarian / Testes de sanidade | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | Carteira |
 
 **Estado de implementação por projecto:**
 
@@ -52,47 +53,55 @@ Estes são os 25 modelos aprovados organizados em 7 famílias. Este registo é a
 | RF | ✅ | ✅ | ⬜ |
 | GB | ✅ | ✅ | ⬜ |
 | SGD | ✅ | ✅ | ⬜ |
-| XGBoost | ⬜ | ⬜ | ⬜ |
-| LightGBM | ⬜ | ⬜ | ⬜ |
-| CatBoost | ⬜ | ⬜ | ⬜ |
-| SVM | ⬜ | ⬜ | ⬜ |
-| ARIMA | ⬜ | ⬜ | ⬜ |
-| SARIMA | ⬜ | ⬜ | ⬜ |
-| ETS | ⬜ | ⬜ | ⬜ |
-| Holt-Winters | ⬜ | ⬜ | ⬜ |
-| Prophet | ⬜ | ⬜ | ⬜ |
-| Markov | ⬜ | ⬜ | ⬜ |
-| HMM | ⬜ | ⬜ | ⬜ |
-| LSTM | ⬜ | ⬜ | ⬜ |
-| GRU | ⬜ | ⬜ | ⬜ |
-| Transformer | ⬜ | ⬜ | ⬜ |
-| TFT | ⬜ | ⬜ | ⬜ |
-| N-BEATS | ⬜ | ⬜ | ⬜ |
-| Gaussian Process | ⬜ | ⬜ | ⬜ |
-| BNN | ⬜ | ⬜ | ⬜ |
-| VAE | ⬜ | ⬜ | ⬜ |
-| GAN | ⬜ | ⬜ | ⬜ |
-| Q-Learning | ⬜ | — | ⬜ |
-| PPO | ⬜ | — | ⬜ |
+| XGBoost | ✅ | ✅ | ⬜ |
+| LightGBM | ✅ | ✅ | ⬜ |
+| CatBoost | ✅ | ✅ | ⬜ |
+| SVM | ✅ | ✅ | ⬜ |
+| ARIMA | ✅ | ✅ | ⬜ |
+| SARIMA | ✅ | ✅ | ⬜ |
+| ETS | ✅ | ✅ | ⬜ |
+| Holt-Winters | ✅ | ✅ | ⬜ |
+| Prophet | ✅ | ✅ | ⬜ |
+| Markov | ✅ | ✅ | ⬜ |
+| HMM | ✅ | ✅ | ⬜ |
+| LSTM | ✅ | ✅ | ⬜ |
+| GRU | ✅ | ✅ | ⬜ |
+| Transformer | ✅ | ✅ | ⬜ |
+| TFT | ✅ | ✅ | ⬜ |
+| N-BEATS | ✅ | ✅ | ⬜ |
+| Gaussian Process | ✅ | ✅ | ⬜ |
+| BNN | ✅ | ✅ | ⬜ |
+| VAE | ✅ | ✅ | ⬜ |
+| GAN | ✅ | ✅ | ⬜ |
+| Q-Learning (DQN) | ✅ | — | ⬜ |
+| PPO | ✅ | — | ⬜ |
+| CB (Contrarian Baseline) | ⏳ | — | — |
+| EWI (Error-Weighted Inverter) | ⏳ | — | — |
+| PEL (Predictive Error Learning) | ⏳ | — | — |
 
 **Camadas transversais (além dos modelos):**
 
 | Camada | Componente | Estado |
 |--------|-----------|--------|
-| Avaliação | Diebold-Mariano test | ⬜ |
-| Avaliação | McNemar test | ⬜ |
-| Avaliação | Ljung-Box test | ⬜ |
-| Avaliação | Métricas por domínio | ⬜ |
-| Explicabilidade | SHAP values | ⬜ |
-| Explicabilidade | Attention weights | ⬜ |
-| Explicabilidade | LIME | ⬜ |
-| Meta-learning | Stacking com meta-learner | ⬜ |
-| Meta-learning | Optuna (hyperopt) | ⬜ |
-| Rastreamento | MLflow | ⬜ |
-| Rastreamento | DVC | ⬜ |
-| Teoria | Entropia de Shannon | ⬜ |
-| Teoria | Informação Mútua | ⬜ |
-| Transferência | Transfer Learning entre domínios | ⬜ |
+| Avaliação | Diebold-Mariano test | ✅ |
+| Avaliação | McNemar test | ✅ |
+| Avaliação | Ljung-Box test | ✅ |
+| Avaliação | Métricas por domínio | ✅ |
+| Explicabilidade | SHAP values | ✅ |
+| Explicabilidade | Attention weights | ✅ |
+| Explicabilidade | LIME | ✅ |
+| Meta-learning | Stacking com meta-learner | ✅ |
+| Meta-learning | Optuna (hyperopt) | ✅ |
+| Rastreamento | MLflow | ✅ |
+| Rastreamento | DVC | ✅ |
+| Teoria | Entropia de Shannon | ✅ |
+| Teoria | Informação Mútua | ✅ |
+| Teoria | Permutation Entropy | ✅ |
+| Teoria | Transfer Entropy | ✅ |
+| Transferência | MMD (Maximum Mean Discrepancy) | ✅ |
+| Transferência | CORAL Feature Alignment | ✅ |
+| Transferência | Fine-tuning cross-domain | ✅ |
+| Transferência | Cross-domain Evaluation | ✅ |
 
 ---
 
@@ -105,25 +114,26 @@ Este é o plano de execução oficial. Todas as skills devem seguir esta ordem. 
 | Fase | O que implementar | Família | Dependências novas | Projectos | Estado |
 |------|------------------|---------|-------------------|-----------|--------|
 | **0** | RF, GB, SGD | Clássico | nenhuma | Carteira, Mega Sena | ✅ |
-| **1** | Markov, HMM | Estado oculto | nenhuma | Carteira, Mega Sena | ⬜ |
-| **2** | XGBoost, LightGBM, CatBoost, SVM | Clássico avançado | `xgboost`, `lightgbm`, `catboost` | Carteira, Mega Sena | ⬜ |
-| **3** | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Séries temporais | `statsmodels`, `prophet` | Carteira, Mega Sena | ⬜ |
-| **4** | LSTM, GRU | Neural básico | `torch` | Carteira, Mega Sena | ⬜ |
-| **5** | Transformer, TFT, N-BEATS | Neural avançado | `torch` (já tem) | Carteira, Mega Sena | ⬜ |
-| **6** | Gaussian Process, BNN | Bayesiano | `torch` (já tem) | Carteira, Mega Sena | ⬜ |
-| **7** | VAE, GAN | Generativo | `torch` (já tem) | Carteira, Mega Sena | ⬜ |
-| **8** | Q-Learning, PPO | Reinforcement | `gymnasium`, `stable-baselines3` | Carteira | ⬜ |
-| **9** | Diebold-Mariano, McNemar, Ljung-Box, métricas por domínio | Avaliação | `scipy` | Todos | ⬜ |
-| **10** | SHAP, Attention weights, LIME | Explicabilidade | `shap`, `lime` | Todos | ⬜ |
-| **11** | Stacking com meta-learner, Optuna | Meta-learning | `optuna` | Todos | ⬜ |
-| **12** | MLflow, DVC | Rastreamento | `mlflow`, `dvc` | Todos | ⬜ |
-| **13** | Entropia de Shannon, Informação Mútua | Teoria da informação | `scipy` (já tem) | Todos | ⬜ |
-| **14** | Transfer Learning entre domínios | Transferência | nenhuma nova | Todos | ⬜ |
-| **15** | Reestruturação do email: secção acções + ETFs + recomendação mensal | Relatório | nenhuma nova | Carteira | ⬜ |
+| **1** | Markov, HMM | Estado oculto | `hmmlearn` | Carteira, Mega Sena | ✅ |
+| **2** | XGBoost, LightGBM, CatBoost, SVM | Clássico avançado | `xgboost`, `lightgbm`, `catboost` | Carteira, Mega Sena | ✅ |
+| **3** | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Séries temporais | `statsmodels`, `prophet` | Carteira, Mega Sena | ✅ |
+| **4** | LSTM, GRU | Neural básico | `torch` | Carteira, Mega Sena | ✅ |
+| **5** | Transformer, TFT, N-BEATS | Neural avançado | `torch` (já tem) | Carteira, Mega Sena | ✅ |
+| **6** | Gaussian Process, BNN | Bayesiano | `torch` (já tem) | Carteira, Mega Sena | ✅ |
+| **7** | VAE, GAN | Generativo | `torch` (já tem) | Carteira, Mega Sena | ✅ |
+| **8** | Q-Learning (DQN), PPO | Reinforcement | `gymnasium` | Carteira | ✅ |
+| **9** | Diebold-Mariano, McNemar, Ljung-Box, métricas por domínio | Avaliação | `scipy` | Todos | ✅ |
+| **10** | SHAP, Attention weights, LIME | Explicabilidade | `shap`, `lime` | Todos | ✅ |
+| **11** | Stacking com meta-learner, Optuna | Meta-learning | `optuna` | Todos | ✅ |
+| **12** | MLflow, DVC | Rastreamento | `mlflow`, `dvc` | Todos | ✅ |
+| **13** | Entropia de Shannon, MI, Permutation Entropy, Transfer Entropy | Teoria da informação | `scipy` (já tem) | Todos | ✅ |
+| **14** | MMD, CORAL, Fine-tuning, Cross-domain Evaluation | Transferência | nenhuma nova | Todos | ✅ |
+| **15** | Reestruturação do email: secção acções + ETFs + recomendação mensal | Relatório | nenhuma nova | Carteira | ✅ |
+| **16** | CB, EWI, PEL — integrar no research runner (segunda-feira) como testes de sanidade do ensemble | Contrarian | nenhuma nova | Carteira | ⏳ |
 
 **Contagem total:**
-- Modelos: 25 (3 já implementados + 22 a implementar em fases 1-8)
-- Famílias: 7
+- Modelos: 28 (25 implementados + 3 contrarian aprovados, pendentes de integração)
+- Famílias: 8
 - Testes estatísticos: 3 (Fase 9)
 - Ferramentas XAI: 3 (Fase 10)
 - Meta-learning: 2 componentes (Fase 11)

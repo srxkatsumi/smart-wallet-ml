@@ -12,3 +12,7 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# MLflow — base de dados local, binária e crescente; não vai para git
+mlflow.db
+mlruns/
