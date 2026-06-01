@@ -188,6 +188,53 @@ Os dois modelos não-lineares podem entrar em ressonância, ambos detectando o m
 
 ---
 
+## 4.5. O plano de expansão para 25 modelos em 7 famílias
+
+Os três modelos descritos acima (RF, GB, SGD) são o ponto de partida, não o destino. Este projeto é a base de um doutoramento em Ciência de Dados e o objetivo é testar sistematicamente todas as principais famílias de modelos de aprendizado de máquina nos domínios mais difíceis primeiro, para depois aplicar o mesmo framework a domínios com padrões reais.
+
+A lógica é: se um modelo consegue extrair alguma informação útil de dados ruidosos (mercado financeiro) ou de dados aleatórios por definição (Mega Sena), então ele vai performar muito melhor em dados com padrões reais (e-commerce, sazonalidades).
+
+### As 7 famílias de modelos
+
+**Família 1 — Clássico** (já parcialmente implementado)
+RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM. São os modelos mais citados em papers de ML aplicado e constituem a base de comparação obrigatória para qualquer estudo académico.
+
+**Família 2 — Séries temporais**
+ARIMA, SARIMA, ETS, Holt-Winters, Prophet. Estes modelos foram construídos especificamente para dados com dependência temporal. O Prophet (Meta) é especialmente poderoso para dados com sazonalidade, o que o torna o candidato mais forte para o projeto de e-commerce.
+
+**Família 3 — Estado oculto**
+Cadeias de Markov e HMM (Hidden Markov Model). Modelam a ideia de que o mercado pode estar em diferentes "estados" (bull, bear, lateral) que não são diretamente observáveis mas influenciam o comportamento dos preços. São os modelos mais naturais para detetar regimes de mercado.
+
+**Família 4 — Redes neurais recorrentes**
+LSTM e GRU. Redes neurais com memória temporal. Aprendem dependências de longo prazo entre observações sequenciais — algo que o RF e o GB não conseguem fazer por design.
+
+**Família 5 — Redes neurais com atenção**
+Transformer, TFT (Temporal Fusion Transformer) e N-BEATS. O Transformer aprende a "prestar atenção" a momentos específicos do passado que são relevantes para a previsão atual. O TFT é o estado da arte em previsão multi-horizonte (publicado pelo Google em 2021).
+
+**Família 6 — Modelos bayesianos**
+Gaussian Process e BNN (Bayesian Neural Network). A vantagem principal é a quantificação de incerteza: em vez de prever apenas a direção, estes modelos dizem também "quão confiantes estão" com base na teoria da probabilidade. Fundamental para um júri académico que questione a robustez das previsões.
+
+**Família 7 — Modelos generativos**
+VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de prever a próxima observação, aprendem a distribuição dos dados e geram amostras sintéticas que respeitam os padrões aprendidos. A pergunta central é: o modelo aprende alguma estrutura real, ou apenas reproduce ruído?
+
+---
+
+### Por que testar em domínios difíceis primeiro
+
+A estratégia de começar com a Mega Sena (processo aleatório puro) e o mercado financeiro (processo ruidoso) antes do e-commerce (com sazonalidades reais) é deliberada.
+
+Se qualquer modelo encontrar padrões na Mega Sena, isso é evidência de sobreajuste (overfitting), não de aprendizado real. Se qualquer modelo bater significativamente o acaso no mercado financeiro, isso já é academicamente interessante. Quando os mesmos modelos forem aplicados ao e-commerce, onde existem padrões reais de sazonalidade, espera-se performance muito superior — e a comparação entre domínios é o argumento central da tese.
+
+```
+Mega Sena     → processo aleatório por definição       → todos os modelos devem falhar
+Mercado       → processo ruidoso com algum sinal        → alguns modelos podem ter edge marginal
+E-commerce    → padrões sazonais reais e verificáveis   → modelos de séries temporais devem performar bem
+```
+
+A tese não é "ML consegue prever a loteria". A tese é "apliquei o mesmo framework em 3 domínios com previsibilidade crescente e documentei os resultados".
+
+---
+
 ## 5. As features: o que o modelo vê
 
 O modelo não vê os preços brutos. Ele recebe 16 indicadores derivados do histórico de preços e do contexto de mercado. Esses indicadores são chamados de **features** em Machine Learning.
