@@ -523,11 +523,11 @@ Só aqui. Não antes. O pipeline tem de estar estável antes de mexer no modelo.
 | 18 | ⬜ Features de eventos fundamentalistas | Datas de earnings, semanas FOMC, expiração de opções. Requer API externa fiável; cobertura europeia é limitada. |
 | 19 | ⬜ Regressor de preço D+1 | Só com 1 ano de dados limpos acumulados. |
 
-### Framework de investigação — 25 modelos em 7 famílias (base do doutoramento)
+### Framework de investigação — 38 modelos em 12 famílias (base do doutoramento)
 
 Este projeto é o domínio principal de um framework de investigação ML multi-domínio desenvolvido no âmbito de um programa de doutoramento. As mesmas famílias de modelos são aplicadas em três domínios de previsibilidade crescente: loteria (aleatório por definição), mercado financeiro (ruidoso) e e-commerce (padrões sazonais). A hipótese central é que a performance dos modelos escala com a previsibilidade do domínio.
 
-Todos os 25 modelos estão implementados e testados. As fases 9-14 (framework de avaliação, XAI, meta-learning, rastreamento, teoria da informação e transfer learning) estão pendentes.
+Os 25 modelos originais estão implementados e testados. As camadas transversais (fases 9-15) estão completas. As fases 16-20, que cobrem a nova geração de modelos (arquitecturas eficientes pós-2022, foundation models, incerteza calibrada e detecção de drift), estão aprovadas e pendentes de implementação.
 
 | Fase | Família | Modelos | Carteira | Mega Sena |
 |------|---------|---------|----------|-----------|
@@ -540,13 +540,18 @@ Todos os 25 modelos estão implementados e testados. As fases 9-14 (framework de
 | 6 | Bayesiano | Gaussian Process, BNN (MC Dropout) | ✅ | ✅ |
 | 7 | Generativo | VAE, GAN | ✅ | ✅ |
 | 8 | Reinforcement | DQN, PPO | ✅ | — |
-| 9 | Avaliação | Diebold-Mariano, McNemar, Ljung-Box | ⬜ | ⬜ |
-| 10 | Explicabilidade | SHAP, Attention weights, LIME | ⬜ | ⬜ |
-| 11 | Meta-learning | Stacking, Optuna | ⬜ | ⬜ |
-| 12 | Rastreamento | MLflow, DVC | ⬜ | ⬜ |
-| 13 | Teoria da informação | Entropia de Shannon, Informação Mútua | ⬜ | ⬜ |
-| 14 | Transfer Learning | Adaptação entre domínios | ⬜ | ⬜ |
+| 9 | Avaliação | Diebold-Mariano, McNemar, Ljung-Box, métricas por domínio | ✅ | ✅ |
+| 10 | Explicabilidade | SHAP, Attention weights, LIME | ✅ | ✅ |
+| 11 | Meta-learning | Stacking, Optuna | ✅ | ✅ |
+| 12 | Rastreamento | MLflow (pipeline diário + research runner), DVC | ✅ | ✅ |
+| 13 | Teoria da informação | Entropia de Shannon, MI, Permutation entropy, Transfer entropy | ✅ | ✅ |
+| 14 | Transfer Learning | MMD, CORAL, Fine-tuning, Cross-domain evaluation | ✅ | ✅ |
 | 15 | Email report | Tabela eToro por lote, secção ETF, recomendação mensal | ✅ | — |
+| 16 | Contrarian / Testes de sanidade | CB (Contrarian Baseline), EWI, PEL | ⏳ | — |
+| 17 | Arquitecturas eficientes (pós-2022) | TCN, DLinear, NLinear, PatchTST | ⏳ | ⏳ |
+| 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ⏳ | ⏳ |
+| 19 | Incerteza calibrada | Conformal Prediction (MAPIE) | ⏳ | ⏳ |
+| 20 | Detecção de drift | ADWIN, Page-Hinkley | ⏳ | — |
 
 ---
 

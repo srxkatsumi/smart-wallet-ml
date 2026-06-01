@@ -33,7 +33,7 @@ Este projeto é gerido por uma equipa de skills especializadas. O `/roadmap` é 
 
 ## REGISTO MESTRE DE MODELOS
 
-Estes são os 25 modelos aprovados organizados em 7 famílias. Este registo é a fonte de verdade para `/sync-check` e `/model-add`.
+Estes são os 38 modelos aprovados organizados em 12 famílias. Este registo é a fonte de verdade para `/sync-check` e `/model-add`.
 
 | # | Família | Modelos | Projectos alvo |
 |---|---------|---------|----------------|
@@ -45,6 +45,10 @@ Estes são os 25 modelos aprovados organizados em 7 famílias. Este registo é a
 | 6 | Generativo | VAE, GAN | Carteira, Mega Sena |
 | 7 | Reinforcement | Q-Learning, PPO | Carteira |
 | 8 | Contrarian / Testes de sanidade | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | Carteira |
+| 9 | Arquitecturas eficientes (pós-2022) | TCN, DLinear, NLinear, PatchTST | Carteira, Mega Sena |
+| 10 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | Carteira, Mega Sena |
+| 11 | Incerteza calibrada | Conformal Prediction (MAPIE) | Carteira, Mega Sena |
+| 12 | Detecção de drift | ADWIN, Page-Hinkley | Carteira |
 
 **Estado de implementação por projecto:**
 
@@ -78,6 +82,16 @@ Estes são os 25 modelos aprovados organizados em 7 famílias. Este registo é a
 | CB (Contrarian Baseline) | ⏳ | — | — |
 | EWI (Error-Weighted Inverter) | ⏳ | — | — |
 | PEL (Predictive Error Learning) | ⏳ | — | — |
+| TCN | ⏳ | ⏳ | — |
+| DLinear | ⏳ | ⏳ | — |
+| NLinear | ⏳ | ⏳ | — |
+| PatchTST | ⏳ | ⏳ | — |
+| Chronos | ⏳ | ⏳ | — |
+| TimesFM | ⏳ | ⏳ | — |
+| Moirai | ⏳ | ⏳ | — |
+| Conformal Prediction | ⏳ | ⏳ | — |
+| ADWIN | ⏳ | — | — |
+| Page-Hinkley | ⏳ | — | — |
 
 **Camadas transversais (além dos modelos):**
 
@@ -130,10 +144,14 @@ Este é o plano de execução oficial. Todas as skills devem seguir esta ordem. 
 | **14** | MMD, CORAL, Fine-tuning, Cross-domain Evaluation | Transferência | nenhuma nova | Todos | ✅ |
 | **15** | Reestruturação do email: secção acções + ETFs + recomendação mensal | Relatório | nenhuma nova | Carteira | ✅ |
 | **16** | CB, EWI, PEL — integrar no research runner (segunda-feira) como testes de sanidade do ensemble | Contrarian | nenhuma nova | Carteira | ⏳ |
+| **17** | TCN, DLinear, NLinear, PatchTST | Arquitecturas eficientes | `torch` (já tem) | Carteira, Mega Sena | ⏳ |
+| **18** | Chronos, TimesFM, Moirai — comparação zero-shot vs modelos treinados | Foundation Models | `chronos-forecasting`, `timesfm` | Carteira, Mega Sena | ⏳ |
+| **19** | Conformal Prediction — cobertura estatística garantida para previsões D+1/D+2/D+3 | Incerteza calibrada | `mapie` | Carteira, Mega Sena | ⏳ |
+| **20** | ADWIN, Page-Hinkley — detecção de mudança de regime de mercado | Detecção de drift | `river` | Carteira | ⏳ |
 
 **Contagem total:**
-- Modelos: 28 (25 implementados + 3 contrarian aprovados, pendentes de integração)
-- Famílias: 8
+- Modelos: 38 (25 implementados + 13 aprovados, pendentes — Fases 16-20)
+- Famílias: 12
 - Testes estatísticos: 3 (Fase 9)
 - Ferramentas XAI: 3 (Fase 10)
 - Meta-learning: 2 componentes (Fase 11)

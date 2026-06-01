@@ -188,13 +188,13 @@ Os dois modelos não-lineares podem entrar em ressonância, ambos detectando o m
 
 ---
 
-## 4.5. O plano de expansão para 25 modelos em 7 famílias
+## 4.5. O plano de expansão para 38 modelos em 12 famílias
 
 Os três modelos descritos acima (RF, GB, SGD) são o ponto de partida, não o destino. Este projeto é a base de um doutoramento em Ciência de Dados e o objetivo é testar sistematicamente todas as principais famílias de modelos de aprendizado de máquina nos domínios mais difíceis primeiro, para depois aplicar o mesmo framework a domínios com padrões reais.
 
 A lógica é: se um modelo consegue extrair alguma informação útil de dados ruidosos (mercado financeiro) ou de dados aleatórios por definição (Mega Sena), então ele vai performar muito melhor em dados com padrões reais (e-commerce, sazonalidades).
 
-### As 7 famílias de modelos
+### As 12 famílias de modelos
 
 **Família 1 — Clássico** (já parcialmente implementado)
 RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM. São os modelos mais citados em papers de ML aplicado e constituem a base de comparação obrigatória para qualquer estudo académico.
@@ -247,6 +247,11 @@ A tese não é "ML consegue prever a loteria". A tese é "apliquei o mesmo frame
 | Bayesiano (GP, BNN) | Incerteza calibrada. Além da previsão, quantifica o quão confiante está — academicamente exige justificação quando a confiança é alta. |
 | Generativo (VAE, GAN) | Aprende a distribuição dos dados. Testa se existe estrutura latente separável entre UP e DOWN. |
 | Reinforcement (DQN, PPO) | Optimiza política, não previsão. Trata a decisão de compra/venda como uma sequência de acções com recompensa — completamente diferente de todas as outras famílias. |
+| Contrarian / Testes de sanidade (CB, EWI, PEL) | Inverte ou corrige o ensemble. Testa se o modelo principal é pior que o acaso, detecta regimes de erro sistemático e aprende com a autocorrelação dos erros. |
+| Arquitecturas eficientes — pós-2022 (TCN, DLinear, NLinear, PatchTST) | Alternativas ao Transformer que em vários benchmarks o superam com muito menos complexidade. A pergunta da tese: vale a pena toda a complexidade do Transformer? |
+| Foundation Models — 2023-2024 (Chronos, TimesFM, Moirai) | Modelos pré-treinados em biliões de pontos de dados. Funcionam sem treino — zero-shot. A pergunta da tese: valem mais que 38 modelos treinados do zero nos meus dados? |
+| Incerteza calibrada (Conformal Prediction) | Garante matematicamente que "90% de confiança" significa que o intervalo de previsão contém o valor real em pelo menos 90% dos casos. Rigor estatístico que nenhuma das outras famílias oferece. |
+| Detecção de drift (ADWIN, Page-Hinkley) | Detecta automaticamente quando o mercado mudou de regime e os modelos perdem validade. Complementa o alerta manual de ρ de Spearman com deteção estatística formal. |
 
 ---
 
@@ -262,7 +267,153 @@ A diferença conceptual é o argumento do Capítulo 8 da tese: modelos supervisi
 
 ---
 
-## 5. As features: o que o modelo vê
+---
+
+## 4.6. A nova geração de modelos (Famílias 9 a 12)
+
+As famílias 1 a 8 cobrem bem o estado da arte até 2021. Entre 2022 e 2024 surgiu uma nova vaga de modelos que mudou o que consideramos possível em previsão de séries temporais. Esta secção explica cada família nova com exemplos práticos da carteira.
+
+---
+
+### Família 9 — Arquitecturas eficientes (TCN, DLinear, NLinear, PatchTST)
+
+Em 2023, um grupo de investigadores da UCSF publicou um artigo que causou surpresa: um modelo linear simples, chamado DLinear, batia os Transformers mais sofisticados em múltiplos benchmarks de previsão de séries temporais. O artigo chamava-se "Are Transformers Effective for Time Series Forecasting?" (Zeng et al., 2023).
+
+Para a tese, esta família responde a uma pergunta directa: toda a complexidade do Transformer (atenção multi-cabeça, embeddings posicionais, tokenização) traz benefício real quando aplicada à carteira, ou um modelo mais simples é suficiente?
+
+**TCN (Temporal Convolutional Network)**
+
+O TCN usa convoluções dilatadas em vez de recorrência ou atenção. Imagine uma rede de filtros que olha para o passado como se estivesse a analisar uma imagem: cada filtro cobre uma janela de tempo e a dilatação permite que filtros maiores cubram horizontes mais longos sem aumentar o número de parâmetros.
+
+Exemplo prático com NVDA: o TCN aprende um filtro que olha para a sequência RSI14 dos últimos 20 dias e detecta padrões de contracção antes de um movimento brusco. Enquanto o LSTM "lembra" esses 20 dias através do estado interno da célula, o TCN processa tudo em paralelo, como se fosse uma convolução 1D sobre a série temporal.
+
+**DLinear e NLinear**
+
+São os modelos mais simples desta família. O DLinear faz uma decomposição da série em tendência e resíduo, e aprende uma regressão linear separada para cada componente. O NLinear normaliza os dados pelo último valor antes de aplicar a regressão.
+
+Exemplo prático com ALV.DE: se o preço de fecho nos últimos 20 dias for 295, 297, 302, 305, 303, o DLinear separa a tendência linear (subida de ~2,5 euros por dia) do resíduo (os desvios em torno dessa tendência) e prevê os dois componentes separadamente antes de os somar. O NLinear simplesmente subtrai 303 de todos os valores, aprende a prever o desvio relativo, e depois soma 303 ao resultado.
+
+O resultado surpreendente do paper de Zeng et al. é que estes dois modelos triviais batem o Transformer em 7 dos 9 datasets públicos testados. Para a tese, se o DLinear bater o Transformer nos meus dados, isso é um argumento académico forte: simplicidade vence complexidade quando os dados têm estrutura linear dominante.
+
+**PatchTST (Nie et al., 2023 — Princeton / IBM)**
+
+O PatchTST resolve um problema fundamental do Transformer original: quando aplicado a séries temporais, cada ponto de tempo é tratado como um token separado. Para uma série de 500 dias, isso gera 500 tokens e a atenção tem custo quadrático (500 × 500 = 250.000 pares).
+
+O PatchTST divide a série em "patches" (segmentos sobrepostos de, por exemplo, 16 dias) e trata cada patch como um token. Para 500 dias com patches de 16, há apenas ~31 tokens em vez de 500. A atenção fica muito mais eficiente e cada token contém contexto local em vez de um único ponto isolado.
+
+Exemplo prático com BTC-USD: em vez de o Transformer "olhar" para cada dia de preço separadamente, o PatchTST olha para blocos de 16 dias. Cada bloco captura um mini-ciclo de mercado. A atenção entre blocos captura como mini-ciclos passados se relacionam com o mini-ciclo actual.
+
+---
+
+### Família 10 — Foundation Models (Chronos, TimesFM, Moirai)
+
+Esta família representa uma mudança de paradigma. Todos os modelos das famílias 1 a 9 são treinados nos meus dados da carteira, do zero, a cada execução. Os Foundation Models chegam já treinados em centenas de milhões de séries temporais reais de domínios completamente diferentes.
+
+A ideia é a mesma que levou ao sucesso do ChatGPT: pré-treinar num corpus massivo e generalizar para novas tarefas sem treino adicional. Em inglês, isso chama-se **zero-shot forecasting** porque o modelo faz previsões em dados que nunca viu, sem nenhum treino específico.
+
+**Chronos (Amazon, 2024)**
+
+O Chronos (Ansari et al., 2024) converte séries temporais em tokens discretos usando quantização, e depois aplica um Transformer de linguagem (baseado na arquitectura T5 do Google) para prever os próximos tokens. Foi pré-treinado em ~700.000 séries temporais de domínios variados: energia, tráfego, vendas, clima, finanças.
+
+Exemplo prático com LLY: em vez de treinar o Chronos nos preços históricos da Eli Lilly, simplesmente paso os últimos 50 preços de fecho e peço ao modelo para prever os próximos 3. O modelo usa o conhecimento acumulado de 700.000 séries para fazer a previsão, sem saber que se trata de uma acção farmacêutica ou sequer que se trata de dados financeiros.
+
+A pergunta central para a tese: o Chronos, sem nunca ter visto dados da LLY, consegue bater o meu ensemble RF/GB/SGD que foi treinado especificamente nos dados da LLY durante meses? Se sim, é um argumento poderoso de que os padrões de séries temporais são transferíveis entre domínios.
+
+**TimesFM (Google, 2024)**
+
+O TimesFM (Das et al., 2024) foi pré-treinado em 100 biliões de pontos de dados reais, o maior corpus de pré-treino em séries temporais até à data. Usa uma arquitectura de Transformer com patches e consegue fazer previsões multi-horizonte (D+1, D+2, D+3) num único passo.
+
+Exemplo prático com EMIM.AS: o ETF de mercados emergentes tem padrões sazonais ligados ao ciclo fiscal de vários países e às decisões do Federal Reserve. O TimesFM, treinado em séries de commodities, taxas de câmbio e índices globais, pode ter aprendido implicitamente estes padrões sem precisar de treino explícito nos dados do EMIM.AS.
+
+**Moirai (Salesforce, 2024)**
+
+O Moirai (Woo et al., 2024) é treinado em dados de múltiplas frequências temporais em simultâneo (por hora, por dia, por semana, por mês) e aprende representações universais de padrões temporais. A sua vantagem é que não precisa saber a frequência dos dados de entrada: infere-a automaticamente.
+
+A comparação entre os três Foundation Models é por si só interessante para a tese: foram treinados em corpora diferentes, com arquitecturas ligeiramente diferentes, e espera-se que tenham pontos fortes distintos.
+
+**O que torna esta família academicamente relevante**
+
+Num júri de doutoramento, a pergunta inevitável é: "o que é que os seus 38 modelos treinados do zero oferecem que um Foundation Model pré-treinado não oferece?" A resposta honesta pode ir em duas direcções opostas, e ambas são academicamente válidas:
+
+1. O Foundation Model ganha: os padrões de séries temporais são universais e o pré-treino em dados massivos supera treino específico com dados limitados. Conclusão: para carteiras pequenas com poucos anos de dados, Foundation Models são superiores.
+
+2. Os modelos treinados ganham: os padrões financeiros são suficientemente específicos (microestrutura de mercado, correlações entre ativos, regime de volatilidade) para que o treino nos dados locais seja vantajoso. Conclusão: o contexto domínio importa e não é capturado pelo pré-treino genérico.
+
+Qualquer uma das conclusões é uma contribuição da tese.
+
+---
+
+### Família 11 — Incerteza calibrada (Conformal Prediction)
+
+Todos os modelos das famílias 1 a 10 produzem uma probabilidade. O ensemble diz "68% de confiança em UP". Mas o que significa esse 68%?
+
+Para a maioria dos modelos, não significa nada estatisticamente rigoroso. É uma calibração interna do modelo que pode estar muito longe da realidade. Um ensemble que diz "90% de confiança" pode ter acurácia real de apenas 55% nos casos com essa confiança.
+
+A Conformal Prediction (Vovk, Gammerman e Shafer, 2005) é a única família que oferece uma **garantia matemática**: se o modelo diz "intervalo de previsão a 90%", então em pelo menos 90% dos casos o valor real cai dentro desse intervalo, independentemente da distribuição dos dados e sem suposições sobre o modelo subjacente.
+
+**Como funciona na prática**
+
+Em vez de produzir uma probabilidade pontual, a Conformal Prediction produz um conjunto de previsão: todas as respostas que seriam plausíveis dado o historial de erros do modelo.
+
+Passo 1: separar uma "calibração set" de dados históricos que o modelo nunca viu durante o treino.
+
+Passo 2: calcular os "non-conformity scores" de cada previsão na calibração set. Para previsão de direcção, o score é simplesmente a probabilidade atribuída à classe errada. Se o modelo previu UP com 70% e a ação de facto subiu, o score é 30%. Se previu UP com 70% mas a ação caiu, o score é 70%.
+
+Passo 3: para um nível de confiança de 90%, calcular o quantil 90% dos scores históricos. Chame-se esse valor q*.
+
+Passo 4: numa nova previsão, aceitar como "plausível" qualquer direcção cuja probabilidade de estar errada seja menor que q*. Se q* = 0,40, apenas previsões com probabilidade acima de 60% são incluídas no conjunto de previsão.
+
+**Exemplo concreto com SGLN.L (ouro físico)**
+
+Imagine que nos últimos 100 dias o ensemble previu UP com probabilidade média de 65% para o ouro, mas a acurácia real foi de apenas 52%. Os non-conformity scores mostram que, apesar da aparente confiança, o modelo erra muito.
+
+Com Conformal Prediction a 90%, o conjunto de previsão seria muito mais honesto: em vez de dizer "UP com 65%", diria "o conjunto de previsão a 90% inclui tanto UP como DOWN" — sinalizando que não há evidência suficiente para excluir nenhuma das direcções com esse nível de confiança.
+
+Quando o conjunto de previsão é unitário (só UP ou só DOWN), isso é um sinal genuinamente forte: o modelo está suficientemente confiante para excluir a alternativa com garantia formal.
+
+**Por que é importante para a tese**
+
+Para um júri académico, "68% de confiança" sem calibração estatística é uma afirmação fraca. "O conjunto de previsão a 90% é unitário" é uma afirmação com garantia matemática verificável. A Conformal Prediction transforma as previsões do sistema de assertivas informais em proposições estatisticamente auditáveis.
+
+---
+
+### Família 12 — Detecção de drift (ADWIN, Page-Hinkley)
+
+O sistema já tem um alerta manual de drift: o ρ de Spearman que compara o ranking de features de hoje com o período de referência. Se ρ < 0,70, aparece um aviso no email.
+
+Mas isso é reativo: eu vejo o aviso depois de o drift já ter acontecido. A Família 12 introduz deteção estatística formal de mudança de ponto, conhecida em inglês como **change point detection** ou **concept drift detection**.
+
+**ADWIN (Adaptive Windowing, Bifet e Gavaldà, 2007)**
+
+O ADWIN mantém uma janela deslizante de observações recentes e testa continuamente se a média da primeira metade da janela é estatisticamente diferente da média da segunda metade.
+
+Se a diferença for significativa (acima de um threshold configurável), o ADWIN detecta drift e descarta a parte mais antiga da janela, adaptando-se ao novo regime.
+
+Exemplo prático com o VIX: durante um mercado calmo (VIX entre 12 e 18), o modelo aprende que RSI14 e MACD são as features mais preditivas. Quando o VIX sobe abruptamente para 35 (regime de crise), a relação entre as features e os retornos muda completamente. O ADWIN detecta esta mudança estatisticamente e sinaliza que os modelos foram treinados num regime diferente do actual.
+
+**Page-Hinkley (Page, 1954)**
+
+O teste de Page-Hinkley foi criado originalmente para controlo de qualidade industrial (detectar quando uma linha de produção sai do limite de tolerância) e aplica-se directamente à acurácia do modelo: monitoriza a soma cumulativa dos desvios entre a acurácia observada e a acurácia esperada.
+
+Fórmula:
+```
+M_t = M_{t-1} + (acurácia_t - acurácia_esperada - delta)
+T_t = M_t - min(M_0, M_1, ..., M_t)
+
+Drift detectado quando T_t > lambda
+```
+
+Onde `delta` é a tolerância (tipicamente 0,01) e `lambda` é o threshold de alarme.
+
+Exemplo prático com a NVDA: se o ensemble tinha 58% de acurácia durante 3 meses e de repente começa a errar sistematicamente (52%, 49%, 48%, 51%, 47%), o Page-Hinkley detecta a degradação cumulativa muito antes de a acurácia média dos últimos 30 dias mostrar uma descida clara.
+
+**A diferença entre as duas abordagens**
+
+O ADWIN detecta mudanças nos dados de entrada (as features mudam de distribuição). O Page-Hinkley detecta mudanças na performance do modelo (o modelo começa a errar mais). São complementares: o ADWIN alerta antecipadamente quando o mercado muda de regime; o Page-Hinkley alerta quando essa mudança já está a afectar as previsões.
+
+Para a tese, a combinação das duas é o argumento de que o sistema monitoriza activamente a sua própria validade — uma propriedade que a maioria dos sistemas de ML em produção não tem.
+
+---
 
 O modelo não vê os preços brutos. Ele recebe 16 indicadores derivados do histórico de preços e do contexto de mercado. Esses indicadores são chamados de **features** em Machine Learning.
 
@@ -919,8 +1070,12 @@ Além do pipeline operacional acima, este projeto implementa um framework de inv
 | ✅ Fase 6 — Gaussian Process, BNN | Modelos que também dizem "quão confiantes estão". |
 | ✅ Fase 7 — VAE, GAN | Modelos generativos que aprendem a distribuição dos dados. |
 | ✅ Fase 8 — DQN, PPO | Reinforcement Learning — decisões como política, não previsão. |
-| ⬜ Fases 9-14 | Avaliação estatística, explicabilidade, meta-learning, tracking, teoria da informação, transfer learning entre domínios. |
-| ✅ Fase 15 | Reestruturação do email com tabelas por lote de compra e recomendação mensal ETF. |
+| ✅ Fases 9-15 | Avaliação estatística, explicabilidade, meta-learning, tracking, teoria da informação, transfer learning, reestruturação do email. |
+| ⏳ Fase 16 — CB, EWI, PEL | Testes de sanidade do ensemble: o modelo principal é pior que o acaso? Detectar erros sistemáticos. |
+| ⏳ Fase 17 — TCN, DLinear, NLinear, PatchTST | Arquitecturas eficientes: toda a complexidade do Transformer é necessária? |
+| ⏳ Fase 18 — Chronos, TimesFM, Moirai | Foundation Models: modelos pré-treinados em biliões de pontos valem mais que treino nos meus dados? |
+| ⏳ Fase 19 — Conformal Prediction | Incerteza com garantia matemática: "90% de confiança" que realmente significa 90%. |
+| ⏳ Fase 20 — ADWIN, Page-Hinkley | Detecção automática quando o mercado muda de regime e os modelos perdem validade. |
 
 ---
 
