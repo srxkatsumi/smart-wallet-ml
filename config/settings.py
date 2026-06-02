@@ -7,7 +7,8 @@ CHARTS_DIR   = OUTPUT_DIR / "charts"
 MODELS_DIR   = OUTPUT_DIR / "models"
 PRED_LOG     = OUTPUT_DIR / "predictions_log.csv"
 PUBLIC_LOG   = OUTPUT_DIR / "predictions_log_public.csv"
-WEIGHTS_FILE = OUTPUT_DIR / "ensemble_weights.json"
+WEIGHTS_FILE          = OUTPUT_DIR / "ensemble_weights.json"
+RESEARCH_WEIGHTS_FILE = OUTPUT_DIR / "research_weights.json"
 METADATA_FILE= OUTPUT_DIR / "model_metadata.csv"
 RECALIB_FILE = OUTPUT_DIR / "ultima_recalibracao.json"
 HTML_REPORT  = OUTPUT_DIR / "resumo_diario.html"
@@ -57,6 +58,17 @@ DEFAULT_WEIGHTS = {
     "d1": {"rf": 1.0, "gb": 1.0, "sgd": 1.0},
     "d2": {"rf": 1.0, "gb": 1.0, "sgd": 1.0},
     "d3": {"rf": 1.0, "gb": 1.0, "sgd": 1.0},
+}
+
+_RESEARCH_FAMILIES = [
+    "classico_avancado", "estado_oculto", "series_temporais",
+    "neural_recorrente", "neural_atencao", "bayesiano",
+    "generativo", "reinforcement", "contrarian",
+]
+
+DEFAULT_RESEARCH_WEIGHTS = {
+    f"d{d}": {fam: 1.0 for fam in _RESEARCH_FAMILIES}
+    for d in [1, 2, 3]
 }
 
 # ── Email timezone (Barcelona) ────────────────────────────────────────────

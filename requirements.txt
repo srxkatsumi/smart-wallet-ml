@@ -11,7 +11,7 @@ beautifulsoup4
 lxml
 openpyxl
 hmmlearn
-xgboost
+xgboost>=2.0,<3.0
 lightgbm
 catboost
 statsmodels

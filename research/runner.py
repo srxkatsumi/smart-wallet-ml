@@ -15,6 +15,8 @@ import pandas as pd
 from pathlib import Path
 from datetime import date
 
+from config.settings import WEIGHT_DECAY_FACTOR, MIN_VALIDATIONS_WEIGHT
+
 logger = logging.getLogger(__name__)
 
 RESEARCH_LOG = Path("output/predictions_research_log.csv")
@@ -83,6 +85,49 @@ def _predict_family(family: str, X: np.ndarray, y: np.ndarray,
         return 0.5
 
 
+def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
+    """Recalcula pesos de cada família com base no histórico de acertos (últimas 30 semanas)."""
+    validated = log[log["validated"] == True].copy()  # noqa: E712
+    updated = False
+
+    for day_n in [1, 2, 3]:
+        day_key   = f"d{day_n}"
+        correct_col = f"correct_d{day_n}"
+        if correct_col not in validated.columns:
+            continue
+
+        new_weights = {}
+        for family in _FAMILIES:
+            rows = validated[validated["family"] == family].tail(30)
+            if len(rows) < MIN_VALIDATIONS_WEIGHT or correct_col not in rows.columns:
+                new_weights[family] = current_weights[day_key].get(family, 1.0)
+                continue
+            vals  = rows[correct_col].astype(float).values
+            n     = len(vals)
+            decay = np.exp(WEIGHT_DECAY_FACTOR * np.arange(n))
+            decay = decay / decay.sum()
+            acc_weighted      = (vals * decay).sum()
+            new_weights[family] = max(0.1, acc_weighted)
+
+        total = sum(new_weights.values())
+        n_fam = len(_FAMILIES)
+        current_weights[day_key] = {
+            k: round(v * n_fam / total, 4) for k, v in new_weights.items()
+        }
+        updated = True
+
+    if updated:
+        from data.storage import save_research_weights
+        save_research_weights(current_weights)
+        best = max(current_weights["d1"], key=current_weights["d1"].get)
+        logger.info("Research weights atualizados — d1 melhor: %s (%.3f)",
+                    best, current_weights["d1"][best])
+    else:
+        logger.info("Research weights: histórico insuficiente — mantêm-se")
+
+    return current_weights
+
+
 def run_monday_research(featured_data: dict,
                         portfolio_tickers: list,
                         close_prices: dict) -> dict:
@@ -99,11 +144,16 @@ def run_monday_research(featured_data: dict,
     -------
     dict com chaves 'comparison' e 'consensus' para o email
     """
-    today_str = date.today().isoformat()
-    log       = _load_log()
+    from data.storage import load_research_weights
+    today_str        = date.today().isoformat()
+    log              = _load_log()
+    research_weights = load_research_weights()
 
     # ── 1. Validar previsões da semana anterior ───────────────────────────
     log = _validate_past_predictions(log, close_prices)
+
+    # ── 1b. Atualizar pesos com base nos acertos validados ────────────────
+    research_weights = _update_research_weights(log, research_weights)
 
     # ── 2. Treinar e prever para esta semana ──────────────────────────────
     new_rows = []
@@ -203,7 +253,7 @@ def run_monday_research(featured_data: dict,
 
     # ── 5. Gerar dados para o email ───────────────────────────────────────
     comparison = _build_comparison(log, today_str)
-    consensus  = _build_consensus(new_rows, portfolio_tickers)
+    consensus  = _build_consensus(new_rows, portfolio_tickers, research_weights)
 
     logger.info("Research run concluído: %d famílias × %d ativos",
                 len(_FAMILIES), len(portfolio_tickers))
@@ -264,16 +314,22 @@ def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
     return results
 
 
-def _build_consensus(new_rows: list, portfolio_tickers: list) -> list[dict]:
-    """Constrói tabela de consenso dos 25 modelos por ativo."""
-    n_families = len(_FAMILIES)
-    consensus  = []
+def _build_consensus(new_rows: list, portfolio_tickers: list,
+                     research_weights: dict) -> list[dict]:
+    """Constrói tabela de consenso ponderado pelo histórico de acertos de cada família."""
+    w_d1   = research_weights.get("d1", {})
+    consensus = []
     for ticker in portfolio_tickers:
         ticker_rows = [r for r in new_rows if r["ticker"] == ticker]
         if not ticker_rows:
             continue
+
+        weight_up   = sum(w_d1.get(r["family"], 1.0)
+                          for r in ticker_rows if r.get("direction_d1") == "up")
+        weight_total= sum(w_d1.get(r["family"], 1.0) for r in ticker_rows)
+        pct         = weight_up / max(weight_total, 1e-9)
+
         up_count = sum(1 for r in ticker_rows if r.get("direction_d1") == "up")
-        pct      = up_count / max(len(ticker_rows), 1)
         consensus.append({
             "ticker":    ticker,
             "up_count":  up_count,

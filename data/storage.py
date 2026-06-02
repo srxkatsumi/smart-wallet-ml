@@ -5,6 +5,7 @@ import pandas as pd
 from config.settings import (
     OUTPUT_DIR, CHARTS_DIR, MODELS_DIR,
     PRED_LOG, PUBLIC_LOG, WEIGHTS_FILE, PRED_COLS, DEFAULT_WEIGHTS,
+    RESEARCH_WEIGHTS_FILE, DEFAULT_RESEARCH_WEIGHTS,
 )
 
 logger = logging.getLogger(__name__)
@@ -111,6 +112,28 @@ def save_ensemble_weights(weights: dict):
     with open(WEIGHTS_FILE, "w") as f:
         json.dump(weights, f, indent=2)
     logger.info("Pesos guardados")
+
+
+def load_research_weights() -> dict:
+    if not RESEARCH_WEIGHTS_FILE.exists():
+        weights = {k: dict(v) for k, v in DEFAULT_RESEARCH_WEIGHTS.items()}
+        save_research_weights(weights)
+        logger.info("Research weights inicializados (iguais)")
+        return weights
+    with open(RESEARCH_WEIGHTS_FILE) as f:
+        weights = json.load(f)
+    for dk in ["d1", "d2", "d3"]:
+        if dk not in weights:
+            weights[dk] = dict(DEFAULT_RESEARCH_WEIGHTS[dk])
+    logger.info("Research weights carregados — d1: %s",
+                {k: round(v, 3) for k, v in weights["d1"].items()})
+    return weights
+
+
+def save_research_weights(weights: dict):
+    with open(RESEARCH_WEIGHTS_FILE, "w") as f:
+        json.dump(weights, f, indent=2)
+    logger.info("Research weights guardados")
 
 
 def load_portfolio_config() -> dict:

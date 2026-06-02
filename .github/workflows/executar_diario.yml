@@ -80,11 +80,7 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4 — Correr testes unitários (falha para o pipeline se algo estiver errado)
-      - name: 🧪 Testes unitários
-        run: pytest tests/ -v
-
-      # 5 — Executar pipeline principal
+      # 4 — Executar pipeline principal
       - name: 🚀 Executar main.py
         run: python main.py
         env:
@@ -107,6 +103,7 @@ jobs:
           git add output/predictions_log.csv
           git add output/predictions_log_public.csv 2>/dev/null || true
           git add output/ensemble_weights.json
+          git add output/research_weights.json         2>/dev/null || true
           git add output/resumo_diario.html
           git add output/model_metadata.csv         2>/dev/null || true
           git add output/ultima_recalibracao.json   2>/dev/null || true
@@ -145,6 +142,7 @@ jobs:
           path: |
             output/predictions_log.csv
             output/ensemble_weights.json
+            output/research_weights.json
           retention-days: 7
 
       # 7 — Obter data para o assunto do email

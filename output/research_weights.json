@@ -1,0 +1,35 @@
+{
+  "d1": {
+    "classico_avancado": 1.0,
+    "estado_oculto": 1.0,
+    "series_temporais": 1.0,
+    "neural_recorrente": 1.0,
+    "neural_atencao": 1.0,
+    "bayesiano": 1.0,
+    "generativo": 1.0,
+    "reinforcement": 1.0,
+    "contrarian": 1.0
+  },
+  "d2": {
+    "classico_avancado": 1.0,
+    "estado_oculto": 1.0,
+    "series_temporais": 1.0,
+    "neural_recorrente": 1.0,
+    "neural_atencao": 1.0,
+    "bayesiano": 1.0,
+    "generativo": 1.0,
+    "reinforcement": 1.0,
+    "contrarian": 1.0
+  },
+  "d3": {
+    "classico_avancado": 1.0,
+    "estado_oculto": 1.0,
+    "series_temporais": 1.0,
+    "neural_recorrente": 1.0,
+    "neural_atencao": 1.0,
+    "bayesiano": 1.0,
+    "generativo": 1.0,
+    "reinforcement": 1.0,
+    "contrarian": 1.0
+  }
+}
