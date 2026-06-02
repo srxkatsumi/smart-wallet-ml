@@ -1,6 +1,6 @@
 # test_ml — Laboratório de Machine Learning
 
-Quatro áreas de investigação independentes que partilham infraestrutura de modelos e protocolo de validação.
+Três projetos de investigação independentes que partilham infraestrutura de modelos e protocolo de validação.
 
 ## Projetos
 
@@ -17,18 +17,6 @@ Aplicação do mesmo ensemble adaptativo (RF + GB + SGD) da Carteira Inteligente
 | **Resultado atual** | Ensemble: 0.70 matches/sorteio vs baseline aleatório: 0.60 (+16%) |
 
 O projeto documenta formalmente que, mesmo com 9 famílias de modelos (RF/GB/SGD, Markov/HMM, LSTM/GRU, Transformer, Bayesiano, etc.), nenhum supera consistentemente o baseline aleatório em dados genuinamente i.i.d.
-
----
-
-### 📈 [carteira/](carteira/) — Experimentos ML para a Carteira Inteligente
-
-Área reservada para prototipagem e validação de algoritmos destinados ao pipeline diário da Carteira Inteligente.
-
-| | |
-|---|---|
-| **Objetivo** | Validar algoritmos antes de promovê-los ao pipeline de produção |
-| **Dados** | Preços diários de 95 ativos (ações, ETFs, cripto), horizonte D+1/D+2/D+3 |
-| **Estado atual** | Área preparada; experimentos ativos ficam em `novo_algoritmo/` |
 
 ---
 
@@ -76,8 +64,6 @@ test_ml/
 │   ├── output/                ← resultados, previsões, pesos
 │   ├── README.md              ← documentação em inglês
 │   └── README_pt.md           ← documentação em português
-├── carteira/                  ← experimentos para o pipeline da Carteira
-│   └── (vazio, área reservada)
 ├── novo_algoritmo/            ← análises e diários do Especialista
 │   ├── NewAlgoritmo.md        ← diário de investigação (5 fases)
 │   ├── context_gate.py        ← implementação do ContextGate
