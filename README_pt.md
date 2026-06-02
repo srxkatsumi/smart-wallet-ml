@@ -18,7 +18,7 @@ Decidi mudar isso.
 Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às ~22h30 (Barcelona) e faz três coisas:
 
 1. **Analisa a carteira** — Ganho/Perda real em euros, breakeven com fees incluídos, alvo de saída
-2. **Prevê a direção dos próximos 3 dias** — Usando Machine Learning (Random Forest, Gradient Boosting, SGD em ensemble) com indicadores técnicos + contexto de mercado (VIX, SPY)
+2. **Prevê a direção dos próximos 3 dias** usando Machine Learning (Random Forest, Gradient Boosting, SGD em ensemble) com indicadores técnicos e contexto de mercado (VIX, SPY)
 3. **Aprende com os erros** — Cada previsão é validada quando a data chega. O modelo que acertar mais passa a ter mais peso nas decisões seguintes
 
 Não é um oráculo. É um sistema que fica menos burro a cada dia que passa.
@@ -31,9 +31,13 @@ Não é um oráculo. É um sistema que fica menos burro a cada dia que passa.
 
 A pergunta que o modelo tenta responder é simples: **"o preço vai subir ou cair nos próximos N dias úteis?"**
 
-Isso é o que em ML chamamos de classificação binária:
-- `1` = sobe (UP)
-- `0` = cai (DOWN)
+Isso é o que em ML chamamos de classificação binária, com threshold ATR para filtrar dias com sinal fraco:
+
+- `target_d1` = `1` se movimento > ATR14 × 0,3 × √1, `0` se movimento < −(ATR14 × 0,3 × √1), `NaN` se neutro
+- `target_d2` = `1` se movimento > ATR14 × 0,3 × √2, `0` se movimento < −(ATR14 × 0,3 × √2), `NaN` se neutro
+- `target_d3` = `1` se movimento > ATR14 × 0,3 × √3, `0` se movimento < −(ATR14 × 0,3 × √3), `NaN` se neutro
+
+Dias neutros (movimento pequeno demais para ter sinal claro) são excluídos do treino. O modelo só aprende a partir de sessões com direção clara, o que reduz o ruído nos labels e melhora a calibração das probabilidades. O threshold escala com o horizonte: uma previsão de 3 dias exige um movimento proporcionalmente maior.
 
 E fazemos isso para 3 horizontes de tempo independentes: amanhã (D+1), depois de amanhã (D+2) e em 3 dias úteis (D+3).
 
@@ -55,9 +59,9 @@ Usar um único modelo por horizonte seria um único ponto de falha. Algoritmos d
 
 | Algoritmo | Configuração | Por que foi escolhido |
 |-----------|-------------|----------------------|
-| **Random Forest** | 300 árvores, profundidade máx. 6 | Generalizador robusto. As árvores com bootstrap resistem bem ao overfitting em dados ruidosos de mercado. Funciona bem mesmo quando alguns indicadores são irrelevantes — situação comum em séries temporais financeiras. Funciona como âncora de estabilidade do ensemble. |
-| **Gradient Boosting** | 200 estimadores, taxa 0.05 | Captura padrões que o Random Forest não consegue capturar, corrigindo iterativamente os seus próprios erros residuais. Especialmente bom a detetar sinais de momentum de curto prazo e interações subtis entre indicadores. A taxa de aprendizagem baixa (0.05) impede que o modelo memorize ruído. |
-| **SGD Classifier** | log_loss | Um modelo linear incluído deliberadamente como contrapeso. Quando os dois modelos não-lineares concordam com algo que é na verdade ruído, o SGD age como voto discordante e puxa o ensemble para estimativas mais conservadoras. A sua simplicidade é uma feature, não uma limitação. |
+| **Random Forest** | 100 árvores, profundidade máx. 5, class_weight balanced, CalibratedClassifierCV isotonic | Generalizador robusto. As árvores com bootstrap resistem bem ao overfitting em dados ruidosos de mercado. Funciona bem mesmo quando alguns indicadores são irrelevantes, situação comum em séries temporais financeiras. Funciona como âncora de estabilidade do ensemble. |
+| **Gradient Boosting** | 100 estimadores, taxa 0.05, profundidade máx. 3, CalibratedClassifierCV isotonic | Captura padrões que o Random Forest não consegue capturar, corrigindo iterativamente os seus próprios erros residuais. Especialmente bom a detectar sinais de momentum de curto prazo e interações sutis entre indicadores. A taxa de aprendizagem baixa (0.05) impede que o modelo memorize ruído. |
+| **SGD Classifier** | log_loss, regularização L2, recalibração mensal completa | Um modelo linear incluído deliberadamente como contrapeso. Quando os dois modelos não-lineares concordam com algo que é na verdade ruído, o SGD age como voto discordante e puxa o ensemble para estimativas mais conservadoras. A sua simplicidade é uma feature, não uma limitação. |
 
 O modelo SGD passa por **recalibração mensal completa**: refit do scaler + retreino do zero. Isso é necessário porque o SGD usa features normalizadas. Se a distribuição de preços e indicadores mudar gradualmente, o scaler antigo já não representa os dados atuais e os coeficientes lineares ficam ancorados a uma baseline obsoleta.
 
@@ -65,16 +69,21 @@ O modelo SGD passa por **recalibração mensal completa**: refit do scaler + ret
 
 | Feature | O que representa | Por que importa |
 |---------|-----------------|-----------------|
-| `sma_20`, `sma_50` | Médias móveis de 20 e 50 dias | Alinhamento de tendência de curto vs médio prazo. |
-| `rsi_14` | RSI de 14 dias | Deteta se o ativo está sobreextendido. RSI > 70 (sobrecomprado) e RSI < 30 (sobrevendido) são historicamente condições de mean-reversion. |
-| `macd`, `macd_signal` | Linha MACD e linha de sinal | Captura momentum e reversões de tendência através de cruzamentos. |
-| `bb_upper`, `bb_lower`, `bb_width` | Bandas de Bollinger (20 dias, 2σ) | Codifica o regime de volatilidade e a extremidade do preço. |
-| `atr_14` | Average True Range de 14 dias | O movimento diário esperado em termos absolutos. |
-| `ret_1d`, `ret_5d` | Retorno dos últimos 1 e 5 dias | Features de momentum direto. |
-| `spy_ret_1d` | Retorno do S&P 500 (T-1) | Contexto global do mercado. |
-| `vix_level` | Nível de fecho do VIX (T-1) | O "termómetro do medo" do mercado. |
-| `vix_change` | Variação diária do VIX (T-1) | Captura a *aceleração* do medo, não só o seu nível. |
-| `vix_regime` | Label de regime do VIX: 0 = baixo (VIX < 15), 1 = médio (15 ≤ VIX < 25), 2 = alto (VIX ≥ 25) | Sinal discreto de regime de mercado — permite ao modelo aprender padrões diferentes por contexto de volatilidade. Sem ela, um mercado calmo e uma crise parecem iguais para o vetor de features. |
+| `SMA20_dist`, `SMA50_dist` | Distância do preço atual às médias móveis de 20 e 50 dias, como fração | Alinhamento de tendência de curto vs médio prazo. Captura o quanto o preço se afastou da sua média, não só o nível da média. |
+| `sma_cross` | Binário: 1 se SMA20 > SMA50, 0 caso contrário | Sinal clássico de mudança de regime. Cruzamentos indicam transições entre momentum de curto e médio prazo. |
+| `RSI14` | RSI de 14 dias | Detecta se o ativo está sobreextendido. RSI > 70 (sobrecomprado) e RSI < 30 (sobrevendido) são historicamente condições de reversão. |
+| `MACD`, `MACD_sig`, `MACD_hist` | Linha MACD, linha de sinal e histograma | Captura momentum e reversões de tendência através de cruzamentos. Indica quando uma tendência está a ganhar ou a perder força. |
+| `BB_width`, `BB_pos` | Largura das Bandas de Bollinger (20 dias, 2σ) e posição do preço dentro das bandas | Largura sinaliza regime de volatilidade. Posição indica se o preço está perto do extremo superior ou inferior. |
+| `ATR14` | Average True Range de 14 dias | O movimento diário esperado em termos absolutos. Ajuda o modelo a distinguir um movimento de +1% dentro do intervalo normal de um movimento excecional. Também usado como threshold dos targets. |
+| `ret_1d`, `ret_5d` | Retorno dos últimos 1 e 5 dias | Features de momentum direto. Retornos recentes estão entre as features mais preditivas para horizontes curtos. |
+| `vol_10d` | Desvio padrão dos retornos diários nos últimos 10 dias | Volatilidade realizada. Captura se o ativo está num período calmo ou explosivo, independentemente da janela Bollinger. |
+| `vol_ratio` | Rácio do volume recente versus a média de 20 dias | Detecta atividade de trading incomum. Um pico de volume junto a um movimento de preço indica convicção; volume baixo indica ruído. |
+| `obv_trend` | Tendência do On Balance Volume (inclinação do OBV recente) | Sinal de acumulação vs distribuição (Joseph Granville, 1963). OBV a subir com preço estável frequentemente antecede uma rutura. |
+| `spy_ret_1d` | Retorno do S&P 500 (T-1) | Contexto global do mercado. A NVDA num dia a seguir ao S&P ter caído 2% comporta-se de forma diferente da NVDA num dia neutro. |
+| `vix_level` | Nível de fecho do VIX (T-1) | A volatilidade implícita do mercado, o "termômetro do medo". Um VIX de 30 é um ambiente fundamentalmente diferente de um VIX de 14. |
+| `vix_change` | Variação diária do VIX (T-1) | Captura a aceleração do medo, não só o seu nível. Um VIX a subir rapidamente frequentemente produz resultados diferentes do mesmo nível absoluto mantido estável. |
+| `vix_regime` | Label de regime do VIX: 0 = baixo (VIX < 15), 1 = médio (15 ≤ VIX < 25), 2 = alto (VIX ≥ 25) | Sinal discreto de regime de mercado. Sem ela, um mercado calmo e uma crise parecem iguais para o vetor de features. |
+| `asset_class` | Tipo de ativo: 0 = ação, 1 = ETF de ações, 2 = cripto, 3 = ETF de commodities | Permite ao modelo aprender que BTC-USD e ALV.DE precisam de sinais estruturalmente diferentes, mesmo quando outras features são similares. |
 
 **Por que T-1 para as features de contexto externo:** os valores T-1 são usados para garantir consistência com o processo de treino. Durante o treino, cada linha usa contexto T-1 (os dados SPY/VIX disponíveis *antes* da sessão que está a ser prevista). Usar T-0 em produção introduziria um desfasamento treino/inferência — o modelo receberia uma estrutura temporal para a qual nunca foi treinado.
 

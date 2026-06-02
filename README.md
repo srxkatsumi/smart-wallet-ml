@@ -27,9 +27,11 @@ The output is an HTML email report delivered daily with:
 
 Binary classification: will the closing price be **higher or lower** than today's close in N trading days?
 
-- `target_d1` = `1` if `Close[t+1] > Close[t]` else `0`
-- `target_d2` = `1` if `Close[t+2] > Close[t]` else `0`
-- `target_d3` = `1` if `Close[t+3] > Close[t]` else `0`
+- `target_d1` = `1` if move > ATR14 × 0.3 × √1, `0` if move < −(ATR14 × 0.3 × √1), `NaN` if neutral
+- `target_d2` = `1` if move > ATR14 × 0.3 × √2, `0` if move < −(ATR14 × 0.3 × √2), `NaN` if neutral
+- `target_d3` = `1` if move > ATR14 × 0.3 × √3, `0` if move < −(ATR14 × 0.3 × √3), `NaN` if neutral
+
+Neutral days (small moves below the ATR threshold) are excluded from training. The model only learns from sessions with a clear directional signal, which reduces label noise and improves calibration. The threshold scales with the horizon so that a 3-day forecast is held to a proportionally larger move than a 1-day forecast.
 
 ### Why independent ensembles per horizon — not a single model
 
@@ -49,9 +51,9 @@ Using a single model per horizon would give a single point of failure. Different
 
 | Model | Configuration | Why it was chosen |
 |-------|--------------|-------------------|
-| **Random Forest** | 300 trees, max depth 6 | Robust generaliser. Bootstrapped trees prevent overfitting on noisy market data. Works well even when some features are irrelevant — a common situation in financial time series where indicator usefulness changes with regime. Acts as the ensemble's stability anchor. |
-| **Gradient Boosting** | 200 estimators, learning rate 0.05 | Captures patterns the Random Forest misses by sequentially correcting its own residual errors. Especially good at detecting short-term momentum signals and subtle interactions between indicators. The low learning rate (0.05) slows convergence intentionally — it prevents the model from memorising noise. |
-| **SGD Classifier** | log_loss | A linear model deliberately included to act as a counterweight. When both non-linear models agree on something that is actually noise, the SGD Classifier — which cannot model non-linear interactions — acts as a dissenting vote and pulls the ensemble toward more conservative estimates. Its simplicity is a feature, not a limitation. |
+| **Random Forest** | 100 trees, max depth 5, class_weight balanced, CalibratedClassifierCV isotonic | Robust generaliser. Bootstrapped trees prevent overfitting on noisy market data. Works well even when some features are irrelevant, a common situation in financial time series where indicator usefulness changes with regime. Acts as the ensemble's stability anchor. |
+| **Gradient Boosting** | 100 estimators, learning rate 0.05, max depth 3, CalibratedClassifierCV isotonic | Captures patterns the Random Forest misses by sequentially correcting its own residual errors. Especially good at detecting short-term momentum signals and subtle interactions between indicators. The low learning rate (0.05) slows convergence intentionally and prevents the model from memorising noise. |
+| **SGD Classifier** | log_loss, L2 regularisation, monthly full recalibration | A linear model deliberately included to act as a counterweight. When both non-linear models agree on something that is actually noise, the SGD Classifier, which cannot model non-linear interactions, acts as a dissenting vote and pulls the ensemble toward more conservative estimates. Its simplicity is a feature, not a limitation. |
 
 The SGD model undergoes **full monthly recalibration**: scaler refit + retrain from scratch. This is necessary because the SGD Classifier uses standardised features. If the distribution of prices and indicators shifts gradually (e.g., after a major market repricing), the old scaler no longer represents the current data, and the model's linear coefficients become anchored to an obsolete baseline. Monthly recalibration keeps the linear anchor aligned with current market conditions without requiring daily recalibration overhead.
 
@@ -61,16 +63,21 @@ Each model receives a set of technical indicators computed from historical price
 
 | Feature | Description | Why it matters |
 |---------|-------------|----------------|
-| `sma_20`, `sma_50` | 20-day and 50-day simple moving averages | Short vs medium-term trend alignment. Crossovers between them are a classical regime-change signal. |
-| `rsi_14` | Relative Strength Index (14-day) | Detects whether the asset is overextended in either direction. RSI > 70 (overbought) and RSI < 30 (oversold) are historically mean-reverting conditions. |
-| `macd`, `macd_signal` | MACD line and signal line | Captures momentum and trend reversals through crossovers. Useful for detecting when a trend is gaining or losing steam. |
-| `bb_upper`, `bb_lower`, `bb_width` | Bollinger Bands (20-day, 2σ) | Encodes both volatility regime and price extremity. When price hits the upper/lower band, the model can factor in the probability of reversion. Band width signals whether the asset is in a quiet or explosive period. |
-| `atr_14` | Average True Range (14-day) | The expected daily move in absolute terms. Helps the model distinguish between a +1% move that is within normal range and one that is exceptional. |
+| `SMA20_dist`, `SMA50_dist` | Distance of current price from 20-day and 50-day SMAs, as a fraction | Short vs medium-term trend alignment. Captures how far price has deviated from its average, not just the moving average level. |
+| `sma_cross` | Binary: 1 if SMA20 > SMA50, 0 otherwise | Classical regime-change signal. Crossovers indicate trend shifts between short and medium-term momentum. |
+| `RSI14` | Relative Strength Index (14-day) | Detects whether the asset is overextended in either direction. RSI > 70 (overbought) and RSI < 30 (oversold) are historically mean-reverting conditions. |
+| `MACD`, `MACD_sig`, `MACD_hist` | MACD line, signal line, and histogram | Captures momentum and trend reversals through crossovers. Useful for detecting when a trend is gaining or losing steam. |
+| `BB_width`, `BB_pos` | Bollinger Band width (20-day, 2σ) and price position within the bands | Band width signals volatility regime. Position within the bands encodes whether price is near the upper or lower extreme. |
+| `ATR14` | Average True Range (14-day) | The expected daily move in absolute terms. Helps the model distinguish between a +1% move that is within normal range and one that is exceptional. Also used as the target threshold. |
 | `ret_1d`, `ret_5d` | 1-day and 5-day returns | Direct momentum features. Recent returns are among the most predictive short-horizon features. |
-| `spy_ret_1d` | S&P 500 return (T-1) | Global market context. NVDA on a day after the S&P dropped 2% behaves differently from NVDA on a neutral day. This feature allows the model to condition its forecast on the broad market state. |
-| `vix_level` | CBOE VIX closing level (T-1) | The market's implied volatility — the "fear gauge". A VIX of 30 means a fundamentally different environment from a VIX of 14. Without this, the model cannot distinguish bull-market and crisis-regime behaviour. |
-| `vix_change` | VIX daily change (T-1) | Captures fear *acceleration*, not just fear level. A VIX that is rising sharply often leads different outcomes than the same absolute VIX level that has been stable for weeks. |
-| `vix_regime` | VIX regime label: 0 = low (VIX < 15), 1 = medium (15 ≤ VIX < 25), 2 = high (VIX ≥ 25) | A discrete market-regime signal that lets the model learn different patterns per volatility environment. Without it, a calm bull market and a crisis period look the same to the feature vector — they should not. |
+| `vol_10d` | 10-day rolling standard deviation of daily returns | Realised volatility. Captures whether the asset is in a quiet or explosive period, independent of the Bollinger Band window. |
+| `vol_ratio` | Ratio of recent volume to its 20-day average | Detects unusual trading activity. A volume spike accompanying a price move signals conviction; low volume signals noise. |
+| `obv_trend` | On Balance Volume trend (slope of OBV over recent sessions) | Accumulation vs distribution signal (Joseph Granville, 1963). Rising OBV on flat price often precedes a breakout. |
+| `spy_ret_1d` | S&P 500 return (T-1) | Global market context. NVDA on a day after the S&P dropped 2% behaves differently from NVDA on a neutral day. |
+| `vix_level` | CBOE VIX closing level (T-1) | The market's implied volatility, the "fear gauge". A VIX of 30 is a fundamentally different environment from a VIX of 14. |
+| `vix_change` | VIX daily change (T-1) | Captures fear acceleration, not just fear level. A sharply rising VIX often leads different outcomes than the same absolute level held stable. |
+| `vix_regime` | VIX regime label: 0 = low (VIX < 15), 1 = medium (15 ≤ VIX < 25), 2 = high (VIX ≥ 25) | A discrete market-regime signal. Without it, a calm bull market and a crisis period look the same to the feature vector. |
+| `asset_class` | Asset type: 0 = stock, 1 = equity ETF, 2 = crypto, 3 = commodity ETF | Allows the model to learn that BTC-USD and ALV.DE require structurally different signals, even when other features are similar. |
 
 **Why T-1 for external context features:** T-1 values are used to maintain consistency with how the models were trained. During training, every row uses T-1 context (the SPY/VIX data available *before* the trading session being predicted). Using T-0 at inference time would introduce a train/inference mismatch — the model would be fed a temporal structure it was never trained on.
 
