@@ -202,7 +202,10 @@ def _build_etf_monthly_recommendation(etf_lotes: list[dict], resultados_ml: dict
         seen.add(ticker)
         preds = resultados_ml[ticker].get("preds_dict", {})
         best_day, best_price = None, float("inf")
-        day_labels = {1: "Amanhã", 2: "Depois de amanhã", 3: "D+3"}
+        day_labels = {
+            h: (today + pd.offsets.BDay(h)).strftime("%d/%m/%Y")
+            for h in [1, 2, 3]
+        }
         for h in [1, 2, 3]:
             if h not in preds:
                 continue

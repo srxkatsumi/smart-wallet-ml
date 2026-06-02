@@ -68,7 +68,7 @@ ASSET_CLASSES: dict[str, int] = {
     "ALV.DE":  0, "BABA":    0, "BTC-USD": 2, "DHER.DE": 0,
     "LLY":     0, "NVDA":    0, "SIE.DE":  0, "BMW.DE":  0,
     "BAS.DE":  0, "NESN.SW": 0, "NOVN.SW": 0, "ROG.SW":  0,
-    "EMIM.AS": 1, "EXUS.L":  1, "IWDA.AS": 1, "MEUD.PA": 1,
+    "EMIM.AS": 1, "EXUS.MI": 1, "IWDA.AS": 1, "MEUD.PA": 1,
     "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
     "SGLN.L":  3,
 }
@@ -77,7 +77,7 @@ ASSET_CLASSES: dict[str, int] = {
 # Tickers not listed here default to NYSE.
 TICKER_CALENDAR: dict[str, str] = {
     # London Stock Exchange
-    "EXUS.L":  "LSE",
+    "EXUS.MI": "XMIL",   # Borsa Italiana (EUR)
     "SGLN.L":  "LSE",
     "CSPX.L":  "LSE",
     # Euronext (per-exchange MIC codes)

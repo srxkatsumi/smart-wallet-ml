@@ -64,11 +64,11 @@
   ],
   "etf_acumulacao": [
     {
-      "ticker":           "EXUS.L",
+      "ticker":           "EXUS.MI",
       "nome":             "MSCI World ex USA ETF",
       "unidades":         9.3331233141,
       "euros_investidos": 350.00,
-      "moeda":            "GBP",
+      "moeda":            "EUR",
       "gbp_pence":        false,
       "fee_euro":         0.0,
       "aporte_mensal":    50,
@@ -114,7 +114,9 @@
       "gbp_pence":        false,
       "fee_euro":         0.0,
       "aporte_mensal":    50,
-      "lotes": []
+      "lotes": [
+        {"data_compra": "2026-05-13", "unidades": 1.0669056535, "euros_investidos": 50.00, "preco_unidade_eur": 46.86}
+      ]
     },
     {
       "ticker":           "MEUD.PA",
@@ -125,7 +127,9 @@
       "gbp_pence":        false,
       "fee_euro":         0.0,
       "aporte_mensal":    50,
-      "lotes": []
+      "lotes": [
+        {"data_compra": "2026-05-13", "unidades": 0.1667500416, "euros_investidos": 50.00, "preco_unidade_eur": 299.85}
+      ]
     },
     {
       "ticker":           "SJPA.MI",
@@ -136,7 +140,9 @@
       "gbp_pence":        false,
       "fee_euro":         0.0,
       "aporte_mensal":    50,
-      "lotes": []
+      "lotes": [
+        {"data_compra": "2026-05-13", "unidades": 0.7322917215, "euros_investidos": 50.00, "preco_unidade_eur": 68.28}
+      ]
     }
   ]
 }

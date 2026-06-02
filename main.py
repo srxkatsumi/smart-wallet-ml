@@ -164,6 +164,16 @@ def main():
     close_eur_map = {r["ticker"]: r["close_eur"] for r in resumo_etoro + resumo_etfs}
     for ticker, res in resultados_ml.items():
         res["close_eur"] = close_eur_map.get(ticker, res["close_now"])
+        # Apply the same EUR conversion ratio to predicted prices in preds_dict
+        # (fixes GBX→EUR bug: SGLN.L and other GBP-pence tickers were shown in raw GBX)
+        raw = res["close_now"]
+        eur = res["close_eur"]
+        if raw and raw != 0 and abs(eur / raw - 1) > 0.001:
+            ratio = eur / raw
+            res["preds_dict"] = {
+                h: (d, p * ratio, c)
+                for h, (d, p, c) in res.get("preds_dict", {}).items()
+            }
 
     # ── Charts ────────────────────────────────────────────────────────────
     from config.settings import CHARTS_DIR, CHARTS_RETENTION_DAYS
