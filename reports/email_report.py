@@ -363,7 +363,12 @@ def _build_research_section(research_data: dict) -> str:
         "bayesiano":         "Bayesiano (GP+BNN)",
         "generativo":        "Generativo (VAE+GAN)",
         "reinforcement":     "Reinforcement (DQN+PPO)",
+        "contrarian":        "Contrarian (CB+EWI+PEL) ⚠",
     }
+    contrarian_warning = any(
+        r["family"] == "contrarian" and r == comparison[0]
+        for r in comparison
+    ) if comparison else False
     comp_rows = ""
     for r in comparison:
         acc_pct  = r["accuracy"] * 100
@@ -431,7 +436,8 @@ def _build_research_section(research_data: dict) -> str:
       <div>
         <div style="font-size:13px;font-weight:600;color:#1a1740;margin-bottom:10px">Comparação de famílias — semana anterior</div>
         {comp_html}
-        <div style="margin-top:8px;font-size:10px;color:#a8a39a">★ melhor família da semana &nbsp;·&nbsp; vs Acaso = diferença face a 50%</div>
+        <div style="margin-top:8px;font-size:10px;color:#a8a39a">★ melhor família da semana &nbsp;·&nbsp; vs Acaso = diferença face a 50% &nbsp;·&nbsp; ⚠ = teste de sanidade do ensemble</div>
+        {"<div style='margin-top:10px;padding:8px 10px;background:#fff3cd;border-left:3px solid #d4a017;border-radius:3px;font-size:11px;color:#7a5c00'><strong>Alerta Contrarian:</strong> a família Contrarian foi a mais precisa esta semana. Se CB supera o ensemble principal, o ensemble pode estar a errar de forma sistemática e previsível. Verificar acurácia recente do ensemble.</div>" if contrarian_warning else ""}
       </div>
       <div>
         <div style="font-size:13px;font-weight:600;color:#1a1740;margin-bottom:10px">Consenso dos 25 modelos — amanhã</div>

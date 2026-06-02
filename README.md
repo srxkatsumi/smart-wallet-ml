@@ -422,6 +422,7 @@ done
 The original system was a single Jupyter notebook (AnaliseV5). It was migrated to a modular Python package to enable automated GitHub Actions execution, proper dependency management, and maintainability.
 
 ### Implemented improvements
+- ✅ **Contrarian family in Monday research runner** — CB (Contrarian Baseline), EWI (Error-Weighted Inverter) and PEL (Predictive Error Learning) added as the 9th family in the weekly model comparison. If CB ranks first, an amber warning appears in the email flagging potential systematic errors in the main ensemble.
 - ✅ **Modular Python package** — `main.py` + `data/` + `features/` + `models/` + `portfolio/` + `reports/`
 - ✅ **7-column email ML table** — Ativo · Preço · **Var%** · D+1 · D+2 · D+3 · Consenso
 - ✅ **Var% column** — previous-day close-to-close change per asset in the email
@@ -552,7 +553,7 @@ All 25 original models are implemented and tested. Transversal layers (phases 9-
 | 13 | Information theory | Shannon entropy, Mutual information, Permutation entropy, Transfer entropy | ✅ | ✅ |
 | 14 | Transfer learning | MMD, CORAL, Fine-tuning, Cross-domain evaluation | ✅ | ✅ |
 | 15 | Email report | Per-lot eToro table, ETF section, monthly buy recommendation | ✅ | — |
-| 16 | Contrarian / Sanity tests | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | ⏳ | — |
+| 16 | Contrarian / Sanity tests | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | ✅ | — |
 | 17 | Efficient architectures (post-2022) | TCN, DLinear, NLinear, PatchTST | ⏳ | ⏳ |
 | 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ⏳ | ⏳ |
 | 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ⏳ | ⏳ |

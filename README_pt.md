@@ -426,6 +426,7 @@ done
 O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para um package Python modular para permitir execução automática via GitHub Actions, gestão de dependências e manutenibilidade.
 
 ### Melhorias implementadas
+- ✅ **Família Contrarian no research runner de segunda-feira** — CB (Contrarian Baseline), EWI (Error-Weighted Inverter) e PEL (Predictive Error Learning) adicionados como 9ª família na comparação semanal de modelos. Se o CB ficar em primeiro lugar, um aviso âmbar aparece no email sinalizando possíveis erros sistemáticos no ensemble principal.
 - ✅ **Package Python modular** — `main.py` + `data/` + `features/` + `models/` + `portfolio/` + `reports/`
 - ✅ **Tabela ML de 7 colunas no email** — Ativo · Preço · **Var%** · D+1 · D+2 · D+3 · Consenso
 - ✅ **Coluna Var%** — variação fecho-a-fecho do dia anterior por ativo no email
@@ -556,7 +557,7 @@ Os 25 modelos originais estão implementados e testados. As camadas transversais
 | 13 | Teoria da informação | Entropia de Shannon, MI, Permutation entropy, Transfer entropy | ✅ | ✅ |
 | 14 | Transfer Learning | MMD, CORAL, Fine-tuning, Cross-domain evaluation | ✅ | ✅ |
 | 15 | Email report | Tabela eToro por lote, secção ETF, recomendação mensal | ✅ | — |
-| 16 | Contrarian / Testes de sanidade | CB (Contrarian Baseline), EWI, PEL | ⏳ | — |
+| 16 | Contrarian / Testes de sanidade | CB (Contrarian Baseline), EWI, PEL | ✅ | — |
 | 17 | Arquitecturas eficientes (pós-2022) | TCN, DLinear, NLinear, PatchTST | ⏳ | ⏳ |
 | 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ⏳ | ⏳ |
 | 19 | Incerteza calibrada | Conformal Prediction (MAPIE) | ⏳ | ⏳ |

@@ -29,6 +29,7 @@ _FAMILIES = {
     "bayesiano":         "models.bayesian",
     "generativo":        "models.generative",
     "reinforcement":     "models.reinforcement",
+    "contrarian":        "models.contrarian",
 }
 
 _RES_COLS = [
