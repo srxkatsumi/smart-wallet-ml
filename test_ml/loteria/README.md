@@ -173,7 +173,7 @@ After 1–2 years of data, this becomes a statistically meaningful test. With N 
 ## Repository structure
 
 ```
-test_ml/analisenumerica/
+test_ml/loteria/
 ├── main.py               ← weekly runner (download → validate → train → predict → update README)
 ├── config.py             ← constants, paths, hyperparameters
 ├── data/
@@ -196,7 +196,7 @@ test_ml/analisenumerica/
 ## How to run locally
 
 ```bash
-cd test_ml/analisenumerica
+cd test_ml/loteria
 pip install pandas numpy scikit-learn requests beautifulsoup4 lxml openpyxl
 python main.py          # normal run (processes next 300 historical draws + predicts upcoming)
 python main.py --force  # force re-download of results
