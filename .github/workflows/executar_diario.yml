@@ -10,6 +10,7 @@ on:
   # 17h30 UTC + ~3h delay → disparo real ~20h30 UTC = 22h30 Barcelona CEST
   # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
+    - cron: '0 7 2 6 *'       # validação pontual 02/06/2026 09h00 Barcelona — REMOVER depois
     - cron: '30 17 * * 1-5'   # tentativa 1 — alvo 20h30 UTC / 22h30 Barcelona
     - cron: '0 18 * * 1-5'    # tentativa 2 — alvo 21h00 UTC / 23h00 Barcelona (fallback)
     - cron: '30 18 * * 1-5'   # tentativa 3 — alvo 21h30 UTC / 23h30 Barcelona (fallback)
