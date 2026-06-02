@@ -10,7 +10,6 @@ on:
   # 17h30 UTC + ~3h delay → disparo real ~20h30 UTC = 22h30 Barcelona CEST
   # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
-    - cron: '0 7 2 6 *'       # validação pontual 02/06/2026 09h00 Barcelona — REMOVER depois
     - cron: '30 17 * * 1-5'   # tentativa 1 — alvo 20h30 UTC / 22h30 Barcelona
     - cron: '0 18 * * 1-5'    # tentativa 2 — alvo 21h00 UTC / 23h00 Barcelona (fallback)
     - cron: '30 18 * * 1-5'   # tentativa 3 — alvo 21h30 UTC / 23h30 Barcelona (fallback)
@@ -19,6 +18,10 @@ on:
     inputs:
       forcar:
         description: 'Forçar execução mesmo que já tenha corrido hoje'
+        type: boolean
+        default: false
+      enviar_email:
+        description: 'Enviar email com o relatório (por defeito não envia em execuções manuais)'
         type: boolean
         default: false
 
@@ -148,13 +151,13 @@ jobs:
       # 7 — Obter data para o assunto do email
       - name: 📋 Preparar data
         id: resumo
-        if: success()
+        if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         run: |
           echo "date=$(date +'%d/%m/%Y')" >> "$GITHUB_OUTPUT"
 
       # 7 — Enviar email HTML com o resumo das previsões
       - name: 📧 Enviar resumo por email
-        if: success()
+        if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -214,7 +217,7 @@ jobs:
 
       # 9 — Enviar email de falha com link para os logs
       - name: 📧 Notificar falha por email
-        if: failure()
+        if: failure() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
