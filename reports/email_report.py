@@ -15,14 +15,8 @@ _TAXA_BASE = TAXA_CRESCIMENTO_BASE["base"]          # 0.08
 _TAXA_OTIM = TAXA_CRESCIMENTO_BASE["optimista"]     # 0.15
 
 
-def _build_correlation_chart(resultados_ml: dict, my_tickers: list) -> str:
+def _build_correlation_html(resultados_ml: dict, my_tickers: list) -> str:
     try:
-        import io, base64
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        import numpy as np
-
         closes = {}
         for ticker in my_tickers:
             if ticker in resultados_ml:
@@ -32,42 +26,44 @@ def _build_correlation_chart(resultados_ml: dict, my_tickers: list) -> str:
 
         df_c  = pd.DataFrame(closes).pct_change().dropna()
         corr  = df_c.corr()
-        n     = len(corr)
         ticks = list(corr.columns)
 
-        fig, ax = plt.subplots(figsize=(max(4, n * 0.7), max(3.5, n * 0.6)))
-        fig.patch.set_facecolor("#f6f3eb")
-        ax.set_facecolor("#f6f3eb")
+        def _bg(v: float) -> str:
+            if v >= 0:
+                r = int(0xf6 + (0x1e - 0xf6) * v)
+                g = int(0xf3 + (0x7a - 0xf3) * v)
+                b = int(0xeb + (0x4c - 0xeb) * v)
+            else:
+                t = abs(v)
+                r = int(0xf6 + (0xb8 - 0xf6) * t)
+                g = int(0xf3 + (0x45 - 0xf3) * t)
+                b = int(0xeb + (0x3a - 0xeb) * t)
+            return f"#{r:02x}{g:02x}{b:02x}"
 
-        vals = corr.values
-        cmap = plt.cm.RdYlGn
-        im   = ax.imshow(vals, cmap=cmap, vmin=-1, vmax=1, aspect="auto")
+        def _fg(v: float) -> str:
+            return "white" if abs(v) > 0.65 else "#2a2a2a"
 
-        ax.set_xticks(range(n))
-        ax.set_yticks(range(n))
-        ax.set_xticklabels(ticks, rotation=45, ha="right", fontsize=8, color="#5a5a5a")
-        ax.set_yticklabels(ticks, fontsize=8, color="#5a5a5a")
+        th = '<td style="padding:4px;font-size:9px;color:#a89e85"></td>'
+        for t in ticks:
+            th += (f'<td style="padding:4px 6px;font-size:9px;font-weight:600;'
+                   f'color:#5a5a5a;text-align:center;white-space:nowrap">{t}</td>')
+        rows = f"<tr>{th}</tr>"
 
-        for i in range(n):
-            for j in range(n):
-                v    = vals[i, j]
-                col  = "white" if abs(v) > 0.6 else "#2a2a2a"
-                ax.text(j, i, f"{v:.2f}", ha="center", va="center",
-                        fontsize=7, color=col, fontweight="500")
+        for i, t_row in enumerate(ticks):
+            row = (f'<td style="padding:4px 10px 4px 0;font-size:9px;font-weight:600;'
+                   f'color:#5a5a5a;white-space:nowrap">{t_row}</td>')
+            for j in range(len(ticks)):
+                v      = corr.values[i, j]
+                diag   = "border:2px solid #1a1740;" if i == j else ""
+                row   += (f'<td style="padding:5px 4px;text-align:center;background:{_bg(v)};'
+                           f'{diag}border-radius:3px;font-family:ui-monospace,SFMono-Regular,'
+                           f'Menlo,monospace;font-size:10px;font-weight:600;color:{_fg(v)};'
+                           f'min-width:42px">{v:.2f}</td>')
+            rows += f"<tr>{row}</tr>"
 
-        ax.set_title("Correlação — retornos diários 120d", fontsize=9,
-                     color="#1a1740", pad=10, fontweight="600")
-        plt.colorbar(im, ax=ax, fraction=0.03, pad=0.04)
-        plt.tight_layout()
-
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png", dpi=130, bbox_inches="tight",
-                    facecolor=fig.get_facecolor())
-        plt.close(fig)
-        buf.seek(0)
-        return base64.b64encode(buf.read()).decode("utf-8")
+        return f'<table style="border-collapse:separate;border-spacing:2px">{rows}</table>'
     except Exception as e:
-        logger.warning("Correlation chart failed: %s", e)
+        logger.warning("Correlation HTML failed: %s", e)
         return ""
 _MESES_PT = ['janeiro','fevereiro','março','abril','maio','junho',
              'julho','agosto','setembro','outubro','novembro','dezembro']
@@ -693,14 +689,17 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         ctx_warning_html = ""
 
     # ── Correlation matrix ────────────────────────────────────────────────
-    corr_img = _build_correlation_chart(resultados_ml, my_tickers)
-    if corr_img:
+    corr_table = _build_correlation_html(resultados_ml, my_tickers)
+    if corr_table:
         corr_html = f"""
   <div style="padding:20px 36px;border-top:1px solid #efece4;background:#f6f3eb">
     <div style="font-size:10px;font-weight:600;color:#a89e85;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Correlação de retornos</div>
-    <img src="data:image/png;base64,{corr_img}" alt="Matriz de correlação" style="max-width:100%;height:auto;border-radius:4px;display:block">
-    <div style="margin-top:10px;font-size:10.5px;color:#a8a39a;line-height:1.55">
-      Retornos diários dos últimos 120 dias úteis. Verde = correlação positiva · Vermelho = correlação negativa.
+    <div style="overflow-x:auto">{corr_table}</div>
+    <div style="margin-top:12px;font-size:10.5px;color:#a8a39a;line-height:1.8">
+      Retornos diários dos últimos 120 dias úteis.<br>
+      <span style="display:inline-block;width:11px;height:11px;background:#1e7a4c;border-radius:2px;vertical-align:middle;margin-right:5px"></span><strong style="color:#5a5a5a">+1.0</strong> = movem-se sempre na mesma direção &nbsp;·&nbsp;
+      <span style="display:inline-block;width:11px;height:11px;background:#f6f3eb;border:1px solid #ccc;border-radius:2px;vertical-align:middle;margin-right:5px"></span><strong style="color:#5a5a5a">0.0</strong> = sem relação &nbsp;·&nbsp;
+      <span style="display:inline-block;width:11px;height:11px;background:#b8453a;border-radius:2px;vertical-align:middle;margin-right:5px"></span><strong style="color:#5a5a5a">-1.0</strong> = movem-se em direções opostas
     </div>
   </div>"""
     else:
