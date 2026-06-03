@@ -32,6 +32,7 @@ _FAMILIES = {
     "generativo":        "models.generative",
     "reinforcement":     "models.reinforcement",
     "contrarian":        "models.contrarian",
+    "eficiente":         "models.efficient",
 }
 
 _RES_COLS = [
