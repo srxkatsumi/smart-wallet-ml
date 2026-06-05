@@ -60,6 +60,8 @@ jobs:
     if: needs.verificar.outputs.ja_executou == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
 
     steps:
 
@@ -88,6 +90,33 @@ jobs:
         run: python main.py
         env:
           PYTHONUNBUFFERED: "1"
+
+      # 4b — Validar que os dados foram gerados correctamente
+      - name: ✅ Validar dados gerados
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          COUNT=$(python -c "
+import pandas as pd, sys
+try:
+    log = pd.read_csv('output/predictions_log.csv')
+    print(len(log[log['pred_date'] == '$TODAY']))
+except Exception as e:
+    print(0)
+")
+          echo "Previsões geradas para $TODAY: $COUNT"
+          if [ "$COUNT" -lt 10 ]; then
+            echo "❌ FALHA: apenas $COUNT previsões geradas — esperado ≥ 10"
+            exit 1
+          fi
+          if [ ! -f output/resumo_diario.html ]; then
+            echo "❌ FALHA: resumo_diario.html não foi gerado"
+            exit 1
+          fi
+          if [ ! -f output/ensemble_weights.json ]; then
+            echo "❌ FALHA: ensemble_weights.json não foi gerado"
+            exit 1
+          fi
+          echo "✅ Validação OK — $COUNT previsões · HTML · weights"
 
       # 5b — Mega Sena ML (todos os dias úteis — backfill 300 draws/dia até completar histórico)
       - name: 🎱 Mega Sena ML (backfill diário)

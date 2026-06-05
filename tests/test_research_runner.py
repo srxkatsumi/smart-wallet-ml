@@ -51,7 +51,7 @@ def test_build_consensus_all_up():
         {"ticker": "NVDA", "direction_d1": "up",   "family": f"f{i}"}
         for i in range(8)
     ]
-    r = _build_consensus(rows, ["NVDA"])
+    r = _build_consensus(rows, ["NVDA"], {})
     assert len(r) == 1
     assert r[0]["direction"] == "ALTA"
     assert r[0]["up_count"] == 8
@@ -62,7 +62,7 @@ def test_build_consensus_all_down():
         {"ticker": "NVDA", "direction_d1": "down", "family": f"f{i}"}
         for i in range(8)
     ]
-    r = _build_consensus(rows, ["NVDA"])
+    r = _build_consensus(rows, ["NVDA"], {})
     assert r[0]["direction"] == "BAIXA"
     assert r[0]["pct_up"] == 0.0
 
@@ -72,7 +72,7 @@ def test_build_consensus_multiple_tickers():
         [{"ticker": "NVDA", "direction_d1": "up",   "family": f"f{i}"} for i in range(5)] +
         [{"ticker": "LLY",  "direction_d1": "down", "family": f"f{i}"} for i in range(5)]
     )
-    r = _build_consensus(rows, ["NVDA", "LLY"])
+    r = _build_consensus(rows, ["NVDA", "LLY"], {})
     assert len(r) == 2
     tickers = [x["ticker"] for x in r]
     assert "NVDA" in tickers
