@@ -125,7 +125,7 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
     )
     if total_pending == 0:
         logger.info("Backfill completo — nenhum sorteio histórico pendente")
-        return pred_df, True
+        return pred_df, True, pd.DataFrame()
 
     logger.info("Backfill: %d sorteios históricos pendentes (batch=%d)",
                 total_pending, DAILY_BATCH_SIZE)
@@ -285,7 +285,7 @@ def predict_upcoming_draws(results: pd.DataFrame, models, weights: dict,
 
 # ── Main ─────────────────────────────────────────────────────────────────
 
-def main(force_download: bool = False):
+def main(force_download: bool = False, force_predict: bool = False):
     logger.info("=== Mega Sena ML Experiment — %s ===", date.today())
 
     from data.storage    import ensure_dirs, load_predictions, save_predictions
@@ -321,16 +321,17 @@ def main(force_download: bool = False):
     weights = update_weights(pred_df, weights)
     save_weights(weights)
 
-    # 5 — Previsões futuras: APENAS às segundas-feiras
+    # 5 — Previsões futuras: às segundas-feiras ou com --predict
     is_monday = pd.Timestamp.today().weekday() == 0
-    if is_monday:
-        logger.info("Segunda-feira — treinando modelo final e prevendo próximos sorteios...")
+    if is_monday or force_predict:
+        reason = "Segunda-feira" if is_monday else "--predict activado"
+        logger.info("%s — treinando modelo final e prevendo próximos sorteios...", reason)
         X, y = build_training_data(results)
         models = train(X, y)
         pred_df = predict_upcoming_draws(results, models, weights, pred_df)
         save_predictions(pred_df)
     else:
-        logger.info("Não é segunda-feira — só backfill hoje (previsões futuras apenas às segundas)")
+        logger.info("Não é segunda-feira — só backfill hoje (usa --predict para forçar previsões)")
 
     if not backfill_done:
         logger.info("Backfill em progresso — retoma amanhã")
@@ -343,6 +344,7 @@ def main(force_download: bool = False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--force", action="store_true")
+    parser.add_argument("--force",   action="store_true", help="Forçar re-download do Excel")
+    parser.add_argument("--predict", action="store_true", help="Forçar geração de previsões (ignora check de segunda-feira)")
     args = parser.parse_args()
-    main(force_download=args.force)
+    main(force_download=args.force, force_predict=args.predict)
