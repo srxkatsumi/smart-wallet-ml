@@ -211,6 +211,93 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
     return pred_df, remaining == 0, new_baselines
 
 
+# ── Per-model backfill (seq 6=RF · 7=GB · 8=SGD) ─────────────────────────
+
+def backfill_per_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Walk-forward pass that adds seq_num=6/7/8 (RF/GB/SGD top-6) for every
+    validated historical draw that doesn't have them yet.
+    Runs without DAILY_BATCH_SIZE limit — call once via --predict.
+    """
+    from features.engineering import build_training_data, build_prediction_features
+    from models.ensemble import train, predict_per_model
+    from config import MIN_DRAWS_TRAIN, RETRAIN_INTERVAL
+
+    validated_concursos = set(
+        pred_df[pred_df["validated"] == True]["target_concurso"].astype(int)
+    )
+    has_model_seq = set(
+        pred_df[pred_df["seq_num"] >= 6]["target_concurso"].astype(int)
+    )
+    pending = validated_concursos - has_model_seq
+
+    if not pending:
+        logger.info("Per-model backfill: já completo")
+        return pred_df
+
+    logger.info("Per-model backfill: %d sorteios sem seq 6/7/8 — a processar...", len(pending))
+
+    models         = None
+    last_train_idx = -RETRAIN_INTERVAL
+    new_rows       = []
+    processed      = 0
+
+    for i in range(MIN_DRAWS_TRAIN, len(results)):
+        concurso = int(results.iloc[i]["concurso"])
+        if concurso not in pending:
+            continue
+
+        if models is None or (i - last_train_idx) >= RETRAIN_INTERVAL:
+            X, y = build_training_data(results.iloc[:i])
+            models = train(X, y)
+            last_train_idx = i
+
+        rf, gb, sgd, scaler = models
+        draw_row  = results.iloc[i]
+        draw_day  = pd.Timestamp(draw_row["data"]).day_name()
+        actual    = _actual_balls(draw_row)
+
+        X_pred = build_prediction_features(results.iloc[:i], draw_day)
+        X_sc   = scaler.transform(X_pred)
+        per_model = predict_per_model(X_sc, models)
+
+        pred_date      = (pd.Timestamp(draw_row["data"]) - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        target_date_str = str(draw_row["data"])[:10]
+
+        for seq_num, model_name in [(6, "rf"), (7, "gb"), (8, "sgd")]:
+            seq     = per_model[model_name]
+            matches = _count_matches(seq, actual)
+            new_rows.append({
+                "prediction_date": pred_date,
+                "target_concurso": concurso,
+                "target_date":     target_date_str,
+                "draw_day":        draw_day,
+                "seq_num":         seq_num,
+                "n1": seq[0], "n2": seq[1], "n3": seq[2],
+                "n4": seq[3], "n5": seq[4], "n6": seq[5],
+                "matches":   matches,
+                "prize":     _prize(matches),
+                "acertou":   "Sim" if matches >= 1 else "Não",
+                "acuracia":  round(matches / 6 * 100, 1),
+                "validated": True,
+                "actual_n1": actual[0], "actual_n2": actual[1],
+                "actual_n3": actual[2], "actual_n4": actual[3],
+                "actual_n5": actual[4], "actual_n6": actual[5],
+            })
+
+        processed += 1
+        if processed % 300 == 0:
+            logger.info("  Per-model backfill: %d/%d processados", processed, len(pending))
+
+    if new_rows:
+        pred_df = pd.concat([pred_df, pd.DataFrame(new_rows)], ignore_index=True)
+        logger.info(
+            "Per-model backfill: +%d linhas (%d sorteios × 3 modelos)",
+            len(new_rows), processed,
+        )
+    return pred_df
+
+
 # ── Validate pending ──────────────────────────────────────────────────────
 
 def validate_pending(pred_df: pd.DataFrame, results: pd.DataFrame) -> pd.DataFrame:
@@ -316,6 +403,10 @@ def main(force_download: bool = False, force_predict: bool = False):
     if not new_baselines.empty:
         baselines_df = pd.concat([baselines_df, new_baselines], ignore_index=True)
         save_baselines(baselines_df)
+
+    # 3b — Per-model backfill: seq 6/7/8 (RF/GB/SGD top-6) para calibrar pesos
+    pred_df = backfill_per_model_seqs(results, pred_df)
+    save_predictions(pred_df)
 
     # 4 — Actualizar pesos com base no histórico validado (todos os dias)
     weights = update_weights(pred_df, weights)

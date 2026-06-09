@@ -12,7 +12,7 @@ OUTPUT_MD       = OUTPUT_DIR / "previsoes.md"
 N_BALLS         = 60        # numbers in pool
 BALLS_PER_DRAW  = 6         # drawn per game
 N_SEQUENCES     = 5         # predicted sequences per draw day
-DRAW_DAYS       = ["Monday", "Thursday", "Saturday"]
+DRAW_DAYS       = ["Tuesday", "Thursday", "Saturday"]
 
 # ── Feature windows ───────────────────────────────────────────────────────
 FREQ_WINDOWS    = [5, 10, 20, 50]   # last N draws for frequency features

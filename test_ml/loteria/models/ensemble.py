@@ -80,52 +80,70 @@ def predict_sequences(results: pd.DataFrame, draw_day: str,
     return sequences
 
 
+def predict_per_model(X_sc: np.ndarray, models: tuple) -> dict:
+    """Return deterministic top-6 for each model individually.
+    Returns {"rf": [...], "gb": [...], "sgd": [...]}
+    """
+    rf, gb, sgd, _ = models
+    numbers = np.arange(1, N_BALLS + 1)
+    result = {}
+    for name, clf in [("rf", rf), ("gb", gb), ("sgd", sgd)]:
+        probs = clf.predict_proba(X_sc)[:, 1]
+        top6  = sorted(numbers[np.argsort(probs)[::-1][:BALLS_PER_DRAW]].tolist())
+        result[name] = top6
+    return result
+
+
 def count_matches(predicted: list[int], actual: list[int]) -> int:
     return len(set(predicted) & set(actual))
 
 
 def update_weights(pred_df: pd.DataFrame, weights: dict) -> dict:
     """
-    Update model weights based on recent validated predictions.
+    Update weights using per-model deterministic sequences:
+      seq_num=6 → RF top-6
+      seq_num=7 → GB top-6
+      seq_num=8 → SGD top-6
 
-    For each validated draw, compute how many numbers each model's
-    top-6 matched vs the ensemble top-6. Weight = decay-weighted hit rate.
-    We approximate individual model accuracy by using their individual
-    top-6 selections (highest probability numbers from each model alone).
+    Falls back to ensemble-level update if per-model data is insufficient.
     """
-    validated = pred_df[pred_df["validated"] == True].tail(MIN_DRAWS_WEIGHT * 3)
-    if len(validated) < MIN_DRAWS_WEIGHT:
-        logger.info("Pesos não atualizados: apenas %d sorteios validados (mínimo %d)",
-                    len(validated), MIN_DRAWS_WEIGHT)
-        return weights
+    SEQ_MAP = {"rf": 6, "gb": 7, "sgd": 8}
 
-    # Use only seq_num == 1 (deterministic sequence) for weight update
-    v = validated[validated["seq_num"] == 1].copy()
+    def _decay_weighted_acc(df_model: pd.DataFrame) -> float:
+        matches = df_model["matches"].astype(float).values
+        n = len(matches)
+        decay = np.exp(-WEIGHT_DECAY * np.arange(n)[::-1])
+        decay /= decay.sum()
+        return float((matches / BALLS_PER_DRAW * decay).sum())
+
+    # Check if per-model sequences exist
+    accs = {}
+    for model, seq_num in SEQ_MAP.items():
+        v = pred_df[(pred_df["seq_num"] == seq_num) & (pred_df["validated"] == True)]
+        if len(v) >= MIN_DRAWS_WEIGHT:
+            accs[model] = _decay_weighted_acc(v)
+
+    if len(accs) == 3:
+        total = sum(accs.values())
+        if total == 0:
+            return weights
+        new_weights = {m: round(accs[m] / total * 3.0, 4) for m in accs}
+        logger.info(
+            "Pesos (per-model): RF=%.3f GB=%.3f SGD=%.3f  |  acc RF=%.4f GB=%.4f SGD=%.4f",
+            new_weights["rf"], new_weights["gb"], new_weights["sgd"],
+            accs["rf"], accs["gb"], accs["sgd"],
+        )
+        return new_weights
+
+    # Fallback: ensemble-level update (while per-model backfill is still running)
+    v = pred_df[(pred_df["seq_num"] == 1) & (pred_df["validated"] == True)]
     if len(v) < MIN_DRAWS_WEIGHT:
+        logger.info("Pesos não atualizados: dados insuficientes")
         return weights
-
-    n = len(v)
-    decay = np.exp(WEIGHT_DECAY * np.arange(n))
-    decay = decay / decay.sum()
-
-    # matches column already tells us how many numbers seq1 got right
-    # We use this as proxy for ensemble quality
-    # Per-model accuracy can't be tracked without storing individual model sequences
-    # → keep uniform weights with small recency adjustment based on overall match rate
-    matches = v["matches"].astype(float).values
-    norm_matches = matches / BALLS_PER_DRAW      # 0.0 → 1.0
-    weighted_acc = (norm_matches * decay).sum()
-
-    # Since we can't distinguish per-model without storing their individual predictions,
-    # we use a simplified update: reward all models proportionally to recent accuracy
-    # vs random baseline (0.6 / 6 = 0.1)
-    baseline = 0.1
-    signal   = max(weighted_acc, baseline) / baseline   # > 1 means beating random
-
+    acc = _decay_weighted_acc(v)
+    signal = max(acc, 0.1) / 0.1
     new_weights = {k: max(0.1, weights[k] * signal) for k in weights}
     total = sum(new_weights.values())
     new_weights = {k: round(v * 3.0 / total, 4) for k, v in new_weights.items()}
-
-    logger.info("Pesos: RF=%.3f GB=%.3f SGD=%.3f (acurácia ponderada=%.3f)",
-                new_weights["rf"], new_weights["gb"], new_weights["sgd"], weighted_acc)
+    logger.info("Pesos (fallback ensemble): RF=%.3f GB=%.3f SGD=%.3f", *new_weights.values())
     return new_weights

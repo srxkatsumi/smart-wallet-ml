@@ -6,12 +6,12 @@
 
 ## Resultados
 
-> 🎯 **Destaque:** 6× Sequência com 4 acertos registada!
+> 🎯 **Destaque:** 1× Sequência com 5 acertos registada!
 
-**Sequências previstas:** 14925
+**Sequências previstas:** 23880
 Sequência 6 acertada: 0
-Sequência 5 acertada: 0
-🏆 **Sequência 4 acertada: 6×** (Quadra)
+🏆🏆 **Sequência 5 acertada: 1×** (Quina)
+🏆 **Sequência 4 acertada: 7×** (Quadra)
 
 ---
 
@@ -45,14 +45,15 @@ Sequência 5 acertada: 0
 | Métrica | Valor |
 |---------|-------|
 | Sorteios analisados | 2985 |
-| Sequências avaliadas | 14925 |
-| Média de acertos/sequência | **0.607** |
+| Sequências avaliadas | 23880 |
+| Média de acertos/sequência | **0.611** |
 | Baseline aleatório (teórico) | 0.600 |
-| vs Baseline | **+0.007** |
-| Melhor resultado | 4 acertos |
-| Quadra (4 acertos) | 6× |
-| Terno (3 acertos) | 123× |
-| Duque (2 acertos) | 1468× |
+| vs Baseline | **+0.011** |
+| Melhor resultado | 5 acertos |
+| Quina (5 acertos) | 1× |
+| Quadra (4 acertos) | 7× |
+| Terno (3 acertos) | 225× |
+| Duque (2 acertos) | 2320× |
 
 
 ---
@@ -61,7 +62,7 @@ Sequência 5 acertada: 0
 
 | Estratégia | Média acertos/seq | vs Teórico (0.60) |
 |-----------|------------------|-------------------|
-| 🤖 ML Ensemble | **0.607** | **+0.007** |
+| 🤖 ML Ensemble | **0.611** | **+0.011** |
 | 🔥 Hot (+ frequentes) | 0.598 | -0.002 |
 | ❄️ Cold (- frequentes) | 0.572 | -0.028 |
 | 🎲 Aleatório (Monte Carlo) | 0.592 | -0.008 |
@@ -72,7 +73,7 @@ Sequência 5 acertada: 0
 
 ## Histórico completo
 
-O histórico completo de previsões (14925 sequências · 2985 sorteios validados) está disponível em formato CSV:
+O histórico completo de previsões (23880 sequências · 2985 sorteios validados) está disponível em formato CSV:
 
 → **[predictions_log.csv](predictions_log.csv)**
 
