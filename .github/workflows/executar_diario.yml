@@ -140,7 +140,7 @@ jobs:
           git add test_ml/loteria/output/baselines_log.csv        2>/dev/null || true
           git add test_ml/loteria/output/ensemble_weights.json    2>/dev/null || true
           git add test_ml/loteria/output/previsoes.md             2>/dev/null || true
-          git add test_ml/loteria/data/mega_sena_results.csv      2>/dev/null || true
+          git add test_ml/loteria/output/mega_sena_results.csv     2>/dev/null || true
           git add test_ml/loteria/README.md                       2>/dev/null || true
           git add test_ml/loteria/README_pt.md                    2>/dev/null || true
 
