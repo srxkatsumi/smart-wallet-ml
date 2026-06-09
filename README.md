@@ -418,6 +418,29 @@ done
 
 ## Changelog
 
+### Incidents & fixes
+
+#### 2026-06-05 → 2026-06-09 — Pipeline silent failure (4 missed days)
+
+**Symptom:** No automated runs and no daily email from 2026-06-05 through 2026-06-08 (4 trading days).
+
+**Root cause 1 — Invalid YAML in workflow file (primary):**
+Commit `18d3902` added a data-validation step to `.github/workflows/executar_diario.yml`. The validation used a multi-line `python -c "..."` block whose Python code started at column 0, while the YAML `run: |` block required all content to be indented at least 10 spaces (matching the first line of the block). GitHub Actions' YAML parser rejected the entire workflow file with `Invalid workflow file: error on line 99`. Because the file was syntactically invalid, **no jobs ran at all** — not the pipeline, not the email, not even the "already ran today" check. The scheduler continued firing but every attempt immediately errored out before executing a single step. After 3 consecutive failures, GitHub paused the scheduled runs entirely.
+
+**Fix:** Collapsed the multi-line Python into a one-liner: `python -c "import pandas as pd; log=pd.read_csv(...); print(len(...))"` — valid YAML on a single line. Commit `82e3f3f`.
+
+**Root cause 2 — Unpinned `scikit-learn` installing version 2.x:**
+With the YAML fixed (run #65), the pipeline ran and failed immediately on all 95 tickers with `No module named '_loss'`. scikit-learn 2.x restructured internal Cython extensions (including `_loss`), which `GradientBoostingClassifier` and other estimators rely on at training time. Because `requirements.txt` had `scikit-learn` with no version pin, GitHub Actions installed the latest available version (2.x), which was incompatible with the project. The local environment had scikit-learn 1.8.0, which worked correctly.
+
+**Fix:** Pinned `scikit-learn>=1.5,<2` in `requirements.txt`. Commit `49669e6`.
+
+**Root cause 3 — All dependencies unpinned:**
+The broader lesson was that all 26 packages in `requirements.txt` were unpinned. Any package releasing a breaking update would cause the same class of failure without any change to project code.
+
+**Fix:** Pinned all 26 dependencies to the exact versions confirmed working in the local environment. Commit `d6f7be1`.
+
+---
+
 ### Migration: Jupyter Notebook → modular Python
 The original system was a single Jupyter notebook (AnaliseV5). It was migrated to a modular Python package to enable automated GitHub Actions execution, proper dependency management, and maintainability.
 
