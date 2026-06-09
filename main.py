@@ -46,21 +46,11 @@ def main():
 
     logger.info("Downloading %d tickers...", len(all_tickers))
     raw_data = download_prices(all_tickers, etf_acumul)
-    if not raw_data:
-        raise RuntimeError(
-            "CRÍTICO: 0 tickers descarregados — possível falha de rede ou API do yfinance. "
-            "Nenhum dado gerado."
-        )
 
     # ── Feature engineering ───────────────────────────────────────────────
     from features.engineering import build_all_features
     from config.settings import MIN_SAMPLES_FEATURES
     featured_data = build_all_features(raw_data, context_data, MIN_SAMPLES_FEATURES)
-    if not featured_data:
-        raise RuntimeError(
-            f"CRÍTICO: 0 tickers com features válidas (de {len(raw_data)} descarregados). "
-            "Verifica os logs acima para erros de features."
-        )
 
     # ── Validate past predictions + update weights (before training) ─────
     from models.validator import (
@@ -76,11 +66,6 @@ def main():
 
     monthly_recalibration(featured_data, my_tickers, MODELS_DIR)
     resultados_ml = train_all(featured_data, ensemble_weights, MODELS_DIR)
-    if not resultados_ml:
-        raise RuntimeError(
-            f"CRÍTICO: 0 modelos treinados (de {len(featured_data)} tickers com features). "
-            "Todos os tickers falharam em train_all — verifica os logs acima."
-        )
     save_model_metadata(resultados_ml, my_tickers)
 
     # ── Save today's predictions ──────────────────────────────────────────

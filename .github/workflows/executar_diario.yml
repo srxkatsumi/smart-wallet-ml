@@ -136,11 +136,13 @@ jobs:
           git add output/charts/*.png               2>/dev/null || true
           git add output/xai/                       2>/dev/null || true
           git add output/predictions_research_log.csv 2>/dev/null || true
-          git add test_ml/loteria/output/predictions_log.csv 2>/dev/null || true
-          git add test_ml/loteria/output/baselines_log.csv   2>/dev/null || true
-          git add test_ml/loteria/output/ensemble_weights.json 2>/dev/null || true
-          git add test_ml/loteria/README.md   2>/dev/null || true
-          git add test_ml/loteria/README_pt.md 2>/dev/null || true
+          git add test_ml/loteria/output/predictions_log.csv     2>/dev/null || true
+          git add test_ml/loteria/output/baselines_log.csv        2>/dev/null || true
+          git add test_ml/loteria/output/ensemble_weights.json    2>/dev/null || true
+          git add test_ml/loteria/output/previsoes.md             2>/dev/null || true
+          git add test_ml/loteria/data/mega_sena_results.csv      2>/dev/null || true
+          git add test_ml/loteria/README.md                       2>/dev/null || true
+          git add test_ml/loteria/README_pt.md                    2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
