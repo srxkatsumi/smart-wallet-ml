@@ -95,14 +95,7 @@ jobs:
       - name: ✅ Validar dados gerados
         run: |
           TODAY=$(date +%Y-%m-%d)
-          COUNT=$(python -c "
-import pandas as pd, sys
-try:
-    log = pd.read_csv('output/predictions_log.csv')
-    print(len(log[log['pred_date'] == '$TODAY']))
-except Exception as e:
-    print(0)
-")
+          COUNT=$(python -c "import pandas as pd; log=pd.read_csv('output/predictions_log.csv'); print(len(log[log['pred_date']=='${TODAY}']))" 2>/dev/null || echo 0)
           echo "Previsões geradas para $TODAY: $COUNT"
           if [ "$COUNT" -lt 10 ]; then
             echo "❌ FALHA: apenas $COUNT previsões geradas — esperado ≥ 10"
