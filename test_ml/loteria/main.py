@@ -46,7 +46,7 @@ def _prize(matches: int) -> str:
     return PRIZE_TIERS.get(matches, "—")
 
 
-_DRAW_WEEKDAYS = {0: "Monday", 3: "Thursday", 5: "Saturday"}
+_DRAW_WEEKDAYS = {1: "Tuesday", 3: "Thursday", 5: "Saturday"}
 _RNG = np.random.RandomState(42)
 
 
@@ -71,7 +71,7 @@ def _next_draw_dates(n: int = 3) -> list[tuple[pd.Timestamp, str]]:
     """Return the next n upcoming Mega Sena draw dates as (date, day_name) tuples."""
     today = pd.Timestamp.today().normalize()
     result = []
-    delta = 1
+    delta = 0  # include today if it's a draw day (draw happens tonight)
     while len(result) < n:
         candidate = today + pd.Timedelta(days=delta)
         if candidate.weekday() in _DRAW_WEEKDAYS:
