@@ -102,7 +102,7 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
     Returns (updated_pred_df, backfill_complete, new_baselines_df).
     """
     from features.engineering import build_training_data, build_prediction_features, _build_appeared_matrix
-    from models.ensemble     import train, predict_sequences
+    from models.registry     import train_all, predict_sequences
     from config              import MIN_DRAWS_TRAIN, DAILY_BATCH_SIZE, RETRAIN_INTERVAL
     from data.storage        import BASELINE_COLS
 
@@ -142,7 +142,7 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
         if models is None or (i - last_train_idx) >= RETRAIN_INTERVAL:
             history_slice = results.iloc[:i]
             X, y = build_training_data(history_slice)
-            models = train(X, y)
+            models = train_all(X, y)
             last_train_idx = i
             logger.info("  Retreinado em concurso %d (treino: %d draws)", concurso, i)
 
@@ -211,35 +211,47 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
     return pred_df, remaining == 0, new_baselines
 
 
-# ── Per-model backfill (seq 6=RF · 7=GB · 8=SGD) ─────────────────────────
+# ── Per-family backfill (seq 6–15 for all model families) ────────────────
 
-def backfill_per_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.DataFrame:
+def backfill_all_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.DataFrame:
     """
-    Walk-forward pass that adds seq_num=6/7/8 (RF/GB/SGD top-6) for every
-    validated historical draw that doesn't have them yet.
-    Runs without DAILY_BATCH_SIZE limit — call once via --predict.
+    Walk-forward pass that adds one seq_num per model family (seq 6–15) for
+    every validated historical draw that doesn't have a complete set yet.
+    Runs without DAILY_BATCH_SIZE limit — designed for --predict runs.
     """
-    from features.engineering import build_training_data, build_prediction_features
-    from models.ensemble import train, predict_per_model
+    from features.engineering import build_training_data
+    from models.registry import train_all, predict_per_family, FAMILY_SEQ
     from config import MIN_DRAWS_TRAIN, RETRAIN_INTERVAL
 
+    all_seq_nums   = set(FAMILY_SEQ.values())
     validated_concursos = set(
         pred_df[pred_df["validated"] == True]["target_concurso"].astype(int)
     )
-    has_model_seq = set(
-        pred_df[pred_df["seq_num"] >= 6]["target_concurso"].astype(int)
+
+    # A concurso is "complete" if it has every family's seq_num
+    complete = set(
+        pred_df[pred_df["seq_num"].isin(all_seq_nums)]
+        .groupby("target_concurso")["seq_num"]
+        .apply(lambda s: all_seq_nums.issubset(set(s)))
+        .where(lambda x: x)
+        .dropna()
+        .index
+        .astype(int)
     )
-    pending = validated_concursos - has_model_seq
+    pending = validated_concursos - complete
 
     if not pending:
-        logger.info("Per-model backfill: já completo")
+        logger.info("Per-family backfill: já completo para todas as famílias")
         return pred_df
 
-    logger.info("Per-model backfill: %d sorteios sem seq 6/7/8 — a processar...", len(pending))
+    logger.info(
+        "Per-family backfill: %d sorteios com seq incompleto (%d famílias)",
+        len(pending), len(FAMILY_SEQ),
+    )
 
     models         = None
     last_train_idx = -RETRAIN_INTERVAL
-    new_rows       = []
+    new_rows: list = []
     processed      = 0
 
     for i in range(MIN_DRAWS_TRAIN, len(results)):
@@ -249,23 +261,28 @@ def backfill_per_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.
 
         if models is None or (i - last_train_idx) >= RETRAIN_INTERVAL:
             X, y = build_training_data(results.iloc[:i])
-            models = train(X, y)
+            models = train_all(X, y)
             last_train_idx = i
 
-        rf, gb, sgd, scaler = models
-        draw_row  = results.iloc[i]
-        draw_day  = pd.Timestamp(draw_row["data"]).day_name()
-        actual    = _actual_balls(draw_row)
-
-        X_pred = build_prediction_features(results.iloc[:i], draw_day)
-        X_sc   = scaler.transform(X_pred)
-        per_model = predict_per_model(X_sc, models)
-
-        pred_date      = (pd.Timestamp(draw_row["data"]) - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        draw_row        = results.iloc[i]
+        draw_day        = pd.Timestamp(draw_row["data"]).day_name()
+        actual          = _actual_balls(draw_row)
+        pred_date       = (pd.Timestamp(draw_row["data"]) - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
         target_date_str = str(draw_row["data"])[:10]
 
-        for seq_num, model_name in [(6, "rf"), (7, "gb"), (8, "sgd")]:
-            seq     = per_model[model_name]
+        per_family = predict_per_family(results.iloc[:i], draw_day, models)
+
+        # Determine which seq_nums are already present for this concurso
+        existing_seqs = set(
+            pred_df[pred_df["target_concurso"] == concurso]["seq_num"].astype(int)
+        )
+
+        for family, seq_num in FAMILY_SEQ.items():
+            if seq_num in existing_seqs:
+                continue  # already stored
+            seq = per_family.get(family)
+            if seq is None:
+                continue
             matches = _count_matches(seq, actual)
             new_rows.append({
                 "prediction_date": pred_date,
@@ -287,12 +304,12 @@ def backfill_per_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.
 
         processed += 1
         if processed % 300 == 0:
-            logger.info("  Per-model backfill: %d/%d processados", processed, len(pending))
+            logger.info("  Per-family backfill: %d/%d processados", processed, len(pending))
 
     if new_rows:
         pred_df = pd.concat([pred_df, pd.DataFrame(new_rows)], ignore_index=True)
         logger.info(
-            "Per-model backfill: +%d linhas (%d sorteios × 3 modelos)",
+            "Per-family backfill: +%d linhas (%d sorteios)",
             len(new_rows), processed,
         )
     return pred_df
@@ -327,10 +344,10 @@ def validate_pending(pred_df: pd.DataFrame, results: pd.DataFrame) -> pd.DataFra
 
 # ── Predict next Saturday ─────────────────────────────────────────────────
 
-def predict_upcoming_draws(results: pd.DataFrame, models, weights: dict,
+def predict_upcoming_draws(results: pd.DataFrame, models: dict, weights: dict,
                            pred_df: pd.DataFrame) -> pd.DataFrame:
-    """Predict the next 3 upcoming draws (Mon/Thu/Sat) if not already predicted."""
-    from models.ensemble import predict_sequences
+    """Predict the next 3 upcoming draws (Tue/Thu/Sat) if not already predicted."""
+    from models.registry import predict_sequences
 
     today_str  = pd.Timestamp.today().strftime("%Y-%m-%d")
     new_rows   = []
@@ -379,7 +396,7 @@ def main(force_download: bool = False, force_predict: bool = False):
     from data.storage    import load_weights, save_weights, load_baselines, save_baselines
     from data.downloader import download_results
     from features.engineering import build_training_data
-    from models.ensemble import train, update_weights
+    from models.registry import train_all, update_weights
     from reports.generate_md import save_md
     from config import RESULTS_FILE, MIN_DRAWS_TRAIN
 
@@ -404,8 +421,8 @@ def main(force_download: bool = False, force_predict: bool = False):
         baselines_df = pd.concat([baselines_df, new_baselines], ignore_index=True)
         save_baselines(baselines_df)
 
-    # 3b — Per-model backfill: seq 6/7/8 (RF/GB/SGD top-6) para calibrar pesos
-    pred_df = backfill_per_model_seqs(results, pred_df)
+    # 3b — Per-family backfill: seq 6–15 (top-6 por família) para calibrar pesos
+    pred_df = backfill_all_model_seqs(results, pred_df)
     save_predictions(pred_df)
 
     # 4 — Actualizar pesos com base no histórico validado (todos os dias)
@@ -416,9 +433,9 @@ def main(force_download: bool = False, force_predict: bool = False):
     is_monday = pd.Timestamp.today().weekday() == 0
     if is_monday or force_predict:
         reason = "Segunda-feira" if is_monday else "--predict activado"
-        logger.info("%s — treinando modelo final e prevendo próximos sorteios...", reason)
+        logger.info("%s — treinando todas as famílias e prevendo próximos sorteios...", reason)
         X, y = build_training_data(results)
-        models = train(X, y)
+        models = train_all(X, y)
         pred_df = predict_upcoming_draws(results, models, weights, pred_df)
         save_predictions(pred_df)
     else:

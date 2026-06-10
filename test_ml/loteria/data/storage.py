@@ -59,11 +59,12 @@ def load_weights() -> dict:
         return DEFAULT_WEIGHTS.copy()
     with open(WEIGHTS_FILE) as f:
         w = json.load(f)
+    # Merge: existing values take priority; new families default to 1.0
     return {k: w.get(k, 1.0) for k in DEFAULT_WEIGHTS}
 
 
 def save_weights(weights: dict):
     with open(WEIGHTS_FILE, "w") as f:
         json.dump(weights, f, indent=2)
-    logger.info("Pesos: RF=%.3f GB=%.3f SGD=%.3f",
-                weights["rf"], weights["gb"], weights["sgd"])
+    top3 = sorted(weights.items(), key=lambda x: -x[1])[:3]
+    logger.info("Pesos guardados. Top-3: %s", "  ".join(f"{k}={v:.3f}" for k, v in top3))

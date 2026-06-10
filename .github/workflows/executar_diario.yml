@@ -42,13 +42,17 @@ jobs:
         run: |
           TODAY=$(date +%Y-%m-%d)
           FORCE="${{ github.event.inputs.forcar }}"
+          TRIGGER="${{ github.event_name }}"
 
-          if [[ "$FORCE" == "true" ]]; then
+          if [[ "$FORCE" == "true" || "$TRIGGER" == "schedule" ]]; then
+            # Runs agendados SEMPRE executam — garante que o email é enviado
+            # mesmo que um run manual anterior já tenha gerado os dados.
+            # O pipeline é idempotente: não re-gera previsões se já existirem.
             echo "ja_executou=false" >> "$GITHUB_OUTPUT"
-            echo "✅ Forçar=true — vai executar mesmo assim"
+            echo "✅ Run agendado (ou forçado) — vai executar"
           elif grep -q "^[^,]*,$TODAY," output/predictions_log.csv 2>/dev/null; then
             echo "ja_executou=true" >> "$GITHUB_OUTPUT"
-            echo "⏭️  Já executou hoje ($TODAY) — a saltar"
+            echo "⏭️  Já executou hoje ($TODAY) via workflow_dispatch — a saltar"
           else
             echo "ja_executou=false" >> "$GITHUB_OUTPUT"
             echo "🚀 Ainda não executou hoje ($TODAY) — vai arrancar"

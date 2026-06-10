@@ -30,7 +30,13 @@ N_SPLITS_CV      = 3
 SGD_ALPHA        = 0.001
 
 # ── Ensemble weights ──────────────────────────────────────────────────────
-DEFAULT_WEIGHTS = {"rf": 1.0, "gb": 1.0, "sgd": 1.0}
+# All 10 model families; new families default to 1.0 until backfill provides data
+DEFAULT_WEIGHTS = {
+    "rf": 1.0, "gb": 1.0, "sgd": 1.0,
+    "classical": 1.0, "markov": 1.0, "neural": 1.0,
+    "transformer": 1.0, "efficient": 1.0, "timeseries": 1.0,
+    "contrarian": 1.0,
+}
 MIN_DRAWS_WEIGHT= 10        # minimum validated draws to update weights
 WEIGHT_DECAY    = 0.1
 
