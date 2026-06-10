@@ -213,11 +213,15 @@ def backfill_historical(results: pd.DataFrame, pred_df: pd.DataFrame,
 
 # ── Per-family backfill (seq 6–15 for all model families) ────────────────
 
-def backfill_all_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.DataFrame:
+def backfill_all_model_seqs(
+    results: pd.DataFrame,
+    pred_df: pd.DataFrame,
+    batch_limit: int | None = None,
+) -> pd.DataFrame:
     """
     Walk-forward pass that adds one seq_num per model family (seq 6–15) for
     every validated historical draw that doesn't have a complete set yet.
-    Runs without DAILY_BATCH_SIZE limit — designed for --predict runs.
+    batch_limit caps how many draws are processed per call (None = unlimited).
     """
     from features.engineering import build_training_data
     from models.registry import train_all, predict_per_family, FAMILY_SEQ
@@ -303,8 +307,11 @@ def backfill_all_model_seqs(results: pd.DataFrame, pred_df: pd.DataFrame) -> pd.
             })
 
         processed += 1
-        if processed % 300 == 0:
+        if processed % 100 == 0:
             logger.info("  Per-family backfill: %d/%d processados", processed, len(pending))
+        if batch_limit is not None and processed >= batch_limit:
+            logger.info("  Per-family backfill: limite diário (%d) atingido — retoma amanhã", batch_limit)
+            break
 
     if new_rows:
         pred_df = pd.concat([pred_df, pd.DataFrame(new_rows)], ignore_index=True)
@@ -421,8 +428,10 @@ def main(force_download: bool = False, force_predict: bool = False):
         baselines_df = pd.concat([baselines_df, new_baselines], ignore_index=True)
         save_baselines(baselines_df)
 
-    # 3b — Per-family backfill: seq 6–15 (top-6 por família) para calibrar pesos
-    pred_df = backfill_all_model_seqs(results, pred_df)
+    # 3b — Per-family backfill: 300 draws/dia até cobrir todo o histórico (sem limite com --predict)
+    from config import DAILY_BATCH_SIZE
+    family_batch = None if force_predict else DAILY_BATCH_SIZE
+    pred_df = backfill_all_model_seqs(results, pred_df, batch_limit=family_batch)
     save_predictions(pred_df)
 
     # 4 — Actualizar pesos com base no histórico validado (todos os dias)
