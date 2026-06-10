@@ -16,3 +16,9 @@ Thumbs.db
 # MLflow — base de dados local, binária e crescente; não vai para git
 mlflow.db
 mlruns/
+
+# Artefactos de treino locais (CatBoost)
+catboost_info/
+
+# Análises antigas / snapshots de output anteriores
+AnaliseV5/
