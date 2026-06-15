@@ -5,15 +5,13 @@ Seq-num convention:
   1  → mega-ensemble top-6 (deterministic)
   2–5 → weighted-random diversity (mega-ensemble probabilities)
   6  → RF top-6
-  7  → GB top-6
-  8  → SGD top-6
   9  → Classical top-6  (XGB+LGBM+CatBoost+SVM)
-  10 → Markov top-6     (Markov chain + HMM)
-  11 → Neural top-6     (LSTM + GRU)
   12 → Transformer top-6
   13 → Efficient top-6  (TCN)
   14 → TimeSeries top-6 (ARIMA + ETS + Prophet)
   15 → Contrarian top-6
+
+Removed (low weight): gb(7), sgd(8), markov(10), neural(11)
 """
 
 import logging
@@ -31,13 +29,11 @@ logger = logging.getLogger(__name__)
 _RNG = np.random.default_rng(seed=42)
 
 # family → seq_num (order preserved for iteration)
+# Only top-6 families by weight kept (transformer=2.0, rf=1.95, timeseries=1.68,
+# classical=1.65, contrarian=1.63, efficient=1.57). Seq nums unchanged for history.
 FAMILY_SEQ: dict[str, int] = {
     "rf":          6,
-    "gb":          7,
-    "sgd":         8,
     "classical":   9,
-    "markov":     10,
-    "neural":     11,
     "transformer": 12,
     "efficient":   13,
     "timeseries":  14,
@@ -46,9 +42,7 @@ FAMILY_SEQ: dict[str, int] = {
 
 _EXTERNAL_MODULES: dict[str, str] = {
     "classical":   "models.classical",
-    "markov":      "models.markov",
     "contrarian":  "models.contrarian",
-    "neural":      "models.neural",
     "transformer": "models.transformer",
     "efficient":   "models.efficient",
     "timeseries":  "models.timeseries",
