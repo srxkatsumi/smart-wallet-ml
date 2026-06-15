@@ -111,60 +111,6 @@ def _consenso_badge(consenso: str) -> str:
     )
 
 
-def _alvo_cell(close_eur: float, alvo_15_eur: float) -> str:
-    if close_eur >= alvo_15_eur:
-        pct = (close_eur / (alvo_15_eur / 1.15) - 1) * 100
-        return (
-            '<span style="display:inline-block;background:#e7f3eb;color:#1e7a4c;border-radius:3px;'
-            'padding:3px 7px;font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,'
-            f'Menlo,Consolas,monospace;white-space:nowrap">✅ +{pct:.0f}%</span>'
-        )
-    falta_pct = (alvo_15_eur - close_eur) / alvo_15_eur * 100
-    if falta_pct <= 5:
-        return (
-            '<span style="display:inline-block;background:#fffbea;color:#7a6010;border-radius:3px;'
-            'padding:3px 7px;font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,'
-            f'Menlo,Consolas,monospace;white-space:nowrap">⚠️ −{falta_pct:.1f}%</span>'
-        )
-    return (
-        f'<span style="font-size:11px;color:#a0a0a0;font-family:ui-monospace,SFMono-Regular,'
-        f'Menlo,Consolas,monospace;white-space:nowrap">−{falta_pct:.0f}%</span>'
-    )
-
-
-def _pct_feito_cell(preco_compra_eur: float, close_eur: float) -> str:
-    pct = (close_eur - preco_compra_eur) / preco_compra_eur * 100
-    if pct >= 15:
-        return (
-            '<span style="display:inline-block;background:#e7f3eb;color:#1e7a4c;border-radius:3px;'
-            'padding:2px 6px;font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,'
-            f'Menlo,Consolas,monospace;white-space:nowrap">✅ +{pct:.1f}%</span>'
-        )
-    if pct >= 0:
-        return (
-            f'<span style="font-size:11px;color:#1e7a4c;font-family:ui-monospace,SFMono-Regular,'
-            f'Menlo,Consolas,monospace;white-space:nowrap">+{pct:.1f}%</span>'
-        )
-    return (
-        f'<span style="font-size:11px;color:#b8453a;font-family:ui-monospace,SFMono-Regular,'
-        f'Menlo,Consolas,monospace;white-space:nowrap">{pct:.1f}%</span>'
-    )
-
-
-def _pct_pendente_cell(close_eur: float, alvo_15_eur: float, preco_compra_eur: float) -> str:
-    if close_eur >= alvo_15_eur:
-        return '<span style="font-size:10px;color:#1e7a4c;font-weight:700">✅ Atingido</span>'
-    falta_pct = (alvo_15_eur - close_eur) / preco_compra_eur * 100
-    if falta_pct <= 2:
-        return (
-            f'<span style="display:inline-block;background:#fffbea;color:#7a6010;border-radius:3px;'
-            f'padding:2px 6px;font-size:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,'
-            f'Menlo,Consolas,monospace;white-space:nowrap">⚠️ {falta_pct:.1f}%</span>'
-        )
-    return (
-        f'<span style="font-size:11px;color:#a0a0a0;font-family:ui-monospace,SFMono-Regular,'
-        f'Menlo,Consolas,monospace;white-space:nowrap">{falta_pct:.1f}%</span>'
-    )
 
 
 def _delta_vs_compra_cell(preco_compra_eur: float, close_eur: float) -> str:
@@ -197,35 +143,20 @@ def _build_etf_monthly_recommendation(etf_lotes: list[dict], resultados_ml: dict
             continue
         seen.add(ticker)
         preds = resultados_ml[ticker].get("preds_dict", {})
-        best_day, best_price = None, float("inf")
         day_labels = {
             h: (today + pd.offsets.BDay(h)).strftime("%d/%m/%Y")
             for h in [1, 2, 3]
         }
-        for h in [1, 2, 3]:
-            if h not in preds:
-                continue
-            direction, pred_price, _ = preds[h]
-            if direction == "down" and pred_price < best_price:
-                best_price = pred_price
-                best_day = h
+        best_day = next((h for h in [1, 2, 3] if h in preds and preds[h][0] == "down"), None)
         if best_day is None:
-            for h in [1, 2, 3]:
-                if h in preds:
-                    _, pred_price, _ = preds[h]
-                    if pred_price < best_price:
-                        best_price = pred_price
-                        best_day = h
+            best_day = min(preds.keys()) if preds else None
         if best_day is None:
             continue
         label = day_labels.get(best_day, f"D+{best_day}")
         rec_rows += (
             f'<tr><td style="padding:6px 8px 6px 0;font-family:ui-monospace,SFMono-Regular,'
             f'Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740">{ticker}</td>'
-            f'<td style="padding:6px 8px;font-size:12px;color:#1a1a1a">{label}</td>'
-            f'<td style="padding:6px 0 6px 8px;text-align:right;font-family:ui-monospace,'
-            f'SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1e7a4c;font-weight:600">'
-            f'{best_price:,.2f} €</td></tr>'
+            f'<td style="padding:6px 0 6px 8px;font-size:12px;color:#1a1a1a">{label}</td></tr>'
         )
     if not rec_rows:
         return ""
@@ -237,8 +168,7 @@ def _build_etf_monthly_recommendation(etf_lotes: list[dict], resultados_ml: dict
       <thead>
         <tr>
           <th style="text-align:left;padding:0 8px 6px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #c8e6d0">ETF</th>
-          <th style="text-align:left;padding:0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #c8e6d0">Melhor dia</th>
-          <th style="text-align:right;padding:0 0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #c8e6d0">Preço estimado</th>
+          <th style="text-align:left;padding:0 0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #c8e6d0">Melhor dia</th>
         </tr>
       </thead>
       <tbody>{rec_rows}</tbody>
@@ -246,14 +176,6 @@ def _build_etf_monthly_recommendation(etf_lotes: list[dict], resultados_ml: dict
   </div>"""
 
 
-def _pred_price_cell(pred_price: float, close_eur: float, direction: str) -> str:
-    color = "#1e7a4c" if direction == "up" else "#b8453a"
-    arrow = "▲" if direction == "up" else "▼"
-    return (
-        f'<span style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;'
-        f'font-size:11px;color:{color};font-variant-numeric:tabular-nums;white-space:nowrap">'
-        f'{arrow}&nbsp;{pred_price:,.2f}</span>'
-    )
 
 
 def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
@@ -517,9 +439,9 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
             close     = r["close_eur"]
             data_c    = r["data_compra"] or "—"
             preds     = resultados_ml.get(ticker, {}).get("preds_dict", {})
-            d1 = _pred_price_cell(preds[1][1], close, preds[1][0]) if 1 in preds else "—"
-            d2 = _pred_price_cell(preds[2][1], close, preds[2][0]) if 2 in preds else "—"
-            d3 = _pred_price_cell(preds[3][1], close, preds[3][0]) if 3 in preds else "—"
+            d1 = _dir_cell(preds[1][0], preds[1][2]) if 1 in preds else "—"
+            d2 = _dir_cell(preds[2][0], preds[2][2]) if 2 in preds else "—"
+            d3 = _dir_cell(preds[3][0], preds[3][2]) if 3 in preds else "—"
             border = "border-bottom:1px solid #f0ede5" if i < len(resumo_etf_lotes) - 1 else ""
             etf_lot_rows += f"""
         <tr style="{border}">
@@ -533,70 +455,6 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
           <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">{_delta_vs_compra_cell(preco_c, close)}</td>
         </tr>"""
 
-    # ── Price forecast table (eToro stocks) — per lot ─────────────────────
-    prev_rows = ""
-    if resumo_etoro_lotes:
-        for i, r in enumerate(resumo_etoro_lotes):
-            ticker  = r["ticker"]
-            if ticker not in resultados_ml:
-                continue
-            close   = r["close_eur"]
-            preco_c = r["preco_compra_eur"]
-            alvo    = r["alvo_15_eur"]
-            data_c  = r["data_compra"] or "—"
-            preds   = resultados_ml[ticker]["preds_dict"]
-            border  = "border-bottom:1px solid #f0ede5" if i < len(resumo_etoro_lotes) - 1 else ""
-            prev_rows += f"""
-        <tr style="{border}">
-          <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;white-space:nowrap">{ticker}</td>
-          <td style="padding:11px 6px;font-size:11px;color:#8a8a8a;white-space:nowrap">{data_c}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#7c7c7c;font-variant-numeric:tabular-nums;white-space:nowrap">{preco_c:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{close:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pred_price_cell(preds[1][1], close, preds[1][0])}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pred_price_cell(preds[2][1], close, preds[2][0])}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pred_price_cell(preds[3][1], close, preds[3][0])}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:#5a5a5a">{alvo:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{_pct_feito_cell(preco_c, close)}</td>
-          <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">{_pct_pendente_cell(close, alvo, preco_c)}</td>
-        </tr>"""
-
-    if prev_rows:
-        prev_section_html = f"""
-  <div style="padding:24px 36px;border-top:1px solid #efece4">
-    <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:18px">
-      <tr>
-        <td style="vertical-align:baseline">
-          <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;font-size:20px;font-weight:500;color:#1a1740;letter-spacing:-0.005em">Previsões de preço</div>
-          <div style="font-size:12px;color:#8a8a8a;margin-top:2px">Ações eToro · estimativa ATR por horizonte · alvo +15% por lote</div>
-        </td>
-      </tr>
-    </table>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -36px;padding:0 36px">
-    <table style="width:100%;border-collapse:collapse;min-width:700px">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ativo</th>
-          <th style="text-align:left;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Compra</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Preço €</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ontem</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+1</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+2</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+3</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Alvo €</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">% feito</th>
-          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">% falta</th>
-        </tr>
-      </thead>
-      <tbody>{prev_rows}
-      </tbody>
-    </table>
-    </div>
-    <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.55;border-left:2px solid #efece4;padding-left:10px">
-      Preço € = valor de compra em euros · Alvo = preço de compra × 1,15 · % feito = ganho atual · % falta = quanto resta para atingir o alvo
-    </div>
-  </div>"""
-    else:
-        prev_section_html = ""
 
     # ── ETF lot section HTML ──────────────────────────────────────────────
     monthly_rec_html = _build_etf_monthly_recommendation(resumo_etf_lotes or [], resultados_ml)
@@ -858,9 +716,6 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
 
   <!-- ETFs VISÃO DE LONGO PRAZO -->
   {etf_section_html}
-
-  <!-- PREVISÕES DE PREÇO -->
-  {prev_section_html}
 
   <!-- ACURÁCIA DO MODELO -->
   <div style="padding:28px 36px;border-top:1px solid #efece4;background:#f6f3eb">
