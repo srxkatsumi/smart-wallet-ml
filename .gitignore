@@ -23,6 +23,9 @@ catboost_info/
 # Análises antigas / snapshots de output anteriores
 AnaliseV5/
 
+# Modelos de investigação (geridos pelo cache GitHub Actions, não vão para git)
+output/models/research/
+
 # Dados pessoais e relatórios privados (nunca no repo público)
 config/my_portfolio.json
 output/resumo_diario.html

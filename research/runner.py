@@ -1,14 +1,16 @@
 """
-Research Runner — executa apenas às segundas-feiras.
+Research Runner — executa todos os dias úteis.
 
-Treina todos os 25 modelos de investigação em cada ativo da carteira,
-compara a acurácia da semana anterior por família e calcula o consenso
-dos 25 modelos para a semana seguinte.
+Segunda-feira: retreina todas as 13 famílias com dados acumulados → guarda
+models em disco. Terça a Sexta: carrega models guardados e corre apenas
+predict() com as features do dia (sem retreino) → muito mais rápido.
 
-Nunca substitui o ensemble principal (RF/GB/SGD). Corre DEPOIS do
-pipeline diário e gera secções adicionais para o email de segunda.
+Gera para o email a tabela de comparação das 13 famílias e o consenso
+ponderado por ticker. Gera também output/telegram_resumo.txt com a
+tendência diária de acurácia por família (melhora / piora).
 """
 
+import joblib
 import logging
 import numpy as np
 import pandas as pd
@@ -19,7 +21,9 @@ from config.settings import WEIGHT_DECAY_FACTOR, MIN_VALIDATIONS_WEIGHT
 
 logger = logging.getLogger(__name__)
 
-RESEARCH_LOG = Path("output/predictions_research_log.csv")
+RESEARCH_LOG        = Path("output/predictions_research_log.csv")
+RESEARCH_MODELS_DIR = Path("output/models/research")
+TELEGRAM_RESUMO     = Path("output/telegram_resumo.txt")
 
 # Famílias e módulos de modelos
 _FAMILIES = {
@@ -33,7 +37,32 @@ _FAMILIES = {
     "reinforcement":     "models.reinforcement",
     "contrarian":        "models.contrarian",
     "eficiente":         "models.efficient",
+    "foundation":        "models.foundation",
+    "conformal":         "models.conformal",
+    "drift":             "models.drift",
 }
+
+_FAMILY_LABELS_SHORT: dict[str, str] = {
+    "classico_avancado": "Clássico",
+    "estado_oculto":     "HMM",
+    "series_temporais":  "Séries temporais",
+    "neural_recorrente": "Neural recorrente",
+    "neural_atencao":    "Transformer",
+    "bayesiano":         "Bayesiano",
+    "generativo":        "VAE/GAN",
+    "reinforcement":     "Reforço",
+    "contrarian":        "Contrarian",
+    "eficiente":         "TCN/PatchTST",
+    "foundation":        "Foundation",
+    "conformal":         "Conformal",
+    "drift":             "Drift",
+}
+
+
+def _model_path(ticker: str, family: str, horizon: int) -> Path:
+    safe = ticker.replace(".", "_").replace("-", "_")
+    return RESEARCH_MODELS_DIR / f"{safe}_{family}_{horizon}.pkl"
+
 
 _RES_COLS = [
     "week_date", "ticker", "family",
@@ -73,13 +102,37 @@ def _get_xy(df_ticker: pd.DataFrame, horizon: int = 1):
 
 
 def _predict_family(family: str, X: np.ndarray, y: np.ndarray,
-                    X_latest: np.ndarray) -> float:
-    """Treina uma família e retorna P(UP) para X_latest."""
+                    X_latest: np.ndarray,
+                    ticker: str = "",
+                    horizon: int = 1,
+                    is_monday: bool = True) -> float:
+    """
+    Segunda-feira: retreina e guarda model em disco.
+    Terça-Sexta: carrega model guardado e corre apenas predict().
+    Fallback: retreino completo se o ficheiro não existir.
+    """
     import importlib
     try:
-        mod    = importlib.import_module(family)
-        model  = mod.train(X, y)
-        probs  = mod.predict(model, X_latest)
+        mod  = importlib.import_module(family)
+        path = _model_path(ticker, family, horizon)
+
+        if not is_monday and path.exists():
+            try:
+                model = joblib.load(path)
+                probs = mod.predict(model, X_latest)
+                return float(np.clip(probs[-1], 0.0, 1.0))
+            except Exception as load_err:
+                logger.warning("Carregar %s falhou — a retreinar: %s", path.name, load_err)
+
+        model = mod.train(X, y)
+
+        try:
+            RESEARCH_MODELS_DIR.mkdir(parents=True, exist_ok=True)
+            joblib.dump(model, path, compress=1)
+        except Exception as save_err:
+            logger.warning("Guardar %s falhou: %s", path.name, save_err)
+
+        probs = mod.predict(model, X_latest)
         return float(np.clip(probs[-1], 0.0, 1.0))
     except Exception as e:
         logger.warning("Família %s falhou: %s", family, e)
@@ -129,11 +182,14 @@ def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
     return current_weights
 
 
-def run_monday_research(featured_data: dict,
-                        portfolio_tickers: list,
-                        close_prices: dict) -> dict:
+def run_research(featured_data: dict,
+                 portfolio_tickers: list,
+                 close_prices: dict) -> dict:
     """
-    Ponto de entrada principal — chamado em main.py apenas às segundas.
+    Ponto de entrada principal — chamado todos os dias úteis.
+
+    Segunda-feira : retreina todas as famílias e guarda models em disco.
+    Terça-Sexta   : carrega models guardados e corre apenas predict().
 
     Parameters
     ----------
@@ -147,6 +203,7 @@ def run_monday_research(featured_data: dict,
     """
     from data.storage import load_research_weights
     today_str        = date.today().isoformat()
+    _is_monday       = (date.today().weekday() == 0)
     log              = _load_log()
     research_weights = load_research_weights()
 
@@ -179,7 +236,9 @@ def run_monday_research(featured_data: dict,
                     row[f"direction_d{h}"] = "up"
                     continue
                 X_latest = X[-1:].copy()
-                prob = _predict_family(module, X[:-1], y[:-1], X_latest)
+                prob = _predict_family(module, X[:-1], y[:-1], X_latest,
+                                       ticker=ticker, horizon=h,
+                                       is_monday=_is_monday)
                 row[f"prob_d{h}"]      = round(prob, 4)
                 row[f"direction_d{h}"] = "up" if prob >= 0.5 else "down"
 
@@ -256,9 +315,77 @@ def run_monday_research(featured_data: dict,
     comparison = _build_comparison(log, today_str)
     consensus  = _build_consensus(new_rows, portfolio_tickers, research_weights)
 
-    logger.info("Research run concluído: %d famílias × %d ativos",
-                len(_FAMILIES), len(portfolio_tickers))
+    # ── 6. Gerar resumo Telegram ──────────────────────────────────────────
+    _generate_telegram_resumo(log, _is_monday)
+
+    logger.info("Research run concluído: %d famílias × %d ativos (%s)",
+                len(_FAMILIES), len(portfolio_tickers),
+                "retreino" if _is_monday else "predict only")
     return {"comparison": comparison, "consensus": consensus}
+
+
+def _build_telegram_message(log: pd.DataFrame, is_monday: bool) -> str:
+    """
+    Mensagem diária de tendência dos modelos para Telegram.
+    Mostra acurácia D+1 dos últimos 10 dias e seta de tendência
+    comparando com os 10 dias anteriores (se disponíveis).
+    """
+    validated = log[log["validated"] == True].copy()  # noqa: E712
+    today_str = date.today().strftime("%d/%m/%Y")
+    mode_tag  = "🔄 retreino" if is_monday else "⚡ predict"
+
+    if validated.empty or "correct_d1" not in validated.columns:
+        return (f"🤖 Modelos — {today_str} ({mode_tag})\n\n"
+                "Sem dados validados ainda — acurácia disponível a partir de amanhã.")
+
+    results = []
+    for family in _FAMILIES:
+        rows = validated[validated["family"] == family].copy()
+        if rows.empty:
+            continue
+        recent  = rows.tail(10)["correct_d1"].astype(float)
+        prev    = rows.tail(20).head(10)["correct_d1"].astype(float)
+        acc     = recent.mean()
+        trend   = acc - prev.mean() if len(prev) >= 5 else 0.0
+        results.append((family, acc, trend, len(rows)))
+
+    if not results:
+        return (f"🤖 Modelos — {today_str} ({mode_tag})\n\n"
+                "Sem acurácia validada ainda.")
+
+    results.sort(key=lambda x: -x[1])
+
+    lines = [f"🤖 Modelos — {today_str} ({mode_tag})", "", "D+1 Acurácia (últ. 10 dias):"]
+    for fam, acc, trend, n in results:
+        icon  = "🟢" if acc >= 0.60 else ("⚪" if acc >= 0.50 else "🔴")
+        if abs(trend) < 0.02:
+            arrow = "→"
+        elif trend > 0:
+            arrow = f"↑ +{trend*100:.0f}pp"
+        else:
+            arrow = f"↓ {trend*100:.0f}pp"
+        label = _FAMILY_LABELS_SHORT.get(fam, fam)
+        lines.append(f"{icon} {label:<18} {acc*100:.0f}%  {arrow}")
+
+    best  = results[0]
+    worst = results[-1]
+    lines.append("")
+    lines.append(f"🏆 Melhor: {_FAMILY_LABELS_SHORT.get(best[0], best[0])} ({best[1]*100:.0f}%)")
+    if worst[1] < 0.50:
+        lines.append(f"⚠️  Pior:   {_FAMILY_LABELS_SHORT.get(worst[0], worst[0])} ({worst[1]*100:.0f}%)")
+
+    return "\n".join(lines)
+
+
+def _generate_telegram_resumo(log: pd.DataFrame, is_monday: bool) -> None:
+    """Escreve output/telegram_resumo.txt para o workflow enviar via Telegram."""
+    try:
+        msg = _build_telegram_message(log, is_monday)
+        TELEGRAM_RESUMO.parent.mkdir(parents=True, exist_ok=True)
+        TELEGRAM_RESUMO.write_text(msg, encoding="utf-8")
+        logger.debug("telegram_resumo.txt gerado (%d chars)", len(msg))
+    except Exception as e:
+        logger.warning("Falha ao gerar telegram_resumo.txt: %s", e)
 
 
 def _validate_past_predictions(log: pd.DataFrame,

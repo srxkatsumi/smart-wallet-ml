@@ -268,7 +268,7 @@ def _compute_drift() -> dict:
 
 
 def _build_research_section(research_data: dict) -> str:
-    """Secção de segunda-feira com comparação de famílias e consenso."""
+    """Secção diária com comparação das 13 famílias e consenso ponderado."""
     if not research_data:
         return ""
 
@@ -286,6 +286,10 @@ def _build_research_section(research_data: dict) -> str:
         "generativo":        "Generativo (VAE+GAN)",
         "reinforcement":     "Reinforcement (DQN+PPO)",
         "contrarian":        "Contrarian (CB+EWI+PEL) ⚠",
+        "eficiente":         "Eficiente (TCN/DLinear/PatchTST)",
+        "foundation":        "Foundation (Chronos/TimesFM/Moirai)",
+        "conformal":         "Conformal (calibração)",
+        "drift":             "Drift detection (ADWIN/PH)",
     }
     contrarian_warning = any(
         r["family"] == "contrarian" and r == comparison[0]
@@ -655,6 +659,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
     </table>
     <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;color:#f4f2ff;font-size:34px;line-height:1.1;font-weight:500;letter-spacing:-0.01em;margin-bottom:6px">Relatório diário</div>
     <div style="color:#7d75c4;font-size:13px;letter-spacing:0.02em">{data_str}</div>
+    <div style="color:#a8a0ff;font-size:11px;letter-spacing:0.06em;margin-top:4px">Actualizado: {agora.strftime('%d/%m/%Y - %H:%M')}</div>
     <table role="presentation" style="border-collapse:collapse;width:100%;margin-top:28px">
       <tr>
         <td style="padding:0;vertical-align:top;width:25%">
@@ -747,7 +752,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
   <!-- CORRELAÇÃO DE RETORNOS -->
   {corr_html}
 
-  <!-- INVESTIGAÇÃO SEMANAL (apenas segunda-feira) -->
+  <!-- INVESTIGAÇÃO — 13 FAMÍLIAS (diário) -->
   {_build_research_section(research_data) if research_data else ""}
 
   <!-- AVISO LEGAL -->

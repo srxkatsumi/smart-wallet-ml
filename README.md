@@ -544,7 +544,7 @@ Only here. Not before. The pipeline must be stable before touching the model.
 
 This project serves as the primary domain for a multi-domain ML research framework being developed as part of a doctoral programme. The same model families are applied across three domains of increasing predictability: lottery (random by design), financial markets (noisy), and e-commerce (seasonal patterns). The hypothesis is that model performance scales with the predictability of the domain, which constitutes the central argument of the thesis.
 
-All 25 original models are implemented and tested. Transversal layers (phases 9-15) are complete. Phases 16-20 (covering the new generation of models: efficient architectures, foundation models, calibrated uncertainty, drift detection) are approved and pending implementation.
+All 25 original models are implemented and tested. Transversal layers (phases 9-15) are complete. Phases 16-20 are fully implemented.
 
 | Phase | Family | Models | Carteira | Mega Sena |
 |-------|--------|--------|----------|-----------|
@@ -566,9 +566,9 @@ All 25 original models are implemented and tested. Transversal layers (phases 9-
 | 15 | Email report | Per-lot eToro table, ETF section, monthly buy recommendation | ✅ | — |
 | 16 | Contrarian / Sanity tests | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | ✅ | — |
 | 17 | Efficient architectures (post-2022) | TCN, DLinear, NLinear, PatchTST | ✅ | ✅ |
-| 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ⏳ | ⏳ |
-| 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ⏳ | ⏳ |
-| 20 | Drift detection | ADWIN, Page-Hinkley | ⏳ | — |
+| 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ✅ | ✅ |
+| 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ✅ | ✅ |
+| 20 | Drift detection | ADWIN, Page-Hinkley | ✅ | — |
 
 ---
 

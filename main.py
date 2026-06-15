@@ -181,24 +181,20 @@ def main():
     cleanup_old_charts(CHARTS_DIR, CHARTS_RETENTION_DAYS)
     generate_charts(my_tickers, resultados_ml, df_log, portfolio_cfg, CHARTS_DIR)
 
-    # ── Research pipeline (apenas às segundas-feiras) ─────────────────────
+    # ── Research pipeline (todos os dias úteis) ───────────────────────────
     research_data = None
-    is_monday     = pd.Timestamp.today().weekday() == 0
-    if is_monday:
-        logger.info("Segunda-feira — a correr research pipeline (25 modelos)...")
-        try:
-            from research.runner import run_monday_research
-            from features.engineering import FEATURE_COLS
-            featured_data = {t: res["df"] for t, res in resultados_ml.items()
-                             if "df" in res}
-            close_prices  = {t: res.get("close_eur", res["close_now"])
-                             for t, res in resultados_ml.items()}
-            etoro_tickers = [a["ticker"] for a in etoro]
-            research_data = run_monday_research(
-                featured_data, etoro_tickers, close_prices
-            )
-        except Exception as e:
-            logger.warning("Research pipeline falhou (não bloqueia): %s", e)
+    try:
+        from research.runner import run_research
+        featured_data = {t: res["df"] for t, res in resultados_ml.items()
+                         if "df" in res}
+        close_prices  = {t: res.get("close_eur", res["close_now"])
+                         for t, res in resultados_ml.items()}
+        etoro_tickers = [a["ticker"] for a in etoro]
+        research_data = run_research(
+            featured_data, etoro_tickers, close_prices
+        )
+    except Exception as e:
+        logger.warning("Research pipeline falhou (não bloqueia): %s", e)
 
     # ── Email report ──────────────────────────────────────────────────────
     from reports.email_report import build_html, save_html

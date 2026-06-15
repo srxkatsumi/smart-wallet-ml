@@ -5,15 +5,14 @@ env:
 
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
-  # Objetivo: executar de manhã com dados do dia anterior já fechados
-  # NYSE/NASDAQ fecham às 20h00 UTC → dados disponíveis a partir de ~22h UTC
-  # De madrugada o GitHub tem pouca carga → delay real ~15-30 min (não 3h)
-  # 2h00 UTC + ~30min delay → disparo real ~2h30 UTC = 4h30 Barcelona CEST
+  # Objetivo: executar após fecho dos mercados com dados do dia fechados
+  # NYSE/NASDAQ fecham às 20h00 UTC → dados estáveis a partir de 22h UTC
+  # Repo público → minutos ilimitados no GitHub Actions
   # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
-    - cron: '0 2 * * 1-5'    # tentativa 1 — alvo ~2h30 UTC / ~4h30 Barcelona
-    - cron: '0 3 * * 1-5'    # tentativa 2 — alvo ~3h30 UTC / ~5h30 Barcelona (fallback)
-    - cron: '30 3 * * 1-5'   # tentativa 3 — alvo ~4h00 UTC / ~6h00 Barcelona (fallback)
+    - cron: '0 22 * * 1-5'   # tentativa 1 — 22h00 UTC / ~00h00 Barcelona CEST
+    - cron: '30 22 * * 1-5'  # tentativa 2 — 22h30 UTC (fallback)
+    - cron: '0 23 * * 1-5'   # tentativa 3 — 23h00 UTC (fallback)
 
   workflow_dispatch:
     inputs:
@@ -65,7 +64,7 @@ jobs:
     needs: verificar
     if: needs.verificar.outputs.ja_executou == 'false'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
     permissions:
       contents: write
 
@@ -85,6 +84,11 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
+      # 2a — Calcular semana corrente (chave do cache de modelos)
+      - name: 📅 Calcular semana
+        id: date
+        run: echo "week=$(date +%Y-%W)" >> "$GITHUB_OUTPUT"
+
       # 2b — Reconstruir configuração privada da carteira a partir do secret
       - name: 🔐 Reconstruir my_portfolio.json
         run: echo "${{ secrets.MY_PORTFOLIO_JSON }}" | base64 -d > config/my_portfolio.json
@@ -94,6 +98,15 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+
+      # 3b — Restaurar cache dos modelos de investigação (treino incremental)
+      - name: ♻️ Restaurar cache dos modelos de investigação
+        uses: actions/cache@v4
+        with:
+          path: output/models/research/
+          key: research-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-${{ steps.date.outputs.week }}
+          restore-keys: |
+            research-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-
 
       # 4 — Executar pipeline principal
       - name: 🚀 Executar main.py
@@ -141,7 +154,8 @@ jobs:
           git add output/research_weights.json         2>/dev/null || true
           git add output/model_metadata.csv         2>/dev/null || true
           git add output/ultima_recalibracao.json   2>/dev/null || true
-          git add output/models/                    2>/dev/null || true
+          git add output/models/*.json               2>/dev/null || true
+          # output/models/research/*.pkl — gerido pelo cache Actions, não vai para git
           git add output/charts/*.png               2>/dev/null || true
           git add output/xai/                       2>/dev/null || true
           git add output/predictions_research_log.csv 2>/dev/null || true
@@ -199,7 +213,37 @@ jobs:
           html_body: file://output/resumo_diario.html
           convert_markdown: false
 
-      # 7b — Fallback Telegram se o email falhar
+      # 7b — Telegram diário com tendência dos modelos
+      - name: 📱 Telegram — tendência dos modelos
+        if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
+        run: |
+          python3 - <<'EOF'
+          import os, requests, sys
+          token   = os.environ.get("TELEGRAM_TOKEN", "")
+          chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+          if not token or not chat_id:
+              print("Telegram não configurado — a saltar")
+              sys.exit(0)
+          try:
+              msg = open("output/telegram_resumo.txt", encoding="utf-8").read()
+          except FileNotFoundError:
+              msg = "🤖 Modelos — sem resumo disponível hoje."
+          try:
+              r = requests.post(
+                  f"https://api.telegram.org/bot{token}/sendMessage",
+                  json={"chat_id": chat_id, "text": msg},
+                  timeout=10,
+              )
+              print(f"Telegram: {r.status_code}")
+          except Exception as e:
+              print(f"Telegram falhou: {e}")
+          EOF
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        continue-on-error: true
+
+      # 7c — Fallback Telegram se o email falhar
       - name: 📱 Fallback Telegram (email falhou)
         if: steps.send_email.outcome == 'failure' && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         run: |
