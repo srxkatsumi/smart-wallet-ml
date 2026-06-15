@@ -5,14 +5,15 @@ env:
 
 on:
   # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
-  # Objetivo: executar após fecho de TODOS os mercados (NYSE/NASDAQ fecham 20h00 UTC)
-  # O GitHub atrasa crons ~3h — por isso agendamos 3h mais cedo (UTC)
-  # 17h30 UTC + ~3h delay → disparo real ~20h30 UTC = 22h30 Barcelona CEST
+  # Objetivo: executar de manhã com dados do dia anterior já fechados
+  # NYSE/NASDAQ fecham às 20h00 UTC → dados disponíveis a partir de ~22h UTC
+  # De madrugada o GitHub tem pouca carga → delay real ~15-30 min (não 3h)
+  # 2h00 UTC + ~30min delay → disparo real ~2h30 UTC = 4h30 Barcelona CEST
   # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
-    - cron: '30 17 * * 1-5'   # tentativa 1 — alvo 20h30 UTC / 22h30 Barcelona
-    - cron: '0 18 * * 1-5'    # tentativa 2 — alvo 21h00 UTC / 23h00 Barcelona (fallback)
-    - cron: '30 18 * * 1-5'   # tentativa 3 — alvo 21h30 UTC / 23h30 Barcelona (fallback)
+    - cron: '0 2 * * 1-5'    # tentativa 1 — alvo ~2h30 UTC / ~4h30 Barcelona
+    - cron: '0 3 * * 1-5'    # tentativa 2 — alvo ~3h30 UTC / ~5h30 Barcelona (fallback)
+    - cron: '30 3 * * 1-5'   # tentativa 3 — alvo ~4h00 UTC / ~6h00 Barcelona (fallback)
 
   workflow_dispatch:
     inputs:
@@ -63,7 +64,7 @@ jobs:
     needs: verificar
     if: needs.verificar.outputs.ja_executou == 'false'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     permissions:
       contents: write
 
