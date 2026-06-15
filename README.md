@@ -496,7 +496,7 @@ The pipeline runs but doesn't tell you when it's degrading. That changes here.
 | # | Item | Description |
 |---|------|-------------|
 | 5 | ✅ Feature importance drift alert | `model_metadata.csv` already stores daily importances — reads it and adds a drift panel to the email with Spearman rank correlation. |
-| 6 | ⬜ Telegram as email fallback | ~20 lines; activates when Gmail fails — ensures the daily report is always delivered. *(deferred to end)* |
+| 6 | ✅ Telegram as email fallback | `continue-on-error` on the Gmail step + Telegram bot fallback; activates when Gmail fails — ensures the daily report is always delivered. |
 | 7 | ✅ Dynamic badge in public repo | `shields.io/github/last-commit` badge — updates automatically on every page view. |
 
 ### Week 3: Public repo completion
