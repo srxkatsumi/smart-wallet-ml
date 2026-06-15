@@ -565,7 +565,7 @@ All 25 original models are implemented and tested. Transversal layers (phases 9-
 | 14 | Transfer learning | MMD, CORAL, Fine-tuning, Cross-domain evaluation | ✅ | ✅ |
 | 15 | Email report | Per-lot eToro table, ETF section, monthly buy recommendation | ✅ | — |
 | 16 | Contrarian / Sanity tests | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | ✅ | — |
-| 17 | Efficient architectures (post-2022) | TCN, DLinear, NLinear, PatchTST | ⏳ | ⏳ |
+| 17 | Efficient architectures (post-2022) | TCN, DLinear, NLinear, PatchTST | ✅ | ✅ |
 | 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ⏳ | ⏳ |
 | 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ⏳ | ⏳ |
 | 20 | Drift detection | ADWIN, Page-Hinkley | ⏳ | — |
