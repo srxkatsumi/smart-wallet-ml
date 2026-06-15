@@ -73,26 +73,6 @@ Commit `18d3902`: all 3 tests fixed by passing `{}` as the third argument: `_bui
 
 ---
 
-## ERR-005 — Climate workflow silently failing on git push
-
-**Symptom**
-The `daily_update.yml` workflow in the `climate-adaptive-ml` project ran the pipeline but failed to push updated predictions.
-
-**Root cause**
-Missing `permissions: contents: write` in the `run-pipeline` job. Without this permission, the `GITHUB_TOKEN` is not authorized to write to the repository, and `git push` fails.
-
-**Fix applied**
-Added to `.github/workflows/daily_update.yml`:
-```yaml
-jobs:
-  run-pipeline:
-    permissions:
-      contents: write
-```
-Committed manually by the user (policy: climate commits are always manual).
-
----
-
 ## ERR-006 — research/runner.py with invalid syntax lines
 
 **Symptom**

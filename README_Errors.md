@@ -73,26 +73,6 @@ Commit `18d3902`: os 3 testes foram corrigidos passando `{}` como terceiro argum
 
 ---
 
-## ERR-005 — Workflow do Clima falhava silenciosamente no git push
-
-**Sintoma**
-O workflow `daily_update.yml` do projeto `climate-adaptive-ml` executava o pipeline mas falhava ao fazer push das previsões actualizadas.
-
-**Causa raiz**
-Faltava `permissions: contents: write` no job `run-pipeline`. Sem esta permissão, o `GITHUB_TOKEN` não tem autorização para escrever no repositório, e o `git push` falha.
-
-**Solução aplicada**
-Adicionado ao `.github/workflows/daily_update.yml`:
-```yaml
-jobs:
-  run-pipeline:
-    permissions:
-      contents: write
-```
-Commit feito manualmente pelo utilizador (política: commits do clima são sempre manuais).
-
----
-
 ## ERR-006 — research/runner.py com linhas de sintaxe inválida
 
 **Sintoma**

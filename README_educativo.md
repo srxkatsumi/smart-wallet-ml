@@ -188,13 +188,11 @@ Os dois modelos não-lineares podem entrar em ressonância, ambos detectando o m
 
 ---
 
-## 4.5. O plano de expansão para 38 modelos em 12 famílias
+## 4.5. O plano de expansão para 38 modelos em 13 famílias
 
-Os três modelos descritos acima (RF, GB, SGD) são o ponto de partida, não o destino. Este projeto é a base de um doutoramento em Ciência de Dados e o objetivo é testar sistematicamente todas as principais famílias de modelos de aprendizado de máquina nos domínios mais difíceis primeiro, para depois aplicar o mesmo framework a domínios com padrões reais.
+Os três modelos descritos acima (RF, GB, SGD) são o ponto de partida, não o destino. O objetivo é testar sistematicamente todas as principais famílias de modelos de aprendizado de máquina aplicados a mercados financeiros ruidosos, onde qualquer edge marginal é academicamente interessante.
 
-A lógica é: se um modelo consegue extrair alguma informação útil de dados ruidosos (mercado financeiro) ou de dados aleatórios por definição (Mega Sena), então ele vai performar muito melhor em dados com padrões reais (e-commerce, sazonalidades).
-
-### As 12 famílias de modelos
+### As 13 famílias de modelos
 
 **Família 1 — Clássico** (já parcialmente implementado)
 RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM. São os modelos mais citados em papers de ML aplicado e constituem a base de comparação obrigatória para qualquer estudo académico.

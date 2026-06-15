@@ -540,35 +540,33 @@ Only here. Not before. The pipeline must be stable before touching the model.
 | 18 | ⬜ Fundamental event features | Earnings dates, FOMC weeks, options expiry. Requires a reliable external API; European coverage is limited. |
 | 19 | ⬜ D+1 price regressor | Only with 1 year of clean accumulated data. |
 
-### Research framework: 38 models across 12 families (PhD foundation)
-
-This project serves as the primary domain for a multi-domain ML research framework being developed as part of a doctoral programme. The same model families are applied across three domains of increasing predictability: lottery (random by design), financial markets (noisy), and e-commerce (seasonal patterns). The hypothesis is that model performance scales with the predictability of the domain, which constitutes the central argument of the thesis.
+### Research framework: 38 models across 13 families
 
 All 25 original models are implemented and tested. Transversal layers (phases 9-15) are complete. Phases 16-20 are fully implemented.
 
-| Phase | Family | Models | Carteira | Mega Sena |
-|-------|--------|--------|----------|-----------|
-| 0 | Classic baseline | RF, GB, SGD | ✅ | ✅ |
-| 1 | Hidden state | Markov, HMM | ✅ | ✅ |
-| 2 | Advanced classic | XGBoost, LightGBM, CatBoost, SVM | ✅ | ✅ |
-| 3 | Time series | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | ✅ | ✅ |
-| 4 | Recurrent neural | LSTM, GRU | ✅ | ✅ |
-| 5 | Attention neural | Transformer, TFT, N-BEATS | ✅ | ✅ |
-| 6 | Bayesian | Gaussian Process, BNN (MC Dropout) | ✅ | ✅ |
-| 7 | Generative | VAE, GAN | ✅ | ✅ |
-| 8 | Reinforcement | DQN, PPO | ✅ | — |
-| 9 | Evaluation | Diebold-Mariano, McNemar, Ljung-Box, domain metrics | ✅ | ✅ |
-| 10 | Explainability | SHAP, Attention weights, LIME | ✅ | ✅ |
-| 11 | Meta-learning | Stacking, Optuna | ✅ | ✅ |
-| 12 | Tracking | MLflow (daily + research runner), DVC | ✅ | ✅ |
-| 13 | Information theory | Shannon entropy, Mutual information, Permutation entropy, Transfer entropy | ✅ | ✅ |
-| 14 | Transfer learning | MMD, CORAL, Fine-tuning, Cross-domain evaluation | ✅ | ✅ |
-| 15 | Email report | Per-lot eToro table, ETF section, monthly buy recommendation | ✅ | — |
-| 16 | Contrarian / Sanity tests | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | ✅ | — |
-| 17 | Efficient architectures (post-2022) | TCN, DLinear, NLinear, PatchTST | ✅ | ✅ |
-| 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ✅ | ✅ |
-| 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ✅ | ✅ |
-| 20 | Drift detection | ADWIN, Page-Hinkley | ✅ | — |
+| Phase | Family | Models | Status |
+|-------|--------|--------|--------|
+| 0 | Classic baseline | RF, GB, SGD | ✅ |
+| 1 | Hidden state | Markov, HMM | ✅ |
+| 2 | Advanced classic | XGBoost, LightGBM, CatBoost, SVM | ✅ |
+| 3 | Time series | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | ✅ |
+| 4 | Recurrent neural | LSTM, GRU | ✅ |
+| 5 | Attention neural | Transformer, TFT, N-BEATS | ✅ |
+| 6 | Bayesian | Gaussian Process, BNN (MC Dropout) | ✅ |
+| 7 | Generative | VAE, GAN | ✅ |
+| 8 | Reinforcement | DQN, PPO | ✅ |
+| 9 | Evaluation | Diebold-Mariano, McNemar, Ljung-Box, domain metrics | ✅ |
+| 10 | Explainability | SHAP, Attention weights, LIME | ✅ |
+| 11 | Meta-learning | Stacking, Optuna | ✅ |
+| 12 | Tracking | MLflow (daily + research runner), DVC | ✅ |
+| 13 | Information theory | Shannon entropy, Mutual information, Permutation entropy, Transfer entropy | ✅ |
+| 14 | Transfer learning | MMD, CORAL, Fine-tuning, Cross-domain evaluation | ✅ |
+| 15 | Email report | Per-lot eToro table, ETF section, monthly buy recommendation | ✅ |
+| 16 | Contrarian / Sanity tests | CB (Contrarian Baseline), EWI (Error-Weighted Inverter), PEL (Predictive Error Learning) | ✅ |
+| 17 | Efficient architectures (post-2022) | TCN, DLinear, NLinear, PatchTST | ✅ |
+| 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ✅ |
+| 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ✅ |
+| 20 | Drift detection | ADWIN, Page-Hinkley | ✅ |
 
 ---
 
