@@ -22,3 +22,11 @@ catboost_info/
 
 # Análises antigas / snapshots de output anteriores
 AnaliseV5/
+
+# Dados pessoais e relatórios privados (nunca no repo público)
+config/my_portfolio.json
+output/resumo_diario.html
+
+# Outros projectos e config privada (excluídos do repositório público)
+test_ml/
+.claude/
