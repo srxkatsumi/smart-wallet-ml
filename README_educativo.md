@@ -198,7 +198,7 @@ Os três modelos descritos acima (RF, GB, SGD) são o ponto de partida, não o d
 RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM. São os modelos mais citados em papers de ML aplicado e constituem a base de comparação obrigatória para qualquer estudo académico.
 
 **Família 2 — Séries temporais**
-ARIMA, SARIMA, ETS, Holt-Winters, Prophet. Estes modelos foram construídos especificamente para dados com dependência temporal. O Prophet (Meta) é especialmente poderoso para dados com sazonalidade, o que o torna o candidato mais forte para o projeto de e-commerce.
+ARIMA, SARIMA, ETS, Holt-Winters, Prophet. Estes modelos foram construídos especificamente para dados com dependência temporal. O Prophet (Meta) é especialmente poderoso para dados com sazonalidade marcada.
 
 **Família 3 — Estado oculto**
 Cadeias de Markov e HMM (Hidden Markov Model). Modelam a ideia de que o mercado pode estar em diferentes "estados" (bull, bear, lateral) que não são diretamente observáveis mas influenciam o comportamento dos preços. São os modelos mais naturais para detetar regimes de mercado.
@@ -217,28 +217,12 @@ VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de 
 
 ---
 
-### Por que testar em domínios difíceis primeiro
-
-A estratégia de começar com a Mega Sena (processo aleatório puro) e o mercado financeiro (processo ruidoso) antes do e-commerce (com sazonalidades reais) é deliberada.
-
-Se qualquer modelo encontrar padrões na Mega Sena, isso é evidência de sobreajuste (overfitting), não de aprendizado real. Se qualquer modelo bater significativamente o acaso no mercado financeiro, isso já é academicamente interessante. Quando os mesmos modelos forem aplicados ao e-commerce, onde existem padrões reais de sazonalidade, espera-se performance muito superior — e a comparação entre domínios é o argumento central da tese.
-
-```
-Mega Sena     → processo aleatório por definição       → todos os modelos devem falhar
-Mercado       → processo ruidoso com algum sinal        → alguns modelos podem ter edge marginal
-E-commerce    → padrões sazonais reais e verificáveis   → modelos de séries temporais devem performar bem
-```
-
-A tese não é "ML consegue prever a loteria". A tese é "apliquei o mesmo framework em 3 domínios com previsibilidade crescente e documentei os resultados".
-
----
-
-### As 7 famílias e o que cada uma acrescenta
+### As 13 famílias e o que cada uma acrescenta
 
 | Família | Modelos | O que diferencia |
 |---------|---------|-----------------|
 | Clássico (RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM) | Aprende padrões tabulares pontuais. Baseline obrigatório em qualquer estudo. |
-| Estado oculto (Markov, HMM) | Modela regimes ocultos. Testa se o mercado ou a loteria têm "estados" não observáveis que influenciam o comportamento. |
+| Estado oculto (Markov, HMM) | Modela regimes ocultos do mercado financeiro — bull, bear, lateral — que não são directamente observáveis mas influenciam o comportamento dos preços. |
 | Séries temporais (ARIMA, SARIMA, ETS, Holt-Winters, Prophet) | Testa autocorrelação temporal directamente. Modelos desenhados para dados com memória. |
 | Neural recorrente (LSTM, GRU) | Memória de longo alcance. Aprende dependências entre observações distantes na sequência. |
 | Neural com atenção (Transformer, TFT, N-BEATS) | Atenção selectiva. O modelo aprende a "olhar" para os momentos do passado mais relevantes para cada previsão. |
@@ -246,8 +230,8 @@ A tese não é "ML consegue prever a loteria". A tese é "apliquei o mesmo frame
 | Generativo (VAE, GAN) | Aprende a distribuição dos dados. Testa se existe estrutura latente separável entre UP e DOWN. |
 | Reinforcement (DQN, PPO) | Optimiza política, não previsão. Trata a decisão de compra/venda como uma sequência de acções com recompensa — completamente diferente de todas as outras famílias. |
 | Contrarian / Testes de sanidade (CB, EWI, PEL) | Inverte ou corrige o ensemble. Testa se o modelo principal é pior que o acaso, detecta regimes de erro sistemático e aprende com a autocorrelação dos erros. |
-| Arquitecturas eficientes — pós-2022 (TCN, DLinear, NLinear, PatchTST) | Alternativas ao Transformer que em vários benchmarks o superam com muito menos complexidade. A pergunta da tese: vale a pena toda a complexidade do Transformer? |
-| Foundation Models — 2023-2024 (Chronos, TimesFM, Moirai) | Modelos pré-treinados em biliões de pontos de dados. Funcionam sem treino — zero-shot. A pergunta da tese: valem mais que 38 modelos treinados do zero nos meus dados? |
+| Arquitecturas eficientes — pós-2022 (TCN, DLinear, NLinear, PatchTST) | Alternativas ao Transformer que em vários benchmarks o superam com muito menos complexidade. A questão central: vale a pena toda a complexidade do Transformer? |
+| Foundation Models — 2023-2024 (Chronos, TimesFM, Moirai) | Modelos pré-treinados em biliões de pontos de dados. Funcionam sem treino — zero-shot. A questão central: valem mais que 38 modelos treinados do zero nos meus dados? |
 | Incerteza calibrada (Conformal Prediction) | Garante matematicamente que "90% de confiança" significa que o intervalo de previsão contém o valor real em pelo menos 90% dos casos. Rigor estatístico que nenhuma das outras famílias oferece. |
 | Detecção de drift (ADWIN, Page-Hinkley) | Detecta automaticamente quando o mercado mudou de regime e os modelos perdem validade. Complementa o alerta manual de ρ de Spearman com deteção estatística formal. |
 
@@ -261,7 +245,7 @@ Todas as outras famílias resolvem o mesmo problema: "dado X hoje, qual é a pro
 
 **PPO (Schulman et al., 2017 — arXiv):** aprende a política π(acção|estado) directamente com um Actor-Critic. O Actor decide o que fazer; o Crítico avalia se foi boa decisão. O clipping ε=0.2 impede que a política mude demasiado de uma vez, tornando o treino estável.
 
-A diferença conceptual é o argumento do Capítulo 8 da tese: modelos supervisionados minimizam uma loss pontual. Modelos de RL optimizam recompensa acumulada sobre uma sequência de decisões. Para trading, esta distinção é real — uma decisão errada hoje pode ter consequências que se estendem pelos dias seguintes.
+A diferença conceptual fundamental: modelos supervisionados minimizam uma loss pontual. Modelos de RL optimizam recompensa acumulada sobre uma sequência de decisões. Para trading, esta distinção é real — uma decisão errada hoje pode ter consequências que se estendem pelos dias seguintes.
 
 ---
 
@@ -277,7 +261,7 @@ As famílias 1 a 8 cobrem bem o estado da arte até 2021. Entre 2022 e 2024 surg
 
 Em 2023, um grupo de investigadores da UCSF publicou um artigo que causou surpresa: um modelo linear simples, chamado DLinear, batia os Transformers mais sofisticados em múltiplos benchmarks de previsão de séries temporais. O artigo chamava-se "Are Transformers Effective for Time Series Forecasting?" (Zeng et al., 2023).
 
-Para a tese, esta família responde a uma pergunta directa: toda a complexidade do Transformer (atenção multi-cabeça, embeddings posicionais, tokenização) traz benefício real quando aplicada à carteira, ou um modelo mais simples é suficiente?
+A questão central desta família: toda a complexidade do Transformer (atenção multi-cabeça, embeddings posicionais, tokenização) traz benefício real quando aplicada à carteira, ou um modelo mais simples é suficiente?
 
 **TCN (Temporal Convolutional Network)**
 
@@ -291,7 +275,7 @@ São os modelos mais simples desta família. O DLinear faz uma decomposição da
 
 Exemplo prático com ALV.DE: se o preço de fecho nos últimos 20 dias for 295, 297, 302, 305, 303, o DLinear separa a tendência linear (subida de ~2,5 euros por dia) do resíduo (os desvios em torno dessa tendência) e prevê os dois componentes separadamente antes de os somar. O NLinear simplesmente subtrai 303 de todos os valores, aprende a prever o desvio relativo, e depois soma 303 ao resultado.
 
-O resultado surpreendente do paper de Zeng et al. é que estes dois modelos triviais batem o Transformer em 7 dos 9 datasets públicos testados. Para a tese, se o DLinear bater o Transformer nos meus dados, isso é um argumento académico forte: simplicidade vence complexidade quando os dados têm estrutura linear dominante.
+O resultado surpreendente do paper de Zeng et al. é que estes dois modelos triviais batem o Transformer em 7 dos 9 datasets públicos testados. Se o DLinear bater o Transformer nos dados da carteira, isso é um argumento forte: simplicidade vence complexidade quando os dados têm estrutura linear dominante.
 
 **PatchTST (Nie et al., 2023 — Princeton / IBM)**
 
@@ -311,11 +295,11 @@ A ideia é a mesma que levou ao sucesso do ChatGPT: pré-treinar num corpus mass
 
 **Chronos (Amazon, 2024)**
 
-O Chronos (Ansari et al., 2024) converte séries temporais em tokens discretos usando quantização, e depois aplica um Transformer de linguagem (baseado na arquitectura T5 do Google) para prever os próximos tokens. Foi pré-treinado em ~700.000 séries temporais de domínios variados: energia, tráfego, vendas, clima, finanças.
+O Chronos (Ansari et al., 2024) converte séries temporais em tokens discretos usando quantização, e depois aplica um Transformer de linguagem (baseado na arquitectura T5 do Google) para prever os próximos tokens. Foi pré-treinado em ~700.000 séries temporais de domínios variados: energia, tráfego, vendas, meteorologia, finanças.
 
 Exemplo prático com LLY: em vez de treinar o Chronos nos preços históricos da Eli Lilly, simplesmente paso os últimos 50 preços de fecho e peço ao modelo para prever os próximos 3. O modelo usa o conhecimento acumulado de 700.000 séries para fazer a previsão, sem saber que se trata de uma acção farmacêutica ou sequer que se trata de dados financeiros.
 
-A pergunta central para a tese: o Chronos, sem nunca ter visto dados da LLY, consegue bater o meu ensemble RF/GB/SGD que foi treinado especificamente nos dados da LLY durante meses? Se sim, é um argumento poderoso de que os padrões de séries temporais são transferíveis entre domínios.
+A questão central: o Chronos, sem nunca ter visto dados da LLY, consegue bater o ensemble RF/GB/SGD que foi treinado especificamente nos dados da LLY durante meses? Se sim, é um argumento poderoso de que os padrões de séries temporais são transferíveis entre domínios.
 
 **TimesFM (Google, 2024)**
 
@@ -327,17 +311,17 @@ Exemplo prático com EMIM.AS: o ETF de mercados emergentes tem padrões sazonais
 
 O Moirai (Woo et al., 2024) é treinado em dados de múltiplas frequências temporais em simultâneo (por hora, por dia, por semana, por mês) e aprende representações universais de padrões temporais. A sua vantagem é que não precisa saber a frequência dos dados de entrada: infere-a automaticamente.
 
-A comparação entre os três Foundation Models é por si só interessante para a tese: foram treinados em corpora diferentes, com arquitecturas ligeiramente diferentes, e espera-se que tenham pontos fortes distintos.
+A comparação entre os três Foundation Models é por si só interessante: foram treinados em corpora diferentes, com arquitecturas ligeiramente diferentes, e espera-se que tenham pontos fortes distintos.
 
-**O que torna esta família academicamente relevante**
+**O que torna esta família relevante**
 
-Num júri de doutoramento, a pergunta inevitável é: "o que é que os seus 38 modelos treinados do zero oferecem que um Foundation Model pré-treinado não oferece?" A resposta honesta pode ir em duas direcções opostas, e ambas são academicamente válidas:
+A questão central é: o que é que os 38 modelos treinados do zero oferecem que um Foundation Model pré-treinado não oferece? A resposta pode ir em duas direcções opostas:
 
 1. O Foundation Model ganha: os padrões de séries temporais são universais e o pré-treino em dados massivos supera treino específico com dados limitados. Conclusão: para carteiras pequenas com poucos anos de dados, Foundation Models são superiores.
 
-2. Os modelos treinados ganham: os padrões financeiros são suficientemente específicos (microestrutura de mercado, correlações entre ativos, regime de volatilidade) para que o treino nos dados locais seja vantajoso. Conclusão: o contexto domínio importa e não é capturado pelo pré-treino genérico.
+2. Os modelos treinados ganham: os padrões financeiros são suficientemente específicos (microestrutura de mercado, correlações entre ativos, regime de volatilidade) para que o treino nos dados locais seja vantajoso. Conclusão: o contexto de domínio importa e não é capturado pelo pré-treino genérico.
 
-Qualquer uma das conclusões é uma contribuição da tese.
+Ambas as conclusões têm valor prático.
 
 ---
 
@@ -369,7 +353,7 @@ Com Conformal Prediction a 90%, o conjunto de previsão seria muito mais honesto
 
 Quando o conjunto de previsão é unitário (só UP ou só DOWN), isso é um sinal genuinamente forte: o modelo está suficientemente confiante para excluir a alternativa com garantia formal.
 
-**Por que é importante para a tese**
+**Por que é importante**
 
 Para um júri académico, "68% de confiança" sem calibração estatística é uma afirmação fraca. "O conjunto de previsão a 90% é unitário" é uma afirmação com garantia matemática verificável. A Conformal Prediction transforma as previsões do sistema de assertivas informais em proposições estatisticamente auditáveis.
 
@@ -409,7 +393,7 @@ Exemplo prático com a NVDA: se o ensemble tinha 58% de acurácia durante 3 mese
 
 O ADWIN detecta mudanças nos dados de entrada (as features mudam de distribuição). O Page-Hinkley detecta mudanças na performance do modelo (o modelo começa a errar mais). São complementares: o ADWIN alerta antecipadamente quando o mercado muda de regime; o Page-Hinkley alerta quando essa mudança já está a afectar as previsões.
 
-Para a tese, a combinação das duas é o argumento de que o sistema monitoriza activamente a sua própria validade — uma propriedade que a maioria dos sistemas de ML em produção não tem.
+A combinação das duas garante que o sistema monitoriza activamente a sua própria validade — uma propriedade que a maioria dos sistemas de ML em produção não tem.
 
 ---
 
@@ -1053,9 +1037,9 @@ O roadmap técnico traduzido para o que cada item significa na prática:
 - ⬜ Features de eventos fundamentalistas: calendário de earnings, semanas do FOMC, expiração de opções. Requer uma API externa confiável com cobertura europeia, o que ainda é limitado.
 - ⬜ Regressor de preço para D+1: em vez de prever apenas a direção, prever o preço. Mas só faz sentido com pelo menos um ano de dados limpos acumulados.
 
-**Framework de investigação (doutoramento) — fases de modelos**
+**Framework de investigação — fases de modelos**
 
-Além do pipeline operacional acima, este projeto implementa um framework de investigação com 25 modelos em 7 famílias, aplicado em domínios de previsibilidade crescente.
+Além do pipeline operacional acima, este projeto implementa um framework de investigação com 38 modelos em 13 famílias aplicadas a mercados financeiros.
 
 | Fase | O que significa na prática |
 |------|---------------------------|
