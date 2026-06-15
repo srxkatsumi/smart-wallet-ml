@@ -183,7 +183,9 @@ jobs:
 
       # 7 — Enviar email HTML com o resumo das previsões
       - name: 📧 Enviar resumo por email
+        id: send_email
         if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
+        continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -196,6 +198,14 @@ jobs:
           from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
           html_body: file://output/resumo_diario.html
           convert_markdown: false
+
+      # 7b — Fallback Telegram se o email falhar
+      - name: 📱 Fallback Telegram (email falhou)
+        if: steps.send_email.outcome == 'failure' && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="📈 Carteira Inteligente — ${{ steps.resumo.outputs.date }}%0A%0A⚠️ Email falhou. Ver resultados em:%0Ahttps://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       # 8 — Sincronizar charts com repositório público (janela D-10 a D-19)
       - name: 🌐 Sincronizar repositório público
