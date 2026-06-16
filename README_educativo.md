@@ -17,7 +17,7 @@ Decidi construir um sistema que fizesse o que eu não conseguia fazer manualment
 - Analisar os indicadores técnicos de cada ativo todo dia de forma consistente
 - Fazer previsões direcionais para os próximos 3 dias úteis usando Machine Learning
 - Guardar cada previsão, validar quando a data chegar, e usar os resultados para melhorar as próximas previsões
-- Enviar tudo isso por email todo dia às 22h00 (Barcelona), quando todos os mercados já fecharam
+- Enviar tudo isso por email todo dia às 22h00 UTC (meia-noite Barcelona CEST), quando todos os mercados já fecharam
 
 O sistema não é um oráculo. Não prevê preços exatos. Não garante lucros. O que ele faz é gerar uma previsão direcional objetiva (vai subir ou vai cair?) com base nos dados disponíveis, e aprender com os próprios erros ao longo do tempo.
 
@@ -25,11 +25,11 @@ O sistema não é um oráculo. Não prevê preços exatos. Não garante lucros. 
 
 ## 2. Como o sistema funciona no dia a dia
 
-Todo dia útil, às 22h00 (horário de Barcelona), o GitHub Actions acorda automaticamente e executa a seguinte sequência:
+Todo dia útil, às 22h00 UTC (meia-noite Barcelona CEST / 23h CET), o GitHub Actions acorda automaticamente e executa a seguinte sequência:
 
 ```mermaid
 flowchart TD
-    A["⏰ GitHub Actions acorda\n22h00 Barcelona\n3 tentativas com anti-duplicação"] --> B["🔍 Já rodou hoje?\nLê predictions_log.csv\nSe já tem data de hoje, para aqui"]
+    A["⏰ GitHub Actions acorda\n22h00 UTC / meia-noite Barcelona CEST\n3 tentativas com anti-duplicação"] --> B["🔍 Já rodou hoje?\nLê predictions_log.csv\nSe já tem data de hoje, para aqui"]
     B -->|Ainda não rodou| C["📥 Baixa preços de ~90+ ativos\nEm grupos de 20 com pausa de 2s\nEvita bloqueio da API do Yahoo Finance"]
     C --> D["🔄 Verifica VIX e SPY\nSe algum retornou NaN\nUsa o valor do dia anterior\nMostra aviso âmbar no email"]
     D --> E["⚙️ Calcula os indicadores técnicos\nSMA, RSI, MACD, Bollinger Bands\nATR, retornos, volatilidade"]
@@ -221,19 +221,19 @@ VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de 
 
 | Família | Modelos | O que diferencia |
 |---------|---------|-----------------|
-| Clássico (RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM) | Aprende padrões tabulares pontuais. Baseline obrigatório em qualquer estudo. |
-| Estado oculto (Markov, HMM) | Modela regimes ocultos do mercado financeiro — bull, bear, lateral — que não são directamente observáveis mas influenciam o comportamento dos preços. |
-| Séries temporais (ARIMA, SARIMA, ETS, Holt-Winters, Prophet) | Testa autocorrelação temporal directamente. Modelos desenhados para dados com memória. |
-| Neural recorrente (LSTM, GRU) | Memória de longo alcance. Aprende dependências entre observações distantes na sequência. |
-| Neural com atenção (Transformer, TFT, N-BEATS) | Atenção selectiva. O modelo aprende a "olhar" para os momentos do passado mais relevantes para cada previsão. |
-| Bayesiano (GP, BNN) | Incerteza calibrada. Além da previsão, quantifica o quão confiante está — academicamente exige justificação quando a confiança é alta. |
-| Generativo (VAE, GAN) | Aprende a distribuição dos dados. Testa se existe estrutura latente separável entre UP e DOWN. |
-| Reinforcement (DQN, PPO) | Optimiza política, não previsão. Trata a decisão de compra/venda como uma sequência de acções com recompensa — completamente diferente de todas as outras famílias. |
-| Contrarian / Testes de sanidade (CB, EWI, PEL) | Inverte ou corrige o ensemble. Testa se o modelo principal é pior que o acaso, detecta regimes de erro sistemático e aprende com a autocorrelação dos erros. |
-| Arquitecturas eficientes — pós-2022 (TCN, DLinear, NLinear, PatchTST) | Alternativas ao Transformer que em vários benchmarks o superam com muito menos complexidade. A questão central: vale a pena toda a complexidade do Transformer? |
-| Foundation Models — 2023-2024 (Chronos, TimesFM, Moirai) | Modelos pré-treinados em biliões de pontos de dados. Funcionam sem treino — zero-shot. A questão central: valem mais que 38 modelos treinados do zero nos meus dados? |
-| Incerteza calibrada (Conformal Prediction) | Garante matematicamente que "90% de confiança" significa que o intervalo de previsão contém o valor real em pelo menos 90% dos casos. Rigor estatístico que nenhuma das outras famílias oferece. |
-| Detecção de drift (ADWIN, Page-Hinkley) | Detecta automaticamente quando o mercado mudou de regime e os modelos perdem validade. Complementa o alerta manual de ρ de Spearman com deteção estatística formal. |
+| Clássico | RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM | Aprende padrões tabulares pontuais. Baseline obrigatório — referência contra a qual todos os outros são comparados. |
+| Estado oculto | Markov, HMM | Modela regimes ocultos do mercado (bull, bear, lateral) que não são directamente observáveis mas influenciam o comportamento dos preços. |
+| Séries temporais | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Testa autocorrelação temporal directamente. Modelos construídos especificamente para dados com memória e dependência temporal. |
+| Neural recorrente | LSTM, GRU | Memória de longo alcance. Aprende dependências entre observações distantes na sequência — algo que os modelos clássicos não conseguem por design. |
+| Neural com atenção | Transformer, TFT, N-BEATS | Atenção selectiva. O modelo aprende a "olhar" para os momentos do passado mais relevantes para cada previsão futura. |
+| Bayesiano | Gaussian Process, BNN (MC Dropout) | Incerteza calibrada. Além da previsão, quantifica quão confiante está — com base na teoria da probabilidade, não em heurísticas. |
+| Generativo | VAE, GAN | Aprende a distribuição dos dados. Testa se existe estrutura latente separável entre sessões UP e DOWN. |
+| Reinforcement | DQN, PPO | Optimiza política, não previsão. Trata a decisão como uma sequência de acções com recompensa acumulada — completamente diferente de todas as outras famílias. |
+| Contrarian / Sanidade | CB, EWI, PEL | Inverte ou corrige o ensemble. Detecta quando o modelo principal é pior que o acaso e aprende com a autocorrelação dos erros. |
+| Arquitecturas eficientes | TCN, DLinear, NLinear, PatchTST | Alternativas ao Transformer (pós-2022) que em múltiplos benchmarks o superam com muito menos complexidade e parâmetros. |
+| Foundation Models | Chronos, TimesFM, Moirai | Modelos pré-treinados em biliões de pontos de dados de séries temporais. Funcionam sem treino específico — zero-shot. |
+| Incerteza calibrada | Conformal Prediction | Garante matematicamente que "90% de confiança" significa que o intervalo contém o valor real em pelo menos 90% dos casos. |
+| Detecção de drift | ADWIN, Page-Hinkley | Detecta automaticamente quando o mercado mudou de regime e os modelos perdem validade estatística. |
 
 ---
 
@@ -613,7 +613,7 @@ O ATR14 também é usado para calcular o `pred_price` (preço estimado na previs
 
 **Fórmula:** `spy_ret_1d = retorno_percentual(SPY_fechamento_ontem)`
 
-**Por que T-1 e não o retorno de hoje:** porque o modelo usa os dados disponíveis no momento da previsão, que é às 22h00. Nesse horário, os mercados já fecharam, então o dado do dia corrente (T-0) está disponível. Mas para manter consistência com como o modelo foi treinado (onde T-1 era o dado disponível antes da sessão), uso sempre T-1.
+**Por que T-1 e não o retorno de hoje:** porque o modelo usa os dados disponíveis no momento da previsão, que é às 22h00 UTC. Nesse horário, os mercados já fecharam, então o dado do dia corrente (T-0) está disponível. Mas para manter consistência com como o modelo foi treinado (onde T-1 era o dado disponível antes da sessão), uso sempre T-1.
 
 **Exemplo:** se ontem o S&P 500 caiu 2%, todas as ações americanas da minha carteira (NVDA, LLY, BABA) foram influenciadas por esse contexto. O modelo pode aprender que em dias seguintes a grandes quedas do S&P, determinados ativos tendem a recuperar ou continuar caindo.
 
@@ -1053,11 +1053,11 @@ Além do pipeline operacional acima, este projeto implementa um framework de inv
 | ✅ Fase 7 — VAE, GAN | Modelos generativos que aprendem a distribuição dos dados. |
 | ✅ Fase 8 — DQN, PPO | Reinforcement Learning — decisões como política, não previsão. |
 | ✅ Fases 9-15 | Avaliação estatística, explicabilidade, meta-learning, tracking, teoria da informação, transfer learning, reestruturação do email. |
-| ⏳ Fase 16 — CB, EWI, PEL | Testes de sanidade do ensemble: o modelo principal é pior que o acaso? Detectar erros sistemáticos. |
-| ⏳ Fase 17 — TCN, DLinear, NLinear, PatchTST | Arquitecturas eficientes: toda a complexidade do Transformer é necessária? |
-| ⏳ Fase 18 — Chronos, TimesFM, Moirai | Foundation Models: modelos pré-treinados em biliões de pontos valem mais que treino nos meus dados? |
-| ⏳ Fase 19 — Conformal Prediction | Incerteza com garantia matemática: "90% de confiança" que realmente significa 90%. |
-| ⏳ Fase 20 — ADWIN, Page-Hinkley | Detecção automática quando o mercado muda de regime e os modelos perdem validade. |
+| ✅ Fase 16 — CB, EWI, PEL | Testes de sanidade do ensemble: detecta quando o modelo principal é pior que o acaso e aprende com os erros sistemáticos. |
+| ✅ Fase 17 — TCN, DLinear, NLinear, PatchTST | Arquitecturas eficientes: alternativas ao Transformer com menos complexidade e melhores resultados em vários benchmarks. |
+| ✅ Fase 18 — Chronos, TimesFM, Moirai | Foundation Models: modelos pré-treinados em biliões de pontos de dados, sem treino específico nos dados da carteira. |
+| ✅ Fase 19 — Conformal Prediction | Incerteza calibrada com garantia matemática: "90% de confiança" que realmente significa 90%. |
+| ✅ Fase 20 — ADWIN, Page-Hinkley | Detecção de drift: alerta automático quando o mercado muda de regime e os modelos perdem validade. |
 
 ---
 

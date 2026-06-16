@@ -1,7 +1,7 @@
 # Carteira Inteligente — Sistema de Previsão de Carteira com Machine Learning
 
 > Um sistema de análise e previsão de carteira de investimentos que aprende sozinho, construído do zero.
-> Executa automaticamente todos os dias úteis às ~22h30 (Barcelona / CEST) — após o fecho de todos os mercados — via GitHub Actions.
+> Executa automaticamente todos os dias úteis às 22h00 UTC (meia-noite Barcelona CEST) — após o fecho de todos os mercados — via GitHub Actions.
 
 [![GitHub Actions](https://img.shields.io/badge/Automatizado-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart_wallet/actions)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
@@ -15,7 +15,7 @@ Tenho uma carteira de investimentos dividida entre ações (eToro) e ETFs de acu
 
 Decidi mudar isso.
 
-Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às ~22h30 (Barcelona) e faz três coisas:
+Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às 22h00 UTC (meia-noite Barcelona CEST) e faz três coisas:
 
 1. **Analisa a carteira** — Ganho/Perda real em euros, breakeven com fees incluídos, alvo de saída
 2. **Prevê a direção dos próximos 3 dias** usando Machine Learning (Random Forest, Gradient Boosting, SGD em ensemble) com indicadores técnicos e contexto de mercado (VIX, SPY)
@@ -321,7 +321,7 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 ## Como funciona a automação (GitHub Actions)
 
 ```
-Seg–Sex ~22h30 Barcelona CEST (20h30 UTC — após o fecho de todos os mercados)
+Seg–Sex 22h00 UTC (meia-noite Barcelona CEST / 23h CET — após o fecho de todos os mercados)
   │
   ├─ Job 1: verificar se já executou hoje
   │   └─ lê predictions_log.csv — se a data de hoje já existe, sai em ~10s
@@ -349,7 +349,7 @@ Seg–Sex ~22h30 Barcelona CEST (20h30 UTC — após o fecho de todos os mercado
 
 **Por que três entradas de cron:** o agendador do GitHub Actions pode atrasar 2–3 horas. Três crons separados (com 30 min de diferença) garantem a execução. A verificação anti-duplicação no Job 1 garante que o pipeline só executa uma vez por dia.
 
-**Por que após o fecho dos EUA:** a NYSE e o NASDAQ fecham às 20h00 UTC (16h00 ET). Ao correr às ~20h30 UTC, o pipeline tem acesso ao preço real de fecho do dia para todos os ativos da carteira — incluindo ações americanas (LLY, NVDA, BABA) e crypto (BTC-USD). Isto permite validar as previsões no próprio dia em que os mercados fecham, e os ícones ✅/❌ de acurácia no email aparecem sempre preenchidos quando o relatório chega.
+**Por que após o fecho dos mercados:** a NYSE e o NASDAQ fecham às 20h00 UTC (16h00 ET). Ao correr às 22h00 UTC, o pipeline tem acesso ao preço real de fecho do dia para todos os ativos da carteira — incluindo ações americanas (LLY, NVDA, BABA) e crypto (BTC-USD). Isto permite validar as previsões no próprio dia em que os mercados fecham, e os ícones ✅/❌ de acurácia no email aparecem sempre preenchidos quando o relatório chega.
 
 ---
 
@@ -454,7 +454,7 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 - ✅ **Correcção dos ícones ✅/❌** — `_acertou_ontem()` passa a filtrar por `target_date` em vez de `pred_date`; mostra se a previsão que *apontava* para ontem acertou, não a que foi *feita* ontem — corrige ícones em falta às segundas-feiras e para tickers cujo mercado fecha depois do pipeline correr
 - ✅ **Legenda no painel drift** — adicionada descrição de ρ, do período de referência e do significado das setas (↑ ↓ →) na secção de drift do email
 - ✅ **Badge dinâmico no repo público** — badge `last sync` via `shields.io/github/last-commit`; actualiza automaticamente em cada visualização, sem ficheiro JSON nem configuração extra
-- ✅ **Horário movido para após o fecho dos mercados EUA** — cron reajustado para ~20h30 UTC (22h30 Barcelona CEST); NYSE/NASDAQ fecham às 20h00 UTC, por isso todos os tickers têm o preço de fecho disponível no momento da validação — corrige os ícones ✅/❌ em falta para ações americanas e crypto
+- ✅ **Horário movido para após o fecho dos mercados EUA** — cron reajustado para 22h00 UTC (meia-noite Barcelona CEST); NYSE/NASDAQ fecham às 20h00 UTC, por isso todos os tickers têm o preço de fecho disponível no momento da validação — corrige os ícones ✅/❌ em falta para ações americanas e crypto
 - ✅ **`predictions_log_public.csv`** — versão anonimizada do log de auditoria (sem tickers, sem preços) publicada diariamente no repo público; contém `asset_type` (portfolio/watchlist), direção, confiança, resultado e votos individuais dos modelos — permite a qualquer pessoa verificar a acurácia real
 - ✅ **Seção Confiabilidade** — todos os mecanismos de proteção reunidos num único lugar: testes unitários (antes da execução), forward fill VIX/SPY e detecção de split (durante a execução), retry do push e artifact de emergência (após a execução)
 - ✅ **Tags semânticos no git** — `v1.0.0` (Semana 1: estabilidade), `v1.1.0` (Semana 2: observabilidade), `v1.2.0` (Semana 3: repo público); cada tag ancora um marco no histórico git com mensagem descritiva
