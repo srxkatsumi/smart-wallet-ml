@@ -26,9 +26,9 @@ readme = f"""\
 
 ## What is this?
 
-An automated machine learning system that runs every weekday and generates daily directional forecasts for a personal investment portfolio using ensemble models.
+An automated machine learning system that runs every weekday and generates daily directional forecasts for a personal investment portfolio.
 
-The pipeline downloads fresh market data for 90+ assets, engineers technical indicators, trains three independent classifiers per asset per time horizon, validates each forecast against real closing prices, and reweights the models based on recent accuracy.
+Every night after market close it downloads fresh prices for **543 assets** across 70 sectors, builds 33 engineered features per asset, trains **16 independent model families**, and blends their predictions into a final ensemble. Each forecast is validated against actual closing prices and the models are reweighted accordingly.
 
 Charts are published here with a **10-day delay**. No prices, positions, or portfolio holdings are disclosed.
 
@@ -38,61 +38,120 @@ Charts are published here with a **10-day delay**. No prices, positions, or port
 
 ```mermaid
 flowchart TD
-    A["📥 Market Data\\nyfinance · 90+ tickers\\nVIX · SPY · FX rates"] --> B["⚙️ Feature Engineering\\nRSI · MACD · Bollinger Bands\\nATR · SMA · 1d/5d returns"]
-    B --> C["🤖 Independent Ensemble\\nper asset × per horizon\\nD+1 · D+2 · D+3"]
-    C --> D1["🌲 Random Forest\\n300 trees · depth 6"]
-    C --> D2["📈 Gradient Boosting\\n200 est. · lr 0.05"]
-    C --> D3["📐 SGD Classifier\\nlog loss · monthly recal."]
-    D1 & D2 & D3 --> E["⚖️ Weighted Vote\\nadaptive weights\\nexponential decay"]
-    E --> F["📊 Forecast\\nUP / DOWN + confidence"]
-    F --> G["✅ Validation\\nactual close vs prediction"]
-    G --> H["🔄 Weight Update\\nmore recent = more weight"]
+    A["📥 Market Data\\n543 tickers · 70 sectors\\nVIX · SPY · BTC · GLD · FX"] --> B["⚙️ Feature Engineering\\n33 features in 5 groups\\n(Technical · Momentum · Calendar\\n Cross-asset · Extremes)"]
+    B --> C["🏭 Production Ensemble\\nper asset × D+1 · D+2 · D+3"]
+    C --> P1["🌲 Random Forest"]
+    C --> P2["📈 Gradient Boosting"]
+    C --> P3["📐 SGD Classifier"]
+    B --> R["🔬 Research Pipeline\\n13 model families\\nMonday: retrain · Tue–Fri: predict"]
+    R --> R1["HMM · Bayesian · VAE"]
+    R --> R2["Transformer · Foundation\\nConformal · Drift"]
+    P1 & P2 & P3 --> E["⚖️ Blend\\n50% Production + 50% Research\\nadaptive weights per family"]
+    R1 & R2 --> E
+    E --> F["📊 Final Forecast\\nUP / DOWN + confidence"]
+    F --> G["✅ Daily Validation\\nactual close vs prediction"]
+    G --> H["🔄 Weight Update\\nexponential decay"]
     H --> E
-    F --> I["📧 Daily email\\n+ charts → public repo"]
+    F --> I["📧 Email + Telegram\\nCharts → public repo (D-10)"]
 ```
 
 ---
 
-## AI Models
+## Two-layer ensemble
 
-Three classifiers are combined in a weighted ensemble. Each model was chosen for a specific reason:
+### Production layer (3 classifiers)
 
 | Model | Config | Why |
 |-------|--------|-----|
-| **Random Forest** | 300 trees, max depth 6 | Robust generaliser — bootstrapped trees resist overfitting on noisy market data. Acts as the ensemble's stability anchor. |
-| **Gradient Boosting** | 200 estimators, lr 0.05 | Sequential residual learner — captures patterns RF misses, especially short-term momentum signals. Low learning rate prevents memorising noise. |
-| **SGD Classifier** | log loss, L2 | Linear counterweight — cannot model non-linear interactions, so it acts as a dissenting vote when the other two agree on noise. Fully recalibrated monthly. |
+| **Random Forest** | 100 trees, max depth 5 | Robust generaliser — bootstrapped trees resist overfitting on noisy market data. |
+| **Gradient Boosting** | 100 estimators, lr 0.05 | Captures momentum patterns RF misses via sequential residual learning. |
+| **SGD Classifier** | log loss, L2, monthly recal. | Linear dissenting vote — penalises when the other two agree on noise. |
 
-### Why independent ensembles per horizon?
+### Research layer (13 model families)
 
-D+1, D+2, and D+3 are trained as **completely separate ensembles**. The patterns that predict tomorrow's price differ structurally from those that predict a 3-day move — conflating them into a single model produces weaker forecasts for all horizons.
+| Family | Technique |
+|--------|-----------|
+| `classico_avancado` | Extended classical ML (SVM, ExtraTrees, stacking) |
+| `estado_oculto` | Hidden Markov Model — regime detection |
+| `series_temporais` | ARIMA, Prophet, SARIMA |
+| `neural_recorrente` | LSTM / GRU |
+| `neural_atencao` | Transformer encoder |
+| `bayesiano` | Bayesian classifier with uncertainty |
+| `generativo` | VAE / GAN-based features |
+| `reinforcement` | Q-learning signal |
+| `contrarian` | Mean-reversion counter-trend |
+| `eficiente` | TCN / PatchTST |
+| `foundation` | Chronos-T5 (zero-shot), TimesFM, Moirai |
+| `conformal` | Conformal prediction intervals |
+| `drift` | Concept drift detector |
 
-### Adaptive weights with exponential decay
-
-```
-weight(model) ∝ accuracy(model) × Σ decay^(days_ago)
-```
-
-Recent correct predictions count more than older ones. If a model starts underperforming after a market regime change, the ensemble automatically reduces its vote share — no manual intervention needed.
+Each family's vote is weighted by its recent validated accuracy (exponential decay). The final prediction blends production and research 50/50.
 
 ---
 
 ## Features (what the model sees)
 
-| Feature | Description |
-|---------|-------------|
-| `sma_20`, `sma_50` | Short and medium-term trend |
-| `rsi_14` | Overbought / oversold signal |
-| `macd`, `macd_signal` | Momentum and crossovers |
-| `bb_upper`, `bb_lower`, `bb_width` | Volatility regime and price extremity |
-| `atr_14` | Expected daily move magnitude |
-| `ret_1d`, `ret_5d` | Recent momentum |
-| `spy_ret_1d` | S&P 500 return (T-1) — global market context |
-| `vix_level` | CBOE VIX close (T-1) — market fear level |
-| `vix_change` | VIX daily change (T-1) — fear acceleration |
-| `vix_regime` | VIX regime label: 0 = low (< 15), 1 = medium (15–25), 2 = high (≥ 25) |
+33 features grouped in 5 categories:
 
-All external context features use T-1 values to prevent data leakage.
+| Group | Features |
+|-------|---------|
+| **Technical** | `SMA20_dist`, `SMA50_dist`, `sma_cross`, `RSI14`, `MACD`, `MACD_sig`, `MACD_hist`, `BB_width`, `BB_pos`, `ATR14`, `ret_1d`, `ret_5d`, `vol_10d`, `vol_ratio`, `obv_trend` |
+| **Context** | `spy_ret_1d`, `vix_level`, `vix_change`, `vix_regime`, `asset_class` |
+| **Momentum** | `ret_1m`, `ret_3m`, `ret_6m`, `ret_12m` |
+| **Calendar** | `day_of_week`, `month`, `is_options_expiry` |
+| **Cross-asset** | `btc_ret_1d`, `gold_ret_1d`, `corr_spy_20d`, `vwap_dist` |
+| **Extremes** | `high52w_dist`, `low52w_dist` |
+
+All external features use T-1 values to prevent data leakage.
+
+---
+
+## Sample daily output
+
+This is what the system produces each weekday evening (Telegram summary):
+
+```
+🤖 Modelos — 14/06/2026 (⚡ predict)
+
+D+1 Acurácia (últ. 10 dias):
+🟢 Foundation         68%  ↑ +5pp
+🟢 Clássico           65%  →
+⚪ Transformer        58%  →
+⚪ HMM                55%  ↓ -3pp
+🔴 VAE/GAN            47%  ↓ -8pp
+
+🏆 Melhor: Foundation (68%)
+⚠️  Pior:   VAE/GAN (47%)
+
+📊 WFV 2026-06-09 — D+1 real: ⚪ 53.2%
+```
+
+And the anonymised predictions table (`predictions_log_public.csv`):
+
+| asset_type | pred_date | target_date | direction | confidence | correct | model_rf | model_gb | model_sgd |
+|-----------|-----------|-------------|-----------|------------|---------|----------|----------|-----------|
+| portfolio | 2026-06-13 | 2026-06-14 | up | 0.61 | True | up | up | up |
+| portfolio | 2026-06-13 | 2026-06-14 | down | 0.54 | False | down | up | down |
+| watchlist | 2026-06-13 | 2026-06-14 | up | 0.57 | True | up | up | down |
+
+---
+
+## Walk-Forward Validation
+
+The system runs a daily walk-forward backtest over the last 30 trading days: train only on data available before each day, predict that day, compare to actual outcome. Results are logged in `output/wfv_log.csv` (cumulative, never deleted).
+
+This gives an honest out-of-sample accuracy benchmark — no look-ahead bias.
+
+---
+
+## Accuracy context
+
+| Benchmark | Value |
+|-----------|-------|
+| Random directional forecast | 50% |
+| System target | 55–65% |
+| Degradation signal | < 52% over 30+ validations |
+| Walk-Forward Validation | updated daily in `wfv_log.csv` |
 
 ---
 
@@ -100,39 +159,30 @@ All external context features use T-1 values to prevent data leakage.
 
 ```
 Python 3.11
-├── yfinance       — market data (prices, FX, VIX, SPY)
+├── yfinance       — market data (543 tickers, VIX, SPY, BTC, GLD, FX)
 ├── scikit-learn   — RandomForest, GradientBoosting, SGDClassifier
-├── pandas/numpy   — data processing and feature computation
+├── torch          — Transformer, LSTM, Foundation model wrappers
+├── pandas/numpy   — feature engineering (33 features)
 ├── joblib         — model serialisation
 └── matplotlib     — chart generation
 
-GitHub Actions     — free daily automation
+GitHub Actions     — free daily automation (22h00 UTC Mon–Fri)
 ```
-
----
-
-## Accuracy context
-
-| Benchmark | Target |
-|-----------|--------|
-| Random directional forecast | 50% |
-| System target | 55–65% |
-| Degradation signal | < 52% over 30+ validations |
 
 ---
 
 ## Verifiable accuracy
 
-`predictions_log_public.csv` is published in this repository alongside the charts.
+`predictions_log_public.csv` is published in this repository.
 It contains every forecast made since the system went live, with the actual outcome filled in once the target date passes.
 
 | Column | Content |
 |--------|---------|
-| `asset_type` | `portfolio` or `watchlist` — no ticker names disclosed |
+| `asset_type` | `portfolio` or `watchlist` — no ticker names |
 | `pred_date` | Date the forecast was made |
 | `target_date` | Date the forecast refers to |
 | `direction` | `up` or `down` |
-| `confidence` | Ensemble weighted probability |
+| `confidence` | Blended ensemble probability |
 | `correct` | `True` / `False` / `NaN` (NaN = stock split detected) |
 | `model_rf` | Individual Random Forest vote |
 | `model_gb` | Individual Gradient Boosting vote |

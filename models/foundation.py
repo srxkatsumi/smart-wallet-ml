@@ -32,6 +32,13 @@ from sklearn.preprocessing import RobustScaler
 
 logger = logging.getLogger(__name__)
 
+try:
+    from chronos import ChronosPipeline as _ChronosPipeline
+    _CHRONOS_AVAILABLE = True
+except ImportError:
+    _CHRONOS_AVAILABLE = False
+    logger.info("chronos package not installed — Foundation uses TimesFM + Moirai only")
+
 SEQ_LEN    = 20
 EPOCHS     = 30
 LR         = 5e-4
@@ -106,15 +113,15 @@ class _Moirai(nn.Module):
 
 def _chronos_prob(context: np.ndarray, y_mean: float) -> float:
     """Zero-shot probability of next value > last via Chronos-T5-Tiny."""
+    if not _CHRONOS_AVAILABLE:
+        return y_mean
     try:
-        import torch as _t
-        from chronos import ChronosPipeline
-        pipeline = ChronosPipeline.from_pretrained(
+        pipeline = _ChronosPipeline.from_pretrained(
             "amazon/chronos-t5-tiny",
             device_map="cpu",
-            torch_dtype=_t.float32,
+            torch_dtype=torch.float32,
         )
-        series   = _t.tensor(context, dtype=_t.float32).unsqueeze(0)
+        series   = torch.tensor(context, dtype=torch.float32).unsqueeze(0)
         forecast = pipeline.predict(series, prediction_length=1, num_samples=20)
         samples  = forecast[0, :, 0].numpy()
         return float((samples > float(context[-1])).mean())

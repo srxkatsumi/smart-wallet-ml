@@ -5,6 +5,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 FEATURE_COLS = [
+    # Technical indicators
     "SMA20_dist", "SMA50_dist", "sma_cross",
     "RSI14", "MACD", "MACD_sig", "MACD_hist",
     "BB_width", "BB_pos", "ATR14",
@@ -12,12 +13,35 @@ FEATURE_COLS = [
     "vol_ratio", "obv_trend",
     "spy_ret_1d", "vix_level", "vix_change", "vix_regime",
     "asset_class",
+    # Momentum — captures trend strength across horizons
+    "ret_1m", "ret_3m", "ret_6m", "ret_12m",
+    # Distance to 52-week extremes — mean-reversion / breakout signal
+    "high52w_dist", "low52w_dist",
+    # Calendar effects — weekday, month, options expiry week
+    "day_of_week", "month", "is_options_expiry",
+    # Cross-asset signals — crypto risk appetite, gold safe-haven, market correlation
+    "btc_ret_1d", "gold_ret_1d", "corr_spy_20d",
+    # VWAP distance — institutional price anchor
+    "vwap_dist",
 ]
+
+
+def _options_expiry_signal(index: pd.DatetimeIndex) -> np.ndarray:
+    """1.0 if date is within 2 calendar days of the 3rd Friday (US equity options expiry)."""
+    result = np.zeros(len(index))
+    for i, ts in enumerate(index):
+        first = pd.Timestamp(ts.year, ts.month, 1)
+        days_to_fri = (4 - first.weekday()) % 7  # 4 = Friday
+        third_fri = first + pd.Timedelta(days=days_to_fri + 14)
+        if abs((ts - third_fri).days) <= 2:
+            result[i] = 1.0
+    return result
 
 
 def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -> pd.DataFrame:
     d = df.copy()
 
+    # ── Technical indicators ──────────────────────────────────────────────
     d["SMA20"]      = d["Close"].rolling(20).mean()
     d["SMA50"]      = d["Close"].rolling(50).mean()
     d["SMA20_dist"] = (d["Close"] - d["SMA20"]) / d["SMA20"]
@@ -87,7 +111,55 @@ def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -
 
     d["asset_class"] = float(asset_class)
 
-    # Targets com threshold ATR: NaN para dias "neutros" (movimento pequeno demais)
+    # ── Momentum features ────────────────────────────────────────────────
+    # fillna(0.0): tickers with insufficient history get neutral signal
+    d["ret_1m"]  = d["Close"].pct_change(21).fillna(0.0)
+    d["ret_3m"]  = d["Close"].pct_change(63).fillna(0.0)
+    d["ret_6m"]  = d["Close"].pct_change(126).fillna(0.0)
+    d["ret_12m"] = d["Close"].pct_change(252).fillna(0.0)
+
+    # ── Distance to 52-week extremes ─────────────────────────────────────
+    roll_max = d["Close"].rolling(252, min_periods=20).max()
+    roll_min = d["Close"].rolling(252, min_periods=20).min()
+    d["high52w_dist"] = ((d["Close"] - roll_max) / roll_max.replace(0, np.nan)).fillna(0.0)
+    d["low52w_dist"]  = ((d["Close"] - roll_min) / roll_min.replace(0, np.nan)).fillna(0.0)
+
+    # ── Calendar signals ─────────────────────────────────────────────────
+    d["day_of_week"]       = d.index.dayofweek.astype(float)
+    d["month"]             = d.index.month.astype(float)
+    d["is_options_expiry"] = _options_expiry_signal(d.index)
+
+    # ── Cross-asset signals ──────────────────────────────────────────────
+    if "btc" in context_data:
+        btc_ret          = context_data["btc"].pct_change(1).shift(1)
+        d["btc_ret_1d"]  = btc_ret.reindex(d.index, method="ffill").fillna(0.0).values
+    else:
+        d["btc_ret_1d"] = 0.0
+
+    if "gold" in context_data:
+        gold_ret          = context_data["gold"].pct_change(1).shift(1)
+        d["gold_ret_1d"]  = gold_ret.reindex(d.index, method="ffill").fillna(0.0).values
+    else:
+        d["gold_ret_1d"] = 0.0
+
+    if "spy" in context_data:
+        spy_ret_raw    = context_data["spy"].pct_change(1)
+        aligned_spy    = spy_ret_raw.reindex(d.index, method="ffill")
+        ticker_ret     = d["Close"].pct_change(1)
+        d["corr_spy_20d"] = ticker_ret.rolling(20, min_periods=10).corr(aligned_spy).fillna(0.0)
+    else:
+        d["corr_spy_20d"] = 0.0
+
+    # ── VWAP distance ────────────────────────────────────────────────────
+    if "Volume" in d.columns and d["Volume"].notna().any() and d["Volume"].sum() > 0:
+        typical    = (d["High"] + d["Low"] + d["Close"]) / 3
+        cum_vol    = d["Volume"].rolling(20, min_periods=1).sum().replace(0, np.nan)
+        vwap_20    = (typical * d["Volume"]).rolling(20, min_periods=1).sum() / cum_vol
+        d["vwap_dist"] = ((d["Close"] - vwap_20) / vwap_20.replace(0, np.nan)).fillna(0.0)
+    else:
+        d["vwap_dist"] = 0.0
+
+    # ── Targets with ATR threshold ───────────────────────────────────────
     atr = d["ATR14"]
     for horizon, days in [(1, 1), (2, 2), (3, 3)]:
         thr  = atr * 0.3 * np.sqrt(days)

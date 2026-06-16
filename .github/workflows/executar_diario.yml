@@ -159,6 +159,9 @@ jobs:
           git add output/charts/*.png               2>/dev/null || true
           git add output/xai/                       2>/dev/null || true
           git add output/predictions_research_log.csv 2>/dev/null || true
+          git add output/wfv_log.csv                2>/dev/null || true
+          git add output/wfv_results.json           2>/dev/null || true
+          git add output/significance.json          2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 

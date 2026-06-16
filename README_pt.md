@@ -1,6 +1,12 @@
 # Carteira Inteligente — Sistema de Previsão de Carteira com Machine Learning
 
-> Um sistema de análise e previsão de carteira de investimentos que aprende sozinho, construído do zero.
+Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo — usando um ensemble de 38 modelos em 13 famílias, desde Random Forests clássicos até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal.
+Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraestrutura cloud, sem APIs pagas, sem passos manuais. Cada previsão é registada, validada contra preços reais, e usada para actualizar os pesos do ensemble — o sistema aprende continuamente com os seus próprios erros.
+
+[![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
+
+> ⚠️ **PROJECTO DE ESTUDO. AS PREVISÕES GERADAS POR ESTE SISTEMA NÃO DEVEM SER USADAS COMO BASE PARA DECISÕES DE INVESTIMENTO REAIS.** ⚠️
+
 > Executa automaticamente todos os dias úteis às 22h00 UTC (meia-noite Barcelona CEST) — após o fecho de todos os mercados — via GitHub Actions.
 
 [![GitHub Actions](https://img.shields.io/badge/Automatizado-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart_wallet/actions)
@@ -67,6 +73,10 @@ O modelo SGD passa por **recalibração mensal completa**: refit do scaler + ret
 
 ### As features — o que o modelo "vê" de cada ativo
 
+O modelo recebe **33 features** em 5 grupos, calculadas a partir de dados históricos de preço e volume mais contexto externo de mercado:
+
+**Grupo 1 — Indicadores técnicos (15 features)**
+
 | Feature | O que representa | Por que importa |
 |---------|-----------------|-----------------|
 | `SMA20_dist`, `SMA50_dist` | Distância do preço atual às médias móveis de 20 e 50 dias, como fração | Alinhamento de tendência de curto vs médio prazo. Captura o quanto o preço se afastou da sua média, não só o nível da média. |
@@ -79,11 +89,42 @@ O modelo SGD passa por **recalibração mensal completa**: refit do scaler + ret
 | `vol_10d` | Desvio padrão dos retornos diários nos últimos 10 dias | Volatilidade realizada. Captura se o ativo está num período calmo ou explosivo, independentemente da janela Bollinger. |
 | `vol_ratio` | Rácio do volume recente versus a média de 20 dias | Detecta atividade de trading incomum. Um pico de volume junto a um movimento de preço indica convicção; volume baixo indica ruído. |
 | `obv_trend` | Tendência do On Balance Volume (inclinação do OBV recente) | Sinal de acumulação vs distribuição (Joseph Granville, 1963). OBV a subir com preço estável frequentemente antecede uma rutura. |
+
+**Grupo 2 — Contexto externo (5 features)**
+
+| Feature | O que representa | Por que importa |
+|---------|-----------------|-----------------|
 | `spy_ret_1d` | Retorno do S&P 500 (T-1) | Contexto global do mercado. A NVDA num dia a seguir ao S&P ter caído 2% comporta-se de forma diferente da NVDA num dia neutro. |
 | `vix_level` | Nível de fecho do VIX (T-1) | A volatilidade implícita do mercado, o "termômetro do medo". Um VIX de 30 é um ambiente fundamentalmente diferente de um VIX de 14. |
 | `vix_change` | Variação diária do VIX (T-1) | Captura a aceleração do medo, não só o seu nível. Um VIX a subir rapidamente frequentemente produz resultados diferentes do mesmo nível absoluto mantido estável. |
 | `vix_regime` | Label de regime do VIX: 0 = baixo (VIX < 15), 1 = médio (15 ≤ VIX < 25), 2 = alto (VIX ≥ 25) | Sinal discreto de regime de mercado. Sem ela, um mercado calmo e uma crise parecem iguais para o vetor de features. |
 | `asset_class` | Tipo de ativo: 0 = ação, 1 = ETF de ações, 2 = cripto, 3 = ETF de commodities | Permite ao modelo aprender que BTC-USD e ALV.DE precisam de sinais estruturalmente diferentes, mesmo quando outras features são similares. |
+
+**Grupo 3 — Momentum multi-horizonte (4 features)**
+
+| Feature | O que representa | Por que importa |
+|---------|-----------------|-----------------|
+| `ret_1m`, `ret_3m` | Retorno a 21 e 63 dias | Força da tendência de médio prazo. Uma ação +20% em 3 meses está num regime diferente de uma que ficou flat no mesmo período. |
+| `ret_6m`, `ret_12m` | Retorno a 126 e 252 dias | Contexto de tendência longa. O retorno de 12 meses captura o ciclo anual e separa vencedores seculares de nomes com reversão à média. |
+
+**Grupo 4 — Extremos de 52 semanas (2 features)**
+
+| Feature | O que representa | Por que importa |
+|---------|-----------------|-----------------|
+| `high52w_dist` | Distância à máxima das 52 semanas (fração, sempre ≤ 0) | Sinal de reversão à média ou rutura. Preço perto da máxima anual sinaliza continuação de momentum ou exaustão. |
+| `low52w_dist` | Distância à mínima das 52 semanas (fração, sempre ≥ 0) | Sinal de ressalto ou capitulação. Preço perto da mínima anual corresponde a uma zona de suporte estrutural. |
+
+**Grupo 5 — Calendário e inter-mercados (7 features)**
+
+| Feature | O que representa | Por que importa |
+|---------|-----------------|-----------------|
+| `day_of_week` | Dia da semana (0 = Segunda, 4 = Sexta) | Efeitos de dia documentados: gaps às segundas e tomada de lucros às sextas criam padrões sistemáticos. |
+| `month` | Mês do calendário (1–12) | Efeitos sazonais: efeito Janeiro, sell-in-May, colheita de perdas fiscais de fim de ano. |
+| `is_options_expiry` | 1 se estiver a 2 dias da 3ª sexta-feira (expiração de opções US) | As semanas de expiração têm dinâmicas de vol e direcionalidade diferentes ("max pain" pinning). |
+| `btc_ret_1d` | Retorno do Bitcoin (T-1) | Proxy de risk-on/risk-off cripto. Quedas bruscas do BTC tendem a arrastar ações de crescimento e ativos de risco. |
+| `gold_ret_1d` | Retorno do ouro — GLD (T-1) | Sinal de fluxo para ativos seguros. Ouro a subir num dia de mercado sinaliza rotação defensiva. |
+| `corr_spy_20d` | Correlação rolling de 20 dias com retornos do SPY | Mede o quanto o ativo se move com o mercado. Um ativo com beta baixo ou negativo precisa de sinais diferentes de um ativo de beta elevado. |
+| `vwap_dist` | Distância ao VWAP de 20 dias (preço médio ponderado por volume) | Âncora institucional. Muitos algoritmos e fundos compram abaixo do VWAP e vendem acima, criando um efeito gravitacional nesse nível. |
 
 **Por que T-1 para as features de contexto externo:** os valores T-1 são usados para garantir consistência com o processo de treino. Durante o treino, cada linha usa contexto T-1 (os dados SPY/VIX disponíveis *antes* da sessão que está a ser prevista). Usar T-0 em produção introduziria um desfasamento treino/inferência — o modelo receberia uma estrutura temporal para a qual nunca foi treinado.
 
@@ -115,7 +156,7 @@ Mapeamento de cada ticker para a sua bolsa:
 
 ### Estratificação de acurácia — carteira vs watchlist
 
-A watchlist contém ~90 tickers usados como contexto macroeconómico. Não são ativos detidos — são sinais de treino. A acurácia dos tickers da watchlist é estruturalmente mais baixa e nunca deve ser misturada com a acurácia da carteira. O sistema rastreia e reporta separadamente:
+A watchlist contém **543 tickers em 70 sectores** usados como contexto macroeconómico. Não são ativos detidos — são sinais de treino. A acurácia dos tickers da watchlist é estruturalmente mais baixa e nunca deve ser misturada com a acurácia da carteira. O sistema rastreia e reporta separadamente:
 
 - **Acurácia da carteira** — o número que importa para as decisões do dia a dia
 - **Acurácia da watchlist** — qualidade interna do sinal, não reportada no email
@@ -146,6 +187,22 @@ Cada previsão fica guardada no `output/predictions_log.csv` com todos os detalh
 | `model_sgd` | Voto individual do SGD Classifier |
 
 Nada é apagado. O histórico completo fica preservado indefinidamente. Novas colunas são adicionadas via migração retrocompatível em `data/storage.py` — as linhas existentes são preenchidas retroativamente onde possível.
+
+### Walk-Forward Validation
+
+Todos os dias após o fecho dos mercados, o pipeline corre um **backtest walk-forward** sobre os últimos 30 dias úteis para todos os tickers da carteira:
+
+1. Para cada um dos últimos 30 dias úteis com resultado conhecido, treina apenas com dados estritamente anteriores a esse dia.
+2. Prevê a direção para esse dia.
+3. Compara com o resultado real.
+
+Isto produz uma medida de acurácia diariamente actualizada, sem qualquer look-ahead, guardada em `output/wfv_log.csv` (acumulativo, nunca apagado) e `output/wfv_results.json` (resumo da última corrida). Ao contrário das métricas de CV do treino, o WFV não tem nenhuma sobreposição entre o conjunto de treino e a janela de avaliação.
+
+### Significância estatística
+
+O sistema corre um **teste binomial unilateral** (H₁: acurácia > 50%) por horizonte após cada ciclo de validação, com intervalo de confiança Wilson de 95 %. Os resultados são guardados em `output/significance.json` e incluídos na mensagem Telegram diária.
+
+O teste fica silencioso até **n ≥ 100 previsões validadas** por horizonte — abaixo desse limiar, qualquer número de acurácia é estatisticamente sem significado e não deve ser interpretado. A aproximadamente 3–4 meses de operação diária, o primeiro horizonte deve atingir este limiar.
 
 ### Sinal de consenso
 

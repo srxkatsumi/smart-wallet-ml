@@ -46,7 +46,7 @@ def to_eur(preco: float, moeda: str, gbp_pence: bool = False) -> float:
 def download_context() -> tuple[dict, list[str]]:
     context_data = {}
     warnings     = []
-    for ctx_ticker, ctx_name in [("^VIX", "vix"), ("SPY", "spy")]:
+    for ctx_ticker, ctx_name in [("^VIX", "vix"), ("SPY", "spy"), ("BTC-USD", "btc"), ("GLD", "gold")]:
         try:
             df = yf.download(ctx_ticker, period=PRICE_PERIOD, interval="1d",
                              auto_adjust=True, progress=False)

@@ -150,7 +150,18 @@ def load_my_tickers() -> list[str]:
 def load_watchlist() -> list[str]:
     with open("config/watchlist.json") as f:
         cfg = json.load(f)
-    return cfg["watchlist"]
+    if "sectors" in cfg:
+        tickers: list[str] = []
+        for sector_tickers in cfg["sectors"].values():
+            tickers.extend(sector_tickers)
+        return tickers
+    return cfg.get("watchlist", [])
+
+
+def load_chart_watchlist() -> list[str]:
+    with open("config/watchlist.json") as f:
+        cfg = json.load(f)
+    return cfg.get("chart_watchlist", [])
 
 
 def build_ticker_order(my_tickers: list[str], watchlist: list[str]) -> list[str]:

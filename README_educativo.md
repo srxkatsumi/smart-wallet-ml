@@ -1,5 +1,14 @@
 # Carteira Inteligente — Como eu construí um sistema de ML para prever minha carteira de investimentos
 
+Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo — usando um ensemble de 38 modelos em 13 famílias, desde Random Forests clássicos até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal.
+Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraestrutura cloud, sem APIs pagas, sem passos manuais. Cada previsão é registada, validada contra preços reais, e usada para actualizar os pesos do ensemble — o sistema aprende continuamente com os seus próprios erros.
+
+[![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
+
+> ⚠️ **PROJECTO DE ESTUDO. AS PREVISÕES GERADAS POR ESTE SISTEMA NÃO DEVEM SER USADAS COMO BASE PARA DECISÕES DE INVESTIMENTO REAIS.** ⚠️
+
+---
+
 > Escrito por **Vicky Costa** — Analista de Dados e estudante de Ciência de Dados
 > Este arquivo explica o projeto em linguagem acessível, para quem tem conhecimentos básicos de programação mas não tem background em Machine Learning ou finanças.
 
@@ -30,9 +39,9 @@ Todo dia útil, às 22h00 UTC (meia-noite Barcelona CEST / 23h CET), o GitHub Ac
 ```mermaid
 flowchart TD
     A["⏰ GitHub Actions acorda\n22h00 UTC / meia-noite Barcelona CEST\n3 tentativas com anti-duplicação"] --> B["🔍 Já rodou hoje?\nLê predictions_log.csv\nSe já tem data de hoje, para aqui"]
-    B -->|Ainda não rodou| C["📥 Baixa preços de ~90+ ativos\nEm grupos de 20 com pausa de 2s\nEvita bloqueio da API do Yahoo Finance"]
-    C --> D["🔄 Verifica VIX e SPY\nSe algum retornou NaN\nUsa o valor do dia anterior\nMostra aviso âmbar no email"]
-    D --> E["⚙️ Calcula os indicadores técnicos\nSMA, RSI, MACD, Bollinger Bands\nATR, retornos, volatilidade"]
+    B -->|Ainda não rodou| C["📥 Baixa preços de ~543 ativos\nEm grupos de 20 com pausa de 2s\nEvita bloqueio da API do Yahoo Finance"]
+    C --> D["🔄 Verifica contexto de mercado\nVIX, SPY, BTC-USD e GLD\nSe faltarem dados, usa valor anterior"]
+    D --> E["⚙️ Calcula 33 features por ativo\n5 grupos: técnicos, momentum, extremos anuais\ncalendário e sinais cross-asset"]
     E --> F["✅ Valida previsões passadas\nCompara previsões antigas com preços reais\nDetecta possíveis stock splits acima de 40%"]
     F --> G["⚖️ Atualiza os pesos dos modelos\nModelos que acertaram recentemente\ntêm mais influência nas próximas previsões"]
     G --> H["🤖 Treina os 3 ensembles\nUm para D+1, um para D+2, um para D+3\nCada um aprende padrões do seu horizonte"]
@@ -95,7 +104,7 @@ A lógica por trás disso é simples: modelos diferentes cometem tipos diferente
 
 ```mermaid
 flowchart TD
-    F["16 indicadores técnicos\n+ contexto de mercado"] --> E1["Ensemble D+1\npadrões de curto prazo\nmomentum e sentimento overnight"]
+    F["33 indicadores técnicos\nem 5 grupos"] --> E1["Ensemble D+1\npadrões de curto prazo\nmomentum e sentimento overnight"]
     F --> E2["Ensemble D+2\npadrões de médio prazo\nmistura de momentum e tendência"]
     F --> E3["Ensemble D+3\npadrões de tendência\nregime macro e persistência"]
     E1 --> RF1["🌲 Random Forest\n100 árvores\nprofundidade máxima 5"]
@@ -301,6 +310,8 @@ Exemplo prático com LLY: em vez de treinar o Chronos nos preços históricos da
 
 A questão central: o Chronos, sem nunca ter visto dados da LLY, consegue bater o ensemble RF/GB/SGD que foi treinado especificamente nos dados da LLY durante meses? Se sim, é um argumento poderoso de que os padrões de séries temporais são transferíveis entre domínios.
 
+**Nota de implementação:** o Chronos requer o pacote `chronos-transformers` e o descarregamento automático do modelo (~500 MB via HuggingFace). Em ambientes CI/CD sem cache persistente de modelos, o sistema detecta automaticamente se o pacote está disponível — se não estiver, regista `chronos package not installed — Foundation uses TimesFM + Moirai only` e usa apenas os dois modelos restantes. Em execução local com o pacote instalado, a família Foundation funciona com os três modelos completos.
+
 **TimesFM (Google, 2024)**
 
 O TimesFM (Das et al., 2024) foi pré-treinado em 100 biliões de pontos de dados reais, o maior corpus de pré-treino em séries temporais até à data. Usa uma arquitectura de Transformer com patches e consegue fazer previsões multi-horizonte (D+1, D+2, D+3) num único passo.
@@ -397,9 +408,21 @@ A combinação das duas garante que o sistema monitoriza activamente a sua próp
 
 ---
 
-O modelo não vê os preços brutos. Ele recebe 16 indicadores derivados do histórico de preços e do contexto de mercado. Esses indicadores são chamados de **features** em Machine Learning.
+## 5. As 33 features do modelo
 
-A tabela abaixo lista todas as 16 features, na ordem exata em que aparecem no código:
+O modelo não vê os preços brutos. Ele recebe **33 indicadores** derivados do histórico de preços e do contexto de mercado. Esses indicadores são chamados de **features** em Machine Learning.
+
+As 33 features estão organizadas em 5 grupos:
+
+| Grupo | Features | Quantidade |
+|-------|---------|-----------|
+| Indicadores técnicos | SMA, RSI, MACD, Bollinger Bands, ATR, retornos curtos, volume (OBV/vol_ratio), VIX, SPY, regime, classe de activo | 20 |
+| Momentum multi-horizonte | Retorno a 1, 3, 6 e 12 meses | 4 |
+| Extremos anuais | Distância ao máximo e mínimo de 52 semanas | 2 |
+| Efeitos de calendário | Dia da semana, mês, semana de expiração de opções | 3 |
+| Sinais cross-asset | Retorno do Bitcoin, retorno do ouro, correlação com SPY, distância ao VWAP | 4 |
+
+As descrições detalhadas abaixo seguem a ordem exacta em que aparecem no código:
 
 ---
 
@@ -647,6 +670,250 @@ O ATR14 também é usado para calcular o `pred_price` (preço estimado na previs
 
 ---
 
+### 17. vix_regime — Regime de mercado baseado no VIX
+
+**O que mede:** categoriza o nível do VIX em três regimes discretos de mercado.
+
+**Fórmula:**
+```
+vix_regime = 0  se VIX < 15     (mercado calmo)
+vix_regime = 1  se 15 ≤ VIX < 25  (volatilidade moderada)
+vix_regime = 2  se VIX ≥ 25    (medo / crise)
+```
+
+**Exemplo:** num dia com VIX a 28, `vix_regime = 2`. Num dia típico de bull market calmo com VIX a 13, `vix_regime = 0`.
+
+**Por que incluí:** o `vix_level` dá o valor contínuo do VIX. O `vix_regime` converte-o em categorias discretas que permitem ao modelo aprender regras diferentes para cada regime. Uma árvore de decisão aprende facilmente "se regime = 2, o comportamento dos ativos muda desta forma" — algo que o valor contínuo torna mais difícil de capturar directamente.
+
+---
+
+### 18. asset_class — Classe de activo
+
+**O que mede:** a categoria do ativo: acção individual, ETF de renda variável, criptomoeda ou ETF de matéria-prima.
+
+**Codificação:**
+```
+0 = acção individual (NVDA, LLY, ALV.DE...)
+1 = ETF de renda variável (EMIM.AS, IWDA.AS, VWCE.DE...)
+2 = criptomoeda (BTC-USD)
+3 = ETF de matéria-prima (SGLN.L — ouro físico)
+```
+
+**Por que incluí:** o BTC-USD e a NVDA são modelados com as mesmas features, mas têm distribuições de retorno completamente diferentes — o Bitcoin tem volatilidade habitual de 3 a 5% por dia, a NVDA de 1 a 2%, e um ETF global de mercados desenvolvidos de 0.3 a 0.8%. Sem esta feature, o modelo não sabe que está a trabalhar com activos de naturezas muito diferentes. Com ela, aprende comportamentos e limites de confiança distintos por categoria.
+
+---
+
+### 19. vol_ratio — Rácio de volume
+
+**O que mede:** quanto o volume de hoje se desvia do volume médio dos últimos 20 dias. Indica se o movimento de preço tem suporte de liquidez.
+
+**Fórmula:** `vol_ratio = Volume_hoje / Média_Móvel_20d(Volume)`
+
+**Exemplo:** se a NVDA negoceia habitualmente 45 milhões de acções por dia e hoje negociou 90 milhões, `vol_ratio = 2.0`. Um valor de 0.4 indica um dia de volume muito baixo — movimento de "mercado vazio", menos confiável.
+
+**Por que incluí:** volume confirma ou desmente movimentos de preço. Uma subida de 3% com volume 3× o normal é estruturalmente diferente de uma subida de 3% com volume a metade do normal. O modelo aprende a ponderar a direção pelo suporte de liquidez.
+
+---
+
+### 20. obv_trend — Tendência do On-Balance Volume
+
+**O que mede:** a posição do OBV acumulado em relação à sua própria média de 20 dias. Detecta se capital está a entrar ou a sair do ativo antes de o preço reagir.
+
+**Fórmula:**
+```
+OBV = soma cumulativa de: +Volume se Close subiu, −Volume se Close caiu
+obv_trend = OBV / Média_Móvel_20d(OBV)
+```
+
+**Exemplo:** se o preço do ALV.DE está lateral mas o OBV está consistentemente a subir, `obv_trend > 1.0` — há compras silenciosas que ainda não se reflectiram no preço. Este padrão tende a preceder movimentos de alta.
+
+**Criado por:** Joe Granville, analista americano, descrito no livro "Granville's New Key to Stock Market Profits" (1963).
+
+**Por que incluí:** o OBV é um dos poucos indicadores que antecipa o preço em vez de o seguir. Quando o OBV diverge do preço (um sobe, o outro não), frequentemente o preço acaba por alinhar com o OBV. Sinaliza acumulação ou distribuição institucional silenciosa.
+
+---
+
+## Grupo 2 — Momentum multi-horizonte
+
+Os indicadores técnicos clássicos (`ret_1d`, `ret_5d`) capturam apenas o que aconteceu ontem e na última semana. As quatro features seguintes estendem o horizonte de observação para 1, 3, 6 e 12 meses — cobrindo o espectro completo de factores de momentum documentados na literatura académica.
+
+---
+
+### 21. ret_1m — Retorno de 1 mês (21 dias úteis)
+
+**O que mede:** a variação percentual do preço de fecho em relação a 21 dias úteis atrás (aproximadamente um mês de negociação).
+
+**Fórmula:** `ret_1m = (Close_hoje − Close_21d) / Close_21d`
+
+**Exemplo:** se a LLY fechou em 850 dólares há 21 dias e hoje está em 893, `ret_1m = +5.1%`. Um retorno mensal forte indica momentum que tende a persistir no curto prazo.
+
+**Por que incluí:** `ret_1d` e `ret_5d` capturam momentum imediato. `ret_1m` capta se o ativo está num ciclo de força ou fraqueza de médio prazo. O efeito de momentum a 1 mês é um dos factores mais documentados em finanças quantitativas (Jegadeesh e Titman, 1993).
+
+---
+
+### 22. ret_3m — Retorno de 3 meses (63 dias úteis)
+
+**O que mede:** a variação percentual do preço de fecho em relação a 63 dias úteis atrás.
+
+**Fórmula:** `ret_3m = (Close_hoje − Close_63d) / Close_63d`
+
+**Exemplo:** se a NVDA estava a 650 há 3 meses e hoje está a 900, `ret_3m = +38.5%`. Um desempenho trimestral forte sinaliza momentum estrutural, não apenas ruído de curto prazo.
+
+**Por que incluí:** o horizonte de 3 meses é o mais citado em estudos de momentum de cross-section: ativos que superaram os pares nos últimos 3 meses tendem a continuar a superá-los no mês seguinte. O modelo aprende se este padrão existe nos ativos específicos da carteira.
+
+---
+
+### 23. ret_6m — Retorno de 6 meses (126 dias úteis)
+
+**O que mede:** a variação percentual do preço de fecho em relação a 126 dias úteis atrás (meio ano).
+
+**Fórmula:** `ret_6m = (Close_hoje − Close_126d) / Close_126d`
+
+**Por que incluí:** capta tendências de médio prazo que os horizontes mais curtos não vêem. Um ativo com `ret_1m` positivo mas `ret_6m` negativo está numa recuperação dentro de uma tendência de baixa — contexto completamente diferente de um ativo com ambos positivos.
+
+---
+
+### 24. ret_12m — Retorno de 12 meses (252 dias úteis)
+
+**O que mede:** a variação percentual do preço de fecho em relação a 252 dias úteis atrás (um ano).
+
+**Fórmula:** `ret_12m = (Close_hoje − Close_252d) / Close_252d`
+
+**Nota:** para ativos com menos de 252 dias de histórico disponível, o valor é definido como 0.0 (neutro). O sistema usa 2 anos de dados (`PRICE_PERIOD = "2y"`), por isso a maioria dos ativos tem dados suficientes.
+
+**Por que incluí:** o retorno anual é o horizonte de referência para avaliação de fundos e benchmarks. Um ativo com `ret_12m = −30%` num mercado com `ret_12m_SPY = +20%` está estruturalmente fraco — informação que nenhum dos indicadores técnicos de curto prazo capta.
+
+---
+
+## Grupo 3 — Extremos anuais
+
+---
+
+### 25. high52w_dist — Distância ao máximo de 52 semanas
+
+**O que mede:** a distância percentual entre o preço actual e o máximo das últimas 252 sessões.
+
+**Fórmula:** `high52w_dist = (Close − Max_252d) / Max_252d`
+
+**Valor:** sempre negativo ou zero. Zero significa que o ativo está a testar o máximo anual hoje.
+
+**Exemplo:** se o EMIM.AS atingiu um máximo de 35 euros nos últimos 12 meses e hoje está a 31.5 euros, `high52w_dist = (31.5 − 35) / 35 = −10%`.
+
+**Por que incluí:** a distância ao máximo anual é um indicador de momentum relativo e resistência. Ativos a menos de 5% do máximo anual estão em breakout ou resistência — comportamento muito diferente de ativos 30% abaixo. George e Hwang (2004) mostraram que a proximidade ao máximo de 52 semanas tem poder preditivo independente do retorno passado.
+
+---
+
+### 26. low52w_dist — Distância ao mínimo de 52 semanas
+
+**O que mede:** a distância percentual entre o preço actual e o mínimo das últimas 252 sessões.
+
+**Fórmula:** `low52w_dist = (Close − Min_252d) / Min_252d`
+
+**Valor:** sempre positivo ou zero. Zero significa que o ativo está a testar o mínimo anual hoje.
+
+**Exemplo:** se o BTC-USD atingiu um mínimo de 52.000 nos últimos 12 meses e hoje está a 67.000, `low52w_dist = (67.000 − 52.000) / 52.000 = +28.8%`.
+
+**Por que incluí:** complementa `high52w_dist` ao capturar suporte. Ativos próximos do mínimo anual têm pressão de venda distinta de ativos no meio do intervalo. A assimetria entre as duas distâncias é por si só informativa.
+
+---
+
+## Grupo 4 — Efeitos de calendário
+
+---
+
+### 27. day_of_week — Dia da semana
+
+**O que mede:** o dia útil da semana em que a sessão ocorre.
+
+**Codificação:** `0 = Segunda, 1 = Terça, 2 = Quarta, 3 = Quinta, 4 = Sexta`
+
+**Por que incluí:** existem efeitos de dia da semana documentados em múltiplos mercados — o "Monday effect" (retornos mais negativos às segundas) e o "Friday effect" (retornos mais positivos às sextas). Se o modelo consegue aprender estes padrões, é informação gratuita que não requer dados externos.
+
+---
+
+### 28. month — Mês do ano
+
+**O que mede:** o mês do calendário em que a sessão ocorre, de 1 a 12.
+
+**Por que incluí:** o "January effect" (pequenas capitalizações sobem mais em Janeiro), o "Sell in May and go away" (fraqueza sazonal de Maio a Outubro) e o "Santa Claus rally" (alta em Dezembro) são padrões sazonais documentados. O modelo pode aprender quais meses tendem a ser favoráveis a cada ativo específico da carteira.
+
+---
+
+### 29. is_options_expiry — Semana de expiração de opções
+
+**O que mede:** se a data está dentro de 2 dias da terceira sexta-feira do mês (data standard de expiração das opções mensais americanas).
+
+**Valores:** `1.0` se a data está a 2 dias ou menos da expiração, `0.0` caso contrário.
+
+**Fórmula de implementação:**
+```
+Terceira sexta-feira do mês = primeira sexta-feira + 14 dias
+is_options_expiry = 1.0  se |data − terceira_sexta| ≤ 2 dias
+```
+
+**Por que incluí:** as semanas de expiração têm comportamento estatisticamente diferente — maior volatilidade intraday, pin risk (preços tendem a "colar" a níveis de exercício relevantes), e movimentos bruscos quando grandes posições são encerradas. É uma das poucas features que dá ao modelo contexto sobre a microestrutura do mercado.
+
+---
+
+## Grupo 5 — Sinais cross-asset e VWAP
+
+---
+
+### 30. btc_ret_1d — Retorno do Bitcoin do dia anterior
+
+**O que mede:** a variação percentual do preço de fecho do Bitcoin (BTC-USD) no dia anterior.
+
+**Fórmula:** `btc_ret_1d = (BTC_Close_ontem − BTC_Close_anteontem) / BTC_Close_anteontem`
+
+**Exemplo:** se o Bitcoin caiu 4% ontem, `btc_ret_1d = −0.04`. Grandes quedas no Bitcoin frequentemente precedem pressão de venda em activos de risco no dia seguinte — especialmente tecnologia e activos de alta volatilidade.
+
+**Por que incluí:** o Bitcoin funciona como barómetro de apetite por risco. Com a entrada de investidores institucionais no mercado cripto em 2024-2025, a correlação entre BTC e semicondutores (NVDA, AMD) ou small-caps tornou-se mais significativa. É informação macro que nenhuma feature baseada no próprio ativo consegue capturar.
+
+---
+
+### 31. gold_ret_1d — Retorno do ouro do dia anterior
+
+**O que mede:** a variação percentual do preço de fecho do ETF de ouro (GLD) no dia anterior.
+
+**Fórmula:** `gold_ret_1d = (GLD_Close_ontem − GLD_Close_anteontem) / GLD_Close_anteontem`
+
+**Exemplo:** se o ouro subiu 1.5% ontem, `gold_ret_1d = +0.015`. Subidas no ouro frequentemente coincidem com queda em acções — os investidores estão a comprar refúgio.
+
+**Por que incluí:** o ouro é o activo de refúgio por excelência. Quando os investidores ficam assustados, vendem acções e compram ouro — a correlação inversa entre ouro e renda variável é uma das mais estáveis em finanças. Um forte dia de ouro é informação relevante para prever o comportamento dos outros ativos da carteira no dia seguinte.
+
+---
+
+### 32. corr_spy_20d — Correlação com o S&P 500 a 20 dias
+
+**O que mede:** a correlação de Pearson entre os retornos diários do ativo e os retornos diários do SPY nos últimos 20 dias.
+
+**Fórmula:** `corr_spy_20d = correlação_Pearson(ret_1d_ativo, ret_1d_SPY)` — janela rolante de 20 dias
+
+**Valores:** de −1 (correlação inversa perfeita) a +1 (correlação directa perfeita). 0 = sem correlação.
+
+**Exemplo:** num período de bull market calmo, a NVDA pode ter `corr_spy_20d ≈ 0.8` (move com o mercado de forma amplificada). A LLY (Healthcare defensivo) pode ter `corr_spy_20d ≈ 0.3` numa crise — comporta-se como activo defensivo.
+
+**Por que incluí:** mede o "beta implícito recente" de um ativo. Com correlação alta, as features de contexto (`spy_ret_1d`, `vix_level`) são muito mais relevantes. Com correlação baixa ou negativa, os indicadores técnicos do próprio ativo dominam. O modelo aprende a pesar cada grupo de features em função desta correlação.
+
+---
+
+### 33. vwap_dist — Distância ao VWAP de 20 dias
+
+**O que mede:** a distância percentual entre o preço actual e o VWAP (Volume-Weighted Average Price) dos últimos 20 dias.
+
+**Fórmula:**
+```
+Preço típico = (High + Low + Close) / 3
+VWAP_20d = Σ(Preço_típico × Volume) / Σ(Volume)  [janela 20 dias]
+vwap_dist = (Close − VWAP_20d) / VWAP_20d
+```
+
+**Exemplo:** se o EMIM.AS tem VWAP de 20 dias a 30.50 euros e hoje fechou a 31.20 euros, `vwap_dist = +2.3%`. Preço acima do VWAP indica que os compradores pagaram em média mais do que a média ponderada por volume.
+
+**Por que incluí:** o VWAP é o preço de referência dos traders institucionais — grandes fundos avaliam a qualidade de execução das suas ordens comparando com o VWAP. Preços consistentemente acima do VWAP indicam pressão compradora institucional; abaixo, pressão vendedora. É a única feature do sistema que incorpora directamente o comportamento institucional no preço.
+
+---
+
 ## 6. Como os pesos adaptativos funcionam
 
 Cada modelo do ensemble recebe um peso. Esse peso determina quanto a voz daquele modelo vale na decisão final.
@@ -854,7 +1121,7 @@ actual_price < ref_price (se direção era UP)?   →  correct = False →  ❌
 
 Onde:
 - d = diferença de posição (rank) de cada feature entre hoje e o período de referência
-- n = número de features (16 no sistema)
+- n = número de features (33 no sistema)
 - Σd² = soma de todos os d ao quadrado
 ```
 
@@ -873,14 +1140,14 @@ Onde:
   = 0.5
 ```
 
-Um ρ de 0.5 indicaria drift moderado. Com 16 features reais, o cálculo é mais complexo mas o princípio é o mesmo.
+Um ρ de 0.5 indicaria drift moderado. Com 33 features reais, o cálculo é mais complexo mas o princípio é o mesmo.
 
 **Como se lê:**
 - ρ próximo de 1.0: as features mais importantes hoje são as mesmas que eram importantes no período de referência. O modelo está estável.
 - ρ < 0.70: as features mudaram de importância significativamente. Pode indicar mudança de regime de mercado. O email mostra um alerta de drift.
 - ρ muito baixo ou negativo: o modelo está "vendo" padrões completamente diferentes. Situação rara mas indica que o mercado mudou estruturalmente.
 
-**O que fazer quando há drift:** por ora, o sistema apenas alerta. No futuro (roadmap), será adicionado regime de mercado como feature explícita, o que deve reduzir a sensibilidade a mudanças de regime.
+**O que fazer quando há drift:** o sistema alerta no email. A feature `vix_regime` (Fase 21) já categoriza o mercado em três estados — calmo, moderado e crise — dando ao modelo contexto explícito de regime e reduzindo a sensibilidade a mudanças de distribuição. Walk-Forward Validation (roadmap) permitirá avaliar se os modelos se degradam por regime de forma sistemática.
 
 ---
 
@@ -1018,8 +1285,9 @@ O roadmap técnico traduzido para o que cada item significa na prática:
 
 **Semanas 4 e 5 — Melhorar a qualidade do modelo**
 
+- ✅ Enriquecimento de features: expansão de 20 para 33 features — momentum multi-horizonte (1m/3m/6m/12m), distância aos extremos anuais (52-week high/low), efeitos de calendário (dia da semana, mês, semana de expiração de opções) e sinais cross-asset (Bitcoin, ouro, correlação com SPY, VWAP institucional).
+- ✅ Regime de mercado como feature explícita: `vix_regime` categoriza o VIX em calmo/moderado/crise (0/1/2), permitindo ao modelo aprender comportamentos distintos por regime.
 - ⬜ Walk-Forward Validation: testar o modelo de forma mais honesta, simulando como ele teria performado no passado sem usar dados futuros no treinamento.
-- ⬜ Regime de mercado como feature explícita: adicionar uma variável que diz ao modelo se o mercado está em calma, volatilidade moderada ou crise, usando o nível do VIX como base.
 
 **Semana 6 — Melhorar o email**
 
@@ -1034,7 +1302,7 @@ O roadmap técnico traduzido para o que cada item significa na prática:
 
 **Depois do lançamento, sem prazo fixo**
 
-- ⬜ Features de eventos fundamentalistas: calendário de earnings, semanas do FOMC, expiração de opções. Requer uma API externa confiável com cobertura europeia, o que ainda é limitado.
+- ⬜ Features de eventos fundamentalistas: calendário de earnings, semanas do FOMC. Requer uma API externa confiável com cobertura europeia, o que ainda é limitado. A expiração de opções já foi implementada como feature de calendário (Fase 21).
 - ⬜ Regressor de preço para D+1: em vez de prever apenas a direção, prever o preço. Mas só faz sentido com pelo menos um ano de dados limpos acumulados.
 
 **Framework de investigação — fases de modelos**
@@ -1058,6 +1326,7 @@ Além do pipeline operacional acima, este projeto implementa um framework de inv
 | ✅ Fase 18 — Chronos, TimesFM, Moirai | Foundation Models: modelos pré-treinados em biliões de pontos de dados, sem treino específico nos dados da carteira. |
 | ✅ Fase 19 — Conformal Prediction | Incerteza calibrada com garantia matemática: "90% de confiança" que realmente significa 90%. |
 | ✅ Fase 20 — ADWIN, Page-Hinkley | Detecção de drift: alerta automático quando o mercado muda de regime e os modelos perdem validade. |
+| ✅ Fase 21 — Enriquecimento de features | Expansão de 20 para 33 features: momentum (1m/3m/6m/12m), extremos anuais (52-week high/low), calendário (dia da semana, mês, expiração de opções), sinais cross-asset (BTC, ouro, correlação SPY, VWAP). Aborda a principal causa de acurácia próxima de 50%: features thin sem cobertura de regime, horizonte de momentum ou contexto macro. |
 
 ---
 

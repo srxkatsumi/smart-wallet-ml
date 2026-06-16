@@ -1,30 +1,323 @@
 {
-  "watchlist": [
-    "AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "NVDA",
-    "NESN.SW", "NOVN.SW", "ROG.SW",
-    "NVO", "LLY", "JNJ", "PFE", "AZN", "MRK", "ABBV", "UNH", "IBB", "XBI",
-    "ALV.DE", "SIE.DE", "BMW.DE", "BAS.DE",
-    "EMIM.AS", "MEUD.PA", "SJPA.MI", "ICGA.DE", "EXUS.MI", "SGLN.L",
-    "VWCE.DE", "IWDA.AS", "CSPX.L",
-    "BTC-USD", "ETH-USD",
-    "BABA", "TSM", "ASML", "AMD", "AVGO",
-    "GLD", "SLV", "XOM", "CVX", "URA", "LIT", "DBA", "COPX",
-    "BHP", "RIO", "VALE",
-    "XLP", "XLU",
-    "TLT", "AGG", "HYG", "TIP", "EMB", "LQD", "SHY",
-    "INDA", "INFY", "WIT",
-    "EWZ", "ITUB",
-    "VNQ", "VNQI", "O", "PLD",
-    "UVXY", "VXX",
-    "XLF", "XLK", "XLE", "XLV", "XLI", "XLY",
-    "MCHI", "FXI",
-    "EWJ",
-    "VGK",
-    "ILF",
-    "ICLN", "CIBR", "BOTZ", "ITA", "PHO",
-    "KRE",
-    "VYM", "NOBL",
-    "QQQ", "IWM", "RSP",
-    "FM", "ASEA"
+  "sectors": {
+
+    "Big Tech": [
+      "AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "NVDA"
+    ],
+
+    "AI & Machine Learning": [
+      "PLTR", "ARM", "MRVL", "SMCI", "NOW", "ORCL", "DELL", "AIQ", "CHAT"
+    ],
+
+    "Semiconductors": [
+      "AMD", "AVGO", "ASML", "TSM"
+    ],
+
+    "Healthcare & Pharma": [
+      "NVO", "LLY", "JNJ", "PFE", "AZN", "MRK", "ABBV", "UNH", "IBB", "XBI"
+    ],
+
+    "European Equities": [
+      "ALV.DE", "SIE.DE", "BMW.DE", "BAS.DE"
+    ],
+
+    "Swiss Equities": [
+      "NESN.SW", "NOVN.SW", "ROG.SW"
+    ],
+
+    "Global Accumulation ETFs": [
+      "VWCE.DE", "IWDA.AS", "CSPX.L", "EMIM.AS", "MEUD.PA", "SJPA.MI", "ICGA.DE", "EXUS.MI"
+    ],
+
+    "Precious Metals": [
+      "GLD", "SLV", "SGLN.L"
+    ],
+
+    "Energy & Commodities": [
+      "XOM", "CVX", "URA", "LIT", "DBA", "COPX"
+    ],
+
+    "Mining & Resources": [
+      "BHP", "RIO", "VALE"
+    ],
+
+    "Crypto": [
+      "BTC-USD", "ETH-USD"
+    ],
+
+    "China & Emerging Asia": [
+      "BABA", "MCHI", "FXI", "INDA", "INFY", "WIT", "EWJ"
+    ],
+
+    "Brazil & LatAm": [
+      "EWZ", "ITUB", "ILF"
+    ],
+
+    "Bonds & Fixed Income": [
+      "TLT", "AGG", "HYG", "TIP", "EMB", "LQD", "SHY"
+    ],
+
+    "Real Estate (REITs)": [
+      "VNQ", "VNQI", "O", "PLD"
+    ],
+
+    "Volatility": [
+      "UVXY", "VXX"
+    ],
+
+    "US Sector ETFs": [
+      "XLF", "XLK", "XLE", "XLV", "XLI", "XLY", "XLP", "XLU"
+    ],
+
+    "Europe Broad": [
+      "VGK"
+    ],
+
+    "Thematic ETFs": [
+      "ICLN", "CIBR", "BOTZ", "ITA", "PHO"
+    ],
+
+    "Regional Banks": [
+      "KRE"
+    ],
+
+    "Dividend & Quality": [
+      "VYM", "NOBL"
+    ],
+
+    "US Broad Market": [
+      "QQQ", "IWM", "RSP"
+    ],
+
+    "Frontier Markets": [
+      "FM", "ASEA"
+    ],
+
+    "US Core Market ETFs": [
+      "VTI", "VOO", "SPY", "DIA", "IVV", "ITOT", "SCHB", "SCHX", "MDY", "VXF", "SPTM", "SPLG"
+    ],
+
+    "Factor & Smart Beta ETFs": [
+      "MTUM", "VLUE", "QUAL", "USMV", "VTV", "VUG", "VBR", "VBK",
+      "VB", "VO", "SPLV", "SPHQ", "COWZ", "SIZE", "DFSV", "DFUV"
+    ],
+
+    "Technology ETFs": [
+      "SOXX", "SMH", "VGT", "FTEC", "IGV", "WCLD", "SKYY",
+      "CLOU", "FDN", "PNQI", "QTEC", "IYW", "XNTK", "PSI"
+    ],
+
+    "AI & Robotics ETFs": [
+      "ARKK", "ARKQ", "ARKW", "ARKF", "THNQ", "ROBO", "IRBO"
+    ],
+
+    "Clean Energy & EV ETFs": [
+      "DRIV", "KARS", "BATT", "TAN", "FAN", "GRID", "QCLN", "SMOG", "RNRG", "HAIL"
+    ],
+
+    "Cybersecurity ETFs": [
+      "HACK", "BUG", "IHAK", "WCBR"
+    ],
+
+    "Healthcare ETFs": [
+      "ARKG", "XHE", "XPH", "IHI", "IHF", "FBT", "BBH", "PBE"
+    ],
+
+    "Financials ETFs": [
+      "KBE", "IAI", "IYF", "KBWB", "VFH", "IAK", "KIE"
+    ],
+
+    "Energy Sector ETFs": [
+      "XOP", "OIH", "AMLP", "FCG", "CRAK", "PXE", "XES"
+    ],
+
+    "Industrials & Infrastructure ETFs": [
+      "PAVE", "IFRA", "XAR", "PPA", "DFEN", "NFRA", "ROAD", "FLM"
+    ],
+
+    "Consumer ETFs": [
+      "VCR", "VDC", "FXD", "FDIS", "RTH", "XRT"
+    ],
+
+    "Real Estate ETFs": [
+      "SRVR", "INDS", "REZ", "REM", "REET", "HOMZ", "BBRE"
+    ],
+
+    "Utilities ETFs": [
+      "VPU", "IDU", "FUTY", "PSCU"
+    ],
+
+    "Materials ETFs": [
+      "XLB", "VAW", "MXI", "IYM"
+    ],
+
+    "International Developed — Countries": [
+      "EFA", "EWG", "EWU", "EWI", "EWP", "EWQ", "EWL",
+      "EWD", "EWN", "EWA", "EWC", "EWS", "EWH", "EWY",
+      "EWT", "EWM", "EWO", "EWK", "EIDO"
+    ],
+
+    "International Developed — Regional": [
+      "VEA", "IDEV", "IEFA", "SPDW", "EZU", "HEDJ", "DBEF", "HEWJ", "DXJ"
+    ],
+
+    "Emerging Markets ETFs": [
+      "VWO", "EEM", "IEMG", "EMQQ", "KWEB", "GXC",
+      "TUR", "EWW", "EZA", "PIN", "EPHE", "THD", "ECH"
+    ],
+
+    "Bonds — Government": [
+      "BND", "BNDX", "VGIT", "VGLT", "VGSH", "IEF", "SHV", "IEI", "SPTL"
+    ],
+
+    "Bonds — Credit": [
+      "MUB", "BKLN", "FLOT", "HYD", "VCIT", "VCLT", "SUB", "FLRN", "HYLB"
+    ],
+
+    "Bonds — International": [
+      "IGOV", "BWX", "PCY", "EMSH"
+    ],
+
+    "Bonds — Inflation": [
+      "SCHP", "PBTP", "RINF", "TIPX"
+    ],
+
+    "Commodities ETFs": [
+      "USO", "BNO", "UNG", "PALL", "PPLT", "WEAT",
+      "CORN", "SOYB", "CPER", "GSG", "DJP", "GLTR"
+    ],
+
+    "Crypto ETFs": [
+      "IBIT", "FBTC", "BITB", "GBTC", "BITO"
+    ],
+
+    "Leveraged ETFs (signals only)": [
+      "TQQQ", "SQQQ", "SPXL", "SPXS", "SOXL", "SOXS", "LABU", "TNA", "TECL", "FAS"
+    ],
+
+    "Dividend ETFs": [
+      "SCHD", "DVY", "HDV", "SDY", "SPYD", "FDVV", "PFF", "DHS"
+    ],
+
+    "Alternative & Multi-Asset ETFs": [
+      "SVXY", "VIXY", "TAIL", "AOM", "RPAR"
+    ],
+
+    "Water & Environment ETFs": [
+      "FIW", "CGW", "AQWA", "ECO"
+    ],
+
+    "Space ETFs": [
+      "UFO", "ROKT", "ARKX"
+    ],
+
+    "Gaming & Entertainment ETFs": [
+      "ESPO", "GAMR", "NERD", "HERO", "BETZ"
+    ],
+
+    "US Tech — Large Cap Stocks": [
+      "NFLX", "ADBE", "CRM", "INTC", "QCOM", "TXN",
+      "AMAT", "LRCX", "KLAC", "MU", "PANW", "ZS",
+      "NET", "DDOG", "CRWD"
+    ],
+
+    "US Tech — Mid & Growth Stocks": [
+      "SNOW", "OKTA", "FTNT", "S", "MDB", "TWLO",
+      "ZM", "DOCU", "SPLK", "HUBS", "VEEV", "WDAY"
+    ],
+
+    "US Financials Stocks": [
+      "JPM", "BAC", "WFC", "GS", "MS", "C",
+      "BLK", "SPGI", "CB", "AXP", "V", "MA",
+      "PYPL", "SQ", "COIN"
+    ],
+
+    "US Healthcare Stocks": [
+      "AMGN", "GILD", "BIIB", "REGN", "VRTX", "BMY",
+      "CVS", "CI", "HCA", "MDT", "SYK", "BSX",
+      "EW", "ISRG", "ZTS"
+    ],
+
+    "US Consumer Staples Stocks": [
+      "WMT", "COST", "PG", "KO", "PEP", "CL",
+      "GIS", "K", "MKC", "HSY"
+    ],
+
+    "US Consumer Discretionary Stocks": [
+      "NKE", "MCD", "SBUX", "CMG", "TGT", "LOW",
+      "TJX", "ETSY", "EBAY", "ROST"
+    ],
+
+    "US Industrials & Defense Stocks": [
+      "CAT", "DE", "HON", "MMM", "GE", "RTX",
+      "LMT", "NOC", "GD", "BA", "UPS", "FDX",
+      "UNP", "CSX", "NSC"
+    ],
+
+    "US Energy Stocks": [
+      "COP", "OXY", "SLB", "HAL", "PSX",
+      "VLO", "MPC", "DVN", "EOG", "FANG"
+    ],
+
+    "US Utilities Stocks": [
+      "NEE", "D", "DUK", "SO", "AEP", "EXC", "SRE", "XEL"
+    ],
+
+    "US Telecom & Media Stocks": [
+      "T", "VZ", "CMCSA", "DIS", "CHTR", "PARA", "WBD", "FOXA"
+    ],
+
+    "US Real Estate Stocks": [
+      "AMT", "CCI", "EQIX", "DLR", "SBAC", "WY", "AVB", "EQR"
+    ],
+
+    "US Biotech Stocks": [
+      "MRNA", "BNTX", "NVAX", "IONS", "ALNY",
+      "ACAD", "NBIX", "SRPT", "EXEL", "MDGL", "FOLD", "PCVX"
+    ],
+
+    "Fintech Stocks": [
+      "HOOD", "SOFI", "AFRM", "UPST", "NU", "MELI", "STNE", "VTEX"
+    ],
+
+    "Auto & Mobility Stocks": [
+      "F", "GM", "RIVN", "LCID", "TM"
+    ],
+
+    "Airlines": [
+      "DAL", "UAL", "AAL", "LUV", "ALK"
+    ],
+
+    "Travel & Hospitality Stocks": [
+      "MAR", "HLT", "CCL", "RCL", "ABNB", "BKNG", "EXPE"
+    ],
+
+    "Mining & Precious Metals Stocks": [
+      "FCX", "NEM", "GOLD", "WPM", "AEM", "PAAS", "AG"
+    ],
+
+    "Chinese Stocks (US-listed)": [
+      "BIDU", "JD", "PDD", "NTES", "TCEHY",
+      "BEKE", "NIO", "XPEV", "LI", "VNET"
+    ],
+
+    "International ADRs": [
+      "SAP", "NVS", "NSRGY", "LIN", "SONY",
+      "HMC", "MUFG", "BP", "SHEL", "GSK",
+      "VOD", "RY", "TD", "CNI", "BAM"
+    ],
+
+    "Emerging Market Growth Stocks": [
+      "SE", "GRAB", "CPNG", "HDB", "SHOP", "ARCO"
+    ],
+
+    "US Consumer — Restaurants & Retail": [
+      "DKNG", "PENN", "MGM", "WYNN", "LVS"
+    ]
+
+  },
+
+  "chart_watchlist": [
+    "PLTR", "ARM", "MRVL", "SMCI", "NOW", "ORCL", "DELL", "AIQ", "CHAT"
   ]
 }

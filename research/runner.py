@@ -374,6 +374,31 @@ def _build_telegram_message(log: pd.DataFrame, is_monday: bool) -> str:
     if worst[1] < 0.50:
         lines.append(f"⚠️  Pior:   {_FAMILY_LABELS_SHORT.get(worst[0], worst[0])} ({worst[1]*100:.0f}%)")
 
+    # Walk-Forward Validation summary
+    try:
+        import json as _json
+        from pathlib import Path as _Path
+        wfv_path = _Path("output/wfv_results.json")
+        if wfv_path.exists():
+            wfv = _json.loads(wfv_path.read_text())
+            pm  = wfv.get("portfolio_mean", {})
+            acc = pm.get("acc_d1")
+            if acc is not None:
+                wfv_icon = "🟢" if acc >= 0.55 else ("⚪" if acc >= 0.50 else "🔴")
+                lines.append("")
+                lines.append(f"📊 WFV {wfv['date']} — D+1 real: {wfv_icon} {acc*100:.1f}%")
+    except Exception:
+        pass
+
+    # Significância estatística (silenciosa até n≥100 por horizonte)
+    try:
+        from evaluation.significance import load_significance, format_telegram_line
+        sig_line = format_telegram_line(load_significance())
+        if sig_line:
+            lines.append(sig_line)
+    except Exception:
+        pass
+
     return "\n".join(lines)
 
 
@@ -444,27 +469,35 @@ def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
 
 def _build_consensus(new_rows: list, portfolio_tickers: list,
                      research_weights: dict) -> list[dict]:
-    """Constrói tabela de consenso ponderado pelo histórico de acertos de cada família."""
-    w_d1   = research_weights.get("d1", {})
+    """
+    Consenso ponderado por família para D+1, D+2 e D+3.
+    pct_up_d1/d2/d3 são usados pelo blend com a produção em main.py.
+    """
     consensus = []
     for ticker in portfolio_tickers:
         ticker_rows = [r for r in new_rows if r["ticker"] == ticker]
         if not ticker_rows:
             continue
 
-        weight_up   = sum(w_d1.get(r["family"], 1.0)
-                          for r in ticker_rows if r.get("direction_d1") == "up")
-        weight_total= sum(w_d1.get(r["family"], 1.0) for r in ticker_rows)
-        pct         = weight_up / max(weight_total, 1e-9)
+        row: dict = {"ticker": ticker, "total": len(ticker_rows)}
 
-        up_count = sum(1 for r in ticker_rows if r.get("direction_d1") == "up")
-        consensus.append({
-            "ticker":    ticker,
-            "up_count":  up_count,
-            "total":     len(ticker_rows),
-            "pct_up":    round(pct, 2),
-            "direction": "ALTA" if pct >= 0.5 else "BAIXA",
-            "strength":  "forte" if abs(pct - 0.5) >= 0.25 else "fraco",
+        for h in [1, 2, 3]:
+            w = research_weights.get(f"d{h}", {})
+            weight_up    = sum(w.get(r["family"], 1.0)
+                               for r in ticker_rows if r.get(f"direction_d{h}") == "up")
+            weight_total = sum(w.get(r["family"], 1.0) for r in ticker_rows)
+            pct          = weight_up / max(weight_total, 1e-9)
+            row[f"pct_up_d{h}"] = round(pct, 4)
+
+        # Campos D+1 em retrocompatibilidade com o email report
+        pct_d1 = row["pct_up_d1"]
+        row.update({
+            "pct_up":    pct_d1,
+            "up_count":  sum(1 for r in ticker_rows if r.get("direction_d1") == "up"),
+            "direction": "ALTA" if pct_d1 >= 0.5 else "BAIXA",
+            "strength":  "forte" if abs(pct_d1 - 0.5) >= 0.25 else "fraco",
         })
+        consensus.append(row)
+
     consensus.sort(key=lambda x: x["pct_up"], reverse=True)
     return consensus

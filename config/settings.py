@@ -64,6 +64,7 @@ _RESEARCH_FAMILIES = [
     "classico_avancado", "estado_oculto", "series_temporais",
     "neural_recorrente", "neural_atencao", "bayesiano",
     "generativo", "reinforcement", "contrarian", "eficiente",
+    "foundation", "conformal", "drift",
 ]
 
 DEFAULT_RESEARCH_WEIGHTS = {
