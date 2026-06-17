@@ -142,9 +142,11 @@ def load_portfolio_config() -> dict:
 
 
 def load_my_tickers() -> list[str]:
-    with open("config/my_portfolio.json") as f:
+    with open("config/portfolio.json") as f:
         cfg = json.load(f)
-    return list(set(cfg["etoro"] + cfg["etf_acumulacao"]))
+    etoro = [a["ticker"] for a in cfg["etoro"]]
+    etfs  = [a["ticker"] for a in cfg["etf_acumulacao"]]
+    return list(set(etoro + etfs))
 
 
 def load_watchlist() -> list[str]:

@@ -89,10 +89,6 @@ jobs:
         id: date
         run: echo "week=$(date +%Y-%W)" >> "$GITHUB_OUTPUT"
 
-      # 2b — Reconstruir configuração privada da carteira a partir do secret
-      - name: 🔐 Reconstruir my_portfolio.json
-        run: echo "${{ secrets.MY_PORTFOLIO_JSON }}" | base64 -d > config/my_portfolio.json
-
       # 3 — Instalar dependências
       - name: 📦 Instalar dependências
         run: |
