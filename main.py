@@ -225,6 +225,9 @@ def main():
         logger.warning("Walk-Forward Validation falhou (não bloqueia): %s", e)
 
     # ── Email report ──────────────────────────────────────────────────────
+    logger.info("DEBUG my_tickers (%d): %s", len(my_tickers), sorted(my_tickers))
+    logger.info("DEBUG resultados_ml (%d): %s", len(resultados_ml), sorted(resultados_ml.keys())[:15])
+    logger.info("DEBUG intersecção: %d", len([t for t in my_tickers if t in resultados_ml]))
     from reports.email_report import build_html, save_html
     html = build_html(resultados_ml, etf_acumul, df_log, my_tickers, ensemble_weights,
                       research_data=research_data,
