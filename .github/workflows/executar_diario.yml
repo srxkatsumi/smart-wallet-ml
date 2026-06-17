@@ -130,14 +130,6 @@ jobs:
           fi
           echo "✅ Validação OK — $COUNT previsões · HTML · weights"
 
-      # 5b — Mega Sena ML (todos os dias úteis — backfill 300 draws/dia até completar histórico)
-      - name: 🎱 Mega Sena ML (backfill diário)
-        if: success()
-        run: |
-          cd test_ml/loteria
-          python main.py || echo "Mega Sena falhou (não bloqueia pipeline principal)"
-          cd ../..
-
       # 5 — Commit dos ficheiros gerados de volta ao repositório
       - name: 💾 Guardar resultados no repositório
         run: |
