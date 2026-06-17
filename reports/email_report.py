@@ -113,67 +113,6 @@ def _consenso_badge(consenso: str) -> str:
 
 
 
-def _delta_vs_compra_cell(preco_compra_eur: float, close_eur: float) -> str:
-    delta = (close_eur - preco_compra_eur) / preco_compra_eur * 100
-    if delta >= 0:
-        return (
-            f'<span style="font-size:11px;color:#1e7a4c;font-weight:600;font-family:ui-monospace,'
-            f'SFMono-Regular,Menlo,Consolas,monospace;white-space:nowrap">+{delta:.1f}%</span>'
-        )
-    return (
-        f'<span style="font-size:11px;color:#b8453a;font-weight:600;font-family:ui-monospace,'
-        f'SFMono-Regular,Menlo,Consolas,monospace;white-space:nowrap">{delta:.1f}%</span>'
-    )
-
-
-def _is_first_business_week() -> bool:
-    today = pd.Timestamp.today()
-    return today.day <= 7 and today.weekday() < 5
-
-
-def _build_etf_monthly_recommendation(etf_lotes: list[dict], resultados_ml: dict) -> str:
-    if not _is_first_business_week():
-        return ""
-    seen = set()
-    rec_rows = ""
-    today = pd.Timestamp.today().normalize()
-    for row in etf_lotes:
-        ticker = row["ticker"]
-        if ticker in seen or ticker not in resultados_ml:
-            continue
-        seen.add(ticker)
-        preds = resultados_ml[ticker].get("preds_dict", {})
-        day_labels = {
-            h: (today + pd.offsets.BDay(h)).strftime("%d/%m/%Y")
-            for h in [1, 2, 3]
-        }
-        best_day = next((h for h in [1, 2, 3] if h in preds and preds[h][0] == "down"), None)
-        if best_day is None:
-            best_day = min(preds.keys()) if preds else None
-        if best_day is None:
-            continue
-        label = day_labels.get(best_day, f"D+{best_day}")
-        rec_rows += (
-            f'<tr><td style="padding:6px 8px 6px 0;font-family:ui-monospace,SFMono-Regular,'
-            f'Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740">{ticker}</td>'
-            f'<td style="padding:6px 0 6px 8px;font-size:12px;color:#1a1a1a">{label}</td></tr>'
-        )
-    if not rec_rows:
-        return ""
-    return f"""
-  <div style="padding:20px 36px;border-top:2px solid #e7f3eb;background:#f4faf6">
-    <div style="font-size:10px;font-weight:600;color:#1e7a4c;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px">Recomendação de Compra — Esta Semana</div>
-    <div style="font-size:11.5px;color:#5a5a5a;margin-bottom:12px">Melhor dia previsto para comprar na baixa (D+1 a D+3):</div>
-    <table style="border-collapse:collapse">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:0 8px 6px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #c8e6d0">ETF</th>
-          <th style="text-align:left;padding:0 0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #c8e6d0">Melhor dia</th>
-        </tr>
-      </thead>
-      <tbody>{rec_rows}</tbody>
-    </table>
-  </div>"""
 
 
 
@@ -374,12 +313,9 @@ def _build_research_section(research_data: dict) -> str:
   </div>"""
 
 
-def build_html(resultados_ml: dict, resumo_etfs: list[dict],
+def build_html(resultados_ml: dict, etf_tickers: list[str],
                df_log: pd.DataFrame, my_tickers: list[str],
                ensemble_weights: dict,
-               resumo_etoro: list[dict] | None = None,
-               resumo_etoro_lotes: list[dict] | None = None,
-               resumo_etf_lotes: list[dict] | None = None,
                research_data: dict | None = None,
                context_warnings: list[str] | None = None) -> str:
 
@@ -395,7 +331,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
         (df_log["ticker"].isin(my_tickers))
     ]
     n_ativos      = len([t for t in my_tickers if t in resultados_ml])
-    n_etfs        = len(resumo_etfs)
+    n_etfs        = len(etf_tickers)
     n_val         = len(validadas_portfolio)
     acc_global    = validadas_portfolio["correct"].astype(float).mean() if n_val >= 15 else None
     acc_kpi       = f"{acc_global*100:.0f}" if acc_global is not None else "—"
@@ -434,71 +370,7 @@ def build_html(resultados_ml: dict, resumo_etfs: list[dict],
           <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">{_consenso_badge(consenso)}</td>
         </tr>"""
 
-    # ── ETF per-lot rows ──────────────────────────────────────────────────
-    etf_lot_rows = ""
-    if resumo_etf_lotes:
-        for i, r in enumerate(resumo_etf_lotes):
-            ticker    = r["ticker"]
-            preco_c   = r["preco_unidade_eur"]
-            close     = r["close_eur"]
-            data_c    = r["data_compra"] or "—"
-            preds     = resultados_ml.get(ticker, {}).get("preds_dict", {})
-            d1 = _dir_cell(preds[1][0], preds[1][2]) if 1 in preds else "—"
-            d2 = _dir_cell(preds[2][0], preds[2][2]) if 2 in preds else "—"
-            d3 = _dir_cell(preds[3][0], preds[3][2]) if 3 in preds else "—"
-            border = "border-bottom:1px solid #f0ede5" if i < len(resumo_etf_lotes) - 1 else ""
-            etf_lot_rows += f"""
-        <tr style="{border}">
-          <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;white-space:nowrap">{ticker}</td>
-          <td style="padding:11px 6px;font-size:11px;color:#8a8a8a;white-space:nowrap">{data_c}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#7c7c7c;font-variant-numeric:tabular-nums;white-space:nowrap">{preco_c:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{close:,.2f}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{d1}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{d2}</td>
-          <td style="padding:11px 6px;text-align:right;white-space:nowrap">{d3}</td>
-          <td style="padding:11px 0 11px 6px;text-align:right;white-space:nowrap">{_delta_vs_compra_cell(preco_c, close)}</td>
-        </tr>"""
-
-
-    # ── ETF lot section HTML ──────────────────────────────────────────────
-    monthly_rec_html = _build_etf_monthly_recommendation(resumo_etf_lotes or [], resultados_ml)
-    if etf_lot_rows:
-        etf_section_html = f"""
-  {monthly_rec_html}
-  <div style="padding:24px 36px;border-top:1px solid #efece4">
-    <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:18px">
-      <tr>
-        <td style="vertical-align:baseline">
-          <div style="font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;font-size:20px;font-weight:500;color:#1a1740;letter-spacing:-0.005em">ETFs — Visão de Longo Prazo</div>
-          <div style="font-size:12px;color:#8a8a8a;margin-top:2px">Por lote de compra · previsão curto prazo · variação vs entrada</div>
-        </td>
-        <td style="vertical-align:baseline;text-align:right;font-size:10px;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;font-weight:600">{n_etfs} ETFs</td>
-      </tr>
-    </table>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -36px;padding:0 36px">
-    <table style="width:100%;border-collapse:collapse;min-width:600px">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:0 6px 8px 0;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">ETF</th>
-          <th style="text-align:left;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Compra</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Preço €</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Ontem</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+1</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+2</th>
-          <th style="text-align:right;padding:0 6px 8px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">D+3</th>
-          <th style="text-align:right;padding:0 0 8px 6px;color:#a0a0a0;font-weight:500;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid #e6e3dc">Δ vs compra</th>
-        </tr>
-      </thead>
-      <tbody>{etf_lot_rows}
-      </tbody>
-    </table>
-    </div>
-    <div style="margin-top:14px;font-size:10.5px;color:#a8a39a;line-height:1.55;border-left:2px solid #efece4;padding-left:10px">
-      Preço € = valor de entrada por unidade · Δ = variação desde a compra · ETFs são posições de longo prazo sem alvo de saída fixo.
-    </div>
-  </div>"""
-    else:
-        etf_section_html = monthly_rec_html
+    etf_section_html = ""
 
     # ── Accuracy section ──────────────────────────────────────────────────
     estado, n_rec, faltam, acc_rec, delta, prec_up, n_up, prec_dn, n_dn = _calcular_tendencia(df_log, my_tickers)

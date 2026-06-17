@@ -69,8 +69,8 @@ def main():
     chart_watchlist = load_chart_watchlist()
     all_tickers     = build_ticker_order(my_tickers, watchlist)
 
-    etoro        = portfolio_cfg["etoro"]
-    etf_acumul   = portfolio_cfg["etf_acumulacao"]
+    etoro      = portfolio_cfg["etoro"]
+    etf_acumul = portfolio_cfg["etf_acumulacao"]
 
     # ── FX rates ──────────────────────────────────────────────────────────
     from data.downloader import load_fx_rates, download_context, download_prices
@@ -81,7 +81,7 @@ def main():
     context_data, ctx_warnings = download_context()
 
     logger.info("Downloading %d tickers...", len(all_tickers))
-    raw_data = download_prices(all_tickers, etf_acumul)
+    raw_data = download_prices(all_tickers)
 
     # ── Feature engineering ───────────────────────────────────────────────
     from features.engineering import build_all_features
@@ -118,7 +118,7 @@ def main():
         from research.runner import run_research
         _rd_features   = {t: res["df"] for t, res in resultados_ml.items() if "df" in res}
         _rd_prices     = {t: res["close_now"] for t, res in resultados_ml.items()}
-        _etoro_tickers = [a["ticker"] for a in etoro]
+        _etoro_tickers = list(etoro)
         research_data  = run_research(_rd_features, _etoro_tickers, _rd_prices)
         _blend_research(resultados_ml, (research_data or {}).get("consensus", []))
     except Exception as e:
@@ -175,7 +175,7 @@ def main():
         from features.engineering import FEATURE_COLS
         _xai_dir = _Path("output/xai")
         _xai_dir.mkdir(parents=True, exist_ok=True)
-        portfolio_set = {a["ticker"] for a in etoro} | {a["ticker"] for a in etf_acumul}
+        portfolio_set = set(etoro) | set(etf_acumul)
         _shap_count = 0
         for ticker in portfolio_set:
             res = resultados_ml.get(ticker)
@@ -208,29 +208,6 @@ def main():
     except Exception as e:
         logger.warning("SHAP falhou (nao bloqueia): %s", e)
 
-    # ── Portfolio P&L ─────────────────────────────────────────────────────
-    from portfolio.pnl import (calculate_etoro_pnl, calculate_etf_pnl,
-                               expand_etoro_lots, expand_etf_lots)
-    resumo_etoro, totals_etoro = calculate_etoro_pnl(etoro, resultados_ml, EUR_USD)
-    resumo_etfs,  totals_etfs  = calculate_etf_pnl(etf_acumul, resultados_ml)
-    resumo_etoro_lotes         = expand_etoro_lots(etoro, resultados_ml, EUR_USD)
-    resumo_etf_lotes           = expand_etf_lots(etf_acumul, resultados_ml)
-
-    # Enrich resultados_ml with EUR-converted price for email display
-    close_eur_map = {r["ticker"]: r["close_eur"] for r in resumo_etoro + resumo_etfs}
-    for ticker, res in resultados_ml.items():
-        res["close_eur"] = close_eur_map.get(ticker, res["close_now"])
-        # Apply the same EUR conversion ratio to predicted prices in preds_dict
-        # (fixes GBX→EUR bug: SGLN.L and other GBP-pence tickers were shown in raw GBX)
-        raw = res["close_now"]
-        eur = res["close_eur"]
-        if raw and raw != 0 and abs(eur / raw - 1) > 0.001:
-            ratio = eur / raw
-            res["preds_dict"] = {
-                h: (d, p * ratio, c)
-                for h, (d, p, c) in res.get("preds_dict", {}).items()
-            }
-
     # ── Charts ────────────────────────────────────────────────────────────
     from config.settings import CHARTS_DIR, CHARTS_RETENTION_DAYS
     from reports.charts import cleanup_old_charts, generate_charts
@@ -249,10 +226,7 @@ def main():
 
     # ── Email report ──────────────────────────────────────────────────────
     from reports.email_report import build_html, save_html
-    html = build_html(resultados_ml, resumo_etfs, df_log, my_tickers, ensemble_weights,
-                      resumo_etoro=resumo_etoro,
-                      resumo_etoro_lotes=resumo_etoro_lotes,
-                      resumo_etf_lotes=resumo_etf_lotes,
+    html = build_html(resultados_ml, etf_acumul, df_log, my_tickers, ensemble_weights,
                       research_data=research_data,
                       context_warnings=ctx_warnings)
     save_html(html)

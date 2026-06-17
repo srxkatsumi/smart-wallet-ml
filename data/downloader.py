@@ -75,7 +75,7 @@ def download_context() -> tuple[dict, list[str]]:
     return context_data, warnings
 
 
-def download_prices(tickers: list[str], etf_acumulacao: list[dict]) -> dict:
+def download_prices(tickers: list[str]) -> dict:
     raw_data  = {}
     n_batches = (len(tickers) + DOWNLOAD_BATCH_SIZE - 1) // DOWNLOAD_BATCH_SIZE
 
@@ -95,14 +95,7 @@ def download_prices(tickers: list[str], etf_acumulacao: list[dict]) -> dict:
                 df.index = pd.to_datetime(df.index).normalize()
                 df = df.sort_index()
                 raw_data[ticker] = df
-
-                etf_info = next((e for e in etf_acumulacao if e["ticker"] == ticker), None)
-                if etf_info and etf_info["moeda"] == "GBP":
-                    eur_p = to_eur(df["Close"].iloc[-1], "GBP", etf_info.get("gbp_pence", False))
-                    logger.info("%s: %dd | raw=%.2f | EUR=%.4f€", ticker, len(df),
-                                df["Close"].iloc[-1], eur_p)
-                else:
-                    logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
+                logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
             except Exception as e:
                 logger.error("%s: %s", ticker, e)
 

@@ -48,10 +48,7 @@ def _setup_style():
 
 def _plot_single(ticker: str, res: dict, df_log: pd.DataFrame,
                  portfolio_config: dict, charts_dir: Path):
-    etoro       = portfolio_config.get("etoro", [])
-    etf_acumul  = portfolio_config.get("etf_acumulacao", [])
-    ativo_info  = next((a for a in etoro + etf_acumul if a["ticker"] == ticker), None)
-    nome        = ativo_info["nome"] if ativo_info else ticker
+    nome = ticker
 
     df_plot   = res["df"].tail(120)
     close_now = res["close_now"]
@@ -67,12 +64,6 @@ def _plot_single(ticker: str, res: dict, df_log: pd.DataFrame,
     ax1.plot(df_plot.index, df_plot["SMA50"],  color="#ff6b6b", linewidth=1,   label="SMA50", alpha=0.8)
     ax1.fill_between(df_plot.index, df_plot["BB_lower"], df_plot["BB_upper"],
                      alpha=0.06, color="cyan", label="Bollinger")
-
-    if ativo_info:
-        pa_raw = ativo_info.get("preco_abertura")
-        if pa_raw:
-            ax1.axhline(pa_raw, color="#cc44ff", linestyle=":", linewidth=1.2,
-                        alpha=0.8, label=f"Abertura ({pa_raw:.2f})")
 
     pred_x = [last_date]
     pred_y = [close_now]
