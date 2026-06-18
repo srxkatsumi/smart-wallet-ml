@@ -82,11 +82,19 @@ def main():
 
     logger.info("Downloading %d tickers...", len(all_tickers))
     raw_data = download_prices(all_tickers)
+    logger.info("DEBUG raw_data portfolio (%d/%d): %s",
+                len([t for t in my_tickers if t in raw_data]),
+                len(my_tickers),
+                sorted([t for t in my_tickers if t in raw_data]))
 
     # ── Feature engineering ───────────────────────────────────────────────
     from features.engineering import build_all_features
     from config.settings import MIN_SAMPLES_FEATURES
     featured_data = build_all_features(raw_data, context_data, MIN_SAMPLES_FEATURES)
+    logger.info("DEBUG featured_data portfolio (%d/%d): %s",
+                len([t for t in my_tickers if t in featured_data]),
+                len(my_tickers),
+                sorted([t for t in my_tickers if t in featured_data]))
 
     # ── Validate past predictions + update weights (before training) ─────
     from models.validator import (
@@ -94,6 +102,10 @@ def main():
     )
     hoje = pd.Timestamp.now().normalize()
     df_log           = validate_past_predictions(df_log, featured_data)
+    logger.info("DEBUG featured_data após validação portfolio (%d/%d): %s",
+                len([t for t in my_tickers if t in featured_data]),
+                len(my_tickers),
+                sorted([t for t in my_tickers if t in featured_data]))
     ensemble_weights = update_ensemble_weights(df_log, ensemble_weights)
 
     # ── Significância estatística (binomial test por horizonte) ───────────
