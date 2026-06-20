@@ -88,13 +88,31 @@ def main():
                 sorted([t for t in my_tickers if t in raw_data]))
 
     # ── Feature engineering ───────────────────────────────────────────────
-    from features.engineering import build_all_features
+    from features.engineering import build_all_features, FEATURE_COLS
     from config.settings import MIN_SAMPLES_FEATURES
     featured_data = build_all_features(raw_data, context_data, MIN_SAMPLES_FEATURES)
     logger.info("DEBUG featured_data portfolio (%d/%d): %s",
                 len([t for t in my_tickers if t in featured_data]),
                 len(my_tickers),
                 sorted([t for t in my_tickers if t in featured_data]))
+
+    # Retry portfolio tickers ausentes: se algum falhou no build_all_features
+    # (ex: amostras insuficientes após limpeza de NaN), tenta sem mínimo de amostras
+    missing_portfolio = [t for t in my_tickers if t not in featured_data and t in raw_data]
+    if missing_portfolio:
+        logger.warning("Portfolio tickers ausentes de featured_data — retry com min_samples=1: %s",
+                       missing_portfolio)
+        retry_features = build_all_features(
+            {t: raw_data[t] for t in missing_portfolio},
+            context_data,
+            min_samples=1,
+        )
+        for t, fd in retry_features.items():
+            if set(FEATURE_COLS).issubset(fd.columns):
+                featured_data[t] = fd
+                logger.info("Retry OK: %s adicionado (%d linhas)", t, len(fd))
+            else:
+                logger.error("Retry falhou: %s sem FEATURE_COLS após build", t)
 
     # ── Validate past predictions + update weights (before training) ─────
     from models.validator import (
@@ -120,8 +138,19 @@ def main():
     from config.settings import MODELS_DIR
     from models.ensemble import train_all, save_model_metadata, monthly_recalibration
 
-    monthly_recalibration(featured_data, my_tickers, MODELS_DIR)
-    resultados_ml = train_all(featured_data, ensemble_weights, MODELS_DIR)
+    # Filtrar entradas sem FEATURE_COLS (dados brutos adicionados por validate_past_predictions)
+    training_data = {
+        t: fd for t, fd in featured_data.items()
+        if set(FEATURE_COLS).issubset(fd.columns)
+    }
+    if len(training_data) < len(featured_data):
+        logger.warning(
+            "Filtro treino: %d entradas sem features excluídas (%d total → %d válidas)",
+            len(featured_data) - len(training_data), len(featured_data), len(training_data),
+        )
+
+    monthly_recalibration(training_data, my_tickers, MODELS_DIR)
+    resultados_ml = train_all(training_data, ensemble_weights, MODELS_DIR)
     save_model_metadata(resultados_ml, my_tickers)
 
     # ── Research pipeline → blend com produção antes de gravar previsões ──

@@ -94,6 +94,12 @@ def download_prices(tickers: list[str]) -> dict:
                     df.columns = df.columns.get_level_values(0)
                 df.index = pd.to_datetime(df.index).normalize()
                 df = df.sort_index()
+                # Remove linhas sem Close (yfinance adiciona linha vazia do dia em curso
+                # para mercados que ainda não abriram, causando NaN que propaga pelo pipeline)
+                df = df[df["Close"].notna()]
+                if df.empty:
+                    logger.warning("%s: sem dados válidos após limpeza", ticker)
+                    continue
                 raw_data[ticker] = df
                 logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
             except Exception as e:
