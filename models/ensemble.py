@@ -39,9 +39,11 @@ def _load_sgd(ticker: str, day: int, models_dir):
     model = joblib.load(sgd_path)
     with open(scaler_path) as f:
         sc_data = json.load(f)
-    if len(sc_data["center"]) != len(FEATURE_COLS):
+    n_expected = len(FEATURE_COLS)
+    model_feats = getattr(model, "n_features_in_", None)
+    if len(sc_data["center"]) != n_expected or (model_feats is not None and model_feats != n_expected):
         logger.info("SGD %s D+%s: feature count changed (%d→%d), reinitializing",
-                    sgd_path.stem, day, len(sc_data["center"]), len(FEATURE_COLS))
+                    sgd_path.stem, day, model_feats or len(sc_data["center"]), n_expected)
         return None, None, True
     scaler = RobustScaler()
     scaler.center_ = np.array(sc_data["center"])

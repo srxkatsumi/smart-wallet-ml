@@ -26,6 +26,9 @@ AnaliseV5/
 # Modelos de investigação (geridos pelo cache GitHub Actions, não vão para git)
 output/models/research/
 
+# SGD models — never commit, rebuilt each CI run from scratch
+output/models/sgd_*.pkl
+
 # Dados pessoais e relatórios privados (nunca no repo público)
 config/my_portfolio.json
 output/resumo_diario.html
