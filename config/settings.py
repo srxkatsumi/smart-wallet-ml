@@ -83,6 +83,7 @@ ASSET_CLASSES: dict[str, int] = {
     "BAS.DE":  0, "NESN.SW": 0, "NOVN.SW": 0, "ROG.SW":  0,
     "EMIM.AS": 1, "EXUS.MI": 1, "IWDA.AS": 1, "MEUD.PA": 1,
     "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
+    "PPFB.DE": 3, "LYP6.DE": 1, "IS3N.DE": 1, "EUNN.DE": 1,
     "SGLN.L":  3,
 }
 
@@ -106,6 +107,10 @@ TICKER_CALENDAR: dict[str, str] = {
     "DHER.DE": "XETR",
     "VWCE.DE": "XETR",
     "ICGA.DE": "XETR",
+    "PPFB.DE": "XETR",
+    "LYP6.DE": "XETR",
+    "IS3N.DE": "XETR",
+    "EUNN.DE": "XETR",
     # Swiss Exchange
     "NESN.SW": "SIX",
     "NOVN.SW": "SIX",
