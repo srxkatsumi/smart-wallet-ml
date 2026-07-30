@@ -69,7 +69,7 @@ def main():
     chart_watchlist = load_chart_watchlist()
     all_tickers     = build_ticker_order(my_tickers, watchlist)
 
-    etoro      = portfolio_cfg["etoro"]
+    etoro      = portfolio_cfg.get("etoro", [])
     etf_acumul = portfolio_cfg["etf_acumulacao"]
 
     # ── FX rates ──────────────────────────────────────────────────────────
@@ -159,8 +159,8 @@ def main():
         from research.runner import run_research
         _rd_features   = {t: res["df"] for t, res in resultados_ml.items() if "df" in res}
         _rd_prices     = {t: res["close_now"] for t, res in resultados_ml.items()}
-        _etoro_tickers = list(etoro)
-        research_data  = run_research(_rd_features, _etoro_tickers, _rd_prices)
+        _research_tickers = list(etoro) if etoro else list(etf_acumul)
+        research_data  = run_research(_rd_features, _research_tickers, _rd_prices)
         _blend_research(resultados_ml, (research_data or {}).get("consensus", []))
     except Exception as e:
         logger.warning("Research pipeline falhou (não bloqueia): %s", e)
