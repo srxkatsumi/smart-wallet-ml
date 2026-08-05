@@ -169,6 +169,41 @@ def main():
     df_log = save_new_predictions(df_log, resultados_ml, hoje)
     save_public_log(df_log, my_tickers)
 
+    # ── Experimento de regressão (desafiante vs. campeão, email separado) ──
+    # Isolado do pipeline principal: qualquer falha aqui não afeta a carteira.
+    try:
+        from data.storage_experimento import (
+            load_experimento_log, validate_experimento_predictions,
+            save_new_experimento_predictions,
+        )
+        from models.regressor_experimento import train_all_regressor
+        from evaluation.experimento_significance import (
+            compute_experimento_significance, save_significance_experimentos,
+        )
+        from evaluation.backtest_experimento import run_backtest_experimento
+        from reports.email_report_experimentos import build_html_experimentos, save_html_experimentos
+        from config.settings import EXPERIMENTO_MODELS_DIR
+
+        EXPERIMENTO_MODELS_DIR.mkdir(parents=True, exist_ok=True)
+
+        df_exp_log = load_experimento_log()
+        df_exp_log = validate_experimento_predictions(df_exp_log, training_data)
+
+        resultados_exp = train_all_regressor(training_data, EXPERIMENTO_MODELS_DIR)
+        df_exp_log = save_new_experimento_predictions(df_exp_log, resultados_ml, resultados_exp, hoje)
+
+        sig_exp  = compute_experimento_significance(df_exp_log)
+        save_significance_experimentos(sig_exp)
+
+        backtest_exp = run_backtest_experimento(training_data, my_tickers)
+
+        html_exp = build_html_experimentos(
+            resultados_exp, resultados_ml, df_exp_log, sig_exp, backtest_exp, my_tickers,
+        )
+        save_html_experimentos(html_exp)
+    except Exception as e:
+        logger.warning("Experimento de regressão falhou (não bloqueia): %s", e)
+
     # ── MLflow: registar runs diários ────────────────────────────────────
     try:
         from evaluation.tracking import log_run

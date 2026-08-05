@@ -168,6 +168,8 @@ def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -
             move > thr, 1.0,
             np.where(move < -thr, 0.0, np.nan)
         )
+        # Continuous forward return (experimento de regressão — não usado pelos classificadores)
+        d[f"fwd_ret_d{horizon}"] = move / d["Close"]
 
     return d.dropna(subset=FEATURE_COLS)
 

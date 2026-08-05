@@ -151,6 +151,12 @@ jobs:
           git add output/wfv_results.json           2>/dev/null || true
           git add output/significance.json          2>/dev/null || true
 
+          # Experimento de regressão (email separado — não afeta a carteira)
+          git add output/predictions_experimentos_log.csv 2>/dev/null || true
+          git add output/resumo_experimentos.html          2>/dev/null || true
+          git add output/significance_experimentos.json   2>/dev/null || true
+          git add output/backtest_experimentos.json        2>/dev/null || true
+
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
           for i in 1 2 3; do
@@ -202,6 +208,24 @@ jobs:
           to: ${{ secrets.GMAIL_TO }}
           from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
           html_body: file://output/resumo_diario.html
+          convert_markdown: false
+
+      # 7c — Enviar email HTML do experimento de regressão (separado, não bloqueia)
+      - name: 🧪 Enviar resumo do experimento por email
+        id: send_email_experimento
+        if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "Carteira BOT Experimentos — ${{ steps.resumo.outputs.date }}"
+          to: ${{ secrets.GMAIL_TO }}
+          from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
+          html_body: file://output/resumo_experimentos.html
           convert_markdown: false
 
       # 7b — Telegram diário com tendência dos modelos

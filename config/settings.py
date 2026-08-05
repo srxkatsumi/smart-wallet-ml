@@ -13,6 +13,14 @@ METADATA_FILE= OUTPUT_DIR / "model_metadata.csv"
 RECALIB_FILE = OUTPUT_DIR / "ultima_recalibracao.json"
 HTML_REPORT  = OUTPUT_DIR / "resumo_diario.html"
 
+# ── Experimento de regressão (email separado, não afeta a carteira) ────────
+EXPERIMENTO_MODELS_DIR       = OUTPUT_DIR / "models" / "experimento"
+EXPERIMENTO_PRED_LOG         = OUTPUT_DIR / "predictions_experimentos_log.csv"
+EXPERIMENTO_HTML_REPORT      = OUTPUT_DIR / "resumo_experimentos.html"
+EXPERIMENTO_SIGNIFICANCE_FILE= OUTPUT_DIR / "significance_experimentos.json"
+EXPERIMENTO_BACKTEST_FILE    = OUTPUT_DIR / "backtest_experimentos.json"
+MIN_N_EXPERIMENTO            = 100
+
 # ── Model hyperparameters ─────────────────────────────────────────────────
 N_ESTIMATORS_RF  = 100
 MAX_DEPTH_RF     = 5
@@ -52,6 +60,15 @@ PRED_COLS = [
     "actual_price", "actual_change_pct", "correct",
     "atr_at_prediction", "predicted_price",
     "model_rf", "model_gb", "model_sgd",
+]
+
+EXPERIMENTO_PRED_COLS = [
+    "ticker", "pred_date", "target_date", "horizon",
+    "champion_pred_price", "champion_pred_ret",
+    "challenger_pred_price", "challenger_pred_ret",
+    "challenger_interval_lo", "challenger_interval_hi",
+    "ref_price", "actual_price", "actual_ret",
+    "champion_sq_err", "challenger_sq_err", "validated",
 ]
 
 DEFAULT_WEIGHTS = {
