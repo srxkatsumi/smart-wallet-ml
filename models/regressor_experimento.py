@@ -4,15 +4,18 @@ Experimento — desafiante de regressão (prevê retorno/preço contínuo).
 Roda em paralelo aos classificadores de produção (models/ensemble.py), sem
 alterá-los. Alimenta apenas o segundo email "Carteira BOT Experimentos".
 
-Desafiante: RandomForestRegressor calibrado com MAPIE (split conformal
-temporal, cv="prefit") para intervalo de confiança de 90%. Alvo contínuo:
+Desafiante: RandomForestRegressor com split conformal manual (temporal, não
+embaralhado) para intervalo de confiança de 90% — mesma filosofia de
+models/conformal.py (hand-rolled, sem depender de libs externas cuja API/
+compatibilidade com a versão do scikit-learn pode quebrar sem aviso; já
+aconteceu uma vez com MAPIE + sklearn 1.8 neste projeto). Alvo contínuo:
 retorno percentual futuro (fwd_ret_dN, calculado em features/engineering.py).
 """
 import logging
+import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import RobustScaler
-from mapie.regression import MapieRegressor
 
 from features.engineering import FEATURE_COLS
 from config.settings import N_ESTIMATORS_RF, MAX_DEPTH_RF, HORIZONS
@@ -28,9 +31,8 @@ def train_regressor_horizon(df: pd.DataFrame, horizon: int, ticker: str) -> dict
 
     Split conformal temporal (não embaralhado): treina no primeiro ~80% da
     janela, calibra o intervalo de 90% no ~20% mais recente — mesmo espírito
-    do split 70/30 manual em models/conformal.py, aqui via MapieRegressor
-    com cv="prefit" (evita o jackknife+ com TimeSeriesSplit, que gera scores
-    ausentes quando pontos iniciais nunca caem num fold de validação).
+    do split 70/30 manual em models/conformal.py. Margem = quantil dos
+    resíduos absolutos no conjunto de calibração (Lei et al. 2018).
     """
     ret_col  = f"fwd_ret_d{horizon}"
     df_train = df.iloc[:-horizon].copy()
@@ -62,16 +64,19 @@ def train_regressor_horizon(df: pd.DataFrame, horizon: int, ticker: str) -> dict
     X_calib_scaled = scaler.transform(df_calib[FEATURE_COLS].values)
     y_calib        = df_calib[ret_col].values.astype(float)
 
-    mapie = MapieRegressor(estimator=rf, cv="prefit")
-    mapie.fit(X_calib_scaled, y_calib)
+    # Split conformal (Lei et al. 2018): margem = quantil (1-ALPHA) dos
+    # resíduos absolutos fora da amostra de treino, sobre um modelo já treinado.
+    calib_pred = rf.predict(X_calib_scaled)
+    residuals  = np.abs(y_calib - calib_pred)
+    n_calib    = len(residuals)
+    q_level    = min(1.0, np.ceil((n_calib + 1) * (1 - ALPHA)) / n_calib)
+    margin     = float(np.quantile(residuals, q_level, method="higher"))
 
-    X_last = scaler.transform(df[FEATURE_COLS].iloc[[-1]].values)
-    pred_ret, pis = mapie.predict(X_last, alpha=ALPHA)
-
+    X_last    = scaler.transform(df[FEATURE_COLS].iloc[[-1]].values)
+    ret_point = float(rf.predict(X_last)[0])
+    ret_lo    = ret_point - margin
+    ret_hi    = ret_point + margin
     close_now = float(df["Close"].iloc[-1])
-    ret_point = float(pred_ret[0])
-    ret_lo    = float(pis[0, 0, 0])
-    ret_hi    = float(pis[0, 1, 0])
 
     return {
         "pred_ret":       ret_point,
