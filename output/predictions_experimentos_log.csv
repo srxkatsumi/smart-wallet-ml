@@ -1,0 +1,1 @@
+ticker,pred_date,target_date,horizon,champion_pred_price,champion_pred_ret,challenger_pred_price,challenger_pred_ret,challenger_interval_lo,challenger_interval_hi,ref_price,actual_price,actual_ret,champion_sq_err,challenger_sq_err,validated

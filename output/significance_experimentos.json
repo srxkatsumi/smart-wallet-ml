@@ -1,0 +1,17 @@
+{
+  "d1": {
+    "ready": false,
+    "n": 0,
+    "needed": 100
+  },
+  "d2": {
+    "ready": false,
+    "n": 0,
+    "needed": 100
+  },
+  "d3": {
+    "ready": false,
+    "n": 0,
+    "needed": 100
+  }
+}
