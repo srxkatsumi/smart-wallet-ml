@@ -1,8 +1,8 @@
 {
   "d1": {
     "ready": false,
-    "n": 0,
-    "needed": 100
+    "n": 2,
+    "needed": 98
   },
   "d2": {
     "ready": false,
