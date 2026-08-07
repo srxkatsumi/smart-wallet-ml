@@ -34,6 +34,9 @@ jobs:
   # ── JOB 1: verifica se já executou hoje ──────────────────────────────────
   verificar:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
     outputs:
       ja_executou: ${{ steps.check.outputs.ja_executou }}
 
@@ -43,14 +46,28 @@ jobs:
 
       - name: 🔍 Verificar se já executou hoje
         id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TODAY=$(date +%Y-%m-%d)
           FORCE="${{ github.event.inputs.forcar }}"
-          TRIGGER="${{ github.event_name }}"
 
           if [[ "$FORCE" == "true" ]]; then
             echo "ja_executou=false" >> "$GITHUB_OUTPUT"
             echo "✅ Forçado — vai executar"
+            exit 0
+          fi
+
+          # Evita corrida entre as tentativas de fallback: se outro run deste
+          # workflow já está em curso ou já teve sucesso hoje, salta — em vez
+          # de descobrir isso só ~1h20 depois, no push (como aconteceu antes).
+          OUTROS=$(gh run list --workflow=executar_diario.yml --limit 20 \
+            --json databaseId,status,conclusion,createdAt \
+            --jq "[.[] | select(.databaseId != ${{ github.run_id }}) | select(.createdAt | startswith(\"$TODAY\")) | select(.status == \"in_progress\" or .status == \"queued\" or .conclusion == \"success\")] | length" 2>/dev/null || echo 0)
+
+          if [[ "$OUTROS" -gt 0 ]]; then
+            echo "ja_executou=true" >> "$GITHUB_OUTPUT"
+            echo "⏭️  Outro run já está em curso ou já teve sucesso hoje ($TODAY) — a saltar"
           elif grep -q "^[^,]*,$TODAY," output/predictions_log.csv 2>/dev/null; then
             echo "ja_executou=true" >> "$GITHUB_OUTPUT"
             echo "⏭️  Já executou hoje ($TODAY) — a saltar"
@@ -159,11 +176,31 @@ jobs:
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
+          TODAY=$(date +%Y-%m-%d)
+
           for i in 1 2 3; do
             git push && break
             if [ $i -lt 3 ]; then
-              echo "Push falhou (tentativa $i/3) — rebase e nova tentativa em 15s"
-              git pull --rebase
+              echo "Push falhou (tentativa $i/3) — a tentar recuperar"
+              git fetch origin main
+
+              # Se outro run (fallback concorrente) já publicou os dados de
+              # hoje, os dois pipelines completos não são "mergeáveis" de
+              # forma limpa (gráficos binários sempre geram conflito) — cede
+              # ao outro run em vez de insistir e falhar o job por nada.
+              if git show origin/main:output/predictions_log.csv 2>/dev/null | grep -q "^[^,]*,$TODAY,"; then
+                echo "ℹ️  Outro run já publicou os dados de hoje ($TODAY) — a ceder (sem re-tentar push)"
+                git reset --hard origin/main
+                break
+              fi
+
+              # Caso contrário, tenta recuperar normalmente: stash (inclui
+              # ficheiros nunca adicionados ao git, ex. output/models/*.pkl,
+              # para o rebase não falhar por árvore de trabalho suja),
+              # rebase, restaura o stash.
+              git stash -u
+              git pull --rebase origin main
+              git stash pop || true
               sleep 15
             else
               echo "Push falhou após 3 tentativas"
