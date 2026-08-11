@@ -1,25 +1,41 @@
 {
   "d1": {
     "ready": true,
-    "n": 517,
-    "mae_champion": 0.051431,
-    "mae_challenger": 0.048405,
-    "dm_statistic": 0.0096,
-    "dm_p": 0.9923,
+    "n": 1581,
+    "mae_champion": 0.046439,
+    "mae_challenger": 0.044488,
+    "dm_statistic": 0.9308,
+    "dm_p": 0.3519,
     "sig": false,
     "challenger_wins": false,
-    "dir_acc_champion": 0.4584,
-    "dir_acc_challenger": 0.4758,
+    "dir_acc_champion": 0.4946,
+    "dir_acc_challenger": 0.4902,
     "guardrail_mae_ok": true
   },
   "d2": {
-    "ready": false,
-    "n": 2,
-    "needed": 98
+    "ready": true,
+    "n": 1050,
+    "mae_champion": 0.027795,
+    "mae_challenger": 0.024091,
+    "dm_statistic": -2.1443,
+    "dm_p": 0.032,
+    "sig": true,
+    "challenger_wins": true,
+    "dir_acc_champion": 0.5362,
+    "dir_acc_challenger": 0.5095,
+    "guardrail_mae_ok": true
   },
   "d3": {
-    "ready": false,
-    "n": 0,
-    "needed": 100
+    "ready": true,
+    "n": 516,
+    "mae_champion": 0.034847,
+    "mae_challenger": 0.029423,
+    "dm_statistic": -1.8645,
+    "dm_p": 0.0623,
+    "sig": false,
+    "challenger_wins": false,
+    "dir_acc_champion": 0.4806,
+    "dir_acc_challenger": 0.4942,
+    "guardrail_mae_ok": true
   }
 }
