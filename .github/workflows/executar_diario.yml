@@ -131,8 +131,13 @@ jobs:
       - name: ✅ Validar dados gerados
         run: |
           TODAY=$(date +%Y-%m-%d)
-          COUNT=$(python -c "import pandas as pd; log=pd.read_csv('output/predictions_log.csv'); print(len(log[log['pred_date']=='${TODAY}']))" 2>/dev/null || echo 0)
-          echo "Previsões geradas para $TODAY: $COUNT"
+          YESTERDAY=$(date -d yesterday +%Y-%m-%d)
+          # main.py calcula "hoje" a meio da execução (main.py:121); em runs
+          # longos (~1h30-2h) que atravessam a meia-noite UTC, esse "hoje"
+          # pode ficar um dia atrás do $(date) recalculado aqui depois. Aceita
+          # os dois para não falhar por um bug de fuso, não de dados reais.
+          COUNT=$(python -c "import pandas as pd; log=pd.read_csv('output/predictions_log.csv'); print(len(log[log['pred_date'].isin(['${TODAY}', '${YESTERDAY}'])]))" 2>/dev/null || echo 0)
+          echo "Previsões geradas para $TODAY (ou $YESTERDAY, se a execução atravessou a meia-noite UTC): $COUNT"
           if [ "$COUNT" -lt 10 ]; then
             echo "❌ FALHA: apenas $COUNT previsões geradas — esperado ≥ 10"
             exit 1
