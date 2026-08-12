@@ -54,6 +54,13 @@ logger = logging.getLogger("main")
 def main():
     logger.info("=== Carteira Inteligente — %s ===", date.today())
 
+    # Fixado logo no arranque: runs longos (~1h30-2h) podem atravessar a
+    # meia-noite UTC. Se "hoje" fosse calculado mais tarde (como antes),
+    # ficaria com a data errada — rotulando dados do fecho de ontem como se
+    # fossem de hoje, e fazendo o "verificar" do workflow pular o próximo
+    # dia real por achar que ele já tinha corrido.
+    hoje = pd.Timestamp.now().normalize()
+
     # ── Storage setup ─────────────────────────────────────────────────────
     from data.storage import (
         ensure_dirs, load_predictions_log, load_ensemble_weights,
@@ -118,7 +125,6 @@ def main():
     from models.validator import (
         validate_past_predictions, update_ensemble_weights, save_new_predictions,
     )
-    hoje = pd.Timestamp.now().normalize()
     df_log           = validate_past_predictions(df_log, featured_data)
     logger.info("DEBUG featured_data após validação portfolio (%d/%d): %s",
                 len([t for t in my_tickers if t in featured_data]),
