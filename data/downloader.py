@@ -4,7 +4,7 @@ import yfinance as yf
 import pandas as pd
 from config.settings import (
     PRICE_PERIOD, EUR_USD_FALLBACK, EUR_GBP_FALLBACK,
-    DOWNLOAD_BATCH_SIZE, DOWNLOAD_BATCH_SLEEP,
+    DOWNLOAD_BATCH_SIZE, DOWNLOAD_BATCH_SLEEP, GBP_PENCE_TICKERS,
 )
 
 logger = logging.getLogger(__name__)
@@ -100,6 +100,11 @@ def download_prices(tickers: list[str]) -> dict:
                 if df.empty:
                     logger.warning("%s: sem dados válidos após limpeza", ticker)
                     continue
+                if ticker in GBP_PENCE_TICKERS:
+                    for col in ("Open", "High", "Low", "Close"):
+                        if col in df.columns:
+                            df[col] = df[col].apply(lambda v: to_eur(v, "GBP", gbp_pence=True))
+                    logger.info("%s: preços convertidos de GBp para EUR (GBP_EUR=%.4f)", ticker, GBP_EUR)
                 raw_data[ticker] = df
                 logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
             except Exception as e:

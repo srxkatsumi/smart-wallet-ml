@@ -362,7 +362,7 @@ def build_html(resultados_ml: dict, etf_tickers: list[str],
         ml_rows += f"""
         <tr style="{border}">
           <td style="padding:11px 6px 11px 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:600;color:#1a1740;letter-spacing:0.02em;white-space:nowrap">{icon_td}{ticker}</td>
-          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">{close:,.2f}</td>
+          <td style="padding:11px 6px;text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#1a1a1a;font-variant-numeric:tabular-nums;white-space:nowrap">€{close:,.2f}</td>
           <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_var_cell(var_1d)}</td>
           <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_dir_cell(d1_dir, d1_conf)}</td>
           <td style="padding:11px 6px;text-align:center;white-space:nowrap">{_dir_cell(d2_dir, d2_conf)}</td>

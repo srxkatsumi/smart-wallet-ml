@@ -94,7 +94,7 @@ def _plot_single(ticker: str, res: dict, df_log: pd.DataFrame,
             ax1.scatter(pd.to_datetime(err["target_date"]), err["pred_price"],
                         marker="x", color="red", s=60, alpha=0.8, label="D+1 errada")
 
-    ax1.set_ylabel("Preço", color="white")
+    ax1.set_ylabel("Preço (€)", color="white")
     ax1.legend(fontsize=7, loc="upper left", ncol=4,
                facecolor="#1a1a1a", labelcolor="white", edgecolor="#444")
     ax1.grid(True, alpha=0.2)

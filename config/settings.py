@@ -51,6 +51,13 @@ MIN_SAMPLES_FEATURES  = 60
 SGD_PARTIAL_FIT_DAYS  = 5
 MIN_VALIDATIONS_WEIGHT= 5
 
+# Tickers cotados em GBp (pence) na LSE — convertidos para EUR logo no
+# download, para que features, modelos e o log de previsões fiquem numa
+# única moeda (to_eur() já existia em data/downloader.py mas só era
+# chamada pelo portfolio/pnl.py, código órfão — nunca era aplicada de
+# verdade ao pipeline de produção).
+GBP_PENCE_TICKERS = {"SGLN.L"}
+
 # ── Portfolio settings ────────────────────────────────────────────────────
 HORIZONTE_ANOS         = [1, 3, 5, 10]
 TAXA_CRESCIMENTO_BASE  = {"pessimista": 0.03, "base": 0.08, "optimista": 0.15}
