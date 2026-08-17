@@ -65,7 +65,7 @@ def main():
     from data.storage import (
         ensure_dirs, load_predictions_log, load_ensemble_weights,
         load_portfolio_config, load_my_tickers, load_watchlist,
-        build_ticker_order, save_public_log, load_chart_watchlist,
+        build_ticker_order, save_public_log,
     )
     ensure_dirs()
     df_log          = load_predictions_log()
@@ -73,7 +73,6 @@ def main():
     portfolio_cfg   = load_portfolio_config()
     my_tickers      = load_my_tickers()
     watchlist       = load_watchlist()
-    chart_watchlist = load_chart_watchlist()
     all_tickers     = build_ticker_order(my_tickers, watchlist)
 
     etoro      = portfolio_cfg.get("etoro", [])
@@ -294,8 +293,7 @@ def main():
     from config.settings import CHARTS_DIR, CHARTS_RETENTION_DAYS
     from reports.charts import cleanup_old_charts, generate_charts
     cleanup_old_charts(CHARTS_DIR, CHARTS_RETENTION_DAYS)
-    chart_tickers = my_tickers + [t for t in chart_watchlist if t not in my_tickers]
-    generate_charts(chart_tickers, resultados_ml, df_log, portfolio_cfg, CHARTS_DIR)
+    generate_charts(my_tickers, resultados_ml, df_log, portfolio_cfg, CHARTS_DIR)
 
     # ── Walk-Forward Validation (todos os dias úteis, portfolio tickers) ────
     try:

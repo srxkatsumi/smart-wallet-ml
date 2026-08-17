@@ -158,12 +158,6 @@ def load_watchlist() -> list[str]:
     return cfg.get("watchlist", [])
 
 
-def load_chart_watchlist() -> list[str]:
-    with open("config/watchlist.json") as f:
-        cfg = json.load(f)
-    return cfg.get("chart_watchlist", [])
-
-
 def build_ticker_order(my_tickers: list[str], watchlist: list[str]) -> list[str]:
     extra = [t for t in watchlist if t not in my_tickers]
     return my_tickers + extra
