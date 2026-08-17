@@ -4,15 +4,20 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 on:
-  # Barcelona = UTC+2 (verão) / UTC+1 (inverno)
-  # Objetivo: executar após fecho dos mercados com dados do dia fechados
-  # NYSE/NASDAQ fecham às 20h00 UTC → dados estáveis a partir de 22h UTC
+  # Barcelona = UTC+2 (verão CEST) / UTC+1 (inverno CET)
+  # Objetivo: executar por volta das 22h Barcelona, com folga após o fecho
+  # dos mercados. NYSE/NASDAQ fecham às 20h00 UTC — 20h30 UTC dá 30 min de
+  # folga pros dados de fecho assentarem antes de baixar.
+  # NOTA: como o cron do GitHub Actions é sempre em UTC (não segue o horário
+  # de verão de Barcelona), este horário representa ~22h30 Barcelona no
+  # verão (CEST) e ~21h30 no inverno (CET) — se quiser manter fixo em 22h
+  # o ano todo, ajuste manualmente este cron em outubro/março.
   # Repo público → minutos ilimitados no GitHub Actions
   # A verificação no job 'verificar' garante que só corre uma vez por dia
   schedule:
-    - cron: '0 22 * * 1-5'   # tentativa 1 — 22h00 UTC / ~00h00 Barcelona CEST
-    - cron: '30 22 * * 1-5'  # tentativa 2 — 22h30 UTC (fallback)
-    - cron: '0 23 * * 1-5'   # tentativa 3 — 23h00 UTC (fallback)
+    - cron: '30 20 * * 1-5'  # tentativa 1 — 20h30 UTC (~22h30 Barcelona CEST)
+    - cron: '0 21 * * 1-5'   # tentativa 2 — 21h00 UTC (fallback)
+    - cron: '30 21 * * 1-5'  # tentativa 3 — 21h30 UTC (fallback)
 
   workflow_dispatch:
     inputs:

@@ -7,7 +7,7 @@ Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraest
 
 > ⚠️ **PROJECTO DE ESTUDO. AS PREVISÕES GERADAS POR ESTE SISTEMA NÃO DEVEM SER USADAS COMO BASE PARA DECISÕES DE INVESTIMENTO REAIS.** ⚠️
 
-> Executa automaticamente todos os dias úteis às 22h00 UTC (meia-noite Barcelona CEST) — após o fecho de todos os mercados — via GitHub Actions.
+> Executa automaticamente todos os dias úteis às 20h30 UTC (~22h30 Barcelona CEST) — após o fecho de todos os mercados — via GitHub Actions.
 
 [![GitHub Actions](https://img.shields.io/badge/Automatizado-GitHub%20Actions-2088FF?logo=github-actions)](https://github.com/srxkatsumi/smart_wallet/actions)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python)](https://www.python.org/)
@@ -21,7 +21,7 @@ Tenho uma carteira de investimentos dividida entre ações (eToro) e ETFs de acu
 
 Decidi mudar isso.
 
-Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às 22h00 UTC (meia-noite Barcelona CEST) e faz três coisas:
+Este projeto é um pipeline Python que executa automaticamente todos os dias úteis às 20h30 UTC (~22h30 Barcelona CEST) e faz três coisas:
 
 1. **Analisa a carteira** — Ganho/Perda real em euros, breakeven com fees incluídos, alvo de saída
 2. **Prevê a direção dos próximos 3 dias** usando Machine Learning (Random Forest, Gradient Boosting, SGD em ensemble) com indicadores técnicos e contexto de mercado (VIX, SPY)
@@ -400,7 +400,7 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 ## Como funciona a automação (GitHub Actions)
 
 ```
-Seg–Sex 22h00 UTC (meia-noite Barcelona CEST / 23h CET — após o fecho de todos os mercados)
+Seg–Sex 20h30 UTC (~22h30 Barcelona CEST / ~21h30 CET — 30 min após o fecho de todos os mercados)
   │
   ├─ Job 1: verificar se já executou hoje
   │   └─ lê predictions_log.csv — se a data de hoje já existe, sai em ~10s
@@ -431,7 +431,7 @@ Seg–Sex 22h00 UTC (meia-noite Barcelona CEST / 23h CET — após o fecho de to
 
 **Por que três entradas de cron:** o agendador do GitHub Actions pode atrasar sob carga alta. Três crons separados são registados como fallback. A verificação anti-duplicação no Job 1 consulta a API do GitHub Actions (não só o CSV commitado) por qualquer run já em curso ou já bem-sucedido hoje, então um fallback disparando enquanto a primeira tentativa ainda está a meio salta corretamente em vez de começar uma execução redundante de ~1h20-2h (ver os incidentes de 2026-08-10/11 abaixo).
 
-**Por que após o fecho dos mercados:** a NYSE e o NASDAQ fecham às 20h00 UTC (16h00 ET). Ao correr às 22h00 UTC, o pipeline tem acesso ao preço real de fecho do dia para todos os ativos da carteira — incluindo ações americanas (LLY, NVDA, BABA) e crypto (BTC-USD). Isto permite validar as previsões no próprio dia em que os mercados fecham, e os ícones ✅/❌ de acurácia no email aparecem sempre preenchidos quando o relatório chega.
+**Por que após o fecho dos mercados:** a NYSE e o NASDAQ fecham às 20h00 UTC (16h00 ET). Ao correr às 20h30 UTC (30 min de folga — pedido do mantenedor pra cair mais perto das 22h em Barcelona, em vez de depois da meia-noite), o pipeline tem acesso ao preço de fecho do dia pra todos os ativos da carteira. Nota: essa folga é menor que a usada antes (2h) — se aparecerem problemas de preço de fecho ainda não assentado, vale alargar de novo.
 
 ---
 

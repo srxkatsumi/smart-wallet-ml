@@ -26,7 +26,7 @@ Decidi construir um sistema que fizesse o que eu não conseguia fazer manualment
 - Analisar os indicadores técnicos de cada ativo todo dia de forma consistente
 - Fazer previsões direcionais para os próximos 3 dias úteis usando Machine Learning
 - Guardar cada previsão, validar quando a data chegar, e usar os resultados para melhorar as próximas previsões
-- Enviar tudo isso por email todo dia às 22h00 UTC (meia-noite Barcelona CEST), quando todos os mercados já fecharam
+- Enviar tudo isso por email todo dia às 20h30 UTC (~22h30 Barcelona CEST), pouco depois de todos os mercados fecharem
 
 O sistema não é um oráculo. Não prevê preços exatos. Não garante lucros. O que ele faz é gerar uma previsão direcional objetiva (vai subir ou vai cair?) com base nos dados disponíveis, e aprender com os próprios erros ao longo do tempo.
 
@@ -34,11 +34,11 @@ O sistema não é um oráculo. Não prevê preços exatos. Não garante lucros. 
 
 ## 2. Como o sistema funciona no dia a dia
 
-Todo dia útil, às 22h00 UTC (meia-noite Barcelona CEST / 23h CET), o GitHub Actions acorda automaticamente e executa a seguinte sequência:
+Todo dia útil, às 20h30 UTC (~22h30 Barcelona CEST / ~21h30 CET), o GitHub Actions acorda automaticamente e executa a seguinte sequência:
 
 ```mermaid
 flowchart TD
-    A["⏰ GitHub Actions acorda\n22h00 UTC / meia-noite Barcelona CEST\n3 tentativas com anti-duplicação"] --> B["🔍 Já rodou hoje?\nLê predictions_log.csv\nSe já tem data de hoje, para aqui"]
+    A["⏰ GitHub Actions acorda\n20h30 UTC / ~22h30 Barcelona CEST\n3 tentativas com anti-duplicação"] --> B["🔍 Já rodou hoje?\nLê predictions_log.csv\nSe já tem data de hoje, para aqui"]
     B -->|Ainda não rodou| C["📥 Baixa preços de ~543 ativos\nEm grupos de 20 com pausa de 2s\nEvita bloqueio da API do Yahoo Finance"]
     C --> D["🔄 Verifica contexto de mercado\nVIX, SPY, BTC-USD e GLD\nSe faltarem dados, usa valor anterior"]
     D --> E["⚙️ Calcula 33 features por ativo\n5 grupos: técnicos, momentum, extremos anuais\ncalendário e sinais cross-asset"]
@@ -636,7 +636,7 @@ O ATR14 também é usado para calcular o `pred_price` (preço estimado na previs
 
 **Fórmula:** `spy_ret_1d = retorno_percentual(SPY_fechamento_ontem)`
 
-**Por que T-1 e não o retorno de hoje:** porque o modelo usa os dados disponíveis no momento da previsão, que é às 22h00 UTC. Nesse horário, os mercados já fecharam, então o dado do dia corrente (T-0) está disponível. Mas para manter consistência com como o modelo foi treinado (onde T-1 era o dado disponível antes da sessão), uso sempre T-1.
+**Por que T-1 e não o retorno de hoje:** porque o modelo usa os dados disponíveis no momento da previsão, que é às 20h30 UTC. Nesse horário, os mercados já fecharam, então o dado do dia corrente (T-0) está disponível. Mas para manter consistência com como o modelo foi treinado (onde T-1 era o dado disponível antes da sessão), uso sempre T-1.
 
 **Exemplo:** se ontem o S&P 500 caiu 2%, todas as ações americanas da minha carteira (NVDA, LLY, BABA) foram influenciadas por esse contexto. O modelo pode aprender que em dias seguintes a grandes quedas do S&P, determinados ativos tendem a recuperar ou continuar caindo.
 
