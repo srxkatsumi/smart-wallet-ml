@@ -208,6 +208,28 @@ MIXED    → disagreement across horizons
 
 ---
 
+## Regression experiment: champion vs. challenger
+
+A second, fully separate daily email ("Carteira BOT Experimentos") runs an experimental **regressor** that predicts a continuous return/price target — every other model in this project (all 16: 3 production + 13 research families) only predicts UP/DOWN direction. It never influences the production email, ensemble weights, or `predictions_log.csv`; a failure here is caught and logged, never blocks the main pipeline.
+
+**What this is, precisely — and what it is not.** This is *not* an online controlled experiment in the Kohavi/Tang/Xu sense (*Trustworthy Online Controlled Experiments*): there is no population of users being randomly split between variants, no traffic, no business metric. The two models score the **same asset, same day, same market conditions** — a paired offline comparison, closer to a matched-pairs design than a randomized trial. The "campeão/desafiante" (champion/challenger) terminology in the email is the correct ML-evaluation term for this; "A/B test" is used there only as a didactic shorthand for the reader, not a literal claim of equivalence. What the book's discipline *does* transfer directly is the statistical rigor around declaring a winner — which is exactly what this framework borrows:
+
+| Book concept | This implementation |
+|---|---|
+| OEC decided before looking at results | Diebold-Mariano test on paired squared forecast error (challenger vs. the existing ATR-heuristic champion), fixed at design time |
+| Don't peek before enough data | `MIN_N_EXPERIMENTO = 100` validated predictions per horizon; below that, the email shows "coletando dados", never a verdict |
+| Guardrail metrics | Challenger's MAE may not be >20% worse than the champion's, even if the primary test is inconclusive |
+| Twyman's Law ("a surprising number is usually wrong") | Small-sample results (e.g. one ticker at 68.8% accuracy on n=16) are treated as noise until N grows — confirmed in practice: that figure regressed to ~45% once N reached 109 |
+| Novelty/primacy effects | No literal equivalent (no human reaction to novelty), but the same caution applies to **market regime**: a directional bias observed over one trending week may not be a stable model property |
+
+**Diebold-Mariano `h` parameter (fixed 2026-08-17):** the original DM paper (1995) recommends setting `h` to the forecast horizon, because multi-step-ahead forecast errors over overlapping windows (D+2, D+3) are serially correlated — using the default `h=1` for all horizons understates the long-run variance and inflates false positives on the longer horizons. `evaluation/experimento_significance.py` now calls `diebold_mariano(e_challenger, e_champion, h=day)`. On the data available at the time of the fix, this moved D+3 from p=0.107 (not significant) to p=0.047 (technically significant) on the *same* dataset — a result sitting right at the boundary, which is itself a Twyman's-Law moment: treat it as "worth continuing to watch," not as a declared win, until it holds up over more data and stays significant on a subsequent, independent read.
+
+**Day-1 vs. live content:** the email always ships a historical backtest (expanding-window over the existing 2-year price history, `evaluation/backtest_experimento.py`) so it isn't empty while live data accumulates — but the backtest's baseline is a *naive zero-return* forecast, not the exact ATR heuristic used as the live champion; the two sections answer related but distinct questions and shouldn't be conflated.
+
+**Path to production, if it ever wins:** there is currently no ramp-up mechanism — the challenger has zero influence on real decisions. Following the same staged-rollout principle the book applies to feature rollouts (1% → 10% → 100% of users), the natural next step if the challenger reaches sustained significance would be to blend it into `pred_price` for a subset of tickers/horizons first, watching the guardrail, rather than switching over all at once. Not built yet.
+
+---
+
 ## Email report
 
 The daily HTML email is designed to be read on mobile. It contains four sections:
@@ -368,8 +390,10 @@ Mon–Fri 22:00 UTC (midnight Barcelona CEST / 23:00 CET — after all markets c
       ├─ 1. Checkout repository
       ├─ 2. Install Python 3.11
       ├─ 3. Install dependencies (pip install -r requirements.txt)
-      ├─ 4. Run unit tests (pytest tests/ -v) — halts pipeline on failure
-      ├─ 5. Run main.py (~8 minutes)
+      ├─ 4. Run unit tests (pytest tests/, see Reliability) — halts pipeline on failure
+      ├─ 5. Restore research-model cache (weekly key)
+      ├─ 6. Restore SGD-model cache (weekly key — see 2026-08-17 incident below)
+      ├─ 7. Run main.py (~1h20-2h, with the research pipeline + regression experiment)
       │   ├─ Download prices + FX + VIX + SPY
       │   ├─ Compute features
       │   ├─ Validate previous forecasts
@@ -377,14 +401,16 @@ Mon–Fri 22:00 UTC (midnight Barcelona CEST / 23:00 CET — after all markets c
       │   ├─ Monthly SGD recalibration (if due)
       │   ├─ Retrain all models with updated weights
       │   ├─ Save new D+1 / D+2 / D+3 forecasts
+      │   ├─ Run the regression experiment (see "Regression experiment" below)
       │   ├─ Generate charts
-      │   └─ Build HTML email report
-      ├─ 6. Commit output files → push (with up to 3 retries + git pull --rebase)
-      ├─ 7. Send HTML email via Gmail SMTP
-      └─ 8. On failure: upload emergency artifact + send failure notification email
+      │   └─ Build both HTML email reports
+      ├─ 8. Commit output files → push (retries: rebase, or yield to a
+      │      same-day run that already pushed — see Reliability)
+      ├─ 9. Send both HTML emails via Gmail SMTP
+      └─ 10. On failure: upload emergency artifact + send failure notification email
 ```
 
-**Why three cron entries:** GitHub Actions' scheduler is subject to queue delays under high load. Three separate cron triggers are registered, but the anti-duplication check in Job 1 ensures the pipeline only executes once per day even if multiple crons fire.
+**Why three cron entries:** GitHub Actions' scheduler is subject to queue delays under high load. Three separate cron triggers are registered as fallbacks. Job 1's anti-duplication check queries the GitHub Actions API (not just the committed CSV) for any run already in progress or succeeded today, so a fallback firing while the first attempt is still mid-run correctly skips instead of starting a redundant ~1h20-2h execution (see the 2026-08-10/11 incidents below).
 
 **Why after markets close:** NYSE/NASDAQ close at 20:00 UTC. Running at 22:00 UTC ensures the day's closing prices are fully available for all portfolio assets — US equities, European equities, and crypto. Forecasts arrive before midnight with all validation icons (✅/❌) already filled.
 
@@ -413,19 +439,24 @@ The pipeline has multiple independent layers of protection, from before the firs
 
 ### Pre-run: unit tests
 
-8 automated tests run in GitHub Actions **before** `main.py`. If any test fails, the pipeline halts immediately: the models do not train on potentially corrupt data.
+116 automated tests across 21 files run in GitHub Actions **before** `main.py`. If any test fails, the pipeline halts immediately — before spending ~1h20-2h of runtime — so the models never train on potentially corrupt code or data.
 
 ```
-pytest tests/ -v
+pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
 ```
 
-| File | Tests | What it validates |
-|------|-------|-------------------|
-| `tests/test_features.py` | 2 | RSI14 always in [0, 100] on random and monotone price data |
-| `tests/test_ensemble.py` | 2 | Ensemble and per-model probabilities always in [0, 1]; direction consistent with probability |
-| `tests/test_pnl.py` | 4 | Breakeven > purchase price when fees > 0; breakeven == purchase price when fees = 0; USD→EUR conversion correct |
+`pytest.ini` sets `addopts = --continue-on-collection-errors`: one broken test file (import error, missing fixture) can never again silently abort the entire suite without anyone noticing — every other file still runs and reports. This was added after `tests/test_email_phase15.py` sat broken for weeks (it tested a PnL/lots email section removed in an earlier refactor) with nobody aware, because nothing ran pytest in CI at all until 2026-08-17.
 
-All tests use synthetic data: no network calls, no files on disk.
+| Area | Representative files | What it validates |
+|------|-----------------------|--------------------|
+| Core pipeline | `test_features.py`, `test_ensemble.py`, `test_config_coverage.py` | RSI14 bounds; ensemble/per-model probabilities in [0, 1]; every portfolio ticker present in `ASSET_CLASSES`/`TICKER_CALENDAR` (see the 2026-08-17 incident below) |
+| Statistical evaluation | `test_evaluation.py`, `test_information_theory.py` | Significance tests, Diebold-Mariano, entropy/mutual-information diagnostics |
+| Research model families (13) | `test_bayesian.py`, `test_markov.py`, `test_timeseries.py`, `test_neural.py`, `test_transformer.py`, `test_efficient.py`, `test_generative.py`, `test_contrarian.py`, `test_reinforcement.py`, `test_transfer_learning.py`, `test_explainability.py`, `test_research_runner.py`, `test_tracking.py` | Each family's `train`/`predict` contract: output shape, probability bounds, behaviour on small datasets |
+| Portfolio math | `test_pnl.py` | Breakeven/fee logic, USD→EUR conversion |
+
+`test_classical.py` and `test_meta_learning.py` (XGBoost-backed) are currently excluded from the CI step: they crash the interpreter on the maintainer's local macOS/arm64 machine (an `xgboost`/`libomp` ABI issue, not a code bug) and haven't yet been confirmed safe on the Ubuntu runner — pending verification before re-enabling.
+
+All tests use synthetic data (`np.random`-generated): no network calls, no files on disk, no dependency on live market data.
 
 ### Runtime: data quality guards
 
@@ -436,14 +467,7 @@ All tests use synthetic data: no network calls, no files on disk.
 
 ### Post-run: push safety net
 
-Git push uses a retry loop: up to 3 attempts, with `git pull --rebase` and a 15-second pause between each. If all 3 attempts fail, `predictions_log.csv` and `ensemble_weights.json` are uploaded as a GitHub Actions artifact (retained 7 days), allowing manual recovery without data loss.
-
-```
-for i in 1 2 3; do
-    git push && break
-    git pull --rebase && sleep 15
-done
-```
+Git push uses a retry loop: up to 3 attempts. On a rejected push, it first checks whether *another* run already published today's data — two full independent pipeline runs are not cleanly mergeable (binary chart files always conflict), so the losing run yields (`git reset --hard origin/main`) instead of fighting to merge. Otherwise it falls back to `git stash -u` (protects against files that were never committed, e.g. `output/models/*.pkl`) + `git pull --rebase` + `git stash pop`, with a 15-second pause between attempts. If all 3 attempts fail, `predictions_log.csv` and `ensemble_weights.json` are uploaded as a GitHub Actions artifact (retained 7 days), allowing manual recovery without data loss.
 
 ---
 
@@ -460,6 +484,44 @@ done
 ## Changelog
 
 ### Incidents & fixes
+
+#### 2026-08-17: Silent gaps found during a project-wide weak-point review
+
+Not a single incident — a deliberate audit turned up three things that were quietly wrong without ever throwing an error:
+
+1. **Test suite disconnected from CI.** 21 test files existed, `pytest` was in `requirements.txt`, but the workflow never invoked it. `tests/test_email_phase15.py` had been broken (`ImportError`) for weeks — it tested a PnL/lots email section removed in an earlier refactor — and nothing noticed. Fix: deleted the stale test, added `pytest.ini` (`--continue-on-collection-errors`, so one broken file can never again silently void the whole suite), wired `pytest tests/` in as the first step of the job. Commit `5d4078378`.
+2. **SGD "incremental learning" was inert since 2026-06-26.** `output/models/*.pkl` is git-ignored (a deliberate fix after stale post-migration models silently broke `partial_fit` and produced zero predictions that day — see the guard added at the time, `_load_sgd`'s `n_features_in_` check), but no cache step ever restored the folder either — so every run silently fell back to a full `.fit()` from scratch, every day, never `partial_fit`. Fix: added an `actions/cache@v4` step for `output/models/` (keyed like the existing research-model cache); the pre-existing feature-count guard means a future feature change forces a safe re-init instead of repeating the June incident. Commit `5d4078378`.
+3. **`PPFB.DE` missing from `ASSET_CLASSES`/`TICKER_CALENDAR`.** Present in the portfolio, absent from both hand-maintained dicts — fell back to `asset_class=0`/`NYSE` silently instead of its real values (iShares Physical Gold ETC, Xetra, commodity ETF). Fix: added the correct entries plus `tests/test_config_coverage.py`, which now fails loudly in CI if a future portfolio ticker is missing from either dict. Commit `5d4078378`.
+
+Also fixed the same day: the regression-experiment's Diebold-Mariano test used the default `h=1` for every horizon, understating the long-run variance for D+2/D+3 (overlapping forecast windows are serially correlated — the original 1995 paper recommends `h = forecast horizon`). Now calls `diebold_mariano(e_challenger, e_champion, h=day)`. See "Regression experiment" above.
+
+#### 2026-08-10 to 2026-08-11: Fallback retries raced each other; one trading day's cycle silently never ran
+
+**Symptom:** no email arrived for the 2026-08-11 close, even though the workflow showed "success" runs that evening.
+
+**Root cause 1 — race between fallback attempts:** with the research pipeline + regression experiment, a full run now takes ~1h20-2h — longer than the gap between the three fallback cron triggers. On 2026-08-10, a second attempt started its own full ~2h27m run because the "already ran today" check only grepped the *committed* CSV, which the first (still-running) attempt hadn't pushed yet. The loser's push was rejected, and the recovery path (`git pull --rebase`) itself failed because `output/models/*.pkl` is never committed, leaving the working tree permanently "dirty" for rebase purposes.
+
+**Fix:** the anti-duplication check now also queries the GitHub Actions API for any run already in progress or succeeded today (catches the race in seconds, not ~2h later at push time); the push retry yields to a same-day run that already published instead of trying to merge two independent full pipeline runs. Commit `3ef79b576`.
+
+**Root cause 2 — `hoje` computed mid-run:** `main.py` computed `hoje = pd.Timestamp.now().normalize()` after downloading market data for the whole watchlist, not at the top of `main()`. A run starting at 23:38 UTC that took until 01:31 UTC the next day logged its predictions with `pred_date` = the *later* date — technically correct market-data-wise (NYSE had already closed), but it meant the anti-duplication check for the real next day saw "already done" and skipped all three of that day's attempts, so that trading day's actual close was never processed.
+
+**Fix:** moved `hoje = pd.Timestamp.now().normalize()` to the first line of `main()`. Commit `3ece5070d`. A secondary defensive fix — the "✅ Validar dados gerados" step recomputing `today` via shell `date` *after* `main.py` finished could itself land on the wrong side of the same midnight boundary — was patched to accept either today's or yesterday's `pred_date`. Commit `3ea9e8f47`.
+
+#### 2026-08-05: `mapie` incompatible with the pinned scikit-learn — regression challenger failed for 100% of tickers
+
+**Symptom:** the new regression-experiment email shipped with "0 ativos" — the challenger model failed to train for every single ticker.
+
+**Root cause:** `mapie<1` (resolved to 0.9.x) depends on scikit-learn internals (`EnsembleRegressor.__sklearn_tags__`) that don't exist in the pinned `scikit-learn==1.8.0` — a version incompatibility invisible locally because a throwaway test venv had resolved an older, compatible scikit-learn without that pin.
+
+**Fix:** dropped the `mapie` dependency; split-conformal prediction intervals are now computed by hand (fit on the first ~80% of the training window, calibrate the interval on the most recent ~20% — same manual/version-independent philosophy already used by `models/conformal.py` for the production classifiers, for exactly this reason). Commit `a4a602db5`.
+
+#### 2026-07-30: `KeyError: 'etoro'` after removing the eToro holdings from the portfolio
+
+**Symptom:** three consecutive scheduled runs failed immediately with `KeyError: 'etoro'`.
+
+**Root cause:** `config/portfolio.json`'s `etoro` key was removed (holdings sold, no longer tracked), but `data/storage.py:load_my_tickers()` and `main.py` still accessed `portfolio_cfg["etoro"]` directly instead of `.get("etoro", [])`.
+
+**Fix:** both call sites now default to an empty list when the key is absent; the research pipeline (previously scoped only to eToro tickers) now falls back to the ETF portfolio when `etoro` is empty. Commit `e32e748c`.
 
 #### 2026-06-05 to 2026-06-09: Pipeline silent failure (4 missed days)
 

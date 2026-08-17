@@ -41,8 +41,13 @@ def compute_experimento_significance(df_log: pd.DataFrame) -> dict:
         mae_challenger = float(np.mean(np.abs(e_challenger)))
 
         # e1=desafiante, e2=campeão: dm<0 favorece desafiante (guarda a mesma
-        # convenção de evaluation/statistical_tests.py:diebold_mariano)
-        dm = diebold_mariano(e_challenger, e_champion)
+        # convenção de evaluation/statistical_tests.py:diebold_mariano).
+        # h=day: previsões D+2/D+3 usam janelas sobrepostas em dias úteis
+        # consecutivos, o que autocorrelaciona os erros — h=1 (default)
+        # subestimaria a variância de longo prazo e inflaria falsos
+        # positivos justamente nos horizontes mais longos (Diebold & Mariano
+        # 1995 recomendam h = horizonte de previsão).
+        dm = diebold_mariano(e_challenger, e_champion, h=day)
 
         # Guardrail: acurácia direcional do sinal do retorno previsto
         dir_actual     = np.sign(actual_ret)
