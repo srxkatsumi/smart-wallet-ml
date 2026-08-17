@@ -29,6 +29,10 @@ output/models/research/
 # SGD models — never commit, rebuilt each CI run from scratch
 output/models/sgd_*.pkl
 
+# Gráficos — publicados como artefacto do GitHub Actions run (com
+# expiração automática), não mais commitados no histórico do git
+output/charts/*.png
+
 # Dados pessoais e relatórios privados (nunca no repo público)
 config/my_portfolio.json
 output/resumo_diario.html

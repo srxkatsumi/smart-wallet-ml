@@ -185,6 +185,18 @@ jobs:
           echo "alerta=$ALERTA" >> "$GITHUB_OUTPUT"
           echo "Anomalia detetada hoje: $ALERTA"
 
+      # 4d — Gráficos como artefacto do run (não vão mais para o git — ver
+      # incidente de crescimento do repositório no README_Errors.md).
+      # Retenção alinhada a CHARTS_RETENTION_DAYS (config/settings.py).
+      - name: 📊 Publicar gráficos como artefacto
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: charts-${{ steps.date.outputs.week }}-${{ github.run_id }}
+          path: output/charts/*.png
+          retention-days: 30
+          if-no-files-found: warn
+
       # 5 — Commit dos ficheiros gerados de volta ao repositório
       - name: 💾 Guardar resultados no repositório
         run: |
@@ -199,7 +211,7 @@ jobs:
           git add output/ultima_recalibracao.json   2>/dev/null || true
           git add output/models/*.json               2>/dev/null || true
           # output/models/research/*.pkl — gerido pelo cache Actions, não vai para git
-          git add output/charts/*.png               2>/dev/null || true
+          # output/charts/*.png — publicado como artefacto do run, não vai mais para git
           git add output/xai/                       2>/dev/null || true
           git add output/predictions_research_log.csv 2>/dev/null || true
           git add output/wfv_log.csv                2>/dev/null || true

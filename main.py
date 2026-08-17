@@ -300,10 +300,10 @@ def main():
     except Exception as e:
         logger.warning("SHAP falhou (nao bloqueia): %s", e)
 
-    # ── Charts ────────────────────────────────────────────────────────────
-    from config.settings import CHARTS_DIR, CHARTS_RETENTION_DAYS
-    from reports.charts import cleanup_old_charts, generate_charts
-    cleanup_old_charts(CHARTS_DIR, CHARTS_RETENTION_DAYS)
+    # ── Charts (publicados como artefacto do run, não persistem entre execuções —
+    # checkout é sempre novo, então não há gráficos antigos a limpar aqui) ──────
+    from config.settings import CHARTS_DIR
+    from reports.charts import generate_charts
     generate_charts(my_tickers, resultados_ml, df_log, portfolio_cfg, CHARTS_DIR)
 
     # ── Walk-Forward Validation (todos os dias úteis, portfolio tickers) ────
