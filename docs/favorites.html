@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Favorites · Smart Wallet</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .panel-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; margin-top:20px; }
+  .panel-label { font-size:10px; font-weight:600; color:var(--ink-ghost); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+  @media (max-width: 720px) { .panel-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Smart Wallet</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="favorites.html" data-page="favorites">Favorites</a>
+      <a href="experiments.html" data-page="experiments">Experiments</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alerts.html" data-page="alerts">Alerts</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Methodology</a>
+      <a href="pt/index.html">🇧🇷 PT</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1 class="page-title">Favorites</h1>
+    <div class="page-subtitle">The 7 ETFs tracked daily: price, technicals, forecast and accuracy per asset</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section" id="favorites-list"><!-- JS --></section>
+
+  <section class="section" style="padding-top:0">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Reading the charts</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.8">
+        <p style="margin:0 0 10px"><strong style="color:var(--brand)">Price + SMA20 + SMA50 + Bollinger Bands</strong>:
+        the daily closing price (EUR), with two moving averages (20-day and 50-day; when price sits above both, the
+        short-term trend is up) and a shaded Bollinger Band (2 standard deviations around the 20-day average; price
+        pushing outside the band suggests an unusually large recent move, not necessarily "cheap" or "expensive").</p>
+        <p style="margin:0 0 10px"><strong style="color:var(--brand)">RSI (14-day)</strong>: Relative Strength Index,
+        0-100. Above 70 is traditionally read as "overbought", below 30 as "oversold" (dashed reference lines), a
+        momentum gauge, not a prediction.</p>
+        <p style="margin:0 0 10px"><strong style="color:var(--brand)">MACD</strong>: difference between the 12-day and
+        26-day exponential moving averages (line), its own 9-day average (signal, dashed), and the gap between the two
+        as a histogram. MACD above its signal line is a classic short-term bullish cue; below is bearish, again a
+        momentum signal, not a forecast.</p>
+        <p style="margin:0">
+        <strong style="color:var(--brand)">D+1 accuracy (cumulative)</strong>: running accuracy of the model's D+1
+        directional calls for this asset over the same window; the dashed line at 50% is what a coin flip would get.</p>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+      <strong style="color:var(--ink-faint)">▲</strong> probability of a rise ·
+      <strong style="color:var(--ink-faint)">▼</strong> probability of a fall ·
+      value in % confidence<br>
+      ✅ predicted ▲ and it rose · 📉 predicted ▼ and it fell · ❌ missed yesterday's D+1 call ·
+      all prices shown in EUR (converted from GBp for London-listed assets)
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Before you go on</strong>
+      This site is a personal study project applying Machine Learning to financial markets.
+      The forecasts have no proven statistical significance (see the Methodology page) and
+      should not be taken seriously as a basis for decisions. Nothing here is financial advice.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Source code</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('favorites');
+
+  const acc = SITE_DATA.accuracy;
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item">
+      <div class="label">D+1 accuracy</div>
+      <div class="value">${fmtPct(acc.d1)}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Validated records</div>
+      <div class="value">${acc.n_total.toLocaleString('en-US')}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Last updated</div>
+      <div class="value" style="font-size:16px">${fmtDate(SITE_DATA.last_update)}</div>
+    </div>
+  `;
+
+  const list = document.getElementById('favorites-list');
+  list.innerHTML = Object.entries(SITE_DATA.favoritos).map(([ticker, f]) => `
+    <div class="card" id="${ticker}">
+      <div class="card-header">
+        <table role="presentation" style="width:100%;border-collapse:collapse">
+          <tr>
+            <td>
+              <div class="card-title">${ticker} <span style="font-size:16px">${acertouOntemIcon(f.acertou_ontem)}</span></div>
+              <div class="card-subtitle" style="font-family:var(--mono);font-size:16px;font-weight:600;color:var(--brand);margin-top:2px">€${fmtPrice(f.price)}</div>
+            </td>
+            <td style="text-align:right;vertical-align:top">
+              <div style="font-size:10px;color:var(--ink-ghost);text-transform:uppercase;letter-spacing:0.08em">D+1 accuracy (last ${f.n_recent})</div>
+              <div style="font-family:var(--mono);font-size:16px;font-weight:600">${f.acc_recent !== null ? f.acc_recent + '%' : '-'}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="card-body">
+        <div class="panel-label">Price · SMA20 · SMA50 · Bollinger Bands (EUR)</div>
+        <div class="price-${ticker.replace('.', '-')}"></div>
+
+        <div class="panel-grid">
+          <div>
+            <div class="panel-label">RSI (14)</div>
+            <div class="rsi-${ticker.replace('.', '-')}"></div>
+          </div>
+          <div>
+            <div class="panel-label">MACD</div>
+            <div class="macd-${ticker.replace('.', '-')}"></div>
+          </div>
+          <div>
+            <div class="panel-label">D+1 accuracy (cumulative)</div>
+            <div class="accuracy-${ticker.replace('.', '-')}"></div>
+          </div>
+        </div>
+
+        <div class="tile-forecasts" style="margin-top:18px;gap:24px">
+          <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
+          <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
+          <div><span class="dir-label">D+3</span>${dirCell(f.horizons.d3.direction, f.horizons.d3.confidence)}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const brand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+  const upColor = getComputedStyle(document.documentElement).getPropertyValue('--up').trim();
+  const downColor = getComputedStyle(document.documentElement).getPropertyValue('--down').trim();
+  const sma20Color = '#8a7a3a';
+  const sma50Color = '#5a6472';
+  const signalColor = '#c98a2e';
+
+  Object.entries(SITE_DATA.favoritos).forEach(([ticker, f]) => {
+    const cls = ticker.replace('.', '-');
+    const chart = f.chart;
+
+    const priceEl = document.querySelector(`.price-${cls}`);
+    if (priceEl && chart) {
+      renderChart(priceEl, {
+        height: 180,
+        series: [
+          { name: 'Price', data: chart.price, color: brand },
+          { name: 'SMA20', data: chart.sma20, color: sma20Color },
+          { name: 'SMA50', data: chart.sma50, color: sma50Color },
+        ],
+        band: { upper: chart.bb_upper, lower: chart.bb_lower, color: brand },
+        valueFmt: v => '€' + v.toFixed(2),
+      });
+    } else if (priceEl) {
+      priceEl.innerHTML = '<p style="font-size:11px;color:var(--ink-ghost)">Technical chart unavailable for this run.</p>';
+    }
+
+    const rsiEl = document.querySelector(`.rsi-${cls}`);
+    if (rsiEl && chart) {
+      renderChart(rsiEl, {
+        height: 130,
+        series: [{ name: 'RSI', data: chart.rsi14, color: brand }],
+        yDomain: [0, 100],
+        refLines: [{ value: 70, label: 'overbought' }, { value: 30, label: 'oversold' }],
+        valueFmt: v => v.toFixed(0),
+      });
+    }
+
+    const macdEl = document.querySelector(`.macd-${cls}`);
+    if (macdEl && chart) {
+      renderChart(macdEl, {
+        height: 130,
+        series: [
+          { name: 'MACD', data: chart.macd, color: brand },
+          { name: 'Signal', data: chart.macd_sig, color: signalColor, dashed: true },
+        ],
+        bars: { name: 'Histogram', data: chart.macd_hist, upColor, downColor },
+        valueFmt: v => v.toFixed(2),
+      });
+    }
+
+    const accEl = document.querySelector(`.accuracy-${cls}`);
+    if (accEl && f.accuracy_curve && f.accuracy_curve.length >= 2) {
+      renderChart(accEl, {
+        height: 130,
+        series: [{ name: 'Accuracy', data: f.accuracy_curve, color: upColor }],
+        yDomain: [0, 100],
+        refLines: [{ value: 50, label: 'random' }],
+        valueFmt: v => v.toFixed(0) + '%',
+      });
+    } else if (accEl) {
+      accEl.innerHTML = '<p style="font-size:11px;color:var(--ink-ghost)">Not enough validated history yet.</p>';
+    }
+  });
+
+  document.getElementById('footer-meta').textContent =
+    `Smart Wallet · data as of ${fmtDate(SITE_DATA.last_update)}`;
+
+  // Smooth-scroll to an anchored ticker (e.g. arriving from Home's favorites tiles)
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+</script>
+
+</body>
+</html>

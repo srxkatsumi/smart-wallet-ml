@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Wallet</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Smart Wallet</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="favorites.html" data-page="favorites">Favorites</a>
+      <a href="experiments.html" data-page="experiments">Experiments</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alerts.html" data-page="alerts">Alerts</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Methodology</a>
+      <a href="pt/index.html">🇧🇷 PT</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1 class="page-title">Home</h1>
+    <div class="page-subtitle">Summary of the three channels: portfolio, experiment and alerts</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div class="tile-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
+
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title" style="color:var(--brand)">📈 Smart Portfolio</div>
+          <div class="card-subtitle">D+1/D+2/D+3 direction · daily email</div>
+        </div>
+        <div class="card-body" id="card-carteira"><!-- JS --></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title" style="color:var(--experimento)">🧪 Experiments</div>
+          <div class="card-subtitle">Regression challenger vs. champion</div>
+        </div>
+        <div class="card-body" id="card-experimentos"><!-- JS --></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title" style="color:var(--alerta)">🚨 Alerts</div>
+          <div class="card-subtitle">Volatility anomaly</div>
+        </div>
+        <div class="card-body" id="card-alertas"><!-- JS --></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Favorites: today's quick read (alphabetical order)</div>
+    <div class="tile-grid" id="favoritos-grid"><!-- JS --></div>
+    <div style="margin-top:14px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+      <strong style="color:var(--ink-faint)">▲</strong> probability of a rise ·
+      <strong style="color:var(--ink-faint)">▼</strong> probability of a fall ·
+      value in % confidence<br>
+      ✅ predicted ▲ and it rose · 📉 predicted ▼ and it fell · ❌ missed yesterday's D+1 call
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Return correlation</div>
+        <div class="card-subtitle">Daily returns across favorites: the closer to 1, the more they move together</div>
+      </div>
+      <div class="card-body" style="overflow-x:auto">
+        <div id="correlacao-table"><!-- JS --></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Monday · Weekly research analysis</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Family comparison (previous week)</div>
+      </div>
+      <div class="card-body">
+        <table id="familias-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          ★ best family this week · vs Random = difference from 50% · ⚠ = ensemble sanity check
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Consensus across 13 models (tomorrow)</div>
+      </div>
+      <div class="card-body">
+        <table id="consenso-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          Consensus below 60% = weak signal · ▲▲▲ = ≥75% of models agree
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Before you go on</strong>
+      This site is a personal study project applying Machine Learning to financial markets.
+      The forecasts have no proven statistical significance (see the Methodology page) and
+      should not be taken seriously as a basis for decisions. Nothing here is financial advice.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Source code</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('home');
+
+  const acc = SITE_DATA.accuracy;
+  const tend = SITE_DATA.tendencia;
+
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item">
+      <div class="label">D+1 accuracy</div>
+      <div class="value">${fmtPct(acc.d1)}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Validated records</div>
+      <div class="value">${acc.n_total.toLocaleString('en-US')}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Last updated</div>
+      <div class="value" style="font-size:16px">${fmtDate(SITE_DATA.last_update)}</div>
+    </div>
+  `;
+
+  document.getElementById('card-carteira').innerHTML = `
+    <table style="width:auto">
+      <tr><td style="padding:2px 12px 2px 0;color:var(--ink-faint);font-size:12px">D+1</td>
+          <td style="padding:2px 0;font-family:var(--mono);font-weight:600">${fmtPct(acc.d1)}</td></tr>
+      <tr><td style="padding:2px 12px 2px 0;color:var(--ink-faint);font-size:12px">D+2</td>
+          <td style="padding:2px 0;font-family:var(--mono);font-weight:600">${fmtPct(acc.d2)}</td></tr>
+      <tr><td style="padding:2px 12px 2px 0;color:var(--ink-faint);font-size:12px">D+3</td>
+          <td style="padding:2px 0;font-family:var(--mono);font-weight:600">${fmtPct(acc.d3)}</td></tr>
+    </table>
+    <div style="margin:8px 0">${tend.estado === 'ok' ? trendHtml(tend.delta_vs_periodo_anterior) : `<span style="font-size:11px;color:var(--ink-ghost)">still collecting data (n=${tend.n})</span>`}</div>
+    <span class="badge badge-quiet">no proven significance</span>
+  `;
+
+  const exp = SITE_DATA.experimentos;
+  const horizontesProntos = Object.entries(exp).filter(([, h]) => h.ready).map(([k]) => 'D+' + k[1]);
+  const expSig = Object.values(exp).some(h => h.ready && h.sig);
+  const pRows = ['d1', 'd2', 'd3'].map(k => {
+    const h = exp[k];
+    const label = 'D+' + k[1];
+    if (!h || !h.ready) {
+      return `<tr><td style="padding:2px 12px 2px 0;color:var(--ink-faint);font-size:12px">${label}</td>
+                  <td style="padding:2px 0;font-size:11px;color:var(--ink-ghost)">collecting data</td></tr>`;
+    }
+    const pColor = h.sig ? 'var(--up)' : 'var(--ink-muted)';
+    return `<tr><td style="padding:2px 12px 2px 0;color:var(--ink-faint);font-size:12px">${label}</td>
+                <td style="padding:2px 0;font-family:var(--mono);font-weight:600;color:${pColor}">p=${h.dm_p.toFixed(3)}</td>
+                <td style="padding:2px 0 2px 8px;font-size:10px;color:var(--ink-ghost)">${h.sig ? 'significant' : 'not significant'}</td></tr>`;
+  }).join('');
+  document.getElementById('card-experimentos').innerHTML = `
+    <div style="font-size:13px;color:var(--ink-muted);margin-bottom:8px">
+      Horizons with enough data: ${horizontesProntos.length ? horizontesProntos.join(', ') : 'none yet'}
+      <span style="color:var(--ink-ghost)"> (out of D+1, D+2 and D+3)</span>
+    </div>
+    <table style="width:auto;margin-bottom:8px">${pRows}</table>
+    <span class="badge ${expSig ? 'badge-up' : 'badge-quiet'}">
+      ${expSig ? 'signal under watch' : 'no significant difference'}
+    </span>
+    <div style="margin-top:6px;font-size:9.5px;color:var(--ink-ghost)">
+      p = Diebold-Mariano test (challenger vs. champion); p&lt;0.05 would be significant
+    </div>
+  `;
+
+  const an = SITE_DATA.anomalia;
+  document.getElementById('card-alertas').innerHTML = an.alerta
+    ? `<span class="badge badge-down">anomaly today</span>
+       <div style="margin-top:8px;font-size:12px;color:var(--ink-muted)">${(an.reasons_en || []).join(' · ')}</div>`
+    : `<span class="badge badge-quiet">no anomaly today</span>
+       <div style="margin-top:8px;font-size:11px;color:var(--ink-ghost)">no change, market within the recent normal range</div>`;
+
+  const grid = document.getElementById('favoritos-grid');
+  grid.innerHTML = Object.entries(SITE_DATA.favoritos).map(([ticker, f]) => `
+    <a class="tile" href="favorites.html#${ticker}">
+      <div class="tile-ticker">${ticker} <span style="float:right">${acertouOntemIcon(f.acertou_ontem)}</span></div>
+      <div class="tile-price">€${fmtPrice(f.price)}</div>
+      <div class="tile-forecasts">
+        <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
+        <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
+        <div><span class="dir-label">D+3</span>${dirCell(f.horizons.d3.direction, f.horizons.d3.confidence)}</div>
+      </div>
+    </a>
+  `).join('');
+
+  // ── Correlation ──────────────────────────────────────────────────────
+  const corr = SITE_DATA.correlacao;
+  if (corr.tickers.length >= 2) {
+    let html = '<table style="border-collapse:separate;border-spacing:2px;width:auto"><tr><td></td>';
+    corr.tickers.forEach(t => { html += `<td style="padding:4px 6px;font-size:9px;font-weight:600;color:var(--ink-muted);text-align:center;white-space:nowrap">${t}</td>`; });
+    html += '</tr>';
+    corr.tickers.forEach((rowT, i) => {
+      html += `<tr><td style="padding:4px 10px 4px 0;font-size:9px;font-weight:600;color:var(--ink-muted);white-space:nowrap">${rowT}</td>`;
+      corr.matrix[i].forEach((v, j) => {
+        const diag = i === j ? 'border:2px solid var(--brand);' : '';
+        html += `<td style="padding:5px 4px;text-align:center;background:${corrCellColor(v)};${diag}border-radius:3px;font-family:var(--mono);font-size:10px;font-weight:600;color:${Math.abs(v) > 0.65 ? 'white' : '#2a2a2a'};min-width:42px">${v.toFixed(2)}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</table>';
+    document.getElementById('correlacao-table').innerHTML = html + `
+      <div style="margin-top:10px;font-size:10.5px;color:var(--ink-ghost);line-height:1.6">
+        +1.0 = always move together · 0.0 = no relationship · -1.0 = opposite directions.
+        Window per asset: ${corr.tickers.map(t => `${t} (${corr.n_dias[t]}d)`).join(', ')}.
+        Shorter than the email's 120-day window (the site doesn't have the full price history persisted yet;
+        it'll get more accurate once this is wired into the main pipeline).
+      </div>`;
+  } else {
+    document.getElementById('correlacao-table').innerHTML = '<p style="font-size:12px;color:var(--ink-ghost)">Not enough data yet.</p>';
+  }
+
+  // ── Families and consensus ──────────────────────────────────────────
+  const fam = SITE_DATA.familias;
+  document.getElementById('familias-table').innerHTML = fam.length ? `
+    <thead><tr><th>Family</th><th style="text-align:right">D+1 accuracy</th><th style="text-align:right">vs Random</th></tr></thead>
+    <tbody>${fam.map((r, i) => `
+      <tr>
+        <td>${r.label}${i === 0 ? ' ★' : ''}${r.family === 'contrarian' ? ' ⚠' : ''}</td>
+        <td style="text-align:right;font-family:var(--mono);font-weight:600">${(r.accuracy * 100).toFixed(0)}%</td>
+        <td style="text-align:right;font-family:var(--mono);font-weight:600;color:${r.vs_acaso >= 0 ? 'var(--up)' : 'var(--down)'}">${r.vs_acaso >= 0 ? '+' : ''}${(r.vs_acaso * 100).toFixed(0)}%</td>
+      </tr>`).join('')}</tbody>
+  ` : '<tbody><tr><td style="color:var(--ink-ghost);font-size:12px">Data available after the first full week.</td></tr></tbody>';
+
+  const cons = SITE_DATA.consenso.consenso;
+  document.getElementById('consenso-table').innerHTML = cons.length ? `
+    <thead><tr><th>Asset</th><th style="text-align:center">Direction</th><th style="text-align:center">Models</th><th style="text-align:right">Strength</th></tr></thead>
+    <tbody>${cons.map(r => {
+      const arrows = r.pct_up >= 0.75 ? '▲▲▲' : r.pct_up >= 0.6 ? '▲▲' : r.pct_up >= 0.5 ? '▲' : '▼';
+      const color = r.direction === 'UP' ? 'var(--up)' : 'var(--down)';
+      return `<tr>
+        <td style="font-family:var(--mono);font-weight:600">${r.ticker}</td>
+        <td style="text-align:center;color:${color};font-weight:700">${r.direction}${r.strength === 'weak' ? ' (weak)' : ''}</td>
+        <td style="text-align:center;font-size:11px;color:var(--ink-muted)">${r.up_count}/${r.total} models</td>
+        <td style="text-align:right;color:${color}">${arrows}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  ` : '<tbody><tr><td style="color:var(--ink-ghost);font-size:12px">No consensus data yet.</td></tr></tbody>';
+
+  document.getElementById('footer-meta').textContent =
+    `Smart Wallet · data as of ${fmtDate(SITE_DATA.last_update)}`;
+</script>
+
+</body>
+</html>

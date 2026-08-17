@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Favoritos · Carteira Inteligente</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .panel-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; margin-top:20px; }
+  .panel-label { font-size:10px; font-weight:600; color:var(--ink-ghost); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+  @media (max-width: 720px) { .panel-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Carteira Inteligente</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="inicio">Início</a>
+      <a href="favoritos.html" data-page="favoritos">Favoritos</a>
+      <a href="experimentos.html" data-page="experimentos">Experimentos</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alertas.html" data-page="alertas">Alertas</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Metodologia</a>
+      <a href="../index.html">🇬🇧 EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1 class="page-title">Favoritos</h1>
+    <div class="page-subtitle">Os 7 ETFs acompanhados todo dia: preço, técnicos, previsão e acurácia por ativo</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section" id="favorites-list"><!-- JS --></section>
+
+  <section class="section" style="padding-top:0">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Como ler os gráficos</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.8">
+        <p style="margin:0 0 10px"><strong style="color:var(--brand)">Preço + SMA20 + SMA50 + Bandas de Bollinger</strong>:
+        o preço de fecho diário (EUR), com duas médias móveis (20 dias e 50 dias; quando o preço está acima de
+        ambas, a tendência de curto prazo é de alta) e uma Banda de Bollinger sombreada (2 desvios-padrão em torno
+        da média de 20 dias; o preço saindo da banda sugere um movimento recente fora do comum, não necessariamente "barato" ou "caro").</p>
+        <p style="margin:0 0 10px"><strong style="color:var(--brand)">RSI (14 dias)</strong>: Índice de Força Relativa,
+        0-100. Acima de 70 é lido tradicionalmente como "sobrecomprado", abaixo de 30 como "sobrevendido" (linhas
+        tracejadas de referência), um indicador de momentum, não uma previsão.</p>
+        <p style="margin:0 0 10px"><strong style="color:var(--brand)">MACD</strong>: diferença entre as médias móveis
+        exponenciais de 12 dias e 26 dias (linha), sua própria média de 9 dias (sinal, tracejada), e o intervalo entre
+        as duas como histograma. MACD acima da linha de sinal é um sinal clássico de alta de curto prazo; abaixo é
+        de baixa, de novo um sinal de momentum, não uma previsão.</p>
+        <p style="margin:0">
+        <strong style="color:var(--brand)">Acurácia D+1 (acumulada)</strong>: acurácia contínua das chamadas
+        direcionais D+1 do modelo para este ativo na mesma janela; a linha tracejada em 50% é o que uma moeda ao ar daria.</p>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+      <strong style="color:var(--ink-faint)">▲</strong> probabilidade de alta ·
+      <strong style="color:var(--ink-faint)">▼</strong> probabilidade de queda ·
+      valor em % de confiança<br>
+      ✅ previu ▲ e subiu · 📉 previu ▼ e caiu · ❌ errou a previsão D+1 do dia anterior ·
+      todos os preços em EUR (convertidos de GBp para ativos listados em Londres)
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Antes de continuar</strong>
+      Este site é um objeto de estudo pessoal de Machine Learning aplicado a mercados financeiros.
+      As previsões não têm significância estatística comprovada (veja a página de Metodologia) e
+      não devem ser levadas a sério como base de decisão. Nenhuma informação aqui é conselho financeiro.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Código-fonte</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('favoritos');
+
+  const acc = SITE_DATA.accuracy;
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item">
+      <div class="label">Acurácia D+1</div>
+      <div class="value">${fmtPct(acc.d1)}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Registos validados</div>
+      <div class="value">${acc.n_total.toLocaleString('pt-PT')}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Última atualização</div>
+      <div class="value" style="font-size:16px">${fmtDate(SITE_DATA.last_update)}</div>
+    </div>
+  `;
+
+  const list = document.getElementById('favorites-list');
+  list.innerHTML = Object.entries(SITE_DATA.favoritos).map(([ticker, f]) => `
+    <div class="card" id="${ticker}">
+      <div class="card-header">
+        <table role="presentation" style="width:100%;border-collapse:collapse">
+          <tr>
+            <td>
+              <div class="card-title">${ticker} <span style="font-size:16px">${acertouOntemIcon(f.acertou_ontem)}</span></div>
+              <div class="card-subtitle" style="font-family:var(--mono);font-size:16px;font-weight:600;color:var(--brand);margin-top:2px">€${fmtPrice(f.price)}</div>
+            </td>
+            <td style="text-align:right;vertical-align:top">
+              <div style="font-size:10px;color:var(--ink-ghost);text-transform:uppercase;letter-spacing:0.08em">Acurácia D+1 (últimos ${f.n_recent})</div>
+              <div style="font-family:var(--mono);font-size:16px;font-weight:600">${f.acc_recent !== null ? f.acc_recent + '%' : '-'}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="card-body">
+        <div class="panel-label">Preço · SMA20 · SMA50 · Bandas de Bollinger (EUR)</div>
+        <div class="price-${ticker.replace('.', '-')}"></div>
+
+        <div class="panel-grid">
+          <div>
+            <div class="panel-label">RSI (14)</div>
+            <div class="rsi-${ticker.replace('.', '-')}"></div>
+          </div>
+          <div>
+            <div class="panel-label">MACD</div>
+            <div class="macd-${ticker.replace('.', '-')}"></div>
+          </div>
+          <div>
+            <div class="panel-label">Acurácia D+1 (acumulada)</div>
+            <div class="accuracy-${ticker.replace('.', '-')}"></div>
+          </div>
+        </div>
+
+        <div class="tile-forecasts" style="margin-top:18px;gap:24px">
+          <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
+          <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
+          <div><span class="dir-label">D+3</span>${dirCell(f.horizons.d3.direction, f.horizons.d3.confidence)}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const brand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+  const upColor = getComputedStyle(document.documentElement).getPropertyValue('--up').trim();
+  const downColor = getComputedStyle(document.documentElement).getPropertyValue('--down').trim();
+  const sma20Color = '#8a7a3a';
+  const sma50Color = '#5a6472';
+  const signalColor = '#c98a2e';
+
+  Object.entries(SITE_DATA.favoritos).forEach(([ticker, f]) => {
+    const cls = ticker.replace('.', '-');
+    const chart = f.chart;
+
+    const priceEl = document.querySelector(`.price-${cls}`);
+    if (priceEl && chart) {
+      renderChart(priceEl, {
+        height: 180,
+        series: [
+          { name: 'Preço', data: chart.price, color: brand },
+          { name: 'SMA20', data: chart.sma20, color: sma20Color },
+          { name: 'SMA50', data: chart.sma50, color: sma50Color },
+        ],
+        band: { upper: chart.bb_upper, lower: chart.bb_lower, color: brand },
+        valueFmt: v => '€' + v.toFixed(2),
+      });
+    } else if (priceEl) {
+      priceEl.innerHTML = '<p style="font-size:11px;color:var(--ink-ghost)">Gráfico técnico indisponível para esta execução.</p>';
+    }
+
+    const rsiEl = document.querySelector(`.rsi-${cls}`);
+    if (rsiEl && chart) {
+      renderChart(rsiEl, {
+        height: 130,
+        series: [{ name: 'RSI', data: chart.rsi14, color: brand }],
+        yDomain: [0, 100],
+        refLines: [{ value: 70, label: 'sobrecomprado' }, { value: 30, label: 'sobrevendido' }],
+        valueFmt: v => v.toFixed(0),
+      });
+    }
+
+    const macdEl = document.querySelector(`.macd-${cls}`);
+    if (macdEl && chart) {
+      renderChart(macdEl, {
+        height: 130,
+        series: [
+          { name: 'MACD', data: chart.macd, color: brand },
+          { name: 'Sinal', data: chart.macd_sig, color: signalColor, dashed: true },
+        ],
+        bars: { name: 'Histograma', data: chart.macd_hist, upColor, downColor },
+        valueFmt: v => v.toFixed(2),
+      });
+    }
+
+    const accEl = document.querySelector(`.accuracy-${cls}`);
+    if (accEl && f.accuracy_curve && f.accuracy_curve.length >= 2) {
+      renderChart(accEl, {
+        height: 130,
+        series: [{ name: 'Acurácia', data: f.accuracy_curve, color: upColor }],
+        yDomain: [0, 100],
+        refLines: [{ value: 50, label: 'aleatório' }],
+        valueFmt: v => v.toFixed(0) + '%',
+      });
+    } else if (accEl) {
+      accEl.innerHTML = '<p style="font-size:11px;color:var(--ink-ghost)">Ainda sem histórico validado suficiente.</p>';
+    }
+  });
+
+  document.getElementById('footer-meta').textContent =
+    `Carteira Inteligente · dados de ${fmtDate(SITE_DATA.last_update)}`;
+
+  // Scroll suave até um ticker âncora (ex: chegando das cards de favoritos do Início)
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+</script>
+
+</body>
+</html>

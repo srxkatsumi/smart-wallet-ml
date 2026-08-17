@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Watchlist · Carteira Inteligente</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .movers-strip { display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch; }
+  .mover-tile { flex:0 0 auto; min-width:110px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; }
+  .filters-row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+  .filters-row input, .filters-row select {
+    font-family:var(--sans); font-size:12px; padding:8px 10px; border:1px solid var(--border-strong);
+    border-radius:4px; background:var(--card); color:var(--ink);
+  }
+  #wl-search { flex:1; min-width:160px; }
+  th.sortable { cursor:pointer; user-select:none; }
+  th.sortable:hover { color:var(--ink-muted); }
+  th.sortable .arrow { opacity:0.4; margin-left:2px; }
+  th.sortable.active .arrow { opacity:1; }
+  #wl-table tbody tr:hover { background:#f6f3eb; }
+  .wl-empty { padding:24px; text-align:center; color:var(--ink-ghost); font-size:12px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Carteira Inteligente</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="inicio">Início</a>
+      <a href="favoritos.html" data-page="favoritos">Favoritos</a>
+      <a href="experimentos.html" data-page="experimentos">Experimentos</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alertas.html" data-page="alertas">Alertas</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Metodologia</a>
+      <a href="../index.html">🇬🇧 EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1 class="page-title">Watchlist</h1>
+    <div class="page-subtitle">O universo mais amplo de investigação: contexto e navegação, não a carteira pessoal</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Maiores variações de hoje</div>
+    <div class="movers-strip" id="movers-strip"><!-- JS --></div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="filters-row">
+      <input type="text" id="wl-search" placeholder="Buscar ticker…">
+      <select id="wl-sector"><option value="">Todos os setores</option></select>
+      <select id="wl-type">
+        <option value="">ETF ou Ação</option>
+        <option value="ETF">ETF</option>
+        <option value="Stock">Ação</option>
+      </select>
+      <select id="wl-distribution">
+        <option value="">Acum. ou Distr.</option>
+        <option value="Distributing">Distribuindo</option>
+        <option value="Accumulating">Acumulando</option>
+      </select>
+      <select id="wl-dividend">
+        <option value="">Todos os ativos</option>
+        <option value="yes">Paga dividendo</option>
+        <option value="no">Não paga dividendo</option>
+      </select>
+      <select id="wl-frequency">
+        <option value="">Qualquer frequência</option>
+        <option value="Monthly">Mensal</option>
+        <option value="Quarterly">Trimestral</option>
+        <option value="Semi-annual">Semestral</option>
+        <option value="Annual">Anual</option>
+      </select>
+      <span id="wl-count" style="font-size:11px;color:var(--ink-ghost);white-space:nowrap"></span>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto;padding:0">
+        <table id="wl-table" style="min-width:920px">
+          <thead>
+            <tr>
+              <th class="sortable" data-key="ticker">Ticker <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="sector">Setor <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="asset_type">Tipo <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="price" style="text-align:right">Preço <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="var_1d" style="text-align:right">Var% <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="direction" style="text-align:center">D+1 <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="acc_recent" style="text-align:right">Acurácia (15) <span class="arrow">↕</span></th>
+              <th class="sortable" data-key="dividend_rate" style="text-align:right">Dividendo/ação <span class="arrow">↕</span></th>
+            </tr>
+          </thead>
+          <tbody id="wl-tbody"><!-- JS --></tbody>
+        </table>
+        <div class="wl-empty" id="wl-empty" style="display:none">Nenhum ativo corresponde a estes filtros.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+      Preços e valores de dividendo convertidos para EUR no momento da exportação usando taxas de câmbio ao vivo.
+      A maior parte deste universo negocia em USD (com alguns EUR, CHF e GBP), diferente da página Favoritos, que
+      é nativa em EUR. Dividendo/ação é o valor anual pago por ação nos últimos 12 meses; a frequência
+      (Mensal/Trimestral/Semestral/Anual) é inferida contando pagamentos nos últimos 12 meses, então um dividendo
+      recém-iniciado ou recém-cortado pode ser classificado incorretamente. "Acumulando" vs. "Distribuindo" se
+      aplica só a ETFs e é inferido de se o fundo paga dividendo atualmente (classes acumulativas reinvestem em
+      vez de distribuir); ações individuais não são classificadas assim. "Não paga dividendo" inclui ETFs
+      acumulativos, além de ativos que simplesmente não pagam.
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Antes de continuar</strong>
+      Este site é um objeto de estudo pessoal de Machine Learning aplicado a mercados financeiros.
+      As previsões não têm significância estatística comprovada e não devem ser levadas a sério como
+      base de decisão. Nenhuma informação aqui é conselho financeiro.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Código-fonte</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="../assets/watchlist_data.js"></script>
+<script src="../assets/site.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('watchlist');
+
+  const all = WATCHLIST_DATA.tickers;
+
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item"><div class="label">Tickers acompanhados</div><div class="value">${all.length}</div></div>
+    <div class="status-item"><div class="label">Setores</div><div class="value">${WATCHLIST_DATA.sectors.length}</div></div>
+    <div class="status-item"><div class="label">Última atualização</div><div class="value" style="font-size:16px">${fmtDate(WATCHLIST_DATA.last_update)}</div></div>
+  `;
+  document.getElementById('footer-meta').textContent = `Carteira Inteligente · dados de ${fmtDate(WATCHLIST_DATA.last_update)}`;
+
+  // ── Dropdown de setores ─────────────────────────────────────────────
+  const sectorSel = document.getElementById('wl-sector');
+  WATCHLIST_DATA.sectors.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    sectorSel.appendChild(opt);
+  });
+
+  // ── Maiores variações ───────────────────────────────────────────────
+  const withMove = all.filter(t => t.var_1d !== null).slice().sort((a, b) => b.var_1d - a.var_1d);
+  const topMovers = withMove.slice(0, 6);
+  const bottomMovers = withMove.slice(-6).reverse();
+  const movers = [...topMovers, ...bottomMovers];
+  document.getElementById('movers-strip').innerHTML = movers.map(t => {
+    const color = t.var_1d >= 0 ? 'var(--up)' : 'var(--down)';
+    const arrow = t.var_1d >= 0 ? '▲' : '▼';
+    return `<div class="mover-tile">
+      <div style="font-size:11px;font-weight:700;color:var(--brand)">${t.ticker}</div>
+      <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:${color};margin-top:4px">${arrow} ${Math.abs(t.var_1d).toFixed(2)}%</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--ink-muted);margin-top:2px">${t.price !== null ? '€' + fmtPrice(t.price) : '-'}</div>
+    </div>`;
+  }).join('');
+
+  // ── Tabela: filtro + ordenação ────────────────────────────────────────
+  let sortKey = 'var_1d', sortDir = -1;
+
+  function directionCell(t) {
+    if (!t.direction) return '-';
+    return dirCell(t.direction, t.confidence);
+  }
+
+  function render() {
+    const q = document.getElementById('wl-search').value.trim().toUpperCase();
+    const sector = sectorSel.value;
+    const type = document.getElementById('wl-type').value;
+    const distribution = document.getElementById('wl-distribution').value;
+    const div = document.getElementById('wl-dividend').value;
+    const freq = document.getElementById('wl-frequency').value;
+
+    let rows = all.filter(t => {
+      if (q && !t.ticker.toUpperCase().includes(q)) return false;
+      if (sector && t.sector !== sector) return false;
+      if (type && t.asset_type !== type) return false;
+      if (distribution && t.distribution !== distribution) return false;
+      if (div === 'yes' && !t.pays_dividends) return false;
+      if (div === 'no' && t.pays_dividends) return false;
+      if (freq && t.dividend_frequency !== freq) return false;
+      return true;
+    });
+
+    rows.sort((a, b) => {
+      let av = a[sortKey], bv = b[sortKey];
+      if (av === null || av === undefined) av = sortKey === 'ticker' || sortKey === 'sector' || sortKey === 'direction' ? '' : -Infinity;
+      if (bv === null || bv === undefined) bv = sortKey === 'ticker' || sortKey === 'sector' || sortKey === 'direction' ? '' : -Infinity;
+      if (typeof av === 'string') return sortDir * av.localeCompare(bv);
+      return sortDir * (av - bv);
+    });
+
+    document.getElementById('wl-count').textContent = `${rows.length} de ${all.length} tickers`;
+    document.getElementById('wl-empty').style.display = rows.length ? 'none' : 'block';
+
+    const TYPE_LABEL = { ETF: 'ETF', Stock: 'Ação' };
+    const DIST_LABEL = { Distributing: 'Distr.', Accumulating: 'Acum.' };
+
+    document.getElementById('wl-tbody').innerHTML = rows.map(t => `
+      <tr>
+        <td style="font-weight:600;color:var(--brand);font-family:var(--mono)">${t.ticker}</td>
+        <td style="font-size:11px;color:var(--ink-muted)">${t.sector}</td>
+        <td style="font-size:11px;color:var(--ink-muted)">${TYPE_LABEL[t.asset_type] ?? t.asset_type}${t.distribution ? ` · ${DIST_LABEL[t.distribution]}` : ''}</td>
+        <td style="text-align:right;font-family:var(--mono)">${t.price !== null ? '€' + fmtPrice(t.price) : '-'}</td>
+        <td style="text-align:right;font-family:var(--mono);font-weight:600;color:${t.var_1d === null ? 'var(--ink-ghost)' : (t.var_1d >= 0 ? 'var(--up)' : 'var(--down)')}">${t.var_1d !== null ? (t.var_1d >= 0 ? '+' : '') + t.var_1d.toFixed(2) + '%' : '-'}</td>
+        <td style="text-align:center">${directionCell(t)}</td>
+        <td style="text-align:right;font-family:var(--mono)">${t.acc_recent !== null ? t.acc_recent + '%' : '-'}</td>
+        <td style="text-align:right;font-family:var(--mono)">${t.pays_dividends && t.dividend_rate !== null
+          ? `€${fmtPrice(t.dividend_rate)}<div style="font-size:10px;color:var(--ink-ghost);font-weight:400">${t.dividend_yield_pct.toFixed(2)}% rendimento${t.dividend_frequency ? ' · ' + (({Monthly:'Mensal',Quarterly:'Trimestral','Semi-annual':'Semestral',Annual:'Anual'})[t.dividend_frequency] ?? t.dividend_frequency) : ''}</div>`
+          : '<span style="color:var(--ink-ghost)">-</span>'}</td>
+      </tr>
+    `).join('');
+  }
+
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (sortKey === key) { sortDir *= -1; } else { sortKey = key; sortDir = 1; }
+      document.querySelectorAll('th.sortable').forEach(h => h.classList.remove('active'));
+      th.classList.add('active');
+      th.querySelector('.arrow').textContent = sortDir === 1 ? '↑' : '↓';
+      render();
+    });
+  });
+
+  document.getElementById('wl-search').addEventListener('input', render);
+  sectorSel.addEventListener('change', render);
+  document.getElementById('wl-type').addEventListener('change', render);
+  document.getElementById('wl-distribution').addEventListener('change', render);
+  document.getElementById('wl-dividend').addEventListener('change', render);
+  document.getElementById('wl-frequency').addEventListener('change', render);
+
+  render();
+</script>
+
+</body>
+</html>

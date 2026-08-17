@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Experimentos · Carteira Inteligente</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  /* Tema âmbar para o cabeçalho desta página (mesmo acento do email de Experimentos) */
+  .page-header.amber .page-subtitle { color: #e0b98a; }
+  .page-header.amber .status-item .label { color: #e0b98a; }
+  .page-header.amber .status-item .value { color: #fff6ea; }
+  .page-header.amber .status-strip { border-top-color: rgba(255,201,138,0.25); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Carteira Inteligente</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="inicio">Início</a>
+      <a href="favoritos.html" data-page="favoritos">Favoritos</a>
+      <a href="experimentos.html" data-page="experimentos">Experimentos</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alertas.html" data-page="alertas">Alertas</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Metodologia</a>
+      <a href="../index.html">🇬🇧 EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header amber" style="background:rgb(127,60,2)">
+  <div class="wrap">
+    <h1 class="page-title">🧪 Experimentos</h1>
+    <div class="page-subtitle">Desafiante de regressão vs. o campeão heurístico ATR: uma comparação pareada offline, não um teste A/B randomizado</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div style="background:#fff6ea;border:1px solid #f0dfc2;border-radius:var(--radius);padding:14px 18px;font-size:12px;color:#7f3c02;line-height:1.6">
+      ⚠️ <strong>Experimental.</strong> Não usado para nenhuma decisão real. O desafiante prevê um alvo contínuo
+      de retorno/preço: todos os outros modelos deste projeto só preveem direção. Veja "Como este experimento
+      funciona" abaixo para entender o que está (e o que não está) sendo testado aqui.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Previsões de hoje</div>
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto">
+        <table id="predictions-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          Retorno % do desafiante e preço-alvo (EUR) com intervalo de 90% · "campeão" = a heurística ATR existente, para comparação.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Significância ao vivo (Diebold-Mariano, erro quadrático pareado)</div>
+    <div class="tile-grid" id="significance-grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr))"><!-- JS --></div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Backtest histórico (leitura D+1, janela expansiva de 2 anos)</div>
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto">
+        <table id="backtest-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          Baseline "naive" = prever retorno zero (uma aproximação simplificada do campeão nesta leitura retrospectiva,
+          não a heurística ATR exata). R² &gt; 0 significa que o modelo supera o baseline naive.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Como este experimento funciona</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0 0 10px">
+          Isto <strong style="color:var(--brand)">não</strong> é um experimento controlado online no sentido
+          clássico de teste A/B (Kohavi/Tang/Xu, <em>Trustworthy Online Controlled Experiments</em>): não há
+          uma população de usuários dividida aleatoriamente entre variantes. O campeão e o desafiante avaliam o
+          <strong>mesmo ativo, mesmo dia, mesmas condições de mercado</strong>: uma comparação pareada offline,
+          mais próxima de um desenho matched-pairs. "Campeão vs. desafiante" é o termo correto de avaliação de ML;
+          "teste A/B" é usado só informalmente, nunca como equivalência literal.
+        </p>
+        <p style="margin:0 0 10px">O que <em>de fato</em> se mantém é a disciplina estatística:</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">OEC</td>
+              <td style="padding:6px 0">Teste Diebold-Mariano sobre erro de previsão quadrático pareado, fixado antes de olhar os resultados.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Sem espiar</td>
+              <td style="padding:6px 0">N ≥ 100 previsões validadas exigidas por horizonte antes de qualquer veredito ser mostrado.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Guardrail</td>
+              <td style="padding:6px 0">O MAE do desafiante não pode ser &gt;20% pior que o do campeão, mesmo se o teste principal for inconclusivo.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Lei de Twyman</td>
+              <td style="padding:6px 0">Um resultado inicial surpreendente (ex: um ticker com 68,8% de acurácia em n=16) é tratado como ruído até sobreviver a mais dados; regrediu para ~45% quando N cresceu.</td></tr>
+        </table>
+        <p style="margin:0">
+          O teste Diebold-Mariano usa <code>h = horizonte de previsão</code> (recomendação do próprio artigo de 1995).
+          Janelas de previsão de múltiplos dias que se sobrepõem são serialmente correlacionadas, então D+2/D+3
+          precisam desse ajuste ou o teste subestima sua própria incerteza e superestima a significância.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Antes de continuar</strong>
+      Este site é um objeto de estudo pessoal de Machine Learning aplicado a mercados financeiros.
+      As previsões não têm significância estatística comprovada e não devem ser levadas a sério como
+      base de decisão. Nenhuma informação aqui é conselho financeiro.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Código-fonte</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('experimentos');
+
+  const exp = SITE_DATA.experimentos;
+  const readyCount = Object.values(exp).filter(h => h.ready).length;
+  const anySig = Object.values(exp).some(h => h.ready && h.sig);
+
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item">
+      <div class="label">Horizontes prontos</div>
+      <div class="value">${readyCount}<small>/3</small></div>
+    </div>
+    <div class="status-item">
+      <div class="label">Veredito</div>
+      <div class="value" style="font-size:16px">${anySig ? 'Sinal encontrado' : 'Sem vantagem significativa'}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Última atualização</div>
+      <div class="value" style="font-size:16px">${fmtDate(SITE_DATA.last_update)}</div>
+    </div>
+  `;
+
+  // ── Tabela de previsões de hoje ──────────────────────────────────────
+  const predictions = SITE_DATA.exp_predictions;
+  const tickers = Object.keys(predictions);
+  if (tickers.length) {
+    const headerCols = ['D+1', 'D+2', 'D+3'].map(h => `<th style="text-align:center">${h}</th>`).join('');
+    const rows = tickers.map(t => {
+      const p = predictions[t];
+      const cells = ['d1', 'd2', 'd3'].map(k => {
+        const h = p.horizons[k];
+        if (!h) return '<td style="text-align:center;color:var(--ink-ghost)">-</td>';
+        const pct = h.challenger_ret * 100;
+        const color = pct >= 0 ? 'var(--up)' : 'var(--down)';
+        const arrow = pct >= 0 ? '▲' : '▼';
+        return `<td style="text-align:center">
+          <div style="color:${color};font-weight:600;font-family:var(--mono);font-size:11px">${arrow} ${Math.abs(pct).toFixed(2)}%</div>
+          <div style="font-size:9.5px;color:var(--ink-ghost);margin-top:2px">€${h.challenger_price.toFixed(2)} [€${h.interval_lo.toFixed(2)}–€${h.interval_hi.toFixed(2)}]</div>
+          <div style="font-size:9px;color:#c9c2b3;margin-top:1px">campeão: €${h.champion_price.toFixed(2)}</div>
+        </td>`;
+      }).join('');
+      return `<tr><td style="font-weight:600;color:var(--brand)">${t}</td><td style="text-align:right;font-family:var(--mono)">€${p.ref_price.toFixed(2)}</td>${cells}</tr>`;
+    }).join('');
+    document.getElementById('predictions-table').innerHTML = `
+      <thead><tr><th>Ativo</th><th style="text-align:right">Preço</th>${headerCols}</tr></thead>
+      <tbody>${rows}</tbody>`;
+  } else {
+    document.getElementById('predictions-table').innerHTML = '<tbody><tr><td style="color:var(--ink-ghost);font-size:12px">Sem previsões disponíveis para esta execução.</td></tr></tbody>';
+  }
+
+  // ── Cards de significância ────────────────────────────────────────────
+  document.getElementById('significance-grid').innerHTML = ['d1', 'd2', 'd3'].map(k => {
+    const h = exp[k];
+    const label = 'D+' + k[1];
+    if (!h || !h.ready) {
+      return `<div class="card" style="margin-bottom:0"><div class="card-body">
+        <div class="card-title" style="margin-bottom:8px">${label}</div>
+        <span class="badge badge-quiet">coletando dados (n=${h ? h.n : 0}/100)</span>
+      </div></div>`;
+    }
+    const verdict = h.challenger_wins ? '🏆 desafiante vence' : (h.sig ? 'campeão se mantém' : 'sem diferença significativa');
+    const badgeCls = h.challenger_wins ? 'badge-up' : 'badge-quiet';
+    return `<div class="card" style="margin-bottom:0"><div class="card-body">
+      <div class="card-title" style="margin-bottom:10px">${label} <span style="font-size:11px;color:var(--ink-ghost);font-weight:400">n=${h.n}</span></div>
+      <table style="width:100%;margin-bottom:8px">
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">MAE campeão</td><td style="text-align:right;font-family:var(--mono);font-size:12px">${(h.mae_champion*100).toFixed(2)}%</td></tr>
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">MAE desafiante</td><td style="text-align:right;font-family:var(--mono);font-size:12px">${(h.mae_challenger*100).toFixed(2)}% ${h.guardrail_mae_ok ? '✅' : '⚠️'}</td></tr>
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">DM p-valor</td><td style="text-align:right;font-family:var(--mono);font-size:12px;font-weight:600;color:${h.sig ? 'var(--up)' : 'var(--ink-muted)'}">p=${h.dm_p.toFixed(3)}</td></tr>
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">Acurácia direcional (camp./desaf.)</td><td style="text-align:right;font-family:var(--mono);font-size:12px">${(h.dir_acc_champion*100).toFixed(0)}% / ${(h.dir_acc_challenger*100).toFixed(0)}%</td></tr>
+      </table>
+      <span class="badge ${badgeCls}">${verdict}</span>
+    </div></div>`;
+  }).join('');
+
+  // ── Tabela de backtest ────────────────────────────────────────────────
+  const backtest = SITE_DATA.backtest_experimentos;
+  const btTickers = Object.keys(backtest).sort();
+  if (btTickers.length) {
+    const rows = btTickers.map(t => {
+      const d1 = backtest[t].d1;
+      if (!d1) return '';
+      const r2 = d1.r2;
+      const r2Color = r2 !== null && r2 > 0 ? 'var(--up)' : 'var(--ink-muted)';
+      return `<tr>
+        <td style="font-weight:600;color:var(--brand)">${t}</td>
+        <td style="text-align:center;font-size:11px;color:var(--ink-muted)">n=${d1.n}</td>
+        <td style="text-align:center;font-family:var(--mono);font-size:11px">${d1.mse_model.toFixed(5)}</td>
+        <td style="text-align:center;font-family:var(--mono);font-size:11px">${d1.mse_naive.toFixed(5)}</td>
+        <td style="text-align:right;font-family:var(--mono);font-size:11px;font-weight:600;color:${r2Color}">${r2 !== null ? r2.toFixed(3) : '-'}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('backtest-table').innerHTML = `
+      <thead><tr><th>Ativo (D+1)</th><th style="text-align:center">N</th><th style="text-align:center">MSE modelo</th><th style="text-align:center">MSE naive</th><th style="text-align:right">R²</th></tr></thead>
+      <tbody>${rows}</tbody>`;
+  } else {
+    document.getElementById('backtest-table').innerHTML = '<tbody><tr><td style="color:var(--ink-ghost);font-size:12px">Backtest ainda não disponível.</td></tr></tbody>';
+  }
+
+  document.getElementById('footer-meta').textContent =
+    `Carteira Inteligente · dados de ${fmtDate(SITE_DATA.last_update)}`;
+</script>
+
+</body>
+</html>

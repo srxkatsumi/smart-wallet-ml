@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Experiments · Smart Wallet</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* Amber theme for this page's header (matches the Experiments email accent) */
+  .page-header.amber .page-subtitle { color: #e0b98a; }
+  .page-header.amber .status-item .label { color: #e0b98a; }
+  .page-header.amber .status-item .value { color: #fff6ea; }
+  .page-header.amber .status-strip { border-top-color: rgba(255,201,138,0.25); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Smart Wallet</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="favorites.html" data-page="favorites">Favorites</a>
+      <a href="experiments.html" data-page="experiments">Experiments</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alerts.html" data-page="alerts">Alerts</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Methodology</a>
+      <a href="pt/index.html">🇧🇷 PT</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header amber" style="background:rgb(127,60,2)">
+  <div class="wrap">
+    <h1 class="page-title">🧪 Experiments</h1>
+    <div class="page-subtitle">Regression challenger vs. the ATR-heuristic champion: a paired offline comparison, not a randomized A/B test</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div style="background:#fff6ea;border:1px solid #f0dfc2;border-radius:var(--radius);padding:14px 18px;font-size:12px;color:#7f3c02;line-height:1.6">
+      ⚠️ <strong>Experimental.</strong> Not used for any real decision. The challenger predicts a continuous
+      return/price target: every other model in this project only predicts direction. See "How this experiment
+      works" below for what is and isn't being tested here.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Today's predictions</div>
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto">
+        <table id="predictions-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          Challenger return % and target price (EUR) with 90% interval · "champion" = the existing ATR heuristic, for comparison.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Live significance (Diebold-Mariano, paired squared error)</div>
+    <div class="tile-grid" id="significance-grid" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr))"><!-- JS --></div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Historical backtest (day-1 read, 2-year expanding window)</div>
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto">
+        <table id="backtest-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          Baseline "naive" = predicting zero return (a simplified proxy for the champion in this retrospective read,
+          not the exact ATR heuristic). R² &gt; 0 means the model beats the naive baseline.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">How this experiment works</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0 0 10px">
+          This is <strong style="color:var(--brand)">not</strong> an online controlled experiment in the classic
+          A/B-testing sense (Kohavi/Tang/Xu, <em>Trustworthy Online Controlled Experiments</em>): there's no
+          population of users randomly split between variants. The champion and challenger score the
+          <strong>same asset, same day, same market conditions</strong>: a paired offline comparison, closer to a
+          matched-pairs design. "Champion vs. challenger" is the correct ML-evaluation term; "A/B test" is only used
+          informally, never as a literal equivalence.
+        </p>
+        <p style="margin:0 0 10px">What <em>does</em> carry over directly is the statistical discipline:</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">OEC</td>
+              <td style="padding:6px 0">Diebold-Mariano test on paired squared forecast error, fixed before looking at results.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">No peeking</td>
+              <td style="padding:6px 0">N ≥ 100 validated predictions required per horizon before any verdict is shown.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Guardrail</td>
+              <td style="padding:6px 0">Challenger MAE can't be &gt;20% worse than the champion's, even if the main test is inconclusive.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Twyman's Law</td>
+              <td style="padding:6px 0">A surprising early result (e.g. one ticker at 68.8% accuracy on n=16) is treated as noise until it survives more data; it regressed to ~45% once N grew.</td></tr>
+        </table>
+        <p style="margin:0">
+          The Diebold-Mariano test uses <code>h = forecast horizon</code> (1995 paper's own recommendation).
+          Overlapping multi-day forecast windows are serially correlated, so D+2/D+3 need this adjustment or the
+          test understates its own uncertainty and over-claims significance.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Before you go on</strong>
+      This site is a personal study project applying Machine Learning to financial markets.
+      The forecasts have no proven statistical significance and should not be taken seriously as a basis for
+      decisions. Nothing here is financial advice.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Source code</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('experiments');
+
+  const exp = SITE_DATA.experimentos;
+  const readyCount = Object.values(exp).filter(h => h.ready).length;
+  const anySig = Object.values(exp).some(h => h.ready && h.sig);
+
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item">
+      <div class="label">Horizons ready</div>
+      <div class="value">${readyCount}<small>/3</small></div>
+    </div>
+    <div class="status-item">
+      <div class="label">Verdict</div>
+      <div class="value" style="font-size:16px">${anySig ? 'Signal found' : 'No significant edge'}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">Last updated</div>
+      <div class="value" style="font-size:16px">${fmtDate(SITE_DATA.last_update)}</div>
+    </div>
+  `;
+
+  // ── Today's predictions table ──────────────────────────────────────
+  const predictions = SITE_DATA.exp_predictions;
+  const tickers = Object.keys(predictions);
+  if (tickers.length) {
+    const headerCols = ['D+1', 'D+2', 'D+3'].map(h => `<th style="text-align:center">${h}</th>`).join('');
+    const rows = tickers.map(t => {
+      const p = predictions[t];
+      const cells = ['d1', 'd2', 'd3'].map(k => {
+        const h = p.horizons[k];
+        if (!h) return '<td style="text-align:center;color:var(--ink-ghost)">-</td>';
+        const pct = h.challenger_ret * 100;
+        const color = pct >= 0 ? 'var(--up)' : 'var(--down)';
+        const arrow = pct >= 0 ? '▲' : '▼';
+        return `<td style="text-align:center">
+          <div style="color:${color};font-weight:600;font-family:var(--mono);font-size:11px">${arrow} ${Math.abs(pct).toFixed(2)}%</div>
+          <div style="font-size:9.5px;color:var(--ink-ghost);margin-top:2px">€${h.challenger_price.toFixed(2)} [€${h.interval_lo.toFixed(2)}–€${h.interval_hi.toFixed(2)}]</div>
+          <div style="font-size:9px;color:#c9c2b3;margin-top:1px">champion: €${h.champion_price.toFixed(2)}</div>
+        </td>`;
+      }).join('');
+      return `<tr><td style="font-weight:600;color:var(--brand)">${t}</td><td style="text-align:right;font-family:var(--mono)">€${p.ref_price.toFixed(2)}</td>${cells}</tr>`;
+    }).join('');
+    document.getElementById('predictions-table').innerHTML = `
+      <thead><tr><th>Asset</th><th style="text-align:right">Price</th>${headerCols}</tr></thead>
+      <tbody>${rows}</tbody>`;
+  } else {
+    document.getElementById('predictions-table').innerHTML = '<tbody><tr><td style="color:var(--ink-ghost);font-size:12px">No predictions available for this run.</td></tr></tbody>';
+  }
+
+  // ── Significance cards ──────────────────────────────────────────────
+  document.getElementById('significance-grid').innerHTML = ['d1', 'd2', 'd3'].map(k => {
+    const h = exp[k];
+    const label = 'D+' + k[1];
+    if (!h || !h.ready) {
+      return `<div class="card" style="margin-bottom:0"><div class="card-body">
+        <div class="card-title" style="margin-bottom:8px">${label}</div>
+        <span class="badge badge-quiet">collecting data (n=${h ? h.n : 0}/100)</span>
+      </div></div>`;
+    }
+    const verdict = h.challenger_wins ? '🏆 challenger wins' : (h.sig ? 'champion holds' : 'no significant difference');
+    const badgeCls = h.challenger_wins ? 'badge-up' : 'badge-quiet';
+    return `<div class="card" style="margin-bottom:0"><div class="card-body">
+      <div class="card-title" style="margin-bottom:10px">${label} <span style="font-size:11px;color:var(--ink-ghost);font-weight:400">n=${h.n}</span></div>
+      <table style="width:100%;margin-bottom:8px">
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">MAE champion</td><td style="text-align:right;font-family:var(--mono);font-size:12px">${(h.mae_champion*100).toFixed(2)}%</td></tr>
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">MAE challenger</td><td style="text-align:right;font-family:var(--mono);font-size:12px">${(h.mae_challenger*100).toFixed(2)}% ${h.guardrail_mae_ok ? '✅' : '⚠️'}</td></tr>
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">DM p-value</td><td style="text-align:right;font-family:var(--mono);font-size:12px;font-weight:600;color:${h.sig ? 'var(--up)' : 'var(--ink-muted)'}">p=${h.dm_p.toFixed(3)}</td></tr>
+        <tr><td style="padding:2px 0;color:var(--ink-faint);font-size:11px">Dir. accuracy (champ/chall)</td><td style="text-align:right;font-family:var(--mono);font-size:12px">${(h.dir_acc_champion*100).toFixed(0)}% / ${(h.dir_acc_challenger*100).toFixed(0)}%</td></tr>
+      </table>
+      <span class="badge ${badgeCls}">${verdict}</span>
+    </div></div>`;
+  }).join('');
+
+  // ── Backtest table ────────────────────────────────────────────────
+  const backtest = SITE_DATA.backtest_experimentos;
+  const btTickers = Object.keys(backtest).sort();
+  if (btTickers.length) {
+    const rows = btTickers.map(t => {
+      const d1 = backtest[t].d1;
+      if (!d1) return '';
+      const r2 = d1.r2;
+      const r2Color = r2 !== null && r2 > 0 ? 'var(--up)' : 'var(--ink-muted)';
+      return `<tr>
+        <td style="font-weight:600;color:var(--brand)">${t}</td>
+        <td style="text-align:center;font-size:11px;color:var(--ink-muted)">n=${d1.n}</td>
+        <td style="text-align:center;font-family:var(--mono);font-size:11px">${d1.mse_model.toFixed(5)}</td>
+        <td style="text-align:center;font-family:var(--mono);font-size:11px">${d1.mse_naive.toFixed(5)}</td>
+        <td style="text-align:right;font-family:var(--mono);font-size:11px;font-weight:600;color:${r2Color}">${r2 !== null ? r2.toFixed(3) : '-'}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('backtest-table').innerHTML = `
+      <thead><tr><th>Asset (D+1)</th><th style="text-align:center">N</th><th style="text-align:center">MSE model</th><th style="text-align:center">MSE naive</th><th style="text-align:right">R²</th></tr></thead>
+      <tbody>${rows}</tbody>`;
+  } else {
+    document.getElementById('backtest-table').innerHTML = '<tbody><tr><td style="color:var(--ink-ghost);font-size:12px">Backtest not available yet.</td></tr></tbody>';
+  }
+
+  document.getElementById('footer-meta').textContent =
+    `Smart Wallet · data as of ${fmtDate(SITE_DATA.last_update)}`;
+</script>
+
+</body>
+</html>

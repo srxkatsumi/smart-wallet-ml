@@ -151,13 +151,13 @@
       "XLB", "VAW", "MXI", "IYM"
     ],
 
-    "International Developed — Countries": [
+    "International Developed: Countries": [
       "EFA", "EWG", "EWU", "EWI", "EWP", "EWQ", "EWL",
       "EWD", "EWN", "EWA", "EWC", "EWS", "EWH", "EWY",
       "EWT", "EWM", "EWO", "EWK", "EIDO"
     ],
 
-    "International Developed — Regional": [
+    "International Developed: Regional": [
       "VEA", "IDEV", "IEFA", "SPDW", "EZU", "HEDJ", "DBEF", "HEWJ", "DXJ"
     ],
 
@@ -166,19 +166,19 @@
       "TUR", "EWW", "EZA", "PIN", "EPHE", "THD", "ECH"
     ],
 
-    "Bonds — Government": [
+    "Bonds: Government": [
       "BND", "BNDX", "VGIT", "VGLT", "VGSH", "IEF", "SHV", "IEI", "SPTL"
     ],
 
-    "Bonds — Credit": [
+    "Bonds: Credit": [
       "MUB", "BKLN", "FLOT", "HYD", "VCIT", "VCLT", "SUB", "FLRN", "HYLB"
     ],
 
-    "Bonds — International": [
+    "Bonds: International": [
       "IGOV", "BWX", "PCY", "EMSH"
     ],
 
-    "Bonds — Inflation": [
+    "Bonds: Inflation": [
       "SCHP", "PBTP", "RINF", "TIPX"
     ],
 
@@ -215,13 +215,13 @@
       "ESPO", "GAMR", "NERD", "HERO", "BETZ"
     ],
 
-    "US Tech — Large Cap Stocks": [
+    "US Tech: Large Cap Stocks": [
       "NFLX", "ADBE", "CRM", "INTC", "QCOM", "TXN",
       "AMAT", "LRCX", "KLAC", "MU", "PANW", "ZS",
       "NET", "DDOG", "CRWD"
     ],
 
-    "US Tech — Mid & Growth Stocks": [
+    "US Tech: Mid & Growth Stocks": [
       "SNOW", "OKTA", "FTNT", "S", "MDB", "TWLO",
       "ZM", "DOCU", "SPLK", "HUBS", "VEEV", "WDAY"
     ],
@@ -311,7 +311,7 @@
       "SE", "GRAB", "CPNG", "HDB", "SHOP", "ARCO"
     ],
 
-    "US Consumer — Restaurants & Retail": [
+    "US Consumer: Restaurants & Retail": [
       "DKNG", "PENN", "MGM", "WYNN", "LVS"
     ]
 

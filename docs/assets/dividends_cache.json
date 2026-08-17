@@ -1,0 +1,4889 @@
+{
+  "AAL": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AAPL": {
+    "pays_dividends": true,
+    "yield_pct": 0.35,
+    "rate": 1.05,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ABBV": {
+    "pays_dividends": true,
+    "yield_pct": 2.77,
+    "rate": 6.83,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ABNB": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ACAD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ADBE": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AEM": {
+    "pays_dividends": true,
+    "yield_pct": 0.97,
+    "rate": 1.7,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AEP": {
+    "pays_dividends": true,
+    "yield_pct": 3.03,
+    "rate": 3.78,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AFRM": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AG": {
+    "pays_dividends": true,
+    "yield_pct": 0.32,
+    "rate": 0.046,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AGG": {
+    "pays_dividends": true,
+    "yield_pct": 4.05,
+    "rate": 2.48,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "AIQ": {
+    "pays_dividends": true,
+    "yield_pct": 0.08,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ALK": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ALNY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ALV.DE": {
+    "pays_dividends": true,
+    "yield_pct": 3.86,
+    "rate": 17.1,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AMAT": {
+    "pays_dividends": true,
+    "yield_pct": 0.42,
+    "rate": 0.46,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AMD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AMGN": {
+    "pays_dividends": true,
+    "yield_pct": 2.43,
+    "rate": 9.8,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AMLP": {
+    "pays_dividends": true,
+    "yield_pct": 7.28,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "AMT": {
+    "pays_dividends": true,
+    "yield_pct": 3.98,
+    "rate": 6.98,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AMZN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AOM": {
+    "pays_dividends": true,
+    "yield_pct": 3.09,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "AQWA": {
+    "pays_dividends": true,
+    "yield_pct": 1.56,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ARCO": {
+    "pays_dividends": true,
+    "yield_pct": 3.54,
+    "rate": 0.28,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ARKF": {
+    "pays_dividends": true,
+    "yield_pct": 0.11,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ARKG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "ARKK": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "ARKQ": {
+    "pays_dividends": true,
+    "yield_pct": 0.27,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ARKW": {
+    "pays_dividends": true,
+    "yield_pct": 1.72,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ARKX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "ARM": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ASEA": {
+    "pays_dividends": true,
+    "yield_pct": 3.68,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ASML": {
+    "pays_dividends": true,
+    "yield_pct": 0.49,
+    "rate": 4.3,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AVB": {
+    "pays_dividends": true,
+    "yield_pct": 3.87,
+    "rate": 7.06,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AVGO": {
+    "pays_dividends": true,
+    "yield_pct": 0.66,
+    "rate": 2.54,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AXP": {
+    "pays_dividends": true,
+    "yield_pct": 1.11,
+    "rate": 3.54,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "AZN": {
+    "pays_dividends": true,
+    "yield_pct": 2.04,
+    "rate": 3.23,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BABA": {
+    "pays_dividends": true,
+    "yield_pct": 0.85,
+    "rate": 7.242,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BAC": {
+    "pays_dividends": true,
+    "yield_pct": 1.98,
+    "rate": 1.12,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BAM": {
+    "pays_dividends": true,
+    "yield_pct": 3.7,
+    "rate": 1.88,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BAS.DE": {
+    "pays_dividends": true,
+    "yield_pct": 4.4,
+    "rate": 2.25,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BATT": {
+    "pays_dividends": true,
+    "yield_pct": 1.77,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BBH": {
+    "pays_dividends": true,
+    "yield_pct": 0.47,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BBRE": {
+    "pays_dividends": true,
+    "yield_pct": 2.59,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BEKE": {
+    "pays_dividends": true,
+    "yield_pct": 1.62,
+    "rate": 1.931,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BETZ": {
+    "pays_dividends": true,
+    "yield_pct": 5.01,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BHP": {
+    "pays_dividends": true,
+    "yield_pct": 3.07,
+    "rate": 1.33,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BIDU": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BIIB": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BITB": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "BITO": {
+    "pays_dividends": true,
+    "yield_pct": 61.68,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BKLN": {
+    "pays_dividends": true,
+    "yield_pct": 6.51,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BKNG": {
+    "pays_dividends": true,
+    "yield_pct": 0.79,
+    "rate": 1.608,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BLK": {
+    "pays_dividends": true,
+    "yield_pct": 1.95,
+    "rate": 21.88,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BMW.DE": {
+    "pays_dividends": true,
+    "yield_pct": 7.41,
+    "rate": 4.4,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BMY": {
+    "pays_dividends": true,
+    "yield_pct": 3.95,
+    "rate": 2.51,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BND": {
+    "pays_dividends": true,
+    "yield_pct": 4.03,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BNDX": {
+    "pays_dividends": true,
+    "yield_pct": 4.54,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BNO": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "BNTX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BOTZ": {
+    "pays_dividends": true,
+    "yield_pct": 0.49,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BP": {
+    "pays_dividends": true,
+    "yield_pct": 4.74,
+    "rate": 0.336,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BSX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "BTC-USD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "BUG": {
+    "pays_dividends": true,
+    "yield_pct": 0.03,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "BWX": {
+    "pays_dividends": true,
+    "yield_pct": 2.4,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "C": {
+    "pays_dividends": true,
+    "yield_pct": 1.92,
+    "rate": 2.4,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CAT": {
+    "pays_dividends": true,
+    "yield_pct": 0.76,
+    "rate": 6.16,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CB": {
+    "pays_dividends": true,
+    "yield_pct": 1.19,
+    "rate": 3.93,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CCI": {
+    "pays_dividends": true,
+    "yield_pct": 5.59,
+    "rate": 4.25,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CCL": {
+    "pays_dividends": true,
+    "yield_pct": 1.6,
+    "rate": 0.3,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CGW": {
+    "pays_dividends": true,
+    "yield_pct": 1.54,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "CHAT": {
+    "pays_dividends": true,
+    "yield_pct": 2.02,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "CHTR": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CI": {
+    "pays_dividends": true,
+    "yield_pct": 2.21,
+    "rate": 6.14,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CIBR": {
+    "pays_dividends": true,
+    "yield_pct": 0.43,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "CL": {
+    "pays_dividends": true,
+    "yield_pct": 2.31,
+    "rate": 2.09,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CLOU": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "CMCSA": {
+    "pays_dividends": true,
+    "yield_pct": 5.04,
+    "rate": 1.32,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CMG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CNI": {
+    "pays_dividends": true,
+    "yield_pct": 2.05,
+    "rate": 3.605,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "COIN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "COP": {
+    "pays_dividends": true,
+    "yield_pct": 2.65,
+    "rate": 3.3,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "COPX": {
+    "pays_dividends": true,
+    "yield_pct": 2.45,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "CORN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "COST": {
+    "pays_dividends": true,
+    "yield_pct": 0.61,
+    "rate": 5.37,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "COWZ": {
+    "pays_dividends": true,
+    "yield_pct": 1.85,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "CPER": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "CPNG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CRAK": {
+    "pays_dividends": true,
+    "yield_pct": 1.37,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "CRM": {
+    "pays_dividends": true,
+    "yield_pct": 0.9,
+    "rate": 1.688,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CRWD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CSPX.L": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "CSX": {
+    "pays_dividends": true,
+    "yield_pct": 1.12,
+    "rate": 0.54,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CVS": {
+    "pays_dividends": true,
+    "yield_pct": 2.74,
+    "rate": 2.66,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "CVX": {
+    "pays_dividends": true,
+    "yield_pct": 3.56,
+    "rate": 6.98,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "D": {
+    "pays_dividends": true,
+    "yield_pct": 3.88,
+    "rate": 2.67,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DAL": {
+    "pays_dividends": true,
+    "yield_pct": 0.87,
+    "rate": 0.778,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DBA": {
+    "pays_dividends": true,
+    "yield_pct": 3.32,
+    "rate": 0.912,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DBEF": {
+    "pays_dividends": true,
+    "yield_pct": 2.27,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DDOG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DE": {
+    "pays_dividends": true,
+    "yield_pct": 1.06,
+    "rate": 6.48,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DELL": {
+    "pays_dividends": true,
+    "yield_pct": 0.51,
+    "rate": 2.205,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DFEN": {
+    "pays_dividends": true,
+    "yield_pct": 0.14,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DFSV": {
+    "pays_dividends": true,
+    "yield_pct": 1.35,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DFUV": {
+    "pays_dividends": true,
+    "yield_pct": 1.3,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DHS": {
+    "pays_dividends": true,
+    "yield_pct": 3.19,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DIA": {
+    "pays_dividends": true,
+    "yield_pct": 1.37,
+    "rate": 5.62,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DIS": {
+    "pays_dividends": true,
+    "yield_pct": 1.4,
+    "rate": 1.5,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DJP": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "DKNG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DLR": {
+    "pays_dividends": true,
+    "yield_pct": 2.44,
+    "rate": 4.88,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DOCU": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DRIV": {
+    "pays_dividends": true,
+    "yield_pct": 0.65,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DUK": {
+    "pays_dividends": true,
+    "yield_pct": 3.5,
+    "rate": 4.26,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DVN": {
+    "pays_dividends": true,
+    "yield_pct": 2.79,
+    "rate": 1.04,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "DVY": {
+    "pays_dividends": true,
+    "yield_pct": 3.26,
+    "rate": 3.537,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "DXJ": {
+    "pays_dividends": true,
+    "yield_pct": 0.96,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EBAY": {
+    "pays_dividends": true,
+    "yield_pct": 1.2,
+    "rate": 1.2,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ECH": {
+    "pays_dividends": true,
+    "yield_pct": 1.98,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ECO": {
+    "pays_dividends": true,
+    "yield_pct": 15.84,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EEM": {
+    "pays_dividends": true,
+    "yield_pct": 1.73,
+    "rate": 0.76,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EFA": {
+    "pays_dividends": true,
+    "yield_pct": 3.19,
+    "rate": 1.761,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EIDO": {
+    "pays_dividends": true,
+    "yield_pct": 3.3,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EMB": {
+    "pays_dividends": true,
+    "yield_pct": 5.15,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EMIM.AS": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "EMQQ": {
+    "pays_dividends": true,
+    "yield_pct": 3.63,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EMSH": {
+    "pays_dividends": true,
+    "yield_pct": 2.99,
+    "rate": 10.508,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EOG": {
+    "pays_dividends": true,
+    "yield_pct": 2.86,
+    "rate": 4.08,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EPHE": {
+    "pays_dividends": true,
+    "yield_pct": 2.69,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EQIX": {
+    "pays_dividends": true,
+    "yield_pct": 1.87,
+    "rate": 19.7,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EQR": {
+    "pays_dividends": true,
+    "yield_pct": 4.26,
+    "rate": 2.79,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ESPO": {
+    "pays_dividends": true,
+    "yield_pct": 1.36,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ETH-USD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "ETSY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EW": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EWA": {
+    "pays_dividends": true,
+    "yield_pct": 2.89,
+    "rate": 0.577,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWC": {
+    "pays_dividends": true,
+    "yield_pct": 1.27,
+    "rate": 0.644,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWD": {
+    "pays_dividends": true,
+    "yield_pct": 3.44,
+    "rate": 1.419,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWG": {
+    "pays_dividends": true,
+    "yield_pct": 1.94,
+    "rate": 0.67,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWH": {
+    "pays_dividends": true,
+    "yield_pct": 4.49,
+    "rate": 0.602,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWI": {
+    "pays_dividends": true,
+    "yield_pct": 3.05,
+    "rate": 0.65,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWJ": {
+    "pays_dividends": true,
+    "yield_pct": 3.86,
+    "rate": 0.702,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWK": {
+    "pays_dividends": true,
+    "yield_pct": 1.83,
+    "rate": 0.326,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWL": {
+    "pays_dividends": true,
+    "yield_pct": 1.73,
+    "rate": 0.64,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWM": {
+    "pays_dividends": true,
+    "yield_pct": 3.56,
+    "rate": 0.841,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWN": {
+    "pays_dividends": true,
+    "yield_pct": 4.24,
+    "rate": 0.459,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWO": {
+    "pays_dividends": true,
+    "yield_pct": 1.98,
+    "rate": 0.436,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWP": {
+    "pays_dividends": true,
+    "yield_pct": 2.71,
+    "rate": 0.693,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWQ": {
+    "pays_dividends": true,
+    "yield_pct": 2.83,
+    "rate": 0.595,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWS": {
+    "pays_dividends": true,
+    "yield_pct": 3.67,
+    "rate": 0.637,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWT": {
+    "pays_dividends": true,
+    "yield_pct": 1.04,
+    "rate": 0.973,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWU": {
+    "pays_dividends": true,
+    "yield_pct": 3.09,
+    "rate": 0.898,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWW": {
+    "pays_dividends": true,
+    "yield_pct": 3.21,
+    "rate": 0.878,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWY": {
+    "pays_dividends": true,
+    "yield_pct": 1.25,
+    "rate": 0.63,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EWZ": {
+    "pays_dividends": true,
+    "yield_pct": 4.0,
+    "rate": 0.902,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EXC": {
+    "pays_dividends": true,
+    "yield_pct": 3.66,
+    "rate": 1.64,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EXEL": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EXPE": {
+    "pays_dividends": true,
+    "yield_pct": 0.58,
+    "rate": 1.76,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "EXUS.MI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "EZA": {
+    "pays_dividends": true,
+    "yield_pct": 7.98,
+    "rate": 2.42,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "EZU": {
+    "pays_dividends": true,
+    "yield_pct": 2.65,
+    "rate": 1.107,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "F": {
+    "pays_dividends": true,
+    "yield_pct": 4.18,
+    "rate": 0.6,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "FAN": {
+    "pays_dividends": true,
+    "yield_pct": 0.99,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FANG": {
+    "pays_dividends": true,
+    "yield_pct": 2.17,
+    "rate": 4.25,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "FAS": {
+    "pays_dividends": true,
+    "yield_pct": 1.03,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FBT": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.02,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "FBTC": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "FCG": {
+    "pays_dividends": true,
+    "yield_pct": 2.17,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FCX": {
+    "pays_dividends": true,
+    "yield_pct": 0.9,
+    "rate": 0.6,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "FDIS": {
+    "pays_dividends": true,
+    "yield_pct": 0.73,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FDN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "FDVV": {
+    "pays_dividends": true,
+    "yield_pct": 2.77,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FDX": {
+    "pays_dividends": true,
+    "yield_pct": 1.46,
+    "rate": 5.57,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "FIW": {
+    "pays_dividends": true,
+    "yield_pct": 0.72,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FLM": {
+    "pays_dividends": true,
+    "yield_pct": 2.19,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FLOT": {
+    "pays_dividends": true,
+    "yield_pct": 4.47,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FLRN": {
+    "pays_dividends": true,
+    "yield_pct": 4.44,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FM": {
+    "pays_dividends": true,
+    "yield_pct": 3.94,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FOLD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "FOXA": {
+    "pays_dividends": true,
+    "yield_pct": 0.84,
+    "rate": 0.56,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "FTEC": {
+    "pays_dividends": true,
+    "yield_pct": 0.37,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FTNT": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "FUTY": {
+    "pays_dividends": true,
+    "yield_pct": 2.65,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FXD": {
+    "pays_dividends": true,
+    "yield_pct": 0.6,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "FXI": {
+    "pays_dividends": true,
+    "yield_pct": 1.87,
+    "rate": 0.831,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "GAMR": {
+    "pays_dividends": true,
+    "yield_pct": 0.5,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "GBTC": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "GD": {
+    "pays_dividends": true,
+    "yield_pct": 1.61,
+    "rate": 6.18,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GE": {
+    "pays_dividends": true,
+    "yield_pct": 0.51,
+    "rate": 1.66,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GILD": {
+    "pays_dividends": true,
+    "yield_pct": 2.37,
+    "rate": 3.22,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GIS": {
+    "pays_dividends": true,
+    "yield_pct": 6.22,
+    "rate": 2.44,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GLD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "GLTR": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "GM": {
+    "pays_dividends": true,
+    "yield_pct": 0.83,
+    "rate": 0.66,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GOLD": {
+    "pays_dividends": true,
+    "yield_pct": 1.82,
+    "rate": 0.8,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GOOGL": {
+    "pays_dividends": true,
+    "yield_pct": 0.25,
+    "rate": 0.85,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GRAB": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GRID": {
+    "pays_dividends": true,
+    "yield_pct": 0.8,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "GS": {
+    "pays_dividends": true,
+    "yield_pct": 1.92,
+    "rate": 17.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GSG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "GSK": {
+    "pays_dividends": true,
+    "yield_pct": 3.67,
+    "rate": 0.68,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "GXC": {
+    "pays_dividends": true,
+    "yield_pct": 2.19,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HACK": {
+    "pays_dividends": true,
+    "yield_pct": 0.06,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HAIL": {
+    "pays_dividends": true,
+    "yield_pct": 1.74,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HAL": {
+    "pays_dividends": true,
+    "yield_pct": 1.98,
+    "rate": 0.68,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HCA": {
+    "pays_dividends": true,
+    "yield_pct": 0.77,
+    "rate": 3.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HDB": {
+    "pays_dividends": true,
+    "yield_pct": 1.79,
+    "rate": 13.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HDV": {
+    "pays_dividends": true,
+    "yield_pct": 3.07,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HEDJ": {
+    "pays_dividends": true,
+    "yield_pct": 1.78,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HERO": {
+    "pays_dividends": true,
+    "yield_pct": 1.75,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HEWJ": {
+    "pays_dividends": true,
+    "yield_pct": 3.72,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HLT": {
+    "pays_dividends": true,
+    "yield_pct": 0.18,
+    "rate": 0.6,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HMC": {
+    "pays_dividends": true,
+    "yield_pct": 4.22,
+    "rate": 70.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HOMZ": {
+    "pays_dividends": true,
+    "yield_pct": 2.66,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HON": {
+    "pays_dividends": true,
+    "yield_pct": 1.2,
+    "rate": 9.4,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HOOD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HSY": {
+    "pays_dividends": true,
+    "yield_pct": 3.15,
+    "rate": 5.644,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HUBS": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "HYD": {
+    "pays_dividends": true,
+    "yield_pct": 4.37,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HYG": {
+    "pays_dividends": true,
+    "yield_pct": 5.94,
+    "rate": 3.803,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "HYLB": {
+    "pays_dividends": true,
+    "yield_pct": 6.53,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IAI": {
+    "pays_dividends": true,
+    "yield_pct": 1.1,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IAK": {
+    "pays_dividends": true,
+    "yield_pct": 2.43,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IBB": {
+    "pays_dividends": true,
+    "yield_pct": 0.22,
+    "rate": 0.35,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IBIT": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "ICGA.DE": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "ICLN": {
+    "pays_dividends": true,
+    "yield_pct": 1.05,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IDEV": {
+    "pays_dividends": true,
+    "yield_pct": 3.18,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IDU": {
+    "pays_dividends": true,
+    "yield_pct": 2.24,
+    "rate": 2.28,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IEF": {
+    "pays_dividends": true,
+    "yield_pct": 3.96,
+    "rate": 0.934,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IEFA": {
+    "pays_dividends": true,
+    "yield_pct": 3.35,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IEI": {
+    "pays_dividends": true,
+    "yield_pct": 3.68,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IEMG": {
+    "pays_dividends": true,
+    "yield_pct": 2.31,
+    "rate": 1.16,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IFRA": {
+    "pays_dividends": true,
+    "yield_pct": 1.61,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IGOV": {
+    "pays_dividends": true,
+    "yield_pct": 1.43,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IGV": {
+    "pays_dividends": true,
+    "yield_pct": 0.02,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IHAK": {
+    "pays_dividends": true,
+    "yield_pct": 0.07,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IHF": {
+    "pays_dividends": true,
+    "yield_pct": 0.93,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IHI": {
+    "pays_dividends": true,
+    "yield_pct": 0.46,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ILF": {
+    "pays_dividends": true,
+    "yield_pct": 3.34,
+    "rate": 0.66,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "INDA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "INDS": {
+    "pays_dividends": true,
+    "yield_pct": 3.22,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "INFY": {
+    "pays_dividends": true,
+    "yield_pct": 4.33,
+    "rate": 0.52,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "INTC": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "IONS": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "IRBO": {
+    "pays_dividends": true,
+    "yield_pct": 0.58,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ISRG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ITA": {
+    "pays_dividends": true,
+    "yield_pct": 0.44,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ITOT": {
+    "pays_dividends": true,
+    "yield_pct": 1.01,
+    "rate": 1.246,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ITUB": {
+    "pays_dividends": true,
+    "yield_pct": 2.35,
+    "rate": 2.955,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "IVV": {
+    "pays_dividends": true,
+    "yield_pct": 1.09,
+    "rate": 5.688,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IWDA.AS": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "IWM": {
+    "pays_dividends": true,
+    "yield_pct": 0.91,
+    "rate": 2.017,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IYF": {
+    "pays_dividends": true,
+    "yield_pct": 1.42,
+    "rate": 1.082,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IYM": {
+    "pays_dividends": true,
+    "yield_pct": 1.33,
+    "rate": 1.797,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "IYW": {
+    "pays_dividends": true,
+    "yield_pct": 0.11,
+    "rate": 0.032,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "JD": {
+    "pays_dividends": true,
+    "yield_pct": 3.44,
+    "rate": 6.994,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "JNJ": {
+    "pays_dividends": true,
+    "yield_pct": 2.06,
+    "rate": 5.24,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "JPM": {
+    "pays_dividends": true,
+    "yield_pct": 1.65,
+    "rate": 6.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "K": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "KARS": {
+    "pays_dividends": true,
+    "yield_pct": 0.19,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "KBE": {
+    "pays_dividends": true,
+    "yield_pct": 2.11,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "KBWB": {
+    "pays_dividends": true,
+    "yield_pct": 1.93,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "KIE": {
+    "pays_dividends": true,
+    "yield_pct": 1.52,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "KLAC": {
+    "pays_dividends": true,
+    "yield_pct": 0.45,
+    "rate": 0.8,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "KO": {
+    "pays_dividends": true,
+    "yield_pct": 2.42,
+    "rate": 2.08,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "KRE": {
+    "pays_dividends": true,
+    "yield_pct": 2.1,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "KWEB": {
+    "pays_dividends": true,
+    "yield_pct": 7.43,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "LABU": {
+    "pays_dividends": true,
+    "yield_pct": 0.45,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "LCID": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LIN": {
+    "pays_dividends": true,
+    "yield_pct": 1.33,
+    "rate": 6.2,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LIT": {
+    "pays_dividends": true,
+    "yield_pct": 0.72,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "LLY": {
+    "pays_dividends": true,
+    "yield_pct": 0.59,
+    "rate": 6.46,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LMT": {
+    "pays_dividends": true,
+    "yield_pct": 2.27,
+    "rate": 13.65,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LOW": {
+    "pays_dividends": true,
+    "yield_pct": 2.29,
+    "rate": 4.8,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LQD": {
+    "pays_dividends": true,
+    "yield_pct": 4.66,
+    "rate": 3.191,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "LRCX": {
+    "pays_dividends": true,
+    "yield_pct": 0.31,
+    "rate": 1.04,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LUV": {
+    "pays_dividends": true,
+    "yield_pct": 1.63,
+    "rate": 0.72,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "LVS": {
+    "pays_dividends": true,
+    "yield_pct": 2.6,
+    "rate": 1.15,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MA": {
+    "pays_dividends": true,
+    "yield_pct": 0.61,
+    "rate": 3.37,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MAR": {
+    "pays_dividends": true,
+    "yield_pct": 0.82,
+    "rate": 2.74,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MCD": {
+    "pays_dividends": true,
+    "yield_pct": 2.73,
+    "rate": 7.35,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MCHI": {
+    "pays_dividends": true,
+    "yield_pct": 1.97,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "MDB": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MDGL": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MDT": {
+    "pays_dividends": true,
+    "yield_pct": 3.16,
+    "rate": 2.84,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MDY": {
+    "pays_dividends": true,
+    "yield_pct": 1.02,
+    "rate": 6.81,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "MELI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "META": {
+    "pays_dividends": true,
+    "yield_pct": 0.36,
+    "rate": 2.1,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MEUD.PA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "MGM": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MKC": {
+    "pays_dividends": true,
+    "yield_pct": 3.51,
+    "rate": 1.86,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MMM": {
+    "pays_dividends": true,
+    "yield_pct": 1.71,
+    "rate": 3.02,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MPC": {
+    "pays_dividends": true,
+    "yield_pct": 1.13,
+    "rate": 4.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MRK": {
+    "pays_dividends": true,
+    "yield_pct": 2.5,
+    "rate": 3.32,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MRNA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MRVL": {
+    "pays_dividends": true,
+    "yield_pct": 0.11,
+    "rate": 0.24,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MS": {
+    "pays_dividends": true,
+    "yield_pct": 2.12,
+    "rate": 4.15,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MSFT": {
+    "pays_dividends": true,
+    "yield_pct": 0.73,
+    "rate": 3.64,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MTUM": {
+    "pays_dividends": true,
+    "yield_pct": 0.62,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "MU": {
+    "pays_dividends": true,
+    "yield_pct": 0.05,
+    "rate": 0.53,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MUB": {
+    "pays_dividends": true,
+    "yield_pct": 3.23,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "MUFG": {
+    "pays_dividends": true,
+    "yield_pct": 2.34,
+    "rate": 86.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "MXI": {
+    "pays_dividends": true,
+    "yield_pct": 1.73,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "NBIX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NEE": {
+    "pays_dividends": true,
+    "yield_pct": 2.89,
+    "rate": 2.379,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NEM": {
+    "pays_dividends": true,
+    "yield_pct": 0.88,
+    "rate": 1.03,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NERD": {
+    "pays_dividends": true,
+    "yield_pct": 0.71,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "NESN.SW": {
+    "pays_dividends": true,
+    "yield_pct": 3.83,
+    "rate": 3.1,
+    "currency": "CHF",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NET": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NFLX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NFRA": {
+    "pays_dividends": true,
+    "yield_pct": 5.67,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "NIO": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NKE": {
+    "pays_dividends": true,
+    "yield_pct": 4.03,
+    "rate": 1.63,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NOBL": {
+    "pays_dividends": true,
+    "yield_pct": 2.04,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "NOC": {
+    "pays_dividends": true,
+    "yield_pct": 1.6,
+    "rate": 9.4,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NOVN.SW": {
+    "pays_dividends": true,
+    "yield_pct": 3.02,
+    "rate": 4.666,
+    "currency": "CHF",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NOW": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NSC": {
+    "pays_dividends": true,
+    "yield_pct": 1.61,
+    "rate": 5.4,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NSRGY": {
+    "pays_dividends": true,
+    "yield_pct": 3.96,
+    "rate": 3.1,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NTES": {
+    "pays_dividends": true,
+    "yield_pct": 2.41,
+    "rate": 4.175,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NU": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NVAX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NVDA": {
+    "pays_dividends": true,
+    "yield_pct": 0.44,
+    "rate": 0.04,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NVO": {
+    "pays_dividends": true,
+    "yield_pct": 3.91,
+    "rate": 11.7,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "NVS": {
+    "pays_dividends": true,
+    "yield_pct": 3.14,
+    "rate": 4.666,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "O": {
+    "pays_dividends": true,
+    "yield_pct": 5.18,
+    "rate": 3.235,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "OIH": {
+    "pays_dividends": true,
+    "yield_pct": 1.26,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "OKTA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ORCL": {
+    "pays_dividends": true,
+    "yield_pct": 1.33,
+    "rate": 2.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "OXY": {
+    "pays_dividends": true,
+    "yield_pct": 1.92,
+    "rate": 1.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PAAS": {
+    "pays_dividends": true,
+    "yield_pct": 1.55,
+    "rate": 0.62,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PALL": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "PANW": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PARA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PAVE": {
+    "pays_dividends": true,
+    "yield_pct": 0.77,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PBE": {
+    "pays_dividends": true,
+    "yield_pct": 1.73,
+    "rate": 0.57,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PBTP": {
+    "pays_dividends": true,
+    "yield_pct": 4.8,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PCVX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PCY": {
+    "pays_dividends": true,
+    "yield_pct": 6.01,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PDD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PENN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PEP": {
+    "pays_dividends": true,
+    "yield_pct": 4.2,
+    "rate": 5.748,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PFE": {
+    "pays_dividends": true,
+    "yield_pct": 6.42,
+    "rate": 1.72,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PFF": {
+    "pays_dividends": true,
+    "yield_pct": 5.51,
+    "rate": 1.822,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PG": {
+    "pays_dividends": true,
+    "yield_pct": 3.01,
+    "rate": 4.259,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PHO": {
+    "pays_dividends": true,
+    "yield_pct": 0.58,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PIN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "PLD": {
+    "pays_dividends": true,
+    "yield_pct": 3.03,
+    "rate": 4.16,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PLTR": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PNQI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "PPA": {
+    "pays_dividends": true,
+    "yield_pct": 0.37,
+    "rate": 0.44,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PPLT": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "PSCU": {
+    "pays_dividends": true,
+    "yield_pct": 0.99,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PSI": {
+    "pays_dividends": true,
+    "yield_pct": 0.04,
+    "rate": 0.19,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PSX": {
+    "pays_dividends": true,
+    "yield_pct": 2.17,
+    "rate": 4.94,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "PXE": {
+    "pays_dividends": true,
+    "yield_pct": 1.71,
+    "rate": 0.861,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "PYPL": {
+    "pays_dividends": true,
+    "yield_pct": 0.91,
+    "rate": 0.56,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "QCLN": {
+    "pays_dividends": true,
+    "yield_pct": 0.17,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "QCOM": {
+    "pays_dividends": true,
+    "yield_pct": 2.22,
+    "rate": 3.59,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "QQQ": {
+    "pays_dividends": true,
+    "yield_pct": 0.44,
+    "rate": 1.77,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "QTEC": {
+    "pays_dividends": true,
+    "yield_pct": 0.01,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "QUAL": {
+    "pays_dividends": true,
+    "yield_pct": 0.86,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "RCL": {
+    "pays_dividends": true,
+    "yield_pct": 1.64,
+    "rate": 5.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "REET": {
+    "pays_dividends": true,
+    "yield_pct": 3.27,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "REGN": {
+    "pays_dividends": true,
+    "yield_pct": 0.47,
+    "rate": 3.64,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "REM": {
+    "pays_dividends": true,
+    "yield_pct": 9.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "REZ": {
+    "pays_dividends": true,
+    "yield_pct": 1.96,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "RINF": {
+    "pays_dividends": true,
+    "yield_pct": 3.63,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "RIO": {
+    "pays_dividends": true,
+    "yield_pct": 4.86,
+    "rate": 4.65,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "RIVN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "RNRG": {
+    "pays_dividends": true,
+    "yield_pct": 1.71,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ROAD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ROBO": {
+    "pays_dividends": true,
+    "yield_pct": 0.37,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ROG.SW": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "ROKT": {
+    "pays_dividends": true,
+    "yield_pct": 0.28,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ROST": {
+    "pays_dividends": true,
+    "yield_pct": 0.73,
+    "rate": 1.66,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "RPAR": {
+    "pays_dividends": true,
+    "yield_pct": 2.45,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "RSP": {
+    "pays_dividends": true,
+    "yield_pct": 1.49,
+    "rate": 2.01,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "RTH": {
+    "pays_dividends": true,
+    "yield_pct": 0.9,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "RTX": {
+    "pays_dividends": true,
+    "yield_pct": 1.31,
+    "rate": 2.77,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "RY": {
+    "pays_dividends": true,
+    "yield_pct": 2.3,
+    "rate": 6.36,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "S": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SAP": {
+    "pays_dividends": true,
+    "yield_pct": 1.41,
+    "rate": 2.5,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SBAC": {
+    "pays_dividends": true,
+    "yield_pct": 2.7,
+    "rate": 4.72,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SBUX": {
+    "pays_dividends": true,
+    "yield_pct": 2.3,
+    "rate": 2.48,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SCHB": {
+    "pays_dividends": true,
+    "yield_pct": 1.04,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SCHD": {
+    "pays_dividends": true,
+    "yield_pct": 3.13,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SCHP": {
+    "pays_dividends": true,
+    "yield_pct": 4.51,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SCHX": {
+    "pays_dividends": true,
+    "yield_pct": 1.03,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SDY": {
+    "pays_dividends": true,
+    "yield_pct": 2.41,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SE": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SGLN.L": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "GBP",
+    "is_pence": true,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SHEL": {
+    "pays_dividends": true,
+    "yield_pct": 3.45,
+    "rate": 1.511,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SHOP": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SHV": {
+    "pays_dividends": true,
+    "yield_pct": 3.77,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SHY": {
+    "pays_dividends": true,
+    "yield_pct": 3.65,
+    "rate": 0.313,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SIE.DE": {
+    "pays_dividends": true,
+    "yield_pct": 1.88,
+    "rate": 5.35,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SIZE": {
+    "pays_dividends": true,
+    "yield_pct": 1.37,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SJPA.MI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "SKYY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "SLB": {
+    "pays_dividends": true,
+    "yield_pct": 2.19,
+    "rate": 1.16,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SLV": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "SMCI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SMH": {
+    "pays_dividends": true,
+    "yield_pct": 0.2,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SMOG": {
+    "pays_dividends": true,
+    "yield_pct": 1.5,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SNOW": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SO": {
+    "pays_dividends": true,
+    "yield_pct": 3.28,
+    "rate": 2.98,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SOFI": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SONY": {
+    "pays_dividends": true,
+    "yield_pct": 0.65,
+    "rate": 25.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SOXL": {
+    "pays_dividends": true,
+    "yield_pct": 0.01,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SOXS": {
+    "pays_dividends": true,
+    "yield_pct": 41.76,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SOXX": {
+    "pays_dividends": true,
+    "yield_pct": 0.29,
+    "rate": 3.135,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SOYB": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "SPDW": {
+    "pays_dividends": true,
+    "yield_pct": 3.02,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPGI": {
+    "pays_dividends": true,
+    "yield_pct": 0.93,
+    "rate": 3.86,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SPHQ": {
+    "pays_dividends": true,
+    "yield_pct": 1.1,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPLG": {
+    "pays_dividends": true,
+    "yield_pct": 1.13,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPLK": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "SPLV": {
+    "pays_dividends": true,
+    "yield_pct": 2.12,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPTL": {
+    "pays_dividends": true,
+    "yield_pct": 4.35,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPTM": {
+    "pays_dividends": true,
+    "yield_pct": 1.06,
+    "rate": 0.929,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPXL": {
+    "pays_dividends": true,
+    "yield_pct": 0.53,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPXS": {
+    "pays_dividends": true,
+    "yield_pct": 4.45,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPY": {
+    "pays_dividends": true,
+    "yield_pct": 1.01,
+    "rate": 5.662,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SPYD": {
+    "pays_dividends": true,
+    "yield_pct": 4.1,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SQ": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Other",
+    "distribution": null
+  },
+  "SQQQ": {
+    "pays_dividends": true,
+    "yield_pct": 9.13,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SRE": {
+    "pays_dividends": true,
+    "yield_pct": 3.04,
+    "rate": 2.608,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SRPT": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SRVR": {
+    "pays_dividends": true,
+    "yield_pct": 2.82,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "STNE": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "SUB": {
+    "pays_dividends": true,
+    "yield_pct": 2.55,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "SVXY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "SYK": {
+    "pays_dividends": true,
+    "yield_pct": 1.04,
+    "rate": 3.48,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "T": {
+    "pays_dividends": true,
+    "yield_pct": 4.46,
+    "rate": 1.11,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TAIL": {
+    "pays_dividends": true,
+    "yield_pct": 2.99,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TAN": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "TCEHY": {
+    "pays_dividends": true,
+    "yield_pct": 1.19,
+    "rate": 4.763,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TD": {
+    "pays_dividends": true,
+    "yield_pct": 2.57,
+    "rate": 4.26,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TECL": {
+    "pays_dividends": true,
+    "yield_pct": 0.17,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TGT": {
+    "pays_dividends": true,
+    "yield_pct": 3.0,
+    "rate": 4.54,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "THD": {
+    "pays_dividends": true,
+    "yield_pct": 3.49,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "THNQ": {
+    "pays_dividends": true,
+    "yield_pct": 0.15,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TIP": {
+    "pays_dividends": true,
+    "yield_pct": 4.47,
+    "rate": 1.25,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TIPX": {
+    "pays_dividends": true,
+    "yield_pct": 5.17,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TJX": {
+    "pays_dividends": true,
+    "yield_pct": 1.26,
+    "rate": 1.755,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TLT": {
+    "pays_dividends": true,
+    "yield_pct": 4.75,
+    "rate": 2.152,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TM": {
+    "pays_dividends": true,
+    "yield_pct": 3.28,
+    "rate": 95.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TNA": {
+    "pays_dividends": true,
+    "yield_pct": 0.3,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TQQQ": {
+    "pays_dividends": true,
+    "yield_pct": 0.58,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TSLA": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TSM": {
+    "pays_dividends": true,
+    "yield_pct": 1.02,
+    "rate": 26.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TUR": {
+    "pays_dividends": true,
+    "yield_pct": 2.21,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "TWLO": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "TXN": {
+    "pays_dividends": true,
+    "yield_pct": 2.03,
+    "rate": 5.62,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "UAL": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "UFO": {
+    "pays_dividends": true,
+    "yield_pct": 0.34,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "UNG": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "UNH": {
+    "pays_dividends": true,
+    "yield_pct": 2.31,
+    "rate": 8.95,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "UNP": {
+    "pays_dividends": true,
+    "yield_pct": 1.93,
+    "rate": 5.52,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "UPS": {
+    "pays_dividends": true,
+    "yield_pct": 6.28,
+    "rate": 6.56,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "UPST": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "URA": {
+    "pays_dividends": true,
+    "yield_pct": 5.3,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "USMV": {
+    "pays_dividends": true,
+    "yield_pct": 1.48,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "USO": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "UVXY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "V": {
+    "pays_dividends": true,
+    "yield_pct": 0.74,
+    "rate": 2.68,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VALE": {
+    "pays_dividends": true,
+    "yield_pct": 8.77,
+    "rate": 5.477,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VAW": {
+    "pays_dividends": true,
+    "yield_pct": 1.42,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VB": {
+    "pays_dividends": true,
+    "yield_pct": 1.22,
+    "rate": 2.557,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VBK": {
+    "pays_dividends": true,
+    "yield_pct": 0.45,
+    "rate": 1.178,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VBR": {
+    "pays_dividends": true,
+    "yield_pct": 1.77,
+    "rate": 3.131,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VCIT": {
+    "pays_dividends": true,
+    "yield_pct": 4.88,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VCLT": {
+    "pays_dividends": true,
+    "yield_pct": 5.78,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VCR": {
+    "pays_dividends": true,
+    "yield_pct": 0.73,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VDC": {
+    "pays_dividends": true,
+    "yield_pct": 2.08,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VEA": {
+    "pays_dividends": true,
+    "yield_pct": 2.56,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VEEV": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VFH": {
+    "pays_dividends": true,
+    "yield_pct": 1.67,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VGIT": {
+    "pays_dividends": true,
+    "yield_pct": 3.89,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VGK": {
+    "pays_dividends": true,
+    "yield_pct": 2.84,
+    "rate": 1.781,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VGLT": {
+    "pays_dividends": true,
+    "yield_pct": 4.77,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VGSH": {
+    "pays_dividends": true,
+    "yield_pct": 3.85,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VGT": {
+    "pays_dividends": true,
+    "yield_pct": 0.38,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VIXY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "VLO": {
+    "pays_dividends": true,
+    "yield_pct": 1.4,
+    "rate": 4.66,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VLUE": {
+    "pays_dividends": true,
+    "yield_pct": 1.47,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VNET": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VNQ": {
+    "pays_dividends": true,
+    "yield_pct": 3.51,
+    "rate": 3.334,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VNQI": {
+    "pays_dividends": true,
+    "yield_pct": 4.68,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VO": {
+    "pays_dividends": true,
+    "yield_pct": 1.32,
+    "rate": 2.996,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VOD": {
+    "pays_dividends": true,
+    "yield_pct": 3.27,
+    "rate": 0.046,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VOO": {
+    "pays_dividends": true,
+    "yield_pct": 1.07,
+    "rate": 5.437,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VPU": {
+    "pays_dividends": true,
+    "yield_pct": 2.7,
+    "rate": 4.349,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VRTX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VTEX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "VTI": {
+    "pays_dividends": true,
+    "yield_pct": 1.06,
+    "rate": 2.802,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VTV": {
+    "pays_dividends": true,
+    "yield_pct": 1.86,
+    "rate": 3.04,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VUG": {
+    "pays_dividends": true,
+    "yield_pct": 0.4,
+    "rate": 1.54,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VWCE.DE": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "EUR",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "VWO": {
+    "pays_dividends": true,
+    "yield_pct": 2.36,
+    "rate": 1.122,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VXF": {
+    "pays_dividends": true,
+    "yield_pct": 1.04,
+    "rate": 1.767,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VXX": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "VYM": {
+    "pays_dividends": true,
+    "yield_pct": 2.24,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "VZ": {
+    "pays_dividends": true,
+    "yield_pct": 5.84,
+    "rate": 2.795,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WBD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WCBR": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "WCLD": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "WDAY": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WEAT": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Accumulating"
+  },
+  "WFC": {
+    "pays_dividends": true,
+    "yield_pct": 2.25,
+    "rate": 1.8,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WIT": {
+    "pays_dividends": true,
+    "yield_pct": 4.47,
+    "rate": 8.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WMT": {
+    "pays_dividends": true,
+    "yield_pct": 0.86,
+    "rate": 0.953,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WPM": {
+    "pays_dividends": true,
+    "yield_pct": 0.58,
+    "rate": 0.72,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WY": {
+    "pays_dividends": true,
+    "yield_pct": 3.42,
+    "rate": 0.84,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "WYNN": {
+    "pays_dividends": true,
+    "yield_pct": 0.98,
+    "rate": 1.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "XAR": {
+    "pays_dividends": true,
+    "yield_pct": 0.31,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XBI": {
+    "pays_dividends": true,
+    "yield_pct": 0.39,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XEL": {
+    "pays_dividends": true,
+    "yield_pct": 2.99,
+    "rate": 2.325,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "XES": {
+    "pays_dividends": true,
+    "yield_pct": 1.17,
+    "rate": 0.61,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XHE": {
+    "pays_dividends": true,
+    "yield_pct": 0.06,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLB": {
+    "pays_dividends": true,
+    "yield_pct": 1.68,
+    "rate": 1.39,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLE": {
+    "pays_dividends": true,
+    "yield_pct": 2.55,
+    "rate": 2.16,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLF": {
+    "pays_dividends": true,
+    "yield_pct": 1.42,
+    "rate": 0.58,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLI": {
+    "pays_dividends": true,
+    "yield_pct": 1.15,
+    "rate": 1.24,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLK": {
+    "pays_dividends": true,
+    "yield_pct": 0.45,
+    "rate": 1.103,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLP": {
+    "pays_dividends": true,
+    "yield_pct": 2.58,
+    "rate": 1.73,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLU": {
+    "pays_dividends": true,
+    "yield_pct": 2.7,
+    "rate": 1.95,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLV": {
+    "pays_dividends": true,
+    "yield_pct": 1.56,
+    "rate": 1.81,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XLY": {
+    "pays_dividends": true,
+    "yield_pct": 0.78,
+    "rate": 1.17,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XNTK": {
+    "pays_dividends": true,
+    "yield_pct": 0.16,
+    "rate": 0.41,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XOM": {
+    "pays_dividends": true,
+    "yield_pct": 2.57,
+    "rate": 4.08,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "XOP": {
+    "pays_dividends": true,
+    "yield_pct": 1.83,
+    "rate": 1.39,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XPEV": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "XPH": {
+    "pays_dividends": true,
+    "yield_pct": 0.49,
+    "rate": 0.24,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "XRT": {
+    "pays_dividends": true,
+    "yield_pct": 0.75,
+    "rate": 0.521,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "ETF",
+    "distribution": "Distributing"
+  },
+  "ZM": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ZS": {
+    "pays_dividends": false,
+    "yield_pct": 0.0,
+    "rate": 0.0,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  },
+  "ZTS": {
+    "pays_dividends": true,
+    "yield_pct": 2.87,
+    "rate": 2.06,
+    "currency": "USD",
+    "is_pence": false,
+    "asset_type": "Stock",
+    "distribution": null
+  }
+}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alerts · Smart Wallet</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* Red theme for this page's header (matches the Alerta email accent) */
+  .page-header.alerta .page-subtitle { color: var(--alerta-accent); }
+  .page-header.alerta .status-item .label { color: var(--alerta-accent); }
+  .page-header.alerta .status-item .value { color: #fff0ee; }
+  .page-header.alerta .status-strip { border-top-color: rgba(255,179,168,0.25); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Smart Wallet</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="home">Home</a>
+      <a href="favorites.html" data-page="favorites">Favorites</a>
+      <a href="experiments.html" data-page="experiments">Experiments</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alerts.html" data-page="alerts">Alerts</a>
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Methodology</a>
+      <a href="pt/index.html">🇧🇷 PT</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header alerta" style="background:var(--alerta)">
+  <div class="wrap">
+    <h1 class="page-title">🚨 Alerts</h1>
+    <div class="page-subtitle">Only fires on a volatility anomaly: a VIX regime shift or a portfolio ETF moving far outside its normal range. Not a daily report.</div>
+    <div class="status-strip" id="status-strip"><!-- JS --></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div id="status-banner"><!-- JS --></div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="eyebrow" style="margin-left:2px">Market leg: VIX regime</div>
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto">
+        <table id="market-table"><!-- JS --></table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="eyebrow" style="margin-left:2px">Per-asset leg: portfolio ETFs vs. their own ATR</div>
+    <div class="card">
+      <div class="card-body" style="overflow-x:auto">
+        <table id="tickers-table"><!-- JS --></table>
+        <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
+          Only the 7 portfolio ETFs are checked here (not the broader Watchlist). "Normal move" is each
+          ETF's own 14-day ATR as a % of price, its typical daily range. "vs. ATR" is today's return divided
+          by that normal range; ≥2.5× triggers an alert for that asset.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">How this alert works</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0 0 10px">
+          The two daily emails (Carteira Inteligente, Carteira BOT Experimentos) go out every day regardless of
+          what happened in the market. This channel is different: it only fires when something is <em>outside
+          the normal range</em>, so it's worth checking without having to read a daily email for signal.
+        </p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:10px">
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Market leg</td>
+              <td style="padding:6px 0">VIX transitions into the high regime (&gt;25) from a lower one, or jumps ≥15% in a single day even without crossing that line.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Per-asset leg</td>
+              <td style="padding:6px 0">Any of the 7 portfolio ETFs moves ≥2.5× its own 14-day ATR in a single day, rare enough (a few times a year per asset) to be worth flagging, in either direction.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Transition, not persistence</td>
+              <td style="padding:6px 0">The VIX check compares only the last two days, so if volatility stays high for a week, this fires once (on the first day), not every day the state persists.</td></tr>
+          <tr><td style="padding:6px 12px 6px 0;color:var(--ink-faint);white-space:nowrap;vertical-align:top">Not model drift</td>
+              <td style="padding:6px 0">This is separate from the ADWIN/Page-Hinkley drift detectors used internally in research: those catch a model going stale, not a market event.</td></tr>
+        </table>
+        <p style="margin:0">
+          Either leg alone is enough to trigger, no need for both a market-wide and an asset-specific signal at
+          the same time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Before you go on</strong>
+      This site is a personal study project applying Machine Learning to financial markets.
+      The forecasts have no proven statistical significance and should not be taken seriously as a basis for
+      decisions. Nothing here is financial advice.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Source code</a>
+    </div>
+    <div class="footer-meta" id="footer-meta"><!-- JS --></div>
+  </div>
+</footer>
+
+<script src="assets/alerts_data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  setActiveNav('alerts');
+
+  const a = ALERTS_DATA;
+  const REGIME_LABEL = ['Low', 'Medium', 'High'];
+
+  document.getElementById('status-strip').innerHTML = `
+    <div class="status-item">
+      <div class="label">Status</div>
+      <div class="value" style="font-size:16px">${a.alerta ? '🚨 Anomaly' : '✅ Calm'}</div>
+    </div>
+    <div class="status-item">
+      <div class="label">VIX today</div>
+      <div class="value">${a.market.vix_hoje ?? '-'}<small>${a.market.regime_hoje !== undefined ? REGIME_LABEL[a.market.regime_hoje] : ''}</small></div>
+    </div>
+    <div class="status-item">
+      <div class="label">Last updated</div>
+      <div class="value" style="font-size:16px">${fmtDate(a.date)}</div>
+    </div>
+  `;
+  document.getElementById('footer-meta').textContent = `Smart Wallet · data as of ${fmtDate(a.date)}`;
+
+  // ── Status banner ─────────────────────────────────────────────────────
+  if (a.alerta) {
+    document.getElementById('status-banner').innerHTML = `
+      <div style="background:#fdeceb;border:1px solid #f2c9c3;border-radius:var(--radius);padding:16px 18px">
+        <div style="font-weight:700;color:var(--alerta);font-size:14px;margin-bottom:8px">🚨 Anomaly detected today</div>
+        <ul style="margin:0;padding-left:18px;color:#7a2a24;font-size:12.5px;line-height:1.8">
+          ${a.motivos.map(m => `<li>${m}</li>`).join('')}
+        </ul>
+      </div>`;
+  } else {
+    document.getElementById('status-banner').innerHTML = `
+      <div style="background:var(--up-bg);border:1px solid #cfe6d7;border-radius:var(--radius);padding:16px 18px">
+        <div style="font-weight:700;color:var(--up);font-size:14px">✅ No anomaly today</div>
+        <div style="color:#3d6b52;font-size:12.5px;margin-top:4px">VIX and every portfolio ETF are within their normal range. This page only changes when something moves outside it.</div>
+      </div>`;
+  }
+
+  // ── Market table ─────────────────────────────────────────────────────
+  const m = a.market;
+  document.getElementById('market-table').innerHTML = `
+    <thead><tr><th>VIX yesterday</th><th>VIX today</th><th style="text-align:right">1-day change</th><th style="text-align:center">Regime</th><th style="text-align:center">Transition?</th><th style="text-align:center">Spike (≥15%)?</th></tr></thead>
+    <tbody><tr>
+      <td style="font-family:var(--mono)">${m.vix_ontem ?? '-'}</td>
+      <td style="font-family:var(--mono)">${m.vix_hoje ?? '-'}</td>
+      <td style="text-align:right;font-family:var(--mono);font-weight:600;color:${(m.variacao_1d ?? 0) >= 0 ? 'var(--up)' : 'var(--down)'}">${m.variacao_1d !== undefined ? (m.variacao_1d >= 0 ? '+' : '') + (m.variacao_1d * 100).toFixed(1) + '%' : '-'}</td>
+      <td style="text-align:center">${REGIME_LABEL[m.regime_ontem] ?? '-'} → ${REGIME_LABEL[m.regime_hoje] ?? '-'}</td>
+      <td style="text-align:center">${m.transicao ? '<span class="badge badge-down">yes</span>' : '<span class="badge badge-quiet">no</span>'}</td>
+      <td style="text-align:center">${m.spike ? '<span class="badge badge-down">yes</span>' : '<span class="badge badge-quiet">no</span>'}</td>
+    </tr></tbody>`;
+
+  // ── Per-ticker table ─────────────────────────────────────────────────
+  const tickers = Object.keys(a.tickers);
+  const tRows = tickers.map(t => {
+    const r = a.tickers[t];
+    const color = r.retorno_1d >= 0 ? 'var(--up)' : 'var(--down)';
+    const arrow = r.retorno_1d >= 0 ? '▲' : '▼';
+    return `<tr>
+      <td style="font-weight:600;color:var(--brand);font-family:var(--mono)">${t}</td>
+      <td style="text-align:right;font-family:var(--mono);font-weight:600;color:${color}">${arrow} ${Math.abs(r.retorno_1d * 100).toFixed(2)}%</td>
+      <td style="text-align:right;font-family:var(--mono)">±${(r.atr_pct * 100).toFixed(2)}%</td>
+      <td style="text-align:right;font-family:var(--mono)">${r.multiplo_atr.toFixed(2)}×</td>
+      <td style="text-align:center">${r.alerta ? '<span class="badge badge-down">🚨 alert</span>' : '<span class="badge badge-quiet">calm</span>'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tickers-table').innerHTML = `
+    <thead><tr><th>Asset</th><th style="text-align:right">1-day return</th><th style="text-align:right">Normal move (ATR)</th><th style="text-align:right">vs. ATR</th><th style="text-align:center">Status</th></tr></thead>
+    <tbody>${tRows}</tbody>`;
+</script>
+
+</body>
+</html>
