@@ -112,6 +112,11 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      # 3a — Rodar testes (falha rápido — não queima ~1h20 de runtime num commit quebrado)
+      - name: 🧪 Rodar testes
+        run: |
+          pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
+
       # 3b — Restaurar cache dos modelos de investigação (treino incremental)
       - name: ♻️ Restaurar cache dos modelos de investigação
         uses: actions/cache@v4
@@ -120,6 +125,19 @@ jobs:
           key: research-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-${{ steps.date.outputs.week }}
           restore-keys: |
             research-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-
+
+      # 3c — Restaurar cache dos modelos SGD (partial_fit incremental — não
+      # commitado no git, ver .gitignore; guarda de n_features_in_ em
+      # models/ensemble.py:_load_sgd protege contra modelos desatualizados)
+      - name: ♻️ Restaurar cache dos modelos SGD
+        uses: actions/cache@v4
+        with:
+          path: |
+            output/models/
+            !output/models/research/
+          key: sgd-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-${{ steps.date.outputs.week }}
+          restore-keys: |
+            sgd-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-
 
       # 4 — Executar pipeline principal
       - name: 🚀 Executar main.py

@@ -101,7 +101,7 @@ ASSET_CLASSES: dict[str, int] = {
     "EMIM.AS": 1, "EXUS.MI": 1, "IWDA.AS": 1, "MEUD.PA": 1,
     "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
     "LYP6.DE": 1, "IS3N.DE": 1, "EUNN.DE": 1,
-    "SGLN.L":  3,
+    "SGLN.L":  3, "PPFB.DE": 3,  # iShares Physical Gold ETC (Xetra)
 }
 
 # ── Market calendar mapping (pandas-market-calendars) ────────────────────
@@ -127,6 +127,7 @@ TICKER_CALENDAR: dict[str, str] = {
     "LYP6.DE": "XETR",
     "IS3N.DE": "XETR",
     "EUNN.DE": "XETR",
+    "PPFB.DE": "XETR",
     # Swiss Exchange
     "NESN.SW": "SIX",
     "NOVN.SW": "SIX",
