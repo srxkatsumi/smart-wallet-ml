@@ -170,6 +170,16 @@ jobs:
           fi
           echo "✅ Validação OK — $COUNT previsões · HTML · weights"
 
+      # 4c — Verificar se main.py detetou uma anomalia hoje (roda sempre,
+      # independente de enviar_email, pra dar pra testar o cálculo em runs
+      # manuais sem precisar mandar email de verdade)
+      - name: 🔎 Verificar anomalia
+        id: anomalia
+        run: |
+          ALERTA=$(python -c "import json; print(str(json.load(open('output/anomalia.json')).get('alerta', False)).lower())" 2>/dev/null || echo false)
+          echo "alerta=$ALERTA" >> "$GITHUB_OUTPUT"
+          echo "Anomalia detetada hoje: $ALERTA"
+
       # 5 — Commit dos ficheiros gerados de volta ao repositório
       - name: 💾 Guardar resultados no repositório
         run: |
@@ -196,6 +206,10 @@ jobs:
           git add output/resumo_experimentos.html          2>/dev/null || true
           git add output/significance_experimentos.json   2>/dev/null || true
           git add output/backtest_experimentos.json        2>/dev/null || true
+
+          # Alerta de anomalia (email separado — só existe HTML nos dias com alerta)
+          git add output/anomalia.json      2>/dev/null || true
+          git add output/resumo_alerta.html 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
@@ -286,6 +300,24 @@ jobs:
           to: ${{ secrets.GMAIL_TO }}
           from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
           html_body: file://output/resumo_experimentos.html
+          convert_markdown: false
+
+      # 7d — Enviar alerta de anomalia (só quando detetado hoje — ver step "🔎 Verificar anomalia")
+      - name: 🚨 Enviar alerta por email
+        id: send_email_alerta
+        if: success() && steps.anomalia.outputs.alerta == 'true' && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "Carteira BOT Alerta — ${{ steps.resumo.outputs.date }}"
+          to: ${{ secrets.GMAIL_TO }}
+          from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
+          html_body: file://output/resumo_alerta.html
           convert_markdown: false
 
       # 7b — Telegram diário com tendência dos modelos

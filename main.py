@@ -139,6 +139,17 @@ def main():
     except Exception as e:
         logger.warning("Cálculo de significância falhou (não bloqueia): %s", e)
 
+    # ── Deteção de anomalia (email separado, só dispara em evento fora do normal) ─
+    try:
+        from evaluation.anomaly import detect_anomaly, save_anomaly
+        anomaly = detect_anomaly(context_data, featured_data, etf_acumul)
+        save_anomaly(anomaly)
+        if anomaly.get("alerta"):
+            from reports.email_report_alerta import build_html_alerta, save_html_alerta
+            save_html_alerta(build_html_alerta(anomaly))
+    except Exception as e:
+        logger.warning("Deteção de anomalia falhou (não bloqueia): %s", e)
+
     # ── ML training (uses today's updated weights) ────────────────────────
     from config.settings import MODELS_DIR
     from models.ensemble import train_all, save_model_metadata, monthly_recalibration

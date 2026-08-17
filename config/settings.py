@@ -21,6 +21,12 @@ EXPERIMENTO_SIGNIFICANCE_FILE= OUTPUT_DIR / "significance_experimentos.json"
 EXPERIMENTO_BACKTEST_FILE    = OUTPUT_DIR / "backtest_experimentos.json"
 MIN_N_EXPERIMENTO            = 100
 
+# ── Alerta de anomalia (email separado, só dispara em evento fora do normal) ─
+ALERTA_FILE        = OUTPUT_DIR / "anomalia.json"
+ALERTA_HTML_REPORT = OUTPUT_DIR / "resumo_alerta.html"
+ALERTA_ATR_MULTIPLICADOR = 2.5   # retorno diário >= 2.5x o ATR normal do ativo
+ALERTA_VIX_SPIKE_PCT     = 0.15  # variação diária do VIX >= 15%
+
 # ── Model hyperparameters ─────────────────────────────────────────────────
 N_ESTIMATORS_RF  = 100
 MAX_DEPTH_RF     = 5
