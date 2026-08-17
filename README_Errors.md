@@ -107,16 +107,75 @@ O pipeline é idempotente — correr duas vezes no mesmo dia não duplica previs
 
 ---
 
+## ERR-008 — `KeyError: 'etoro'` após remover as posições do eToro da carteira (2026-07-30)
+
+**Sintoma**
+Três execuções agendadas consecutivas falharam imediatamente com `KeyError: 'etoro'`.
+
+**Causa raiz**
+A chave `etoro` de `config/portfolio.json` foi removida (posições vendidas, deixaram de ser acompanhadas), mas `data/storage.py:load_my_tickers()` e `main.py` continuavam a acessar `portfolio_cfg["etoro"]` diretamente em vez de `.get("etoro", [])`.
+
+**Solução aplicada**
+Ambos os pontos de acesso agora usam uma lista vazia por default quando a chave está ausente; o pipeline de research (antes restrito só aos tickers do eToro) agora recai na carteira de ETFs quando `etoro` está vazio. Commit `e32e748c`.
+
+---
+
+## ERR-009 — `mapie` incompatível com o scikit-learn fixado — desafiante de regressão falhou pra 100% dos tickers (2026-08-05)
+
+**Sintoma**
+O novo email do experimento de regressão saiu com "0 ativos" — o modelo desafiante falhou o treino pra todos os tickers.
+
+**Causa raiz**
+`mapie<1` (resolveu pra 0.9.x) depende de internals do scikit-learn (`EnsembleRegressor.__sklearn_tags__`) que não existem no `scikit-learn==1.8.0` fixado — uma incompatibilidade de versão invisível localmente porque um venv de teste descartável tinha resolvido um scikit-learn mais antigo e compatível, sem esse pin.
+
+**Solução aplicada**
+Removida a dependência do `mapie`; os intervalos de predição por conformal prediction agora são calculados manualmente (treina no primeiro ~80% da janela, calibra o intervalo no ~20% mais recente — mesma filosofia manual/independente de versão já usada por `models/conformal.py` pros classificadores de produção, exatamente por este motivo). Commit `a4a602db5`.
+
+---
+
+## ERR-010 — Tentativas de fallback entraram em corrida; o ciclo de um dia de negociação nunca correu (2026-08-10 a 2026-08-11)
+
+**Sintoma**
+Nenhum email chegou pro fecho de 2026-08-11, mesmo o workflow mostrando runs de "sucesso" naquela noite.
+
+**Causa raiz 1 — corrida entre tentativas de fallback**
+Com o pipeline de research + experimento de regressão, um run completo já leva ~1h20-2h — mais que o intervalo entre as três tentativas de fallback do cron. Em 2026-08-10, uma segunda tentativa começou seu próprio run completo de ~2h27m porque a checagem "já rodou hoje" só olhava o CSV *commitado*, que a primeira tentativa (ainda a correr) ainda não tinha publicado. O push da tentativa perdedora foi rejeitado, e a recuperação (`git pull --rebase`) falhou também, porque `output/models/*.pkl` nunca é commitado, deixando a árvore de trabalho permanentemente "suja" pro rebase.
+
+**Causa raiz 2 — `hoje` calculado a meio da execução**
+`main.py` calculava `hoje = pd.Timestamp.now().normalize()` depois de baixar os dados de mercado de toda a watchlist, não no início de `main()`. Um run que começou às 23h38 UTC e levou até 01h31 UTC do dia seguinte gravou as suas previsões com `pred_date` = a data *posterior* — correto do ponto de vista dos dados de mercado (a NYSE já tinha fechado), mas isso significava que a checagem anti-duplicação do dia seguinte real via "já feito" e saltava as três tentativas daquele dia — o fecho real daquele dia de negociação nunca foi processado.
+
+**Solução aplicada**
+- A checagem anti-duplicação agora também consulta a API do GitHub Actions por qualquer run já em curso ou já bem-sucedido hoje (apanha a corrida em segundos, não ~2h depois no push); a retentativa de push cede a um run do mesmo dia que já publicou em vez de tentar mesclar dois pipelines completos independentes. Commit `3ef79b576`.
+- Movido `hoje = pd.Timestamp.now().normalize()` pra primeira linha de `main()`. Commit `3ece5070d`.
+- Correção defensiva secundária: o step "✅ Validar dados gerados" recalculava `today` via `date` do shell *depois* do `main.py` terminar, podendo cair do lado errado da mesma virada de meia-noite — corrigido pra aceitar o `pred_date` de hoje ou de ontem. Commit `3ea9e8f47`.
+
+---
+
+## ERR-011 — Lacunas silenciosas encontradas numa revisão de pontos fracos do projeto (2026-08-17)
+
+Não foi um incidente único — uma auditoria deliberada encontrou três coisas erradas em silêncio, sem nunca lançar erro:
+
+1. **Suite de testes desligada do CI.** Existiam 21 arquivos de teste, `pytest` estava no `requirements.txt`, mas o workflow nunca o invocava. `tests/test_email_phase15.py` estava quebrado (`ImportError`) há semanas — testava uma seção de PnL/lotes do email removida num refactor anterior — e ninguém percebeu. Solução: removido o teste obsoleto, adicionado `pytest.ini` (`--continue-on-collection-errors`, pra um arquivo quebrado nunca mais silenciar a suite inteira), e ligado `pytest tests/` como primeiro passo do job. Commit `5d4078378`.
+2. **"Aprendizado incremental" do SGD estava inerte desde 2026-06-26.** `output/models/*.pkl` está no `.gitignore` (uma correção deliberada depois de modelos desatualizados quebrarem o `partial_fit` em silêncio e produzirem zero previsões naquele dia — ver a guarda adicionada na altura, o cheque de `n_features_in_` em `_load_sgd`), mas nenhum step de cache restaurava a pasta — então todo run caía silenciosamente num `.fit()` do zero, todos os dias, nunca `partial_fit`. Solução: adicionado um step `actions/cache@v4` pra `output/models/` (mesma chave do cache de research já existente); a guarda de contagem de features já existente protege contra repetir o incidente de junho. Commit `5d4078378`.
+3. **`PPFB.DE` ausente de `ASSET_CLASSES`/`TICKER_CALENDAR`.** Presente na carteira, ausente dos dois dicionários mantidos à mão — caía nos defaults silenciosos (`asset_class=0`/NYSE) em vez dos valores reais (iShares Physical Gold ETC, Xetra, ETC de commodity). Solução: adicionadas as entradas corretas mais `tests/test_config_coverage.py`, que agora falha alto no CI se um futuro ticker da carteira ficar de fora de algum dos dois dicionários. Commit `5d4078378`.
+
+Também corrigido no mesmo dia: o teste de Diebold-Mariano do experimento de regressão usava o default `h=1` pros três horizontes, subestimando a variância de longo prazo pro D+2/D+3 (janelas de previsão sobrepostas são serialmente correlacionadas — o paper original de 1995 recomenda `h` = horizonte de previsão). Agora chama `diebold_mariano(e_challenger, e_champion, h=day)`.
+
+---
+
 ## Validações em produção (estado atual)
 
 | Validação | Onde | O que deteta |
 |-----------|------|--------------|
-| `verificar` job | Workflow | Runs manuais: salta se já executou. Crons: sempre executa |
-| `✅ Validar dados gerados` | Workflow | Falha se `COUNT < 10` previsões, HTML ou weights em falta |
+| `verificar` job | Workflow | Runs manuais: salta se já executou. Crons: também consulta a API do Actions por um run em curso/bem-sucedido antes de arrancar |
+| `✅ Validar dados gerados` | Workflow | Falha se `COUNT < 10` previsões (data de hoje ou de ontem), HTML ou weights em falta |
+| `pytest tests/` | Workflow | Corre antes do `main.py`; pára o pipeline em qualquer falha de teste |
+| `actions/cache` (modelos research + SGD) | Workflow | Persiste modelos treinados entre runs; guarda de contagem de features força reinit seguro se houver mismatch |
+| `tests/test_config_coverage.py` | Teste CI | Falha se um ticker da carteira ficar ausente de `ASSET_CLASSES`/`TICKER_CALENDAR` |
 | Pre-commit hook CHECK 1 | Local | Bloqueia commit de predictions_log.csv com dados intraday |
 | Pre-commit hook CHECK 2 | Local | Bloqueia commit se testes relacionados falharem |
 | `permissions: contents: write` | Workflows | Garante que o push nunca falha por falta de permissão |
 
 ---
 
-*Última actualização: 2026-06-10*
+*Última actualização: 2026-08-17*

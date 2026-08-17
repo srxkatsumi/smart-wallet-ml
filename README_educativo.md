@@ -1032,6 +1032,45 @@ O threshold de 40% é configurável no arquivo `settings.py` via `SPLIT_DETECTIO
 
 ---
 
+## 7.5. Os testes automáticos: por que existem e o que garantem
+
+Validar as previsões (seção anterior) responde "o modelo está acertando?". Os testes automáticos respondem uma pergunta diferente e anterior: "o código ainda faz o que eu penso que faz?"
+
+### O que um teste automático testa, exatamente
+
+Um teste unitário não sabe nada sobre o mercado. Ele pega uma função do projeto, dá dados sintéticos (inventados, gerados com `np.random`, nunca dados reais baixados da bolsa) e verifica se a saída obedece uma regra que **tem que ser sempre verdadeira**, independentemente de qual ativo ou dia estamos a olhar. Por exemplo:
+
+```python
+def test_rsi_sempre_entre_0_e_100():
+    dados_aleatorios = gerar_precos_falsos()
+    rsi = calcular_rsi14(dados_aleatorios)
+    assert 0 <= rsi <= 100   # isto TEM que ser verdade, sempre
+```
+
+Isto não diz nada sobre se o RSI está a prever bem a bolsa. Diz que a fórmula do RSI não tem um bug óbvio que produza, por exemplo, `RSI = 150` (matematicamente impossível, mas facilmente causado por um erro de divisão no código).
+
+Hoje existem **116 testes destes, espalhados por 21 arquivos**, cobrindo desde o pipeline principal (features, ensemble, cobertura de configuração) até cada uma das 13 famílias do framework de investigação e a lógica financeira da carteira (breakeven, conversão de moeda).
+
+### Por que isto importa mais do que parece
+
+Todo teste automático deste projeto usa dados sintéticos — nunca faz uma chamada de rede, nunca lê um preço real. Isso é deliberado: um teste que depende da bolsa estar aberta, ou do Yahoo Finance responder, deixa de testar o *código* e passa a testar a *sorte do dia*. Um bug de lógica (por exemplo, uma divisão por zero que só acontece quando um ativo não tem volume) tem que aparecer todas as vezes que o teste corre, não só nos dias em que os dados reais calham a expor o problema.
+
+### A lição que custou caro: ter testes não é o mesmo que usá-los
+
+Durante várias semanas, este projeto teve os 21 arquivos de teste no repositório, mas o pipeline automático nunca os executava — ninguém tinha ligado o `pytest` ao workflow do GitHub Actions. Um desses arquivos (`test_email_phase15.py`) ficou literalmente quebrado — testava uma parte do email que já tinha sido removida noutra altura — durante semanas, sem que ninguém percebesse, porque nada o corria.
+
+A correção não foi só "ligar os testes". Foi também aceitar que, um dia, algum arquivo de teste vai voltar a quebrar (por um refactor, uma renomeação, um import esquecido) — e a suite não pode morrer inteira por causa de um arquivo. Por isso o projeto usa `--continue-on-collection-errors`: mesmo que um arquivo não consiga nem ser carregado, os outros 20 continuam a correr e a reportar os seus resultados normalmente.
+
+```
+pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
+```
+
+Esses dois últimos ficam de fora por agora — na máquina de desenvolvimento (Mac com chip Apple Silicon) eles derrubam o próprio interpretador Python por causa de uma incompatibilidade de biblioteca (`xgboost`/`libomp`), não por um erro no código do projeto. Ainda não confirmámos se isso também acontece no servidor Linux onde o GitHub Actions corre — por precaução, ficam de fora até essa confirmação.
+
+Os testes correm **antes** do `main.py`, de propósito: se algo estiver quebrado, o pipeline para em segundos, em vez de gastar 1h20 a 2h a treinar modelos sobre um código que já se sabia estar errado.
+
+---
+
 ## 8. As métricas do email explicadas
 
 ### Acurácia geral
@@ -1303,7 +1342,7 @@ O roadmap técnico traduzido para o que cada item significa na prática:
 **Depois do lançamento, sem prazo fixo**
 
 - ⬜ Features de eventos fundamentalistas: calendário de earnings, semanas do FOMC. Requer uma API externa confiável com cobertura europeia, o que ainda é limitado. A expiração de opções já foi implementada como feature de calendário (Fase 21).
-- ⬜ Regressor de preço para D+1: em vez de prever apenas a direção, prever o preço. Mas só faz sentido com pelo menos um ano de dados limpos acumulados.
+- ✅ Regressor de preço/retorno — em vez de prever apenas a direção, prever um valor contínuo. Implementado como experimento separado (email próprio, campeão vs. desafiante, ainda sem significância estatística comprovada) em vez de substituir a carteira principal — ver seção 13.
 
 **Framework de investigação — fases de modelos**
 
@@ -1327,6 +1366,55 @@ Além do pipeline operacional acima, este projeto implementa um framework de inv
 | ✅ Fase 19 — Conformal Prediction | Incerteza calibrada com garantia matemática: "90% de confiança" que realmente significa 90%. |
 | ✅ Fase 20 — ADWIN, Page-Hinkley | Detecção de drift: alerta automático quando o mercado muda de regime e os modelos perdem validade. |
 | ✅ Fase 21 — Enriquecimento de features | Expansão de 20 para 33 features: momentum (1m/3m/6m/12m), extremos anuais (52-week high/low), calendário (dia da semana, mês, expiração de opções), sinais cross-asset (BTC, ouro, correlação SPY, VWAP). Aborda a principal causa de acurácia próxima de 50%: features thin sem cobertura de regime, horizonte de momentum ou contexto macro. |
+
+---
+
+## 13. O experimento de regressão: campeão vs. desafiante (e por que não é bem um teste A/B)
+
+Todos os modelos descritos até aqui — os 3 do ensemble principal e os 13 do framework de investigação, 16 no total — respondem a mesma pergunta: **o ativo vai subir ou descer?** Nenhum deles diz "vai subir quanto". Esta seção documenta o primeiro modelo do projeto que tenta responder isso, e — igualmente importante — como decidimos avaliar se ele é bom o suficiente pra confiar, sem enganar a nós mesmos no processo.
+
+### Por que isto não entrou direto no email principal
+
+A tentação óbvia seria treinar um modelo de regressão e simplesmente mostrar o número que ele prevê. O problema é que "mostrar um número" não é o mesmo que "o número ser confiável" — e um número de preço específico (ex: "ICGA.DE vai pra 5,12€") *parece* muito mais preciso e confiável do que uma seta de direção com uma percentagem, mesmo quando, por baixo, tem exatamente a mesma incerteza (ou mais).
+
+Por isso este modelo vive num **segundo email, separado** ("Carteira BOT Experimentos"), claramente marcado como experimental, sem nenhuma influência sobre a carteira principal. Se ele falhar, o email de todos os dias continua a funcionar normalmente — o código que o executa está dentro do seu próprio bloco `try/except` em `main.py`, isolado do resto do pipeline.
+
+### O desenho: campeão vs. desafiante
+
+O "campeão" é a heurística que já existia — um preço-alvo calculado a partir da volatilidade recente do ativo (ATR — Average True Range) na direção que o classificador já prevê: `preço ± ATR × 0.5 × √dias`. Não é aprendido, é uma fórmula fixa.
+
+O "desafiante" é um modelo novo (RandomForestRegressor) treinado especificamente pra prever o retorno percentual futuro, usando as mesmas 33 features que os classificadores já usam.
+
+Todos os dias, os dois preveem o mesmo ativo, no mesmo horizonte (D+1, D+2, D+3), e o resultado real de cada dia é usado depois pra medir qual dos dois errou menos.
+
+### "Isto é um teste A/B?" — sim e não
+
+Enquanto estudava o livro *Trustworthy Online Controlled Experiments* (Kohavi, Tang e Xu — a referência clássica sobre testes A/B de produto), percebi uma diferença importante entre o que esse livro descreve e o que construí aqui.
+
+Num teste A/B de produto de verdade (o que o livro descreve), usuários reais são **divididos aleatoriamente** em dois grupos — metade vê a versão A, metade vê a versão B — e mede-se o impacto disso numa métrica de negócio (conversão, retenção, receita). A aleatoriedade é o ingrediente central: é ela que garante que a única diferença sistemática entre os dois grupos é a variante que viram, e não, por exemplo, o grupo A ter por acaso mais usuários de fim de semana.
+
+No meu sistema não há usuários pra dividir. Campeão e desafiante veem o **mesmo ativo, no mesmo dia, sob as mesmas condições de mercado** — não é uma amostra aleatória de sujeitos diferentes, é uma comparação pareada sobre o mesmo evento. Por isso, no email, uso o termo "campeão vs. desafiante" (o termo correto do mundo de avaliação de modelos de ML) e trato "teste A/B" só como um apelido didático pro leitor entender rapidamente do que se trata — não como uma afirmação literal de que é a mesma coisa.
+
+Curiosamente, essa diferença não torna a comparação mais fraca — torna-a, nesse ponto específico, mais simples de confiar: como os dois modelos veem exatamente as mesmas condições todos os dias, não existe o risco de "o grupo A calhou de ter um mês de mercado melhor que o grupo B", que é exatamente o tipo de confusão que a aleatorização de um teste A/B de produto existe pra evitar.
+
+### O que o livro ensina que decidi aplicar de qualquer forma
+
+Mesmo sem a randomização, várias ideias centrais do livro se aplicam diretamente a como decidimos declarar um vencedor:
+
+- **Decidir a métrica antes de olhar os resultados (OEC — Overall Evaluation Criterion).** A métrica de decisão é fixa desde o desenho: o teste de Diebold-Mariano sobre o erro quadrático pareado dos dois modelos. Não escolhemos essa métrica depois de ver quem estava a ganhar.
+- **Não espiar os resultados antes de ter dados suficientes.** O livro chama isto de "peeking" e mostra como olhar resultados cedo demais e parar assim que "parece bom" infla a taxa de falsos positivos. Por isso o email mostra "coletando dados" e não declara nenhum vencedor até haver pelo menos 100 previsões validadas por horizonte.
+- **Guardrails — não deixar a métrica principal mascarar um problema noutro lado.** O desafiante não pode ter um erro médio 20% pior que o campeão, mesmo que o teste principal não seja conclusivo.
+- **A Lei de Twyman — "todo número surpreendente costuma estar errado".** Nas primeiras semanas, um dos ativos apareceu com 68,8% de acerto — um número ótimo, mas calculado sobre apenas 16 previsões. Em vez de comemorar, tratámos como ruído estatístico até termos mais dados — e, de facto, esse número caiu pra perto de 45% assim que a amostra cresceu. Isto é exatamente o padrão que o livro descreve como sinal de alerta, não de vitória.
+
+### Um bug real que a leitura do livro ajudou a encontrar
+
+Ao comparar o desenho do experimento com o que o livro descreve, notei que o teste estatístico usado (Diebold-Mariano) tinha um parâmetro (`h`, o horizonte) que estava sempre fixo em 1, mesmo para as previsões de D+2 e D+3. O paper original de Diebold e Mariano (1995) recomenda ajustar esse parâmetro ao horizonte de previsão, porque erros de previsões de vários dias, feitas em dias consecutivos, se sobrepõem parcialmente e ficam correlacionados entre si — e ignorar isso faz o teste parecer mais confiante do que devia, especialmente nos horizontes mais longos.
+
+Corrigido, nos dados que tínhamos até então: o resultado de D+3 passou de "não significativo" (p=0,107) pra "tecnicamente significativo" (p=0,047) — usando exatamente os mesmos dados, só com a fórmula certa. Isto é, de novo, um caso pra Lei de Twyman: um número que muda de lado bem em cima do limiar de 0,05 merece desconfiança, não comemoração. Vamos continuar a observar se isso se mantém com mais semanas de dados antes de levar a sério.
+
+### E se o desafiante ganhar de vez?
+
+Ainda não decidimos "trocar tudo de uma vez" pra usar o modelo de regressão na carteira principal, mesmo que ele venha a ganhar significância estatística. O livro descreve rollouts graduais de produto (1% dos usuários, depois 10%, depois 100%) exatamente pra limitar o dano de uma mudança que parecia boa nos testes mas não é. A versão disto pro nosso caso, se algum dia chegarmos lá, seria misturar o desafiante só nalguns ativos ou horizontes primeiro, observando os guardrails, em vez de substituir a heurística ATR de uma vez em tudo. Isto ainda não foi construído — é só o próximo passo natural, se e quando for merecido.
 
 ---
 

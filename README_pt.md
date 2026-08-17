@@ -214,6 +214,28 @@ MISTO    → há discordância entre os horizontes
 
 ---
 
+## Experimento de regressão: campeão vs. desafiante
+
+Um segundo email diário, totalmente separado ("Carteira BOT Experimentos"), roda um **regressor** experimental que prevê um alvo contínuo de retorno/preço — todos os outros modelos do projeto (16 no total: 3 de produção + 13 famílias de research) só preveem direção (sobe/desce). Nunca influencia o email principal, os pesos do ensemble ou o `predictions_log.csv`; uma falha aqui é capturada e registada, nunca bloqueia o pipeline principal.
+
+**O que isto é, com precisão — e o que não é.** Isto **não** é um experimento controlado online no sentido de Kohavi/Tang/Xu (*Trustworthy Online Controlled Experiments*): não existe uma população de usuários dividida aleatoriamente entre variantes, não há tráfego, não há métrica de negócio. Os dois modelos pontuam o **mesmo ativo, no mesmo dia, sob as mesmas condições de mercado** — uma comparação pareada offline, mais próxima de um desenho de pares combinados (matched-pairs) do que de um ensaio aleatorizado. O termo "campeão/desafiante" usado no email é o termo correto do mundo de avaliação de ML para isto; "teste A/B" ali é só um apelido didático pro leitor, não uma equivalência literal. O que a disciplina do livro *de facto* se aplica diretamente é o rigor estatístico em torno de declarar um vencedor — e é exatamente isso que este framework empresta:
+
+| Conceito do livro | Implementação aqui |
+|---|---|
+| OEC decidido antes de olhar os resultados | Teste de Diebold-Mariano sobre o erro quadrático de previsão pareado (desafiante vs. o campeão heurístico ATR já existente), fixado no desenho |
+| Não espiar antes de ter dados suficientes | `MIN_N_EXPERIMENTO = 100` previsões validadas por horizonte; abaixo disso, o email mostra "coletando dados", nunca um veredito |
+| Métricas de guardrail | O MAE do desafiante não pode ser >20% pior que o do campeão, mesmo que o teste principal seja inconclusivo |
+| Lei de Twyman ("um número surpreendente costuma estar errado") | Resultados com amostra pequena (ex: um ticker com 68,8% de acurácia em n=16) são tratados como ruído até N crescer — confirmado na prática: esse número regrediu pra ~45% quando N chegou a 109 |
+| Efeitos de novidade/primazia | Não há equivalente literal (nenhuma reação humana à novidade), mas a mesma cautela se aplica a **regime de mercado**: um viés direcional observado numa semana de tendência pode não ser uma propriedade estável do modelo |
+
+**Parâmetro `h` do Diebold-Mariano (corrigido em 2026-08-17):** o paper original do DM (1995) recomenda ajustar `h` ao horizonte de previsão, porque erros de previsão de múltiplos passos sobre janelas sobrepostas (D+2, D+3) são serialmente correlacionados — usar o default `h=1` pra todos os horizontes subestima a variância de longo prazo e infla falsos positivos justamente nos horizontes mais longos. `evaluation/experimento_significance.py` agora chama `diebold_mariano(e_challenger, e_champion, h=day)`. Nos dados disponíveis no momento da correção, isso moveu o D+3 de p=0,107 (não significativo) pra p=0,047 (tecnicamente significativo) no *mesmo* conjunto de dados — um resultado bem na borda do limiar, o que é por si só um momento de Lei de Twyman: tratar como "vale continuar observando", não como vitória declarada, até se sustentar com mais dados e continuar significativo numa leitura subsequente e independente.
+
+**Conteúdo do dia 1 vs. ao vivo:** o email sempre envia um backtest histórico (expanding-window sobre os 2 anos de histórico de preços já existente, `evaluation/backtest_experimento.py`) pra não ficar vazio enquanto os dados ao vivo acumulam — mas o baseline do backtest é uma previsão *ingênua de retorno zero*, não a heurística ATR exata usada como campeão ao vivo; as duas seções respondem perguntas relacionadas mas distintas, e não devem ser confundidas.
+
+**Caminho pra produção, se algum dia ganhar:** hoje não existe mecanismo de rampa — o desafiante tem zero influência sobre decisões reais. Seguindo o mesmo princípio de rollout gradual que o livro aplica a lançamentos de produto (1% → 10% → 100% dos usuários), o próximo passo natural se o desafiante atingir significância sustentada seria misturá-lo no `pred_price` pra um subconjunto de tickers/horizontes primeiro, observando o guardrail, em vez de trocar tudo de uma vez. Ainda não construído.
+
+---
+
 ## Email diário
 
 O email HTML é desenhado para ser lido em telemóvel. Tem quatro secções:
@@ -387,8 +409,10 @@ Seg–Sex 22h00 UTC (meia-noite Barcelona CEST / 23h CET — após o fecho de to
       ├─ 1. Checkout do repositório
       ├─ 2. Instalar Python 3.11
       ├─ 3. Instalar dependências (pip install -r requirements.txt)
-      ├─ 4. Correr testes unitários (pytest tests/ -v) — pára o pipeline se falhar
-      ├─ 5. Executar main.py (~8 minutos)
+      ├─ 4. Correr testes unitários (pytest tests/, ver Confiabilidade) — pára o pipeline se falhar
+      ├─ 5. Restaurar cache dos modelos de research (chave semanal)
+      ├─ 6. Restaurar cache dos modelos SGD (chave semanal — ver incidente de 2026-08-17 abaixo)
+      ├─ 7. Executar main.py (~1h20-2h, com o pipeline de research + experimento de regressão)
       │   ├─ Baixar preços + câmbio + VIX + SPY
       │   ├─ Calcular features
       │   ├─ Validar previsões anteriores
@@ -396,15 +420,16 @@ Seg–Sex 22h00 UTC (meia-noite Barcelona CEST / 23h CET — após o fecho de to
       │   ├─ Recalibração mensal do SGD (se necessário)
       │   ├─ Treinar modelos com os pesos actualizados
       │   ├─ Guardar novas previsões D+1 / D+2 / D+3
+      │   ├─ Rodar o experimento de regressão (ver "Experimento de regressão" acima)
       │   ├─ Gerar gráficos
-      │   └─ Construir email HTML
-      ├─ 6. Commit dos ficheiros de output → push (até 3 tentativas + git pull --rebase)
-      ├─ 7. Enviar email HTML via Gmail SMTP
-      ├─ 8. Sincronizar repo público (gráficos com atraso 10 dias + README gerado)
-      └─ 9. Em caso de falha: artefacto de emergência + email de notificação de erro
+      │   └─ Construir os dois emails HTML
+      ├─ 8. Commit dos ficheiros de output → push (retentativas: rebase, ou ceder a
+      │      um run do mesmo dia que já publicou — ver Confiabilidade)
+      ├─ 9. Enviar os dois emails HTML via Gmail SMTP
+      └─ 10. Em caso de falha: artefacto de emergência + email de notificação de erro
 ```
 
-**Por que três entradas de cron:** o agendador do GitHub Actions pode atrasar 2–3 horas. Três crons separados (com 30 min de diferença) garantem a execução. A verificação anti-duplicação no Job 1 garante que o pipeline só executa uma vez por dia.
+**Por que três entradas de cron:** o agendador do GitHub Actions pode atrasar sob carga alta. Três crons separados são registados como fallback. A verificação anti-duplicação no Job 1 consulta a API do GitHub Actions (não só o CSV commitado) por qualquer run já em curso ou já bem-sucedido hoje, então um fallback disparando enquanto a primeira tentativa ainda está a meio salta corretamente em vez de começar uma execução redundante de ~1h20-2h (ver os incidentes de 2026-08-10/11 abaixo).
 
 **Por que após o fecho dos mercados:** a NYSE e o NASDAQ fecham às 20h00 UTC (16h00 ET). Ao correr às 22h00 UTC, o pipeline tem acesso ao preço real de fecho do dia para todos os ativos da carteira — incluindo ações americanas (LLY, NVDA, BABA) e crypto (BTC-USD). Isto permite validar as previsões no próprio dia em que os mercados fecham, e os ícones ✅/❌ de acurácia no email aparecem sempre preenchidos quando o relatório chega.
 
@@ -433,19 +458,24 @@ O pipeline tem múltiplas camadas independentes de proteção, desde antes da pr
 
 ### Antes da execução: testes unitários
 
-8 testes automáticos correm no GitHub Actions **antes** do `main.py`. Se algum falhar, o pipeline para imediatamente — os modelos não treinam com dados potencialmente corrompidos.
+116 testes automáticos em 21 arquivos correm no GitHub Actions **antes** do `main.py`. Se algum falhar, o pipeline para imediatamente — antes de gastar ~1h20-2h de execução — os modelos nunca treinam com código ou dados potencialmente corrompidos.
 
 ```
-pytest tests/ -v
+pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
 ```
 
-| Arquivo | Testes | O que valida |
-|---------|--------|--------------|
-| `tests/test_features.py` | 2 | RSI14 sempre em [0, 100] com dados aleatórios e monotônicos |
-| `tests/test_ensemble.py` | 2 | Probabilidades do ensemble e por modelo sempre em [0, 1]; direção coerente com a probabilidade |
-| `tests/test_pnl.py` | 4 | Breakeven > preço de compra quando fees > 0; breakeven == preço de compra quando fees = 0; conversão USD→EUR correta |
+O `pytest.ini` define `addopts = --continue-on-collection-errors`: um arquivo de teste quebrado (erro de import, fixture ausente) nunca mais consegue abortar a suite inteira em silêncio — todos os outros arquivos continuam correndo e reportando. Isso foi adicionado depois de `tests/test_email_phase15.py` ficar quebrado por semanas (testava uma seção de PnL/lotes do email já removida) sem ninguém perceber, porque nada rodava pytest no CI até 2026-08-17.
 
-Todos os testes usam dados sintéticos — sem chamadas de rede, sem arquivos em disco.
+| Área | Arquivos representativos | O que valida |
+|------|---------------------------|---------------|
+| Pipeline principal | `test_features.py`, `test_ensemble.py`, `test_config_coverage.py` | Limites do RSI14; probabilidades do ensemble/por modelo em [0, 1]; todo ticker da carteira presente em `ASSET_CLASSES`/`TICKER_CALENDAR` (ver incidente de 2026-08-17 abaixo) |
+| Avaliação estatística | `test_evaluation.py`, `test_information_theory.py` | Testes de significância, Diebold-Mariano, diagnósticos de entropia/informação mútua |
+| Famílias de research (13) | `test_bayesian.py`, `test_markov.py`, `test_timeseries.py`, `test_neural.py`, `test_transformer.py`, `test_efficient.py`, `test_generative.py`, `test_contrarian.py`, `test_reinforcement.py`, `test_transfer_learning.py`, `test_explainability.py`, `test_research_runner.py`, `test_tracking.py` | Contrato `train`/`predict` de cada família: formato de saída, limites de probabilidade, comportamento com datasets pequenos |
+| Matemática da carteira | `test_pnl.py` | Lógica de breakeven/fees, conversão USD→EUR |
+
+`test_classical.py` e `test_meta_learning.py` (baseados em XGBoost) estão excluídos do step de CI por enquanto: derrubam o interpretador na máquina local do mantenedor (macOS/arm64) — parece um problema de ABI do `xgboost`/`libomp`, não um bug de código — e ainda não foram confirmados seguros no runner Ubuntu; a confirmar antes de reativar.
+
+Todos os testes usam dados sintéticos (gerados com `np.random`) — sem chamadas de rede, sem arquivos em disco, sem depender de dados de mercado ao vivo.
 
 ### Durante a execução: validação dos dados de mercado
 
@@ -456,14 +486,7 @@ Todos os testes usam dados sintéticos — sem chamadas de rede, sem arquivos em
 
 ### Após a execução: rede de segurança do push
 
-O git push usa um loop de tentativas: até 3 tentativas, com `git pull --rebase` e pausa de 15 segundos entre cada uma. Se todas as 3 falharem, `predictions_log.csv` e `ensemble_weights.json` são salvos como artifact do GitHub Actions (retidos por 7 dias), permitindo recuperação manual sem perda de dados.
-
-```
-for i in 1 2 3; do
-    git push && break
-    git pull --rebase && sleep 15
-done
-```
+O git push usa um loop de até 3 tentativas. Se um push é rejeitado, primeiro verifica se **outro** run já publicou os dados de hoje — dois pipelines completos e independentes não são mergeáveis de forma limpa (arquivos binários de gráficos sempre geram conflito), então o run perdedor cede (`git reset --hard origin/main`) em vez de insistir em mesclar. Caso contrário, cai no padrão `git stash -u` (protege contra arquivos nunca commitados, ex: `output/models/*.pkl`) + `git pull --rebase` + `git stash pop`, com pausa de 15s entre tentativas. Se todas as 3 falharem, `predictions_log.csv` e `ensemble_weights.json` são salvos como artifact do GitHub Actions (retidos por 7 dias), permitindo recuperação manual sem perda de dados.
 
 ---
 
@@ -478,6 +501,50 @@ done
 ---
 
 ## Changelog
+
+### Incidentes e correções recentes
+
+Histórico mais antigo e detalhado em `README_Errors.md`. Resumo dos incidentes desta fase (experimento de regressão + auditoria de pontos fracos):
+
+#### 2026-08-17: Lacunas silenciosas encontradas numa revisão de pontos fracos do projeto
+
+Não foi um incidente único — uma auditoria deliberada encontrou três coisas erradas em silêncio, sem nunca lançar erro:
+
+1. **Suite de testes desligada do CI.** Existiam 21 arquivos de teste, `pytest` estava no `requirements.txt`, mas o workflow nunca o invocava. `tests/test_email_phase15.py` estava quebrado (`ImportError`) há semanas — testava uma seção de PnL/lotes do email removida num refactor anterior — e ninguém percebeu. Correção: removido o teste obsoleto, adicionado `pytest.ini` (`--continue-on-collection-errors`, pra um arquivo quebrado nunca mais silenciar a suite inteira), e ligado `pytest tests/` como primeiro passo do job. Commit `5d4078378`.
+2. **"Aprendizado incremental" do SGD estava inerte desde 2026-06-26.** `output/models/*.pkl` está no `.gitignore` (uma correção deliberada depois de modelos desatualizados quebrarem o `partial_fit` em silêncio e produzirem zero previsões naquele dia — ver a guarda adicionada na altura, o cheque de `n_features_in_` em `_load_sgd`), mas nenhum passo de cache restaurava a pasta — então todo run caía silenciosamente num `.fit()` do zero, todos os dias, nunca `partial_fit`. Correção: adicionado um step `actions/cache@v4` pra `output/models/` (mesma chave do cache de research já existente); a guarda de contagem de features já existente protege contra repetir o incidente de junho. Commit `5d4078378`.
+3. **`PPFB.DE` ausente de `ASSET_CLASSES`/`TICKER_CALENDAR`.** Presente na carteira, ausente dos dois dicionários mantidos à mão — caía nos defaults silenciosos (`asset_class=0`/NYSE) em vez dos valores reais (iShares Physical Gold ETC, Xetra, ETC de commodity). Correção: adicionadas as entradas corretas mais `tests/test_config_coverage.py`, que agora falha alto no CI se um futuro ticker da carteira ficar de fora de algum dos dois dicionários. Commit `5d4078378`.
+
+Também corrigido no mesmo dia: o teste de Diebold-Mariano do experimento de regressão usava o default `h=1` pros três horizontes, subestimando a variância de longo prazo pro D+2/D+3 (janelas de previsão sobrepostas são serialmente correlacionadas — o paper original de 1995 recomenda `h` = horizonte de previsão). Agora chama `diebold_mariano(e_challenger, e_champion, h=day)`. Ver "Experimento de regressão" acima.
+
+#### 2026-08-10 a 2026-08-11: tentativas de fallback entraram em corrida; o ciclo de um dia de negociação nunca correu
+
+**Sintoma:** nenhum email chegou pro fecho de 2026-08-11, mesmo o workflow mostrando runs de "sucesso" naquela noite.
+
+**Causa raiz 1 — corrida entre tentativas de fallback:** com o pipeline de research + experimento de regressão, um run completo já leva ~1h20-2h — mais que o intervalo entre as três tentativas de fallback do cron. Em 2026-08-10, uma segunda tentativa começou seu próprio run completo de ~2h27m porque a checagem "já rodou hoje" só olhava o CSV *commitado*, que a primeira tentativa (ainda a correr) ainda não tinha publicado. O push da tentativa perdedora foi rejeitado, e a recuperação (`git pull --rebase`) falhou também, porque `output/models/*.pkl` nunca é commitado, deixando a árvore de trabalho permanentemente "suja" pro rebase.
+
+**Correção:** a checagem anti-duplicação agora também consulta a API do GitHub Actions por qualquer run já em curso ou já bem-sucedido hoje (apanha a corrida em segundos, não ~2h depois no push); a retentativa de push cede a um run do mesmo dia que já publicou em vez de tentar mesclar dois pipelines completos independentes. Commit `3ef79b576`.
+
+**Causa raiz 2 — `hoje` calculado a meio da execução:** `main.py` calculava `hoje = pd.Timestamp.now().normalize()` depois de baixar os dados de mercado de toda a watchlist, não no início de `main()`. Um run que começou às 23h38 UTC e levou até 01h31 UTC do dia seguinte gravou as suas previsões com `pred_date` = a data *posterior* — correto do ponto de vista dos dados de mercado (a NYSE já tinha fechado), mas isso significava que a checagem anti-duplicação do dia seguinte real via "já feito" e saltava as três tentativas daquele dia — o fecho real daquele dia de negociação nunca foi processado.
+
+**Correção:** movido `hoje = pd.Timestamp.now().normalize()` pra primeira linha de `main()`. Commit `3ece5070d`. Uma correção defensiva secundária — o step "✅ Validar dados gerados" recalculava `today` via `date` do shell *depois* do `main.py` terminar, podendo cair do lado errado da mesma virada de meia-noite — foi corrigida pra aceitar o `pred_date` de hoje ou de ontem. Commit `3ea9e8f47`.
+
+#### 2026-08-05: `mapie` incompatível com o scikit-learn fixado — desafiante de regressão falhou para 100% dos tickers
+
+**Sintoma:** o novo email do experimento de regressão saiu com "0 ativos" — o modelo desafiante falhou o treino para todos os tickers.
+
+**Causa raiz:** `mapie<1` (resolveu pra 0.9.x) depende de internals do scikit-learn (`EnsembleRegressor.__sklearn_tags__`) que não existem no `scikit-learn==1.8.0` fixado — uma incompatibilidade de versão invisível localmente porque um venv de teste descartável tinha resolvido um scikit-learn mais antigo e compatível, sem esse pin.
+
+**Correção:** removida a dependência do `mapie`; os intervalos de predição por conformal prediction agora são calculados manualmente (treina no primeiro ~80% da janela, calibra o intervalo no ~20% mais recente — mesma filosofia manual/independente de versão já usada por `models/conformal.py` pros classificadores de produção, exatamente por este motivo). Commit `a4a602db5`.
+
+#### 2026-07-30: `KeyError: 'etoro'` depois de remover as posições do eToro da carteira
+
+**Sintoma:** três execuções agendadas consecutivas falharam imediatamente com `KeyError: 'etoro'`.
+
+**Causa raiz:** a chave `etoro` de `config/portfolio.json` foi removida (posições vendidas, deixaram de ser acompanhadas), mas `data/storage.py:load_my_tickers()` e `main.py` continuavam a acessar `portfolio_cfg["etoro"]` diretamente em vez de `.get("etoro", [])`.
+
+**Correção:** ambos os pontos de acesso agora usam uma lista vazia por default quando a chave está ausente; o pipeline de research (antes restrito só aos tickers do eToro) agora recai na carteira de ETFs quando `etoro` está vazio. Commit `e32e748c`.
+
+---
 
 ### Migração: Jupyter Notebook → Python modular
 O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para um package Python modular para permitir execução automática via GitHub Actions, gestão de dependências e manutenibilidade.
