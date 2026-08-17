@@ -185,6 +185,23 @@ jobs:
           echo "alerta=$ALERTA" >> "$GITHUB_OUTPUT"
           echo "Anomalia detetada hoje: $ALERTA"
 
+      # 4c-2 — Atualizar os dados do site público (docs/) com os resultados
+      # frescos deste run. Roda sempre, como o step de anomalia acima, pra o
+      # site nunca ficar desatualizado silenciosamente. export_watchlist.py
+      # é caro (~7min, 543 tickers) só quando refaz o cache de dividendos —
+      # isso só acontece às segundas-feiras; nos outros dias reaproveita o
+      # cache já commitado (rápido, ~10-20s).
+      - name: 🌐 Atualizar dados do site
+        if: success()
+        run: |
+          python docs/export_alerts.py
+          python docs/export_data.py
+          if [ "$(date +%u)" = "1" ]; then
+            python docs/export_watchlist.py --refresh
+          else
+            python docs/export_watchlist.py
+          fi
+
       # 4d — Gráficos como artefacto do run (não vão mais para o git — ver
       # incidente de crescimento do repositório no README_Errors.md).
       # Retenção alinhada a CHARTS_RETENTION_DAYS (config/settings.py).
@@ -227,6 +244,9 @@ jobs:
           # Alerta de anomalia (email separado — só existe HTML nos dias com alerta)
           git add output/anomalia.json      2>/dev/null || true
           git add output/resumo_alerta.html 2>/dev/null || true
+
+          # Site público (docs/) — dados exportados no step "🌐 Atualizar dados do site"
+          git add docs/assets/ 2>/dev/null || true
 
           git diff --staged --quiet || git commit -m "📊 Execução automática $(date +'%Y-%m-%d %H:%M') UTC [skip ci]"
 
