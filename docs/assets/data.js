@@ -1,40 +1,40 @@
 // Gerado por docs/export_data.py a partir dos dados reais em output/.
 // Rodar de novo (python docs/export_data.py) sempre que quiser atualizar o site local.
 const SITE_DATA = {
-  "last_update": "2026-08-17",
+  "last_update": "2026-08-18",
   "accuracy": {
-    "d1": 0.4989,
-    "d2": 0.4942,
-    "d3": 0.4962,
-    "n_total": 58688
+    "d1": 0.5,
+    "d2": 0.4968,
+    "d3": 0.4992,
+    "n_total": 61823
   },
   "tendencia": {
     "estado": "ok",
-    "n": 124,
-    "acc_recente": 0.5887,
-    "delta_vs_periodo_anterior": 0.2064
+    "n": 130,
+    "acc_recente": 0.5769,
+    "delta_vs_periodo_anterior": 0.2543
   },
   "favoritos": {
     "EUNN.DE": {
-      "price": 72.79,
+      "price": 71.02,
       "currency": "EUR",
       "horizons": {
         "d1": {
           "direction": "up",
-          "confidence": 0.7224
+          "confidence": 0.8639
         },
         "d2": {
           "direction": "up",
-          "confidence": 0.6476
+          "confidence": 0.8378
         },
         "d3": {
-          "direction": "up",
-          "confidence": 0.7377
+          "direction": "down",
+          "confidence": 0.5078
         }
       },
-      "acc_recent": 69.2,
-      "n_recent": 13,
-      "acertou_ontem": "down_correct",
+      "acc_recent": 64.3,
+      "n_recent": 14,
+      "acertou_ontem": "wrong",
       "price_history": [
         {
           "date": "2026-07-25",
@@ -91,15 +91,15 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "price": 72.79
+        },
+        {
+          "date": "2026-08-18",
+          "price": 71.02
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
-          {
-            "date": "2026-04-13",
-            "value": 64.07
-          },
           {
             "date": "2026-04-14",
             "value": 65.0
@@ -454,14 +454,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 72.77
+            "value": 73.14
           }
         ],
         "sma20": [
-          {
-            "date": "2026-04-13",
-            "value": 62.8955
-          },
           {
             "date": "2026-04-14",
             "value": 63.0095
@@ -816,14 +812,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 70.676
+            "value": 70.6945
           }
         ],
         "sma50": [
-          {
-            "date": "2026-04-13",
-            "value": 64.1602
-          },
           {
             "date": "2026-04-14",
             "value": 64.2354
@@ -1178,14 +1170,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 70.3426
+            "value": 70.35
           }
         ],
         "bb_upper": [
-          {
-            "date": "2026-04-13",
-            "value": 65.5445
-          },
           {
             "date": "2026-04-14",
             "value": 65.8182
@@ -1540,14 +1528,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 74.0027
+            "value": 74.0739
           }
         ],
         "bb_lower": [
-          {
-            "date": "2026-04-13",
-            "value": 60.2465
-          },
           {
             "date": "2026-04-14",
             "value": 60.2008
@@ -1902,14 +1886,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 67.3493
+            "value": 67.3151
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-13",
-            "value": 60.2355
-          },
           {
             "date": "2026-04-14",
             "value": 61.0006
@@ -2264,14 +2244,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 78.8331
+            "value": 81.5575
           }
         ],
         "macd": [
-          {
-            "date": "2026-04-13",
-            "value": 0.1416
-          },
           {
             "date": "2026-04-14",
             "value": 0.2399
@@ -2626,14 +2602,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.8641
+            "value": 0.8936
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.8936
           }
         ],
         "macd_sig": [
-          {
-            "date": "2026-04-13",
-            "value": -0.1806
-          },
           {
             "date": "2026-04-14",
             "value": -0.0965
@@ -2988,14 +2964,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.5493
+            "value": 0.5553
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.6229
           }
         ],
         "macd_hist": [
-          {
-            "date": "2026-04-13",
-            "value": 0.3222
-          },
           {
             "date": "2026-04-14",
             "value": 0.3364
@@ -3350,7 +3326,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.3147
+            "value": 0.3383
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.2707
           }
         ]
       },
@@ -3390,24 +3370,28 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "value": 69.2
+        },
+        {
+          "date": "2026-08-18",
+          "value": 64.3
         }
       ]
     },
     "EXUS.MI": {
-      "price": 40.865,
+      "price": 40.325,
       "currency": "EUR",
       "horizons": {
         "d1": {
           "direction": "down",
-          "confidence": 0.6423
+          "confidence": 0.5856
         },
         "d2": {
-          "direction": "down",
-          "confidence": 0.7089
+          "direction": "up",
+          "confidence": 0.7868
         },
         "d3": {
           "direction": "up",
-          "confidence": 0.7426
+          "confidence": 0.6905
         }
       },
       "acc_recent": 80.0,
@@ -3541,15 +3525,15 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "price": 40.865
+        },
+        {
+          "date": "2026-08-18",
+          "price": 40.325
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
-          {
-            "date": "2026-04-13",
-            "value": 37.165
-          },
           {
             "date": "2026-04-14",
             "value": 37.525
@@ -3904,14 +3888,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 40.77
+            "value": 40.815
           }
         ],
         "sma20": [
-          {
-            "date": "2026-04-13",
-            "value": 36.0185
-          },
           {
             "date": "2026-04-14",
             "value": 36.086
@@ -4266,14 +4246,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 40.199
+            "value": 40.2012
           }
         ],
         "sma50": [
-          {
-            "date": "2026-04-13",
-            "value": 36.685
-          },
           {
             "date": "2026-04-14",
             "value": 36.7132
@@ -4628,14 +4604,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 39.6515
+            "value": 39.6524
           }
         ],
         "bb_upper": [
-          {
-            "date": "2026-04-13",
-            "value": 37.587
-          },
           {
             "date": "2026-04-14",
             "value": 37.793
@@ -4990,14 +4962,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 41.2906
+            "value": 41.298
           }
         ],
         "bb_lower": [
-          {
-            "date": "2026-04-13",
-            "value": 34.45
-          },
           {
             "date": "2026-04-14",
             "value": 34.379
@@ -5352,14 +5320,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 39.1074
+            "value": 39.1045
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-13",
-            "value": 72.0273
-          },
           {
             "date": "2026-04-14",
             "value": 72.6406
@@ -5714,14 +5678,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 77.4869
+            "value": 79.2
           }
         ],
         "macd": [
-          {
-            "date": "2026-04-13",
-            "value": 0.1175
-          },
           {
             "date": "2026-04-14",
             "value": 0.1911
@@ -6076,14 +6036,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.3885
+            "value": 0.3921
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.3921
           }
         ],
         "macd_sig": [
-          {
-            "date": "2026-04-13",
-            "value": -0.1219
-          },
           {
             "date": "2026-04-14",
             "value": -0.0593
@@ -6438,14 +6398,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.3445
+            "value": 0.3452
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.3546
           }
         ],
         "macd_hist": [
-          {
-            "date": "2026-04-13",
-            "value": 0.2394
-          },
           {
             "date": "2026-04-14",
             "value": 0.2504
@@ -6800,7 +6760,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.044
+            "value": 0.0469
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.0375
           }
         ]
       },
@@ -6912,29 +6876,33 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "value": 80.0
+        },
+        {
+          "date": "2026-08-18",
+          "value": 80.0
         }
       ]
     },
     "ICGA.DE": {
-      "price": 4.8845,
+      "price": 4.871,
       "currency": "EUR",
       "horizons": {
         "d1": {
-          "direction": "down",
-          "confidence": 0.5515
+          "direction": "up",
+          "confidence": 0.6409
         },
         "d2": {
           "direction": "up",
-          "confidence": 0.608
+          "confidence": 0.6904
         },
         "d3": {
-          "direction": "down",
-          "confidence": 0.6092
+          "direction": "up",
+          "confidence": 0.6223
         }
       },
-      "acc_recent": 40.0,
+      "acc_recent": 46.7,
       "n_recent": 15,
-      "acertou_ontem": "wrong",
+      "acertou_ontem": "up_correct",
       "price_history": [
         {
           "date": "2026-05-21",
@@ -7095,15 +7063,15 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "price": 4.8845
+        },
+        {
+          "date": "2026-08-18",
+          "price": 4.871
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
-          {
-            "date": "2026-04-13",
-            "value": 4.9635
-          },
           {
             "date": "2026-04-14",
             "value": 5.03
@@ -7458,14 +7426,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 4.886
+            "value": 4.883
           }
         ],
         "sma20": [
-          {
-            "date": "2026-04-13",
-            "value": 4.9763
-          },
           {
             "date": "2026-04-14",
             "value": 4.9696
@@ -7820,14 +7784,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 4.9257
+            "value": 4.9256
           }
         ],
         "sma50": [
-          {
-            "date": "2026-04-13",
-            "value": 5.1218
-          },
           {
             "date": "2026-04-14",
             "value": 5.113
@@ -8187,10 +8147,6 @@ const SITE_DATA = {
         ],
         "bb_upper": [
           {
-            "date": "2026-04-13",
-            "value": 5.194
-          },
-          {
             "date": "2026-04-14",
             "value": 5.1706
           },
@@ -8544,14 +8500,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 5.0654
+            "value": 5.0655
           }
         ],
         "bb_lower": [
-          {
-            "date": "2026-04-13",
-            "value": 4.7586
-          },
           {
             "date": "2026-04-14",
             "value": 4.7686
@@ -8906,14 +8858,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 4.7861
+            "value": 4.7857
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-13",
-            "value": 55.1062
-          },
           {
             "date": "2026-04-14",
             "value": 59.7196
@@ -9268,14 +9216,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 47.2837
+            "value": 46.9635
           }
         ],
         "macd": [
-          {
-            "date": "2026-04-13",
-            "value": -0.0486
-          },
           {
             "date": "2026-04-14",
             "value": -0.0394
@@ -9630,14 +9574,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.0208
+            "value": 0.0206
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.0206
           }
         ],
         "macd_sig": [
-          {
-            "date": "2026-04-13",
-            "value": -0.0652
-          },
           {
             "date": "2026-04-14",
             "value": -0.06
@@ -9992,14 +9936,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.0389
+            "value": 0.0388
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.0352
           }
         ],
         "macd_hist": [
-          {
-            "date": "2026-04-13",
-            "value": 0.0165
-          },
           {
             "date": "2026-04-14",
             "value": 0.0207
@@ -10354,7 +10298,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": -0.018
+            "value": -0.0182
+          },
+          {
+            "date": "2026-08-18",
+            "value": -0.0146
           }
         ]
       },
@@ -10518,29 +10466,33 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "value": 40.0
+        },
+        {
+          "date": "2026-08-18",
+          "value": 46.7
         }
       ]
     },
     "IS3N.DE": {
-      "price": 47.646,
+      "price": 46.385,
       "currency": "EUR",
       "horizons": {
         "d1": {
           "direction": "up",
-          "confidence": 0.6471
+          "confidence": 0.6966
         },
         "d2": {
           "direction": "up",
-          "confidence": 0.7608
+          "confidence": 0.7043
         },
         "d3": {
           "direction": "up",
-          "confidence": 0.7694
+          "confidence": 0.7594
         }
       },
-      "acc_recent": 76.9,
-      "n_recent": 13,
-      "acertou_ontem": "wrong",
+      "acc_recent": 71.4,
+      "n_recent": 14,
+      "acertou_ontem": "up_correct",
       "price_history": [
         {
           "date": "2026-07-25",
@@ -10597,15 +10549,15 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "price": 47.646
+        },
+        {
+          "date": "2026-08-18",
+          "price": 46.385
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
-          {
-            "date": "2026-04-13",
-            "value": 42.251
-          },
           {
             "date": "2026-04-14",
             "value": 43.042
@@ -10960,14 +10912,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 47.594
+            "value": 47.988
           }
         ],
         "sma20": [
-          {
-            "date": "2026-04-13",
-            "value": 40.6565
-          },
           {
             "date": "2026-04-14",
             "value": 40.7715
@@ -11322,14 +11270,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 46.233
+            "value": 46.2527
           }
         ],
         "sma50": [
-          {
-            "date": "2026-04-13",
-            "value": 41.4547
-          },
           {
             "date": "2026-04-14",
             "value": 41.4919
@@ -11684,14 +11628,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 47.174
+            "value": 47.1818
           }
         ],
         "bb_upper": [
-          {
-            "date": "2026-04-13",
-            "value": 42.6886
-          },
           {
             "date": "2026-04-14",
             "value": 43.0672
@@ -12046,14 +11986,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 48.1617
+            "value": 48.2469
           }
         ],
         "bb_lower": [
-          {
-            "date": "2026-04-13",
-            "value": 38.6244
-          },
           {
             "date": "2026-04-14",
             "value": 38.4757
@@ -12408,14 +12344,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 44.3043
+            "value": 44.2585
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-13",
-            "value": 66.3763
-          },
           {
             "date": "2026-04-14",
             "value": 68.019
@@ -12770,14 +12702,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 72.6742
+            "value": 74.4051
           }
         ],
         "macd": [
-          {
-            "date": "2026-04-13",
-            "value": 0.1178
-          },
           {
             "date": "2026-04-14",
             "value": 0.2605
@@ -13132,14 +13060,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.136
+            "value": 0.1674
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.1674
           }
         ],
         "macd_sig": [
-          {
-            "date": "2026-04-13",
-            "value": -0.2019
-          },
           {
             "date": "2026-04-14",
             "value": -0.1094
@@ -13494,14 +13422,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": -0.1162
+            "value": -0.1099
+          },
+          {
+            "date": "2026-08-18",
+            "value": -0.0545
           }
         ],
         "macd_hist": [
-          {
-            "date": "2026-04-13",
-            "value": 0.3197
-          },
           {
             "date": "2026-04-14",
             "value": 0.3699
@@ -13856,7 +13784,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.2522
+            "value": 0.2774
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.2219
           }
         ]
       },
@@ -13896,28 +13828,32 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "value": 76.9
+        },
+        {
+          "date": "2026-08-18",
+          "value": 71.4
         }
       ]
     },
     "LYP6.DE": {
-      "price": 324.75,
+      "price": 321.0,
       "currency": "EUR",
       "horizons": {
         "d1": {
-          "direction": "up",
-          "confidence": 0.6972
+          "direction": "down",
+          "confidence": 0.5566
         },
         "d2": {
-          "direction": "up",
-          "confidence": 0.6827
+          "direction": "down",
+          "confidence": 0.5549
         },
         "d3": {
           "direction": "down",
-          "confidence": 0.614
+          "confidence": 0.6566
         }
       },
-      "acc_recent": 53.8,
-      "n_recent": 13,
+      "acc_recent": 50.0,
+      "n_recent": 14,
       "acertou_ontem": "wrong",
       "price_history": [
         {
@@ -13975,15 +13911,15 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "price": 324.75
+        },
+        {
+          "date": "2026-08-18",
+          "price": 321.0
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
-          {
-            "date": "2026-04-13",
-            "value": 297.9
-          },
           {
             "date": "2026-04-14",
             "value": 300.95
@@ -14338,14 +14274,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 323.6
+            "value": 323.4
           }
         ],
         "sma20": [
-          {
-            "date": "2026-04-13",
-            "value": 287.0975
-          },
           {
             "date": "2026-04-14",
             "value": 287.7425
@@ -14700,14 +14632,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 321.1975
+            "value": 321.1875
           }
         ],
         "sma50": [
-          {
-            "date": "2026-04-13",
-            "value": 293.646
-          },
           {
             "date": "2026-04-14",
             "value": 293.811
@@ -15062,14 +14990,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 316.651
+            "value": 316.647
           }
         ],
         "bb_upper": [
-          {
-            "date": "2026-04-13",
-            "value": 300.9081
-          },
           {
             "date": "2026-04-14",
             "value": 302.8815
@@ -15424,14 +15348,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 328.3865
+            "value": 328.363
           }
         ],
         "bb_lower": [
-          {
-            "date": "2026-04-13",
-            "value": 273.2869
-          },
           {
             "date": "2026-04-14",
             "value": 272.6035
@@ -15786,14 +15706,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 314.0085
+            "value": 314.012
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-13",
-            "value": 75.6098
-          },
           {
             "date": "2026-04-14",
             "value": 76.0192
@@ -16148,14 +16064,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 71.3082
+            "value": 70.1246
           }
         ],
         "macd": [
-          {
-            "date": "2026-04-13",
-            "value": 1.0378
-          },
           {
             "date": "2026-04-14",
             "value": 1.7132
@@ -16510,14 +16422,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 2.5867
+            "value": 2.5707
+          },
+          {
+            "date": "2026-08-18",
+            "value": 2.5707
           }
         ],
         "macd_sig": [
-          {
-            "date": "2026-04-13",
-            "value": -1.2062
-          },
           {
             "date": "2026-04-14",
             "value": -0.6223
@@ -16872,14 +16784,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 2.6161
+            "value": 2.613
+          },
+          {
+            "date": "2026-08-18",
+            "value": 2.6045
           }
         ],
         "macd_hist": [
-          {
-            "date": "2026-04-13",
-            "value": 2.244
-          },
           {
             "date": "2026-04-14",
             "value": 2.3355
@@ -17234,7 +17146,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": -0.0295
+            "value": -0.0422
+          },
+          {
+            "date": "2026-08-18",
+            "value": -0.0338
           }
         ]
       },
@@ -17274,28 +17190,32 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "value": 53.8
+        },
+        {
+          "date": "2026-08-18",
+          "value": 50.0
         }
       ]
     },
     "PPFB.DE": {
-      "price": 73.54,
+      "price": 73.04,
       "currency": "EUR",
       "horizons": {
         "d1": {
-          "direction": "up",
-          "confidence": 0.7636
+          "direction": "down",
+          "confidence": 0.5368
         },
         "d2": {
           "direction": "up",
-          "confidence": 0.7428
+          "confidence": 0.7225
         },
         "d3": {
           "direction": "down",
-          "confidence": 0.6203
+          "confidence": 0.6039
         }
       },
-      "acc_recent": 76.9,
-      "n_recent": 13,
+      "acc_recent": 71.4,
+      "n_recent": 14,
       "acertou_ontem": "down_correct",
       "price_history": [
         {
@@ -17353,15 +17273,15 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "price": 73.54
+        },
+        {
+          "date": "2026-08-18",
+          "price": 73.04
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
-          {
-            "date": "2026-04-13",
-            "value": 78.09
-          },
           {
             "date": "2026-04-14",
             "value": 79.12
@@ -17716,14 +17636,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 73.4
+            "value": 74.04
           }
         ],
         "sma20": [
-          {
-            "date": "2026-04-13",
-            "value": 78.5242
-          },
           {
             "date": "2026-04-14",
             "value": 78.198
@@ -18078,14 +17994,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 70.8165
+            "value": 70.8485
           }
         ],
         "sma50": [
-          {
-            "date": "2026-04-13",
-            "value": 81.505
-          },
           {
             "date": "2026-04-14",
             "value": 81.3759
@@ -18440,14 +18352,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 70.2262
+            "value": 70.239
           }
         ],
         "bb_upper": [
-          {
-            "date": "2026-04-13",
-            "value": 85.3315
-          },
           {
             "date": "2026-04-14",
             "value": 84.1386
@@ -18802,14 +18710,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 75.252
+            "value": 75.3709
           }
         ],
         "bb_lower": [
-          {
-            "date": "2026-04-13",
-            "value": 71.717
-          },
           {
             "date": "2026-04-14",
             "value": 72.2574
@@ -19164,14 +19068,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 66.381
+            "value": 66.3261
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-13",
-            "value": 52.616
-          },
           {
             "date": "2026-04-14",
             "value": 66.5721
@@ -19526,14 +19426,10 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 75.4169
+            "value": 77.5552
           }
         ],
         "macd": [
-          {
-            "date": "2026-04-13",
-            "value": -0.9553
-          },
           {
             "date": "2026-04-14",
             "value": -0.837
@@ -19888,14 +19784,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 1.0326
+            "value": 1.0837
+          },
+          {
+            "date": "2026-08-18",
+            "value": 1.0837
           }
         ],
         "macd_sig": [
-          {
-            "date": "2026-04-13",
-            "value": -1.2163
-          },
           {
             "date": "2026-04-14",
             "value": -1.1405
@@ -20250,14 +20146,14 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.5676
+            "value": 0.5778
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.679
           }
         ],
         "macd_hist": [
-          {
-            "date": "2026-04-13",
-            "value": 0.261
-          },
           {
             "date": "2026-04-14",
             "value": 0.3035
@@ -20612,7 +20508,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 0.4651
+            "value": 0.5059
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.4047
           }
         ]
       },
@@ -20652,2008 +20552,2012 @@ const SITE_DATA = {
         {
           "date": "2026-08-17",
           "value": 76.9
+        },
+        {
+          "date": "2026-08-18",
+          "value": 71.4
         }
       ]
     },
     "SGLN.L": {
-      "price": 73.5845,
+      "price": 0.8534,
       "currency": "EUR",
       "horizons": {
         "d1": {
-          "direction": "up",
-          "confidence": 0.6626
+          "direction": "down",
+          "confidence": 0.5856
         },
         "d2": {
           "direction": "down",
-          "confidence": 0.6846
+          "confidence": 0.606
         },
         "d3": {
-          "direction": "up",
-          "confidence": 0.7197
+          "direction": "down",
+          "confidence": 0.5642
         }
       },
       "acc_recent": 53.3,
       "n_recent": 15,
-      "acertou_ontem": "wrong",
+      "acertou_ontem": "up_correct",
       "price_history": [
         {
           "date": "2026-05-21",
-          "price": 76.3527
+          "price": 76.317
         },
         {
           "date": "2026-05-22",
-          "price": 76.2591
+          "price": 76.2234
         },
         {
           "date": "2026-05-25",
-          "price": 76.3059
+          "price": 76.2702
         },
         {
           "date": "2026-05-26",
-          "price": 76.0603
+          "price": 76.0247
         },
         {
           "date": "2026-05-27",
-          "price": 74.9842
+          "price": 74.9491
         },
         {
           "date": "2026-05-28",
-          "price": 75.6509
+          "price": 75.6155
         },
         {
           "date": "2026-05-29",
-          "price": 77.0895
+          "price": 77.0535
         },
         {
           "date": "2026-06-01",
-          "price": 75.569
+          "price": 75.5337
         },
         {
           "date": "2026-06-09",
-          "price": 73.721
+          "price": 73.6865
         },
         {
           "date": "2026-06-17",
-          "price": 73.2298
+          "price": 73.1955
         },
         {
           "date": "2026-06-30",
-          "price": 70.1069
+          "price": 70.0741
         },
         {
           "date": "2026-07-01",
-          "price": 68.8554
+          "price": 68.8232
         },
         {
           "date": "2026-07-02",
-          "price": 68.949
+          "price": 68.9167
         },
         {
           "date": "2026-07-03",
-          "price": 69.7092
+          "price": 69.6766
         },
         {
           "date": "2026-07-04",
-          "price": 70.0718
+          "price": 70.039
         },
         {
           "date": "2026-07-07",
-          "price": 70.797
+          "price": 70.7639
         },
         {
           "date": "2026-07-08",
-          "price": 70.4812
+          "price": 70.4482
         },
         {
           "date": "2026-07-09",
-          "price": 70.2707
+          "price": 70.2378
         },
         {
           "date": "2026-07-10",
-          "price": 68.3759
+          "price": 68.3439
         },
         {
           "date": "2026-07-11",
-          "price": 69.873
+          "price": 69.8403
         },
         {
           "date": "2026-07-14",
-          "price": 69.3467
+          "price": 69.3142
         },
         {
           "date": "2026-07-16",
-          "price": 69.1712
+          "price": 69.1389
         },
         {
           "date": "2026-07-17",
-          "price": 68.0601
+          "price": 68.0282
         },
         {
           "date": "2026-07-21",
-          "price": 67.639
+          "price": 67.6074
         },
         {
           "date": "2026-07-23",
-          "price": 69.1595
+          "price": 69.1272
         },
         {
           "date": "2026-07-24",
-          "price": 70.5397
+          "price": 70.5067
         },
         {
           "date": "2026-07-25",
-          "price": 69.0075
+          "price": 68.9752
         },
         {
           "date": "2026-07-28",
-          "price": 69.2882
+          "price": 69.2558
         },
         {
           "date": "2026-07-30",
-          "price": 68.4928
+          "price": 68.4608
         },
         {
           "date": "2026-07-31",
-          "price": 68.4928
+          "price": 68.4608
         },
         {
           "date": "2026-08-01",
-          "price": 69.1361
+          "price": 69.1038
         },
         {
           "date": "2026-08-04",
-          "price": 68.0601
+          "price": 68.0282
         },
         {
           "date": "2026-08-05",
-          "price": 68.1419
+          "price": 68.1101
         },
         {
           "date": "2026-08-06",
-          "price": 68.8086
+          "price": 68.7765
         },
         {
           "date": "2026-08-07",
-          "price": 71.7093
+          "price": 71.6757
         },
         {
           "date": "2026-08-11",
-          "price": 73.1596
+          "price": 73.1254
         },
         {
           "date": "2026-08-12",
-          "price": 72.9725
+          "price": 72.9383
         },
         {
           "date": "2026-08-13",
-          "price": 73.3
+          "price": 73.2657
         },
         {
           "date": "2026-08-14",
-          "price": 73.4871
+          "price": 73.4527
         },
         {
           "date": "2026-08-17",
-          "price": 73.5845
+          "price": 73.5501
+        },
+        {
+          "date": "2026-08-18",
+          "price": 0.8534
         }
       ],
       "chart": {
         "currency": "EUR",
         "price": [
           {
-            "date": "2026-04-10",
-            "value": 80.4697
-          },
-          {
             "date": "2026-04-13",
-            "value": 79.4872
+            "value": 79.4501
           },
           {
             "date": "2026-04-14",
-            "value": 80.4112
+            "value": 80.3736
           },
           {
             "date": "2026-04-15",
-            "value": 80.2358
+            "value": 80.1983
           },
           {
             "date": "2026-04-16",
-            "value": 80.5399
+            "value": 80.5022
           },
           {
             "date": "2026-04-17",
-            "value": 81.5458
+            "value": 81.5076
           },
           {
             "date": "2026-04-20",
-            "value": 80.5633
+            "value": 80.5256
           },
           {
             "date": "2026-04-21",
-            "value": 79.7095
+            "value": 79.6722
           },
           {
             "date": "2026-04-22",
-            "value": 79.4872
+            "value": 79.4501
           },
           {
             "date": "2026-04-23",
-            "value": 79.5457
+            "value": 79.5085
           },
           {
             "date": "2026-04-24",
-            "value": 79.3586
+            "value": 79.3215
           },
           {
             "date": "2026-04-27",
-            "value": 78.3527
+            "value": 78.3161
           },
           {
             "date": "2026-04-28",
-            "value": 76.8322
+            "value": 76.7963
           },
           {
             "date": "2026-04-29",
-            "value": 76.4345
+            "value": 76.3988
           },
           {
             "date": "2026-04-30",
-            "value": 77.2533
+            "value": 77.2171
           },
           {
             "date": "2026-05-01",
-            "value": 77.2533
+            "value": 77.2171
           },
           {
             "date": "2026-05-05",
-            "value": 76.5866
+            "value": 76.5508
           },
           {
             "date": "2026-05-06",
-            "value": 78.3059
+            "value": 78.2693
           },
           {
             "date": "2026-05-07",
-            "value": 79.0428
+            "value": 79.0058
           },
           {
             "date": "2026-05-08",
-            "value": 78.4229
+            "value": 78.3862
           },
           {
             "date": "2026-05-11",
-            "value": 78.6802
+            "value": 78.6434
           },
           {
             "date": "2026-05-12",
-            "value": 78.2474
+            "value": 78.2109
           },
           {
             "date": "2026-05-13",
-            "value": 78.7855
+            "value": 78.7486
           },
           {
             "date": "2026-05-14",
-            "value": 78.9141
+            "value": 78.8772
           },
           {
             "date": "2026-05-15",
-            "value": 77.4053
+            "value": 77.3691
           },
           {
             "date": "2026-05-18",
-            "value": 76.9141
+            "value": 76.8781
           },
           {
             "date": "2026-05-19",
-            "value": 76.2591
+            "value": 76.2234
           },
           {
             "date": "2026-05-20",
-            "value": 76.4696
+            "value": 76.4339
           },
           {
             "date": "2026-05-21",
-            "value": 76.3527
+            "value": 76.317
           },
           {
             "date": "2026-05-22",
-            "value": 76.3059
+            "value": 76.2702
           },
           {
             "date": "2026-05-26",
-            "value": 76.0603
+            "value": 76.0247
           },
           {
             "date": "2026-05-27",
-            "value": 74.9842
+            "value": 74.9491
           },
           {
             "date": "2026-05-28",
-            "value": 75.6509
+            "value": 75.6155
           },
           {
             "date": "2026-05-29",
-            "value": 77.0895
+            "value": 77.0535
           },
           {
             "date": "2026-06-01",
-            "value": 75.569
+            "value": 75.5337
           },
           {
             "date": "2026-06-02",
-            "value": 75.8848
+            "value": 75.8493
           },
           {
             "date": "2026-06-03",
-            "value": 75.0193
+            "value": 74.9842
           },
           {
             "date": "2026-06-04",
-            "value": 75.5456
+            "value": 75.5103
           },
           {
             "date": "2026-06-05",
-            "value": 73.7678
+            "value": 73.7333
           },
           {
             "date": "2026-06-08",
-            "value": 73.721
+            "value": 73.6865
           },
           {
             "date": "2026-06-09",
-            "value": 72.4227
+            "value": 72.3889
           },
           {
             "date": "2026-06-10",
-            "value": 69.9549
+            "value": 69.9221
           },
           {
             "date": "2026-06-11",
-            "value": 69.37
+            "value": 69.3376
           },
           {
             "date": "2026-06-12",
-            "value": 71.3818
+            "value": 71.3484
           },
           {
             "date": "2026-06-15",
-            "value": 73.5222
+            "value": 73.4878
           },
           {
             "date": "2026-06-16",
-            "value": 73.1596
+            "value": 73.1254
           },
           {
             "date": "2026-06-17",
-            "value": 73.8263
+            "value": 73.7918
           },
           {
             "date": "2026-06-18",
-            "value": 72.5514
+            "value": 72.5175
           },
           {
             "date": "2026-06-19",
-            "value": 71.2531
+            "value": 71.2198
           },
           {
             "date": "2026-06-22",
-            "value": 71.721
+            "value": 71.6874
           },
           {
             "date": "2026-06-23",
-            "value": 71.0894
+            "value": 71.0561
           },
           {
             "date": "2026-06-24",
-            "value": 69.0776
+            "value": 69.0453
           },
           {
             "date": "2026-06-25",
-            "value": 69.1244
+            "value": 69.0921
           },
           {
             "date": "2026-06-26",
-            "value": 70.1069
+            "value": 70.0741
           },
           {
             "date": "2026-06-29",
-            "value": 68.8554
+            "value": 68.8232
           },
           {
             "date": "2026-06-30",
-            "value": 68.949
+            "value": 68.9167
           },
           {
             "date": "2026-07-01",
-            "value": 69.7092
+            "value": 69.6766
           },
           {
             "date": "2026-07-02",
-            "value": 70.0718
+            "value": 70.039
           },
           {
             "date": "2026-07-03",
-            "value": 70.797
+            "value": 70.7639
           },
           {
             "date": "2026-07-06",
-            "value": 70.4812
+            "value": 70.4482
           },
           {
             "date": "2026-07-07",
-            "value": 70.2707
+            "value": 70.2378
           },
           {
             "date": "2026-07-08",
-            "value": 68.3759
+            "value": 68.3439
           },
           {
             "date": "2026-07-09",
-            "value": 69.873
+            "value": 69.8403
           },
           {
             "date": "2026-07-10",
-            "value": 69.3467
+            "value": 69.3142
           },
           {
             "date": "2026-07-13",
-            "value": 68.1186
+            "value": 68.0867
           },
           {
             "date": "2026-07-14",
-            "value": 69.1712
+            "value": 69.1389
           },
           {
             "date": "2026-07-15",
-            "value": 68.0601
+            "value": 68.0282
           },
           {
             "date": "2026-07-16",
-            "value": 67.5571
+            "value": 67.5255
           },
           {
             "date": "2026-07-17",
-            "value": 67.639
+            "value": 67.6074
           },
           {
             "date": "2026-07-20",
-            "value": 67.8495
+            "value": 67.8178
           },
           {
             "date": "2026-07-21",
-            "value": 69.1595
+            "value": 69.1272
           },
           {
             "date": "2026-07-22",
-            "value": 70.5397
+            "value": 70.5067
           },
           {
             "date": "2026-07-23",
-            "value": 69.0075
+            "value": 68.9752
           },
           {
             "date": "2026-07-24",
-            "value": 69.2882
+            "value": 69.2558
           },
           {
             "date": "2026-07-27",
-            "value": 69.4753
+            "value": 69.4428
           },
           {
             "date": "2026-07-28",
-            "value": 68.7618
+            "value": 68.7297
           },
           {
             "date": "2026-07-29",
-            "value": 68.4928
+            "value": 68.4608
           },
           {
             "date": "2026-07-30",
-            "value": 69.1361
+            "value": 69.1038
           },
           {
             "date": "2026-07-31",
-            "value": 68.0601
+            "value": 68.0282
           },
           {
             "date": "2026-08-03",
-            "value": 68.1419
+            "value": 68.1101
           },
           {
             "date": "2026-08-04",
-            "value": 68.8086
+            "value": 68.7765
           },
           {
             "date": "2026-08-05",
-            "value": 71.7093
+            "value": 71.6757
           },
           {
             "date": "2026-08-06",
-            "value": 71.6625
+            "value": 71.629
           },
           {
             "date": "2026-08-07",
-            "value": 73.1596
+            "value": 73.1254
           },
           {
             "date": "2026-08-10",
-            "value": 72.9725
+            "value": 72.9383
           },
           {
             "date": "2026-08-11",
-            "value": 73.5222
+            "value": 73.4878
           },
           {
             "date": "2026-08-12",
-            "value": 74.2123
+            "value": 74.1776
           },
           {
             "date": "2026-08-13",
-            "value": 73.3
+            "value": 73.2657
           },
           {
             "date": "2026-08-14",
-            "value": 73.4871
+            "value": 73.4527
           },
           {
             "date": "2026-08-17",
-            "value": 73.3737
+            "value": 73.9788
+          },
+          {
+            "date": "2026-08-18",
+            "value": 72.9968
           }
         ],
         "sma20": [
           {
-            "date": "2026-04-10",
-            "value": 80.0656
-          },
-          {
             "date": "2026-04-13",
-            "value": 79.6791
+            "value": 79.6418
           },
           {
             "date": "2026-04-14",
-            "value": 79.372
+            "value": 79.3349
           },
           {
             "date": "2026-04-15",
-            "value": 79.1387
+            "value": 79.1017
           },
           {
             "date": "2026-04-16",
-            "value": 78.9118
+            "value": 78.8749
           },
           {
             "date": "2026-04-17",
-            "value": 78.8358
+            "value": 78.7989
           },
           {
             "date": "2026-04-20",
-            "value": 78.9714
+            "value": 78.9345
           },
           {
             "date": "2026-04-21",
-            "value": 79.0492
+            "value": 79.0123
           },
           {
             "date": "2026-04-22",
-            "value": 79.3165
+            "value": 79.2794
           },
           {
             "date": "2026-04-23",
-            "value": 79.551
+            "value": 79.5138
           },
           {
             "date": "2026-04-24",
-            "value": 79.658
+            "value": 79.6208
           },
           {
             "date": "2026-04-27",
-            "value": 79.8434
+            "value": 79.8061
           },
           {
             "date": "2026-04-28",
-            "value": 79.827
+            "value": 79.7897
           },
           {
             "date": "2026-04-29",
-            "value": 79.741
+            "value": 79.7038
           },
           {
             "date": "2026-04-30",
-            "value": 79.6352
+            "value": 79.598
           },
           {
             "date": "2026-05-01",
-            "value": 79.4241
+            "value": 79.3869
           },
           {
             "date": "2026-05-05",
-            "value": 79.2492
+            "value": 79.2122
           },
           {
             "date": "2026-05-06",
-            "value": 79.1831
+            "value": 79.1461
           },
           {
             "date": "2026-05-07",
-            "value": 79.12
+            "value": 79.083
           },
           {
             "date": "2026-05-08",
-            "value": 78.9919
+            "value": 78.955
           },
           {
             "date": "2026-05-11",
-            "value": 78.9024
+            "value": 78.8655
           },
           {
             "date": "2026-05-12",
-            "value": 78.8404
+            "value": 78.8036
           },
           {
             "date": "2026-05-13",
-            "value": 78.7592
+            "value": 78.7223
           },
           {
             "date": "2026-05-14",
-            "value": 78.6931
+            "value": 78.6563
           },
           {
             "date": "2026-05-15",
-            "value": 78.5363
+            "value": 78.4996
           },
           {
             "date": "2026-05-18",
-            "value": 78.3048
+            "value": 78.2681
           },
           {
             "date": "2026-05-19",
-            "value": 78.0895
+            "value": 78.053
           },
           {
             "date": "2026-05-20",
-            "value": 77.9276
+            "value": 77.8911
           },
           {
             "date": "2026-05-21",
-            "value": 77.7708
+            "value": 77.7345
           },
           {
             "date": "2026-05-22",
-            "value": 77.6088
+            "value": 77.5725
           },
           {
             "date": "2026-05-26",
-            "value": 77.4439
+            "value": 77.4077
           },
           {
             "date": "2026-05-27",
-            "value": 77.2755
+            "value": 77.2394
           },
           {
             "date": "2026-05-28",
-            "value": 77.2164
+            "value": 77.1803
           },
           {
             "date": "2026-05-29",
-            "value": 77.2492
+            "value": 77.2131
           },
           {
             "date": "2026-06-01",
-            "value": 77.165
+            "value": 77.1289
           },
           {
             "date": "2026-06-02",
-            "value": 77.0965
+            "value": 77.0605
           },
           {
             "date": "2026-06-03",
-            "value": 77.0182
+            "value": 76.9822
           },
           {
             "date": "2026-06-04",
-            "value": 76.8802
+            "value": 76.8442
           },
           {
             "date": "2026-06-05",
-            "value": 76.6164
+            "value": 76.5806
           },
           {
             "date": "2026-06-08",
-            "value": 76.3813
+            "value": 76.3456
           },
           {
             "date": "2026-06-09",
-            "value": 76.0684
+            "value": 76.0329
           },
           {
             "date": "2026-06-10",
-            "value": 75.6538
+            "value": 75.6184
           },
           {
             "date": "2026-06-11",
-            "value": 75.183
+            "value": 75.1479
           },
           {
             "date": "2026-06-12",
-            "value": 74.8064
+            "value": 74.7714
           },
           {
             "date": "2026-06-15",
-            "value": 74.6123
+            "value": 74.5774
           },
           {
             "date": "2026-06-16",
-            "value": 74.4245
+            "value": 74.3897
           },
           {
             "date": "2026-06-17",
-            "value": 74.3029
+            "value": 74.2682
           },
           {
             "date": "2026-06-18",
-            "value": 74.107
+            "value": 74.0723
           },
           {
             "date": "2026-06-19",
-            "value": 73.852
+            "value": 73.8175
           },
           {
             "date": "2026-06-22",
-            "value": 73.6228
+            "value": 73.5883
           },
           {
             "date": "2026-06-23",
-            "value": 73.3742
+            "value": 73.3399
           },
           {
             "date": "2026-06-24",
-            "value": 73.0789
+            "value": 73.0447
           },
           {
             "date": "2026-06-25",
-            "value": 72.7526
+            "value": 72.7186
           },
           {
             "date": "2026-06-26",
-            "value": 72.4034
+            "value": 72.3696
           },
           {
             "date": "2026-06-29",
-            "value": 72.0678
+            "value": 72.0341
           },
           {
             "date": "2026-06-30",
-            "value": 71.721
+            "value": 71.6874
           },
           {
             "date": "2026-07-01",
-            "value": 71.4555
+            "value": 71.4221
           },
           {
             "date": "2026-07-02",
-            "value": 71.1818
+            "value": 71.1485
           },
           {
             "date": "2026-07-03",
-            "value": 71.0332
+            "value": 71.0
           },
           {
             "date": "2026-07-06",
-            "value": 70.8712
+            "value": 70.8381
           },
           {
             "date": "2026-07-07",
-            "value": 70.7636
+            "value": 70.7306
           },
           {
             "date": "2026-07-08",
-            "value": 70.6847
+            "value": 70.6516
           },
           {
             "date": "2026-07-09",
-            "value": 70.7098
+            "value": 70.6768
           },
           {
             "date": "2026-07-10",
-            "value": 70.6081
+            "value": 70.5751
           },
           {
             "date": "2026-07-13",
-            "value": 70.3379
+            "value": 70.305
           },
           {
             "date": "2026-07-14",
-            "value": 70.1385
+            "value": 70.1057
           },
           {
             "date": "2026-07-15",
-            "value": 69.8502
+            "value": 69.8175
           },
           {
             "date": "2026-07-16",
-            "value": 69.6005
+            "value": 69.5679
           },
           {
             "date": "2026-07-17",
-            "value": 69.4198
+            "value": 69.3873
           },
           {
             "date": "2026-07-20",
-            "value": 69.2262
+            "value": 69.1938
           },
           {
             "date": "2026-07-21",
-            "value": 69.1297
+            "value": 69.0974
           },
           {
             "date": "2026-07-22",
-            "value": 69.2028
+            "value": 69.1704
           },
           {
             "date": "2026-07-23",
-            "value": 69.1969
+            "value": 69.1646
           },
           {
             "date": "2026-07-24",
-            "value": 69.156
+            "value": 69.1237
           },
           {
             "date": "2026-07-27",
-            "value": 69.187
+            "value": 69.1546
           },
           {
             "date": "2026-07-28",
-            "value": 69.1776
+            "value": 69.1453
           },
           {
             "date": "2026-07-29",
-            "value": 69.1168
+            "value": 69.0845
           },
           {
             "date": "2026-07-30",
-            "value": 69.07
+            "value": 69.0377
           },
           {
             "date": "2026-07-31",
-            "value": 68.9332
+            "value": 68.901
           },
           {
             "date": "2026-08-03",
-            "value": 68.8162
+            "value": 68.784
           },
           {
             "date": "2026-08-04",
-            "value": 68.7431
+            "value": 68.711
           },
           {
             "date": "2026-08-05",
-            "value": 68.9098
+            "value": 68.8776
           },
           {
             "date": "2026-08-06",
-            "value": 68.9993
+            "value": 68.967
           },
           {
             "date": "2026-08-07",
-            "value": 69.1899
+            "value": 69.1576
           },
           {
             "date": "2026-08-10",
-            "value": 69.4326
+            "value": 69.4001
           },
           {
             "date": "2026-08-11",
-            "value": 69.6502
+            "value": 69.6176
           },
           {
             "date": "2026-08-12",
-            "value": 69.9578
+            "value": 69.9251
           },
           {
             "date": "2026-08-13",
-            "value": 70.2449
+            "value": 70.2121
           },
           {
             "date": "2026-08-14",
-            "value": 70.5373
+            "value": 70.5043
           },
           {
             "date": "2026-08-17",
-            "value": 70.8135
+            "value": 70.8124
+          },
+          {
+            "date": "2026-08-18",
+            "value": 71.0059
           }
         ],
         "sma50": [
           {
-            "date": "2026-04-10",
-            "value": 82.9893
-          },
-          {
             "date": "2026-04-13",
-            "value": 82.8398
+            "value": 82.8011
           },
           {
             "date": "2026-04-14",
-            "value": 82.7977
+            "value": 82.759
           },
           {
             "date": "2026-04-15",
-            "value": 82.8525
+            "value": 82.8137
           },
           {
             "date": "2026-04-16",
-            "value": 82.8125
+            "value": 82.7737
           },
           {
             "date": "2026-04-17",
-            "value": 82.8057
+            "value": 82.767
           },
           {
             "date": "2026-04-20",
-            "value": 82.7902
+            "value": 82.7515
           },
           {
             "date": "2026-04-21",
-            "value": 82.7385
+            "value": 82.6999
           },
           {
             "date": "2026-04-22",
-            "value": 82.6438
+            "value": 82.6052
           },
           {
             "date": "2026-04-23",
-            "value": 82.5673
+            "value": 82.5287
           },
           {
             "date": "2026-04-24",
-            "value": 82.4644
+            "value": 82.4258
           },
           {
             "date": "2026-04-27",
-            "value": 82.3872
+            "value": 82.3487
           },
           {
             "date": "2026-04-28",
-            "value": 82.252
+            "value": 82.2135
           },
           {
             "date": "2026-04-29",
-            "value": 82.1196
+            "value": 82.0812
           },
           {
             "date": "2026-04-30",
-            "value": 82.0267
+            "value": 81.9884
           },
           {
             "date": "2026-05-01",
-            "value": 81.896
+            "value": 81.8577
           },
           {
             "date": "2026-05-05",
-            "value": 81.7392
+            "value": 81.701
           },
           {
             "date": "2026-05-06",
-            "value": 81.5998
+            "value": 81.5616
           },
           {
             "date": "2026-05-07",
-            "value": 81.4283
+            "value": 81.3903
           },
           {
             "date": "2026-05-08",
-            "value": 81.2723
+            "value": 81.2343
           },
           {
             "date": "2026-05-11",
-            "value": 81.1006
+            "value": 81.0627
           },
           {
             "date": "2026-05-12",
-            "value": 80.924
+            "value": 80.8862
           },
           {
             "date": "2026-05-13",
-            "value": 80.7357
+            "value": 80.6979
           },
           {
             "date": "2026-05-14",
-            "value": 80.5151
+            "value": 80.4774
           },
           {
             "date": "2026-05-15",
-            "value": 80.3172
+            "value": 80.2796
           },
           {
             "date": "2026-05-18",
-            "value": 80.1055
+            "value": 80.068
           },
           {
             "date": "2026-05-19",
-            "value": 79.9039
+            "value": 79.8665
           },
           {
             "date": "2026-05-20",
-            "value": 79.691
+            "value": 79.6537
           },
           {
             "date": "2026-05-21",
-            "value": 79.4886
+            "value": 79.4515
           },
           {
             "date": "2026-05-22",
-            "value": 79.2505
+            "value": 79.2134
           },
           {
             "date": "2026-05-26",
-            "value": 79.0215
+            "value": 78.9845
           },
           {
             "date": "2026-05-27",
-            "value": 78.7768
+            "value": 78.74
           },
           {
             "date": "2026-05-28",
-            "value": 78.5588
+            "value": 78.5221
           },
           {
             "date": "2026-05-29",
-            "value": 78.4025
+            "value": 78.3659
           },
           {
             "date": "2026-06-01",
-            "value": 78.2124
+            "value": 78.1758
           },
           {
             "date": "2026-06-02",
-            "value": 78.0687
+            "value": 78.0322
           },
           {
             "date": "2026-06-03",
-            "value": 78.0121
+            "value": 77.9756
           },
           {
             "date": "2026-06-04",
-            "value": 77.96
+            "value": 77.9235
           },
           {
             "date": "2026-06-05",
-            "value": 77.9525
+            "value": 77.916
           },
           {
             "date": "2026-06-08",
-            "value": 77.9298
+            "value": 77.8933
           },
           {
             "date": "2026-06-09",
-            "value": 77.8339
+            "value": 77.7975
           },
           {
             "date": "2026-06-10",
-            "value": 77.7401
+            "value": 77.7037
           },
           {
             "date": "2026-06-11",
-            "value": 77.5843
+            "value": 77.548
           },
           {
             "date": "2026-06-12",
-            "value": 77.4488
+            "value": 77.4126
           },
           {
             "date": "2026-06-15",
-            "value": 77.3319
+            "value": 77.2957
           },
           {
             "date": "2026-06-16",
-            "value": 77.1655
+            "value": 77.1295
           },
           {
             "date": "2026-06-17",
-            "value": 77.0404
+            "value": 77.0044
           },
           {
             "date": "2026-06-18",
-            "value": 76.8989
+            "value": 76.8629
           },
           {
             "date": "2026-06-19",
-            "value": 76.7178
+            "value": 76.6819
           },
           {
             "date": "2026-06-22",
-            "value": 76.5326
+            "value": 76.4968
           },
           {
             "date": "2026-06-23",
-            "value": 76.3449
+            "value": 76.3092
           },
           {
             "date": "2026-06-24",
-            "value": 76.1368
+            "value": 76.1011
           },
           {
             "date": "2026-06-25",
-            "value": 75.911
+            "value": 75.8755
           },
           {
             "date": "2026-06-26",
-            "value": 75.7084
+            "value": 75.673
           },
           {
             "date": "2026-06-29",
-            "value": 75.4747
+            "value": 75.4395
           },
           {
             "date": "2026-06-30",
-            "value": 75.2228
+            "value": 75.1876
           },
           {
             "date": "2026-07-01",
-            "value": 75.0057
+            "value": 74.9707
           },
           {
             "date": "2026-07-02",
-            "value": 74.813
+            "value": 74.778
           },
           {
             "date": "2026-07-03",
-            "value": 74.6392
+            "value": 74.6043
           },
           {
             "date": "2026-07-06",
-            "value": 74.4579
+            "value": 74.4231
           },
           {
             "date": "2026-07-07",
-            "value": 74.2761
+            "value": 74.2414
           },
           {
             "date": "2026-07-08",
-            "value": 74.0766
+            "value": 74.0419
           },
           {
             "date": "2026-07-09",
-            "value": 73.9374
+            "value": 73.9028
           },
           {
             "date": "2026-07-10",
-            "value": 73.7956
+            "value": 73.7611
           },
           {
             "date": "2026-07-13",
-            "value": 73.613
+            "value": 73.5785
           },
           {
             "date": "2026-07-14",
-            "value": 73.4513
+            "value": 73.417
           },
           {
             "date": "2026-07-15",
-            "value": 73.2808
+            "value": 73.2465
           },
           {
             "date": "2026-07-16",
-            "value": 73.0658
+            "value": 73.0316
           },
           {
             "date": "2026-07-17",
-            "value": 72.8377
+            "value": 72.8037
           },
           {
             "date": "2026-07-20",
-            "value": 72.6263
+            "value": 72.5923
           },
           {
             "date": "2026-07-21",
-            "value": 72.4358
+            "value": 72.402
           },
           {
             "date": "2026-07-22",
-            "value": 72.2817
+            "value": 72.2479
           },
           {
             "date": "2026-07-23",
-            "value": 72.0861
+            "value": 72.0524
           },
           {
             "date": "2026-07-24",
-            "value": 71.8936
+            "value": 71.86
           },
           {
             "date": "2026-07-27",
-            "value": 71.735
+            "value": 71.7015
           },
           {
             "date": "2026-07-28",
-            "value": 71.572
+            "value": 71.5385
           },
           {
             "date": "2026-07-29",
-            "value": 71.4166
+            "value": 71.3832
           },
           {
             "date": "2026-07-30",
-            "value": 71.27
+            "value": 71.2366
           },
           {
             "date": "2026-07-31",
-            "value": 71.1041
+            "value": 71.0709
           },
           {
             "date": "2026-08-03",
-            "value": 70.9408
+            "value": 70.9077
           },
           {
             "date": "2026-08-04",
-            "value": 70.7958
+            "value": 70.7627
           },
           {
             "date": "2026-08-05",
-            "value": 70.7303
+            "value": 70.6972
           },
           {
             "date": "2026-08-06",
-            "value": 70.6505
+            "value": 70.6175
           },
           {
             "date": "2026-08-07",
-            "value": 70.5719
+            "value": 70.5389
           },
           {
             "date": "2026-08-10",
-            "value": 70.52
+            "value": 70.487
           },
           {
             "date": "2026-08-11",
-            "value": 70.4728
+            "value": 70.4398
           },
           {
             "date": "2026-08-12",
-            "value": 70.4566
+            "value": 70.4237
           },
           {
             "date": "2026-08-13",
-            "value": 70.4117
+            "value": 70.3788
           },
           {
             "date": "2026-08-14",
-            "value": 70.4061
+            "value": 70.3732
           },
           {
             "date": "2026-08-17",
-            "value": 70.3991
+            "value": 70.379
+          },
+          {
+            "date": "2026-08-18",
+            "value": 70.3912
           }
         ],
         "bb_upper": [
           {
-            "date": "2026-04-10",
-            "value": 87.6727
-          },
-          {
             "date": "2026-04-13",
-            "value": 86.5009
+            "value": 86.4605
           },
           {
             "date": "2026-04-14",
-            "value": 85.3978
+            "value": 85.3579
           },
           {
             "date": "2026-04-15",
-            "value": 84.5975
+            "value": 84.5579
           },
           {
             "date": "2026-04-16",
-            "value": 83.6625
+            "value": 83.6233
           },
           {
             "date": "2026-04-17",
-            "value": 83.3492
+            "value": 83.3103
           },
           {
             "date": "2026-04-20",
-            "value": 83.5231
+            "value": 83.484
           },
           {
             "date": "2026-04-21",
-            "value": 83.5952
+            "value": 83.5561
           },
           {
             "date": "2026-04-22",
-            "value": 83.2326
+            "value": 83.1937
           },
           {
             "date": "2026-04-23",
-            "value": 82.8565
+            "value": 82.8177
           },
           {
             "date": "2026-04-24",
-            "value": 82.7789
+            "value": 82.7402
           },
           {
             "date": "2026-04-27",
-            "value": 82.0029
+            "value": 81.9646
           },
           {
             "date": "2026-04-28",
-            "value": 82.0754
+            "value": 82.037
           },
           {
             "date": "2026-04-29",
-            "value": 82.3598
+            "value": 82.3212
           },
           {
             "date": "2026-04-30",
-            "value": 82.4785
+            "value": 82.4399
           },
           {
             "date": "2026-05-01",
-            "value": 82.3186
+            "value": 82.2801
           },
           {
             "date": "2026-05-05",
-            "value": 82.3881
+            "value": 82.3496
           },
           {
             "date": "2026-05-06",
-            "value": 82.3441
+            "value": 82.3056
           },
           {
             "date": "2026-05-07",
-            "value": 82.2366
+            "value": 82.1982
           },
           {
             "date": "2026-05-08",
-            "value": 81.9944
+            "value": 81.9561
           },
           {
             "date": "2026-05-11",
-            "value": 81.8251
+            "value": 81.7868
           },
           {
             "date": "2026-05-12",
-            "value": 81.7635
+            "value": 81.7252
           },
           {
             "date": "2026-05-13",
-            "value": 81.5871
+            "value": 81.549
           },
           {
             "date": "2026-05-14",
-            "value": 81.4363
+            "value": 81.3982
           },
           {
             "date": "2026-05-15",
-            "value": 81.192
+            "value": 81.1541
           },
           {
             "date": "2026-05-18",
-            "value": 80.6445
+            "value": 80.6068
           },
           {
             "date": "2026-05-19",
-            "value": 80.3449
+            "value": 80.3073
           },
           {
             "date": "2026-05-20",
-            "value": 80.1582
+            "value": 80.1207
           },
           {
             "date": "2026-05-21",
-            "value": 79.9805
+            "value": 79.9431
           },
           {
             "date": "2026-05-22",
-            "value": 79.7444
+            "value": 79.7071
           },
           {
             "date": "2026-05-26",
-            "value": 79.5191
+            "value": 79.4819
           },
           {
             "date": "2026-05-27",
-            "value": 79.5748
+            "value": 79.5376
           },
           {
             "date": "2026-05-28",
-            "value": 79.6219
+            "value": 79.5847
           },
           {
             "date": "2026-05-29",
-            "value": 79.6275
+            "value": 79.5903
           },
           {
             "date": "2026-06-01",
-            "value": 79.6592
+            "value": 79.6219
           },
           {
             "date": "2026-06-02",
-            "value": 79.6548
+            "value": 79.6175
           },
           {
             "date": "2026-06-03",
-            "value": 79.7334
+            "value": 79.6961
           },
           {
             "date": "2026-06-04",
-            "value": 79.6004
+            "value": 79.5632
           },
           {
             "date": "2026-06-05",
-            "value": 79.4732
+            "value": 79.4361
           },
           {
             "date": "2026-06-08",
-            "value": 79.3824
+            "value": 79.3453
           },
           {
             "date": "2026-06-09",
-            "value": 79.3519
+            "value": 79.3148
           },
           {
             "date": "2026-06-10",
-            "value": 79.7679
+            "value": 79.7306
           },
           {
             "date": "2026-06-11",
-            "value": 79.8991
+            "value": 79.8617
           },
           {
             "date": "2026-06-12",
-            "value": 79.4707
+            "value": 79.4335
           },
           {
             "date": "2026-06-15",
-            "value": 79.1424
+            "value": 79.1053
           },
           {
             "date": "2026-06-16",
-            "value": 78.8633
+            "value": 78.8264
           },
           {
             "date": "2026-06-17",
-            "value": 78.6626
+            "value": 78.6258
           },
           {
             "date": "2026-06-18",
-            "value": 78.4084
+            "value": 78.3718
           },
           {
             "date": "2026-06-19",
-            "value": 78.1973
+            "value": 78.1608
           },
           {
             "date": "2026-06-22",
-            "value": 77.9063
+            "value": 77.8699
           },
           {
             "date": "2026-06-23",
-            "value": 77.6391
+            "value": 77.6028
           },
           {
             "date": "2026-06-24",
-            "value": 77.6792
+            "value": 77.6429
           },
           {
             "date": "2026-06-25",
-            "value": 77.508
+            "value": 77.4717
           },
           {
             "date": "2026-06-26",
-            "value": 76.8323
+            "value": 76.7963
           },
           {
             "date": "2026-06-29",
-            "value": 76.504
+            "value": 76.4683
           },
           {
             "date": "2026-06-30",
-            "value": 75.9818
+            "value": 75.9463
           },
           {
             "date": "2026-07-01",
-            "value": 75.5076
+            "value": 75.4723
           },
           {
             "date": "2026-07-02",
-            "value": 74.7853
+            "value": 74.7503
           },
           {
             "date": "2026-07-03",
-            "value": 74.4267
+            "value": 74.3919
           },
           {
             "date": "2026-07-06",
-            "value": 74.0253
+            "value": 73.9907
           },
           {
             "date": "2026-07-07",
-            "value": 73.8408
+            "value": 73.8062
           },
           {
             "date": "2026-07-08",
-            "value": 73.9258
+            "value": 73.8913
           },
           {
             "date": "2026-07-09",
-            "value": 73.9157
+            "value": 73.8811
           },
           {
             "date": "2026-07-10",
-            "value": 73.8531
+            "value": 73.8185
           },
           {
             "date": "2026-07-13",
-            "value": 73.4587
+            "value": 73.4244
           },
           {
             "date": "2026-07-14",
-            "value": 72.999
+            "value": 72.9648
           },
           {
             "date": "2026-07-15",
-            "value": 72.2748
+            "value": 72.241
           },
           {
             "date": "2026-07-16",
-            "value": 71.8779
+            "value": 71.8443
           },
           {
             "date": "2026-07-17",
-            "value": 71.7185
+            "value": 71.685
           },
           {
             "date": "2026-07-20",
-            "value": 71.3547
+            "value": 71.3214
           },
           {
             "date": "2026-07-21",
-            "value": 71.0692
+            "value": 71.036
           },
           {
             "date": "2026-07-22",
-            "value": 71.2417
+            "value": 71.2084
           },
           {
             "date": "2026-07-23",
-            "value": 71.2375
+            "value": 71.2041
           },
           {
             "date": "2026-07-24",
-            "value": 71.152
+            "value": 71.1188
           },
           {
             "date": "2026-07-27",
-            "value": 71.1826
+            "value": 71.1493
           },
           {
             "date": "2026-07-28",
-            "value": 71.1797
+            "value": 71.1464
           },
           {
             "date": "2026-07-29",
-            "value": 71.1248
+            "value": 71.0915
           },
           {
             "date": "2026-07-30",
-            "value": 71.0273
+            "value": 70.9941
           },
           {
             "date": "2026-07-31",
-            "value": 70.7604
+            "value": 70.7273
           },
           {
             "date": "2026-08-03",
-            "value": 70.5217
+            "value": 70.4887
           },
           {
             "date": "2026-08-04",
-            "value": 70.3054
+            "value": 70.2725
           },
           {
             "date": "2026-08-05",
-            "value": 70.9464
+            "value": 70.9132
           },
           {
             "date": "2026-08-06",
-            "value": 71.3474
+            "value": 71.3141
           },
           {
             "date": "2026-08-07",
-            "value": 72.1865
+            "value": 72.1527
           },
           {
             "date": "2026-08-10",
-            "value": 72.824
+            "value": 72.79
           },
           {
             "date": "2026-08-11",
-            "value": 73.4984
+            "value": 73.464
           },
           {
             "date": "2026-08-12",
-            "value": 74.2309
+            "value": 74.1962
           },
           {
             "date": "2026-08-13",
-            "value": 74.6097
+            "value": 74.5748
           },
           {
             "date": "2026-08-14",
-            "value": 74.9503
+            "value": 74.9153
           },
           {
             "date": "2026-08-17",
-            "value": 75.2097
+            "value": 75.2933
+          },
+          {
+            "date": "2026-08-18",
+            "value": 75.5145
           }
         ],
         "bb_lower": [
           {
-            "date": "2026-04-10",
-            "value": 72.4585
-          },
-          {
             "date": "2026-04-13",
-            "value": 72.8572
+            "value": 72.8231
           },
           {
             "date": "2026-04-14",
-            "value": 73.3462
+            "value": 73.3119
           },
           {
             "date": "2026-04-15",
-            "value": 73.6799
+            "value": 73.6454
           },
           {
             "date": "2026-04-16",
-            "value": 74.1611
+            "value": 74.1264
           },
           {
             "date": "2026-04-17",
-            "value": 74.3223
+            "value": 74.2875
           },
           {
             "date": "2026-04-20",
-            "value": 74.4198
+            "value": 74.385
           },
           {
             "date": "2026-04-21",
-            "value": 74.5032
+            "value": 74.4684
           },
           {
             "date": "2026-04-22",
-            "value": 75.4003
+            "value": 75.3651
           },
           {
             "date": "2026-04-23",
-            "value": 76.2455
+            "value": 76.2098
           },
           {
             "date": "2026-04-24",
-            "value": 76.5371
+            "value": 76.5013
           },
           {
             "date": "2026-04-27",
-            "value": 77.6838
+            "value": 77.6475
           },
           {
             "date": "2026-04-28",
-            "value": 77.5786
+            "value": 77.5424
           },
           {
             "date": "2026-04-29",
-            "value": 77.1223
+            "value": 77.0863
           },
           {
             "date": "2026-04-30",
-            "value": 76.7919
+            "value": 76.756
           },
           {
             "date": "2026-05-01",
-            "value": 76.5296
+            "value": 76.4938
           },
           {
             "date": "2026-05-05",
-            "value": 76.1103
+            "value": 76.0747
           },
           {
             "date": "2026-05-06",
-            "value": 76.0222
+            "value": 75.9866
           },
           {
             "date": "2026-05-07",
-            "value": 76.0033
+            "value": 75.9678
           },
           {
             "date": "2026-05-08",
-            "value": 75.9894
+            "value": 75.9539
           },
           {
             "date": "2026-05-11",
-            "value": 75.9798
+            "value": 75.9442
           },
           {
             "date": "2026-05-12",
-            "value": 75.9174
+            "value": 75.8819
           },
           {
             "date": "2026-05-13",
-            "value": 75.9312
+            "value": 75.8957
           },
           {
             "date": "2026-05-14",
-            "value": 75.9499
+            "value": 75.9144
           },
           {
             "date": "2026-05-15",
-            "value": 75.8806
+            "value": 75.8452
           },
           {
             "date": "2026-05-18",
-            "value": 75.965
+            "value": 75.9295
           },
           {
             "date": "2026-05-19",
-            "value": 75.8342
+            "value": 75.7988
           },
           {
             "date": "2026-05-20",
-            "value": 75.6969
+            "value": 75.6615
           },
           {
             "date": "2026-05-21",
-            "value": 75.5612
+            "value": 75.5258
           },
           {
             "date": "2026-05-22",
-            "value": 75.4733
+            "value": 75.438
           },
           {
             "date": "2026-05-26",
-            "value": 75.3687
+            "value": 75.3335
           },
           {
             "date": "2026-05-27",
-            "value": 74.9762
+            "value": 74.9411
           },
           {
             "date": "2026-05-28",
-            "value": 74.8109
+            "value": 74.7759
           },
           {
             "date": "2026-05-29",
-            "value": 74.8708
+            "value": 74.8358
           },
           {
             "date": "2026-06-01",
-            "value": 74.6708
+            "value": 74.6358
           },
           {
             "date": "2026-06-02",
-            "value": 74.5383
+            "value": 74.5034
           },
           {
             "date": "2026-06-03",
-            "value": 74.3029
+            "value": 74.2682
           },
           {
             "date": "2026-06-04",
-            "value": 74.1599
+            "value": 74.1252
           },
           {
             "date": "2026-06-05",
-            "value": 73.7596
+            "value": 73.7251
           },
           {
             "date": "2026-06-08",
-            "value": 73.3802
+            "value": 73.3459
           },
           {
             "date": "2026-06-09",
-            "value": 72.785
+            "value": 72.751
           },
           {
             "date": "2026-06-10",
-            "value": 71.5397
+            "value": 71.5062
           },
           {
             "date": "2026-06-11",
-            "value": 70.467
+            "value": 70.4341
           },
           {
             "date": "2026-06-12",
-            "value": 70.1422
+            "value": 70.1094
           },
           {
             "date": "2026-06-15",
-            "value": 70.0822
+            "value": 70.0494
           },
           {
             "date": "2026-06-16",
-            "value": 69.9858
+            "value": 69.9531
           },
           {
             "date": "2026-06-17",
-            "value": 69.9433
+            "value": 69.9105
           },
           {
             "date": "2026-06-18",
-            "value": 69.8055
+            "value": 69.7729
           },
           {
             "date": "2026-06-19",
-            "value": 69.5067
+            "value": 69.4742
           },
           {
             "date": "2026-06-22",
-            "value": 69.3392
+            "value": 69.3068
           },
           {
             "date": "2026-06-23",
-            "value": 69.1094
+            "value": 69.077
           },
           {
             "date": "2026-06-24",
-            "value": 68.4786
+            "value": 68.4466
           },
           {
             "date": "2026-06-25",
-            "value": 67.9972
+            "value": 67.9654
           },
           {
             "date": "2026-06-26",
-            "value": 67.9746
+            "value": 67.9429
           },
           {
             "date": "2026-06-29",
-            "value": 67.6315
+            "value": 67.5999
           },
           {
             "date": "2026-06-30",
-            "value": 67.4602
+            "value": 67.4286
           },
           {
             "date": "2026-07-01",
-            "value": 67.4034
+            "value": 67.3719
           },
           {
             "date": "2026-07-02",
-            "value": 67.5783
+            "value": 67.5467
           },
           {
             "date": "2026-07-03",
-            "value": 67.6398
+            "value": 67.6082
           },
           {
             "date": "2026-07-06",
-            "value": 67.7172
+            "value": 67.6855
           },
           {
             "date": "2026-07-07",
-            "value": 67.6865
+            "value": 67.6549
           },
           {
             "date": "2026-07-08",
-            "value": 67.4435
+            "value": 67.412
           },
           {
             "date": "2026-07-09",
-            "value": 67.504
+            "value": 67.4725
           },
           {
             "date": "2026-07-10",
-            "value": 67.3631
+            "value": 67.3316
           },
           {
             "date": "2026-07-13",
-            "value": 67.2171
+            "value": 67.1857
           },
           {
             "date": "2026-07-14",
-            "value": 67.278
+            "value": 67.2465
           },
           {
             "date": "2026-07-15",
-            "value": 67.4256
+            "value": 67.394
           },
           {
             "date": "2026-07-16",
-            "value": 67.323
+            "value": 67.2915
           },
           {
             "date": "2026-07-17",
-            "value": 67.121
+            "value": 67.0896
           },
           {
             "date": "2026-07-20",
-            "value": 67.0976
+            "value": 67.0662
           },
           {
             "date": "2026-07-21",
-            "value": 67.1902
+            "value": 67.1588
           },
           {
             "date": "2026-07-22",
-            "value": 67.1639
+            "value": 67.1325
           },
           {
             "date": "2026-07-23",
-            "value": 67.1564
+            "value": 67.125
           },
           {
             "date": "2026-07-24",
-            "value": 67.16
+            "value": 67.1286
           },
           {
             "date": "2026-07-27",
-            "value": 67.1914
+            "value": 67.16
           },
           {
             "date": "2026-07-28",
-            "value": 67.1756
+            "value": 67.1442
           },
           {
             "date": "2026-07-29",
-            "value": 67.1089
+            "value": 67.0775
           },
           {
             "date": "2026-07-30",
-            "value": 67.1128
+            "value": 67.0814
           },
           {
             "date": "2026-07-31",
-            "value": 67.1059
+            "value": 67.0746
           },
           {
             "date": "2026-08-03",
-            "value": 67.1108
+            "value": 67.0794
           },
           {
             "date": "2026-08-04",
-            "value": 67.1808
+            "value": 67.1494
           },
           {
             "date": "2026-08-05",
-            "value": 66.8732
+            "value": 66.842
           },
           {
             "date": "2026-08-06",
-            "value": 66.6511
+            "value": 66.62
           },
           {
             "date": "2026-08-07",
-            "value": 66.1934
+            "value": 66.1624
           },
           {
             "date": "2026-08-10",
-            "value": 66.0412
+            "value": 66.0103
           },
           {
             "date": "2026-08-11",
-            "value": 65.8019
+            "value": 65.7712
           },
           {
             "date": "2026-08-12",
-            "value": 65.6846
+            "value": 65.6539
           },
           {
             "date": "2026-08-13",
-            "value": 65.8802
+            "value": 65.8494
           },
           {
             "date": "2026-08-14",
-            "value": 66.1243
+            "value": 66.0934
           },
           {
             "date": "2026-08-17",
-            "value": 66.4174
+            "value": 66.3315
+          },
+          {
+            "date": "2026-08-18",
+            "value": 66.4972
           }
         ],
         "rsi14": [
-          {
-            "date": "2026-04-10",
-            "value": 56.3854
-          },
           {
             "date": "2026-04-13",
             "value": 53.1457
@@ -23008,337 +22912,337 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-17",
-            "value": 73.4788
+            "value": 75.6571
+          },
+          {
+            "date": "2026-08-18",
+            "value": 70.7265
           }
         ],
         "macd": [
           {
-            "date": "2026-04-10",
-            "value": -0.9453
-          },
-          {
             "date": "2026-04-13",
-            "value": -0.9138
+            "value": -0.9134
           },
           {
             "date": "2026-04-14",
-            "value": -0.805
+            "value": -0.8046
           },
           {
             "date": "2026-04-15",
-            "value": -0.7246
+            "value": -0.7243
           },
           {
             "date": "2026-04-16",
-            "value": -0.6291
+            "value": -0.6288
           },
           {
             "date": "2026-04-17",
-            "value": -0.4668
+            "value": -0.4666
           },
           {
             "date": "2026-04-20",
-            "value": -0.4128
+            "value": -0.4126
           },
           {
             "date": "2026-04-21",
-            "value": -0.4338
+            "value": -0.4336
           },
           {
             "date": "2026-04-22",
-            "value": -0.4631
+            "value": -0.4629
           },
           {
             "date": "2026-04-23",
-            "value": -0.4761
+            "value": -0.4758
           },
           {
             "date": "2026-04-24",
-            "value": -0.4958
+            "value": -0.4955
           },
           {
             "date": "2026-04-27",
-            "value": -0.5858
+            "value": -0.5855
           },
           {
             "date": "2026-04-28",
-            "value": -0.7709
+            "value": -0.7705
           },
           {
             "date": "2026-04-29",
-            "value": -0.9389
+            "value": -0.9385
           },
           {
             "date": "2026-04-30",
-            "value": -0.9945
+            "value": -0.994
           },
           {
             "date": "2026-05-01",
-            "value": -1.0267
+            "value": -1.0263
           },
           {
             "date": "2026-05-05",
-            "value": -1.0935
+            "value": -1.093
           },
           {
             "date": "2026-05-06",
-            "value": -0.9961
+            "value": -0.9957
           },
           {
             "date": "2026-05-07",
-            "value": -0.8497
+            "value": -0.8494
           },
           {
             "date": "2026-05-08",
-            "value": -0.7748
+            "value": -0.7745
           },
           {
             "date": "2026-05-11",
-            "value": -0.6868
+            "value": -0.6864
           },
           {
             "date": "2026-05-12",
-            "value": -0.6445
+            "value": -0.6442
           },
           {
             "date": "2026-05-13",
-            "value": -0.5611
+            "value": -0.5608
           },
           {
             "date": "2026-05-14",
-            "value": -0.4791
+            "value": -0.4788
           },
           {
             "date": "2026-05-15",
-            "value": -0.5297
+            "value": -0.5295
           },
           {
             "date": "2026-05-18",
-            "value": -0.6026
+            "value": -0.6023
           },
           {
             "date": "2026-05-19",
-            "value": -0.705
+            "value": -0.7047
           },
           {
             "date": "2026-05-20",
-            "value": -0.7604
+            "value": -0.7601
           },
           {
             "date": "2026-05-21",
-            "value": -0.8045
+            "value": -0.8042
           },
           {
             "date": "2026-05-22",
-            "value": -0.8337
+            "value": -0.8333
           },
           {
             "date": "2026-05-26",
-            "value": -0.8666
+            "value": -0.8662
           },
           {
             "date": "2026-05-27",
-            "value": -0.9683
+            "value": -0.9679
           },
           {
             "date": "2026-05-28",
-            "value": -0.9838
+            "value": -0.9833
           },
           {
             "date": "2026-05-29",
-            "value": -0.87
+            "value": -0.8696
           },
           {
             "date": "2026-06-01",
-            "value": -0.8922
+            "value": -0.8917
           },
           {
             "date": "2026-06-02",
-            "value": -0.8742
+            "value": -0.8738
           },
           {
             "date": "2026-06-03",
-            "value": -0.9192
+            "value": -0.9188
           },
           {
             "date": "2026-06-04",
-            "value": -0.902
+            "value": -0.9016
           },
           {
             "date": "2026-06-05",
-            "value": -1.02
+            "value": -1.0196
           },
           {
             "date": "2026-06-08",
-            "value": -1.1047
+            "value": -1.1041
           },
           {
             "date": "2026-06-09",
-            "value": -1.2619
+            "value": -1.2613
           },
           {
             "date": "2026-06-10",
-            "value": -1.5676
+            "value": -1.5669
           },
           {
             "date": "2026-06-11",
-            "value": -1.8359
+            "value": -1.8351
           },
           {
             "date": "2026-06-12",
-            "value": -1.8647
+            "value": -1.8638
           },
           {
             "date": "2026-06-15",
-            "value": -1.6953
+            "value": -1.6945
           },
           {
             "date": "2026-06-16",
-            "value": -1.5722
+            "value": -1.5714
           },
           {
             "date": "2026-06-17",
-            "value": -1.4046
+            "value": -1.4039
           },
           {
             "date": "2026-06-18",
-            "value": -1.359
+            "value": -1.3583
           },
           {
             "date": "2026-06-19",
-            "value": -1.4113
+            "value": -1.4107
           },
           {
             "date": "2026-06-22",
-            "value": -1.3989
+            "value": -1.3983
           },
           {
             "date": "2026-06-23",
-            "value": -1.4237
+            "value": -1.423
           },
           {
             "date": "2026-06-24",
-            "value": -1.5873
+            "value": -1.5866
           },
           {
             "date": "2026-06-25",
-            "value": -1.6937
+            "value": -1.6929
           },
           {
             "date": "2026-06-26",
-            "value": -1.6794
+            "value": -1.6786
           },
           {
             "date": "2026-06-29",
-            "value": -1.7488
+            "value": -1.748
           },
           {
             "date": "2026-06-30",
-            "value": -1.7759
+            "value": -1.7751
           },
           {
             "date": "2026-07-01",
-            "value": -1.7162
+            "value": -1.7154
           },
           {
             "date": "2026-07-02",
-            "value": -1.6209
+            "value": -1.6202
           },
           {
             "date": "2026-07-03",
-            "value": -1.47
+            "value": -1.4693
           },
           {
             "date": "2026-07-06",
-            "value": -1.3601
+            "value": -1.3595
           },
           {
             "date": "2026-07-07",
-            "value": -1.2754
+            "value": -1.2748
           },
           {
             "date": "2026-07-08",
-            "value": -1.3456
+            "value": -1.345
           },
           {
             "date": "2026-07-09",
-            "value": -1.2659
+            "value": -1.2653
           },
           {
             "date": "2026-07-10",
-            "value": -1.2309
+            "value": -1.2304
           },
           {
             "date": "2026-07-13",
-            "value": -1.2875
+            "value": -1.2869
           },
           {
             "date": "2026-07-14",
-            "value": -1.2332
+            "value": -1.2326
           },
           {
             "date": "2026-07-15",
-            "value": -1.2652
+            "value": -1.2646
           },
           {
             "date": "2026-07-16",
-            "value": -1.316
+            "value": -1.3154
           },
           {
             "date": "2026-07-17",
-            "value": -1.3343
+            "value": -1.3337
           },
           {
             "date": "2026-07-20",
-            "value": -1.3166
+            "value": -1.316
           },
           {
             "date": "2026-07-21",
-            "value": -1.1832
+            "value": -1.1827
           },
           {
             "date": "2026-07-22",
-            "value": -0.9552
+            "value": -0.9547
           },
           {
             "date": "2026-07-23",
-            "value": -0.8878
+            "value": -0.8874
           },
           {
             "date": "2026-07-24",
-            "value": -0.8026
+            "value": -0.8022
           },
           {
             "date": "2026-07-27",
-            "value": -0.7117
+            "value": -0.7113
           },
           {
             "date": "2026-07-28",
-            "value": -0.6893
+            "value": -0.689
           },
           {
             "date": "2026-07-29",
-            "value": -0.6853
+            "value": -0.685
           },
           {
             "date": "2026-07-30",
-            "value": -0.6231
+            "value": -0.6228
           },
           {
             "date": "2026-07-31",
-            "value": -0.6531
+            "value": -0.6528
           },
           {
             "date": "2026-08-03",
-            "value": -0.6626
+            "value": -0.6623
           },
           {
             "date": "2026-08-04",
-            "value": -0.6094
+            "value": -0.6091
           },
           {
             "date": "2026-08-05",
-            "value": -0.3293
+            "value": -0.3291
           },
           {
             "date": "2026-08-06",
@@ -23346,435 +23250,435 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-07",
-            "value": 0.1828
+            "value": 0.1827
           },
           {
             "date": "2026-08-10",
-            "value": 0.395
+            "value": 0.3948
           },
           {
             "date": "2026-08-11",
-            "value": 0.6007
+            "value": 0.6004
           },
           {
             "date": "2026-08-12",
-            "value": 0.81
+            "value": 0.8096
           },
           {
             "date": "2026-08-13",
-            "value": 0.892
+            "value": 0.8916
           },
           {
             "date": "2026-08-14",
-            "value": 0.961
+            "value": 0.9605
           },
           {
             "date": "2026-08-17",
-            "value": 0.995
+            "value": 1.0456
+          },
+          {
+            "date": "2026-08-18",
+            "value": 1.022
           }
         ],
         "macd_sig": [
           {
-            "date": "2026-04-10",
-            "value": -1.3208
-          },
-          {
             "date": "2026-04-13",
-            "value": -1.2394
+            "value": -1.2388
           },
           {
             "date": "2026-04-14",
-            "value": -1.1525
+            "value": -1.152
           },
           {
             "date": "2026-04-15",
-            "value": -1.0669
+            "value": -1.0664
           },
           {
             "date": "2026-04-16",
-            "value": -0.9794
+            "value": -0.9789
           },
           {
             "date": "2026-04-17",
-            "value": -0.8769
+            "value": -0.8764
           },
           {
             "date": "2026-04-20",
-            "value": -0.784
+            "value": -0.7837
           },
           {
             "date": "2026-04-21",
-            "value": -0.714
+            "value": -0.7137
           },
           {
             "date": "2026-04-22",
-            "value": -0.6638
+            "value": -0.6635
           },
           {
             "date": "2026-04-23",
-            "value": -0.6263
+            "value": -0.626
           },
           {
             "date": "2026-04-24",
-            "value": -0.6002
+            "value": -0.5999
           },
           {
             "date": "2026-04-27",
-            "value": -0.5973
+            "value": -0.597
           },
           {
             "date": "2026-04-28",
-            "value": -0.632
+            "value": -0.6317
           },
           {
             "date": "2026-04-29",
-            "value": -0.6934
+            "value": -0.6931
           },
           {
             "date": "2026-04-30",
-            "value": -0.7536
+            "value": -0.7533
           },
           {
             "date": "2026-05-01",
-            "value": -0.8082
+            "value": -0.8079
           },
           {
             "date": "2026-05-05",
-            "value": -0.8653
+            "value": -0.8649
           },
           {
             "date": "2026-05-06",
-            "value": -0.8915
+            "value": -0.891
           },
           {
             "date": "2026-05-07",
-            "value": -0.8831
+            "value": -0.8827
           },
           {
             "date": "2026-05-08",
-            "value": -0.8615
+            "value": -0.861
           },
           {
             "date": "2026-05-11",
-            "value": -0.8265
+            "value": -0.8261
           },
           {
             "date": "2026-05-12",
-            "value": -0.7901
+            "value": -0.7897
           },
           {
             "date": "2026-05-13",
-            "value": -0.7443
+            "value": -0.7439
           },
           {
             "date": "2026-05-14",
-            "value": -0.6913
+            "value": -0.6909
           },
           {
             "date": "2026-05-15",
-            "value": -0.6589
+            "value": -0.6586
           },
           {
             "date": "2026-05-18",
-            "value": -0.6477
+            "value": -0.6474
           },
           {
             "date": "2026-05-19",
-            "value": -0.6591
+            "value": -0.6588
           },
           {
             "date": "2026-05-20",
-            "value": -0.6794
+            "value": -0.6791
           },
           {
             "date": "2026-05-21",
-            "value": -0.7044
+            "value": -0.7041
           },
           {
             "date": "2026-05-22",
-            "value": -0.7303
+            "value": -0.7299
           },
           {
             "date": "2026-05-26",
-            "value": -0.7575
+            "value": -0.7572
           },
           {
             "date": "2026-05-27",
-            "value": -0.7997
+            "value": -0.7993
           },
           {
             "date": "2026-05-28",
-            "value": -0.8365
+            "value": -0.8361
           },
           {
             "date": "2026-05-29",
-            "value": -0.8432
+            "value": -0.8428
           },
           {
             "date": "2026-06-01",
-            "value": -0.853
+            "value": -0.8526
           },
           {
             "date": "2026-06-02",
-            "value": -0.8572
+            "value": -0.8568
           },
           {
             "date": "2026-06-03",
-            "value": -0.8696
+            "value": -0.8692
           },
           {
             "date": "2026-06-04",
-            "value": -0.8761
+            "value": -0.8757
           },
           {
             "date": "2026-06-05",
-            "value": -0.9049
+            "value": -0.9045
           },
           {
             "date": "2026-06-08",
-            "value": -0.9448
+            "value": -0.9444
           },
           {
             "date": "2026-06-09",
-            "value": -1.0083
+            "value": -1.0078
           },
           {
             "date": "2026-06-10",
-            "value": -1.1201
+            "value": -1.1196
           },
           {
             "date": "2026-06-11",
-            "value": -1.2633
+            "value": -1.2627
           },
           {
             "date": "2026-06-12",
-            "value": -1.3836
+            "value": -1.3829
           },
           {
             "date": "2026-06-15",
-            "value": -1.4459
+            "value": -1.4452
           },
           {
             "date": "2026-06-16",
-            "value": -1.4712
+            "value": -1.4705
           },
           {
             "date": "2026-06-17",
-            "value": -1.4578
+            "value": -1.4572
           },
           {
             "date": "2026-06-18",
-            "value": -1.4381
+            "value": -1.4374
           },
           {
             "date": "2026-06-19",
-            "value": -1.4327
+            "value": -1.4321
           },
           {
             "date": "2026-06-22",
-            "value": -1.426
+            "value": -1.4253
           },
           {
             "date": "2026-06-23",
-            "value": -1.4255
+            "value": -1.4248
           },
           {
             "date": "2026-06-24",
-            "value": -1.4579
+            "value": -1.4572
           },
           {
             "date": "2026-06-25",
-            "value": -1.505
+            "value": -1.5043
           },
           {
             "date": "2026-06-26",
-            "value": -1.5399
+            "value": -1.5392
           },
           {
             "date": "2026-06-29",
-            "value": -1.5817
+            "value": -1.581
           },
           {
             "date": "2026-06-30",
-            "value": -1.6205
+            "value": -1.6198
           },
           {
             "date": "2026-07-01",
-            "value": -1.6397
+            "value": -1.6389
           },
           {
             "date": "2026-07-02",
-            "value": -1.6359
+            "value": -1.6351
           },
           {
             "date": "2026-07-03",
-            "value": -1.6027
+            "value": -1.602
           },
           {
             "date": "2026-07-06",
-            "value": -1.5542
+            "value": -1.5535
           },
           {
             "date": "2026-07-07",
-            "value": -1.4984
+            "value": -1.4977
           },
           {
             "date": "2026-07-08",
-            "value": -1.4679
+            "value": -1.4672
           },
           {
             "date": "2026-07-09",
-            "value": -1.4275
+            "value": -1.4268
           },
           {
             "date": "2026-07-10",
-            "value": -1.3882
+            "value": -1.3875
           },
           {
             "date": "2026-07-13",
-            "value": -1.368
+            "value": -1.3674
           },
           {
             "date": "2026-07-14",
-            "value": -1.3411
+            "value": -1.3404
           },
           {
             "date": "2026-07-15",
-            "value": -1.3259
+            "value": -1.3253
           },
           {
             "date": "2026-07-16",
-            "value": -1.3239
+            "value": -1.3233
           },
           {
             "date": "2026-07-17",
-            "value": -1.326
+            "value": -1.3254
           },
           {
             "date": "2026-07-20",
-            "value": -1.3241
+            "value": -1.3235
           },
           {
             "date": "2026-07-21",
-            "value": -1.2959
+            "value": -1.2953
           },
           {
             "date": "2026-07-22",
-            "value": -1.2278
+            "value": -1.2272
           },
           {
             "date": "2026-07-23",
-            "value": -1.1598
+            "value": -1.1593
           },
           {
             "date": "2026-07-24",
-            "value": -1.0883
+            "value": -1.0878
           },
           {
             "date": "2026-07-27",
-            "value": -1.013
+            "value": -1.0125
           },
           {
             "date": "2026-07-28",
-            "value": -0.9483
+            "value": -0.9478
           },
           {
             "date": "2026-07-29",
-            "value": -0.8957
+            "value": -0.8953
           },
           {
             "date": "2026-07-30",
-            "value": -0.8412
+            "value": -0.8408
           },
           {
             "date": "2026-07-31",
-            "value": -0.8036
+            "value": -0.8032
           },
           {
             "date": "2026-08-03",
-            "value": -0.7754
+            "value": -0.775
           },
           {
             "date": "2026-08-04",
-            "value": -0.7422
+            "value": -0.7418
           },
           {
             "date": "2026-08-05",
-            "value": -0.6596
+            "value": -0.6593
           },
           {
             "date": "2026-08-06",
-            "value": -0.5496
+            "value": -0.5494
           },
           {
             "date": "2026-08-07",
-            "value": -0.4032
+            "value": -0.403
           },
           {
             "date": "2026-08-10",
-            "value": -0.2435
+            "value": -0.2434
           },
           {
             "date": "2026-08-11",
-            "value": -0.0747
+            "value": -0.0746
           },
           {
             "date": "2026-08-12",
-            "value": 0.1023
+            "value": 0.1022
           },
           {
             "date": "2026-08-13",
-            "value": 0.2602
+            "value": 0.2601
           },
           {
             "date": "2026-08-14",
-            "value": 0.4003
+            "value": 0.4002
           },
           {
             "date": "2026-08-17",
-            "value": 0.5193
+            "value": 0.5292
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.6278
           }
         ],
         "macd_hist": [
           {
-            "date": "2026-04-10",
-            "value": 0.3755
-          },
-          {
             "date": "2026-04-13",
-            "value": 0.3256
+            "value": 0.3254
           },
           {
             "date": "2026-04-14",
-            "value": 0.3475
+            "value": 0.3473
           },
           {
             "date": "2026-04-15",
-            "value": 0.3423
+            "value": 0.3422
           },
           {
             "date": "2026-04-16",
-            "value": 0.3503
+            "value": 0.3501
           },
           {
             "date": "2026-04-17",
-            "value": 0.41
+            "value": 0.4098
           },
           {
             "date": "2026-04-20",
-            "value": 0.3713
+            "value": 0.3711
           },
           {
             "date": "2026-04-21",
-            "value": 0.2802
+            "value": 0.2801
           },
           {
             "date": "2026-04-22",
-            "value": 0.2007
+            "value": 0.2006
           },
           {
             "date": "2026-04-23",
-            "value": 0.1502
+            "value": 0.1501
           },
           {
             "date": "2026-04-24",
@@ -23786,31 +23690,31 @@ const SITE_DATA = {
           },
           {
             "date": "2026-04-28",
-            "value": -0.1389
+            "value": -0.1388
           },
           {
             "date": "2026-04-29",
-            "value": -0.2455
+            "value": -0.2454
           },
           {
             "date": "2026-04-30",
-            "value": -0.2409
+            "value": -0.2408
           },
           {
             "date": "2026-05-01",
-            "value": -0.2185
+            "value": -0.2184
           },
           {
             "date": "2026-05-05",
-            "value": -0.2282
+            "value": -0.2281
           },
           {
             "date": "2026-05-06",
-            "value": -0.1047
+            "value": -0.1046
           },
           {
             "date": "2026-05-07",
-            "value": 0.0334
+            "value": 0.0333
           },
           {
             "date": "2026-05-08",
@@ -23818,7 +23722,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-05-11",
-            "value": 0.1398
+            "value": 0.1397
           },
           {
             "date": "2026-05-12",
@@ -23826,11 +23730,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-05-13",
-            "value": 0.1832
+            "value": 0.1831
           },
           {
             "date": "2026-05-14",
-            "value": 0.2122
+            "value": 0.2121
           },
           {
             "date": "2026-05-15",
@@ -23854,7 +23758,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-05-22",
-            "value": -0.1034
+            "value": -0.1033
           },
           {
             "date": "2026-05-26",
@@ -23862,11 +23766,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-05-27",
-            "value": -0.1686
+            "value": -0.1685
           },
           {
             "date": "2026-05-28",
-            "value": -0.1473
+            "value": -0.1472
           },
           {
             "date": "2026-05-29",
@@ -23874,15 +23778,15 @@ const SITE_DATA = {
           },
           {
             "date": "2026-06-01",
-            "value": -0.0392
+            "value": -0.0391
           },
           {
             "date": "2026-06-02",
-            "value": -0.017
+            "value": -0.0169
           },
           {
             "date": "2026-06-03",
-            "value": -0.0496
+            "value": -0.0495
           },
           {
             "date": "2026-06-04",
@@ -23890,39 +23794,39 @@ const SITE_DATA = {
           },
           {
             "date": "2026-06-05",
-            "value": -0.1152
+            "value": -0.1151
           },
           {
             "date": "2026-06-08",
-            "value": -0.1598
+            "value": -0.1597
           },
           {
             "date": "2026-06-09",
-            "value": -0.2537
+            "value": -0.2535
           },
           {
             "date": "2026-06-10",
-            "value": -0.4475
+            "value": -0.4473
           },
           {
             "date": "2026-06-11",
-            "value": -0.5726
+            "value": -0.5724
           },
           {
             "date": "2026-06-12",
-            "value": -0.4811
+            "value": -0.4809
           },
           {
             "date": "2026-06-15",
-            "value": -0.2494
+            "value": -0.2493
           },
           {
             "date": "2026-06-16",
-            "value": -0.101
+            "value": -0.1009
           },
           {
             "date": "2026-06-17",
-            "value": 0.0533
+            "value": 0.0532
           },
           {
             "date": "2026-06-18",
@@ -23946,19 +23850,19 @@ const SITE_DATA = {
           },
           {
             "date": "2026-06-25",
-            "value": -0.1887
+            "value": -0.1886
           },
           {
             "date": "2026-06-26",
-            "value": -0.1395
+            "value": -0.1394
           },
           {
             "date": "2026-06-29",
-            "value": -0.1672
+            "value": -0.1671
           },
           {
             "date": "2026-06-30",
-            "value": -0.1554
+            "value": -0.1553
           },
           {
             "date": "2026-07-01",
@@ -23970,23 +23874,23 @@ const SITE_DATA = {
           },
           {
             "date": "2026-07-03",
-            "value": 0.1328
+            "value": 0.1327
           },
           {
             "date": "2026-07-06",
-            "value": 0.1941
+            "value": 0.194
           },
           {
             "date": "2026-07-07",
-            "value": 0.2231
+            "value": 0.223
           },
           {
             "date": "2026-07-08",
-            "value": 0.1223
+            "value": 0.1222
           },
           {
             "date": "2026-07-09",
-            "value": 0.1616
+            "value": 0.1615
           },
           {
             "date": "2026-07-10",
@@ -23998,11 +23902,11 @@ const SITE_DATA = {
           },
           {
             "date": "2026-07-14",
-            "value": 0.1079
+            "value": 0.1078
           },
           {
             "date": "2026-07-15",
-            "value": 0.0607
+            "value": 0.0606
           },
           {
             "date": "2026-07-16",
@@ -24018,27 +23922,27 @@ const SITE_DATA = {
           },
           {
             "date": "2026-07-21",
-            "value": 0.1127
+            "value": 0.1126
           },
           {
             "date": "2026-07-22",
-            "value": 0.2726
+            "value": 0.2725
           },
           {
             "date": "2026-07-23",
-            "value": 0.272
+            "value": 0.2718
           },
           {
             "date": "2026-07-24",
-            "value": 0.2858
+            "value": 0.2857
           },
           {
             "date": "2026-07-27",
-            "value": 0.3013
+            "value": 0.3012
           },
           {
             "date": "2026-07-28",
-            "value": 0.259
+            "value": 0.2589
           },
           {
             "date": "2026-07-29",
@@ -24046,7 +23950,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-07-30",
-            "value": 0.2181
+            "value": 0.218
           },
           {
             "date": "2026-07-31",
@@ -24058,43 +23962,47 @@ const SITE_DATA = {
           },
           {
             "date": "2026-08-04",
-            "value": 0.1328
+            "value": 0.1327
           },
           {
             "date": "2026-08-05",
-            "value": 0.3303
+            "value": 0.3302
           },
           {
             "date": "2026-08-06",
-            "value": 0.4398
+            "value": 0.4396
           },
           {
             "date": "2026-08-07",
-            "value": 0.5859
+            "value": 0.5857
           },
           {
             "date": "2026-08-10",
-            "value": 0.6385
+            "value": 0.6382
           },
           {
             "date": "2026-08-11",
-            "value": 0.6753
+            "value": 0.675
           },
           {
             "date": "2026-08-12",
-            "value": 0.7077
+            "value": 0.7074
           },
           {
             "date": "2026-08-13",
-            "value": 0.6318
+            "value": 0.6315
           },
           {
             "date": "2026-08-14",
-            "value": 0.5606
+            "value": 0.5604
           },
           {
             "date": "2026-08-17",
-            "value": 0.4757
+            "value": 0.5163
+          },
+          {
+            "date": "2026-08-18",
+            "value": 0.3942
           }
         ]
       },
@@ -24275,169 +24183,169 @@ const SITE_DATA = {
     "matrix": [
       [
         1.0,
-        -0.41,
-        0.17,
-        -0.04,
-        0.03,
-        -0.65,
-        -0.73
+        -0.38,
+        0.05,
+        -0.02,
+        0.08,
+        -0.55,
+        -0.54
       ],
       [
-        -0.41,
+        -0.38,
         1.0,
-        0.96,
-        0.59,
-        0.22,
-        0.2,
-        0.69
+        0.26,
+        0.54,
+        0.31,
+        0.27,
+        0.67
       ],
       [
-        0.17,
-        0.96,
+        0.05,
+        0.26,
         1.0,
-        0.47,
-        0.24,
-        0.18,
-        0.59
+        0.4,
+        0.73,
+        0.45,
+        0.61
       ],
       [
-        -0.04,
-        0.59,
-        0.47,
+        -0.02,
+        0.54,
+        0.4,
         1.0,
-        0.87,
-        0.43,
-        0.82
+        0.94,
+        0.58,
+        0.88
       ],
       [
-        0.03,
-        0.22,
-        0.24,
-        0.87,
+        0.08,
+        0.31,
+        0.73,
+        0.94,
         1.0,
-        0.19,
-        0.5
+        0.44,
+        0.7
       ],
       [
-        -0.65,
-        0.2,
-        0.18,
-        0.43,
-        0.19,
+        -0.55,
+        0.27,
+        0.45,
+        0.58,
+        0.44,
         1.0,
-        0.63
+        0.72
       ],
       [
-        -0.73,
-        0.69,
-        0.59,
-        0.82,
-        0.5,
-        0.63,
+        -0.54,
+        0.67,
+        0.61,
+        0.88,
+        0.7,
+        0.72,
         1.0
       ]
     ],
     "n_dias": {
-      "ICGA.DE": 45,
-      "PPFB.DE": 14,
-      "SGLN.L": 45,
-      "EXUS.MI": 32,
-      "LYP6.DE": 14,
-      "IS3N.DE": 14,
-      "EUNN.DE": 14
+      "ICGA.DE": 46,
+      "PPFB.DE": 15,
+      "SGLN.L": 46,
+      "EXUS.MI": 33,
+      "LYP6.DE": 15,
+      "IS3N.DE": 15,
+      "EUNN.DE": 15
     }
   },
   "familias": [
     {
       "family": "estado_oculto",
       "label": "Hidden state (HMM)",
-      "accuracy": 0.639,
-      "n": 191,
-      "vs_acaso": 0.139
+      "accuracy": 0.636,
+      "n": 198,
+      "vs_acaso": 0.136
     },
     {
       "family": "series_temporais",
       "label": "Time series",
-      "accuracy": 0.607,
-      "n": 191,
-      "vs_acaso": 0.107
+      "accuracy": 0.586,
+      "n": 198,
+      "vs_acaso": 0.086
     },
     {
       "family": "neural_recorrente",
       "label": "Recurrent neural",
-      "accuracy": 0.607,
-      "n": 191,
-      "vs_acaso": 0.107
+      "accuracy": 0.586,
+      "n": 198,
+      "vs_acaso": 0.086
     },
     {
       "family": "neural_atencao",
       "label": "Attention-based neural",
-      "accuracy": 0.607,
-      "n": 191,
-      "vs_acaso": 0.107
+      "accuracy": 0.586,
+      "n": 198,
+      "vs_acaso": 0.086
     },
     {
       "family": "eficiente",
       "label": "Efficient (TCN/DLinear/PatchTST)",
-      "accuracy": 0.602,
-      "n": 186,
-      "vs_acaso": 0.102
+      "accuracy": 0.58,
+      "n": 193,
+      "vs_acaso": 0.08
     },
     {
       "family": "generativo",
       "label": "Generative (VAE+GAN)",
-      "accuracy": 0.592,
-      "n": 191,
-      "vs_acaso": 0.092
+      "accuracy": 0.571,
+      "n": 198,
+      "vs_acaso": 0.071
     },
     {
       "family": "conformal",
       "label": "Conformal (calibration)",
-      "accuracy": 0.586,
-      "n": 186,
-      "vs_acaso": 0.086
+      "accuracy": 0.57,
+      "n": 193,
+      "vs_acaso": 0.07
     },
     {
       "family": "foundation",
       "label": "Foundation (Chronos/TimesFM/Moirai)",
-      "accuracy": 0.548,
-      "n": 186,
-      "vs_acaso": 0.048
+      "accuracy": 0.549,
+      "n": 193,
+      "vs_acaso": 0.049
     },
     {
       "family": "classico_avancado",
       "label": "Classical advanced",
-      "accuracy": 0.529,
-      "n": 191,
-      "vs_acaso": 0.029
+      "accuracy": 0.515,
+      "n": 198,
+      "vs_acaso": 0.015
     },
     {
       "family": "drift",
       "label": "Drift detection (ADWIN/PH)",
-      "accuracy": 0.516,
-      "n": 186,
-      "vs_acaso": 0.016
+      "accuracy": 0.503,
+      "n": 193,
+      "vs_acaso": 0.003
     },
     {
       "family": "contrarian",
       "label": "Contrarian (CB+EWI+PEL)",
-      "accuracy": 0.489,
-      "n": 186,
-      "vs_acaso": -0.011
+      "accuracy": 0.497,
+      "n": 193,
+      "vs_acaso": -0.003
     },
     {
       "family": "bayesiano",
       "label": "Bayesian (GP+BNN)",
-      "accuracy": 0.471,
-      "n": 191,
-      "vs_acaso": -0.029
+      "accuracy": 0.455,
+      "n": 198,
+      "vs_acaso": -0.045
     },
     {
       "family": "reinforcement",
       "label": "Reinforcement (DQN+PPO)",
-      "accuracy": 0.435,
-      "n": 191,
-      "vs_acaso": -0.065
+      "accuracy": 0.439,
+      "n": 198,
+      "vs_acaso": -0.061
     }
   ],
   "consenso": {
@@ -24446,9 +24354,9 @@ const SITE_DATA = {
         "ticker": "PPFB.DE",
         "direction": "UP",
         "strength": "strong",
-        "up_count": 13,
+        "up_count": 12,
         "total": 13,
-        "pct_up": 1.0
+        "pct_up": 0.8882
       },
       {
         "ticker": "ICGA.DE",
@@ -24456,7 +24364,7 @@ const SITE_DATA = {
         "strength": "strong",
         "up_count": 12,
         "total": 13,
-        "pct_up": 0.9254
+        "pct_up": 0.8683
       },
       {
         "ticker": "SGLN.L",
@@ -24464,15 +24372,23 @@ const SITE_DATA = {
         "strength": "strong",
         "up_count": 11,
         "total": 13,
-        "pct_up": 0.8549
+        "pct_up": 0.7762
+      },
+      {
+        "ticker": "EUNN.DE",
+        "direction": "UP",
+        "strength": "weak",
+        "up_count": 10,
+        "total": 13,
+        "pct_up": 0.7015
       },
       {
         "ticker": "IS3N.DE",
         "direction": "UP",
-        "strength": "strong",
+        "strength": "weak",
         "up_count": 10,
         "total": 13,
-        "pct_up": 0.7829
+        "pct_up": 0.6318
       },
       {
         "ticker": "LYP6.DE",
@@ -24480,489 +24396,481 @@ const SITE_DATA = {
         "strength": "weak",
         "up_count": 9,
         "total": 13,
-        "pct_up": 0.7123
-      },
-      {
-        "ticker": "EUNN.DE",
-        "direction": "UP",
-        "strength": "weak",
-        "up_count": 9,
-        "total": 13,
-        "pct_up": 0.7123
+        "pct_up": 0.5198
       },
       {
         "ticker": "EXUS.MI",
-        "direction": "UP",
+        "direction": "DOWN",
         "strength": "weak",
-        "up_count": 7,
+        "up_count": 6,
         "total": 13,
-        "pct_up": 0.5684
+        "pct_up": 0.3992
       }
     ],
-    "semana": "2026-08-17"
+    "semana": "2026-08-18"
   },
   "experimentos": {
     "d1": {
       "ready": true,
-      "n": 3227,
-      "mae_champion": 0.03222,
-      "mae_challenger": 0.030006,
-      "dm_statistic": 0.1827,
-      "dm_p": 0.855,
+      "n": 4273,
+      "mae_champion": 0.029137,
+      "mae_challenger": 0.0269,
+      "dm_statistic": -0.2991,
+      "dm_p": 0.7649,
       "sig": false,
       "challenger_wins": false,
-      "dir_acc_champion": 0.5051,
-      "dir_acc_challenger": 0.5042,
+      "dir_acc_champion": 0.5088,
+      "dir_acc_challenger": 0.5106,
       "guardrail_mae_ok": true
     },
     "d2": {
       "ready": true,
-      "n": 2692,
-      "mae_champion": 0.035667,
-      "mae_challenger": 0.03261,
-      "dm_statistic": -0.3821,
-      "dm_p": 0.7024,
+      "n": 3738,
+      "mae_champion": 0.032241,
+      "mae_challenger": 0.029139,
+      "dm_statistic": -0.4491,
+      "dm_p": 0.6534,
       "sig": false,
       "challenger_wins": false,
-      "dir_acc_champion": 0.5085,
-      "dir_acc_challenger": 0.5056,
+      "dir_acc_champion": 0.519,
+      "dir_acc_challenger": 0.5251,
       "guardrail_mae_ok": true
     },
     "d3": {
       "ready": true,
-      "n": 2157,
-      "mae_champion": 0.043024,
-      "mae_challenger": 0.038615,
-      "dm_statistic": -1.4713,
-      "dm_p": 0.1412,
+      "n": 3203,
+      "mae_champion": 0.038137,
+      "mae_challenger": 0.034236,
+      "dm_statistic": -1.4241,
+      "dm_p": 0.1544,
       "sig": false,
       "challenger_wins": false,
-      "dir_acc_champion": 0.5086,
-      "dir_acc_challenger": 0.5109,
+      "dir_acc_champion": 0.5229,
+      "dir_acc_challenger": 0.5233,
       "guardrail_mae_ok": true
     }
   },
   "backtest_experimentos": {
-    "PPFB.DE": {
+    "SGLN.L": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.011932,
-        "mae_model": 0.012332,
-        "mse_naive": 0.000225,
-        "mse_model": 0.000256,
-        "r2": -0.1397
+        "mae_naive": 0.012187,
+        "mae_model": 0.012484,
+        "mse_naive": 0.000234,
+        "mse_model": 0.000242,
+        "r2": -0.0345
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.016654,
-        "mae_model": 0.017327,
-        "mse_naive": 0.000454,
-        "mse_model": 0.000488,
-        "r2": -0.0747
+        "mae_naive": 0.016491,
+        "mae_model": 0.016992,
+        "mse_naive": 0.000459,
+        "mse_model": 0.000493,
+        "r2": -0.0738
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.019458,
-        "mae_model": 0.018048,
-        "mse_naive": 0.000633,
-        "mse_model": 0.000595,
-        "r2": 0.0614
-      }
-    },
-    "ICGA.DE": {
-      "d1": {
-        "n": 60,
-        "mae_naive": 0.009887,
-        "mae_model": 0.01003,
-        "mse_naive": 0.00016,
-        "mse_model": 0.000167,
-        "r2": -0.0392
-      },
-      "d2": {
-        "n": 60,
-        "mae_naive": 0.013794,
-        "mae_model": 0.0132,
-        "mse_naive": 0.000273,
-        "mse_model": 0.00025,
-        "r2": 0.0858
-      },
-      "d3": {
-        "n": 60,
-        "mae_naive": 0.014748,
-        "mae_model": 0.01531,
-        "mse_naive": 0.000354,
-        "mse_model": 0.000362,
-        "r2": -0.0226
+        "mae_naive": 0.019717,
+        "mae_model": 0.018248,
+        "mse_naive": 0.000662,
+        "mse_model": 0.000645,
+        "r2": 0.0256
       }
     },
     "LYP6.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.004702,
-        "mae_model": 0.004882,
-        "mse_naive": 3.8e-05,
-        "mse_model": 4.1e-05,
-        "r2": -0.0757
+        "mae_naive": 0.004818,
+        "mae_model": 0.005012,
+        "mse_naive": 3.9e-05,
+        "mse_model": 4.3e-05,
+        "r2": -0.0784
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.005917,
-        "mae_model": 0.005852,
-        "mse_naive": 6.5e-05,
-        "mse_model": 6.1e-05,
-        "r2": 0.0607
+        "mae_naive": 0.006109,
+        "mae_model": 0.006055,
+        "mse_naive": 6.8e-05,
+        "mse_model": 6.4e-05,
+        "r2": 0.0524
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.007098,
-        "mae_model": 0.006895,
-        "mse_naive": 9.9e-05,
-        "mse_model": 9.2e-05,
-        "r2": 0.0723
-      }
-    },
-    "EUNN.DE": {
-      "d1": {
-        "n": 60,
-        "mae_naive": 0.009194,
-        "mae_model": 0.009368,
-        "mse_naive": 0.000128,
-        "mse_model": 0.00013,
-        "r2": -0.012
-      },
-      "d2": {
-        "n": 60,
-        "mae_naive": 0.013324,
-        "mae_model": 0.012976,
-        "mse_naive": 0.000275,
-        "mse_model": 0.000263,
-        "r2": 0.0414
-      },
-      "d3": {
-        "n": 60,
-        "mae_naive": 0.015691,
-        "mae_model": 0.015063,
-        "mse_naive": 0.000365,
-        "mse_model": 0.000334,
-        "r2": 0.0838
-      }
-    },
-    "SGLN.L": {
-      "d1": {
-        "n": 60,
-        "mae_naive": 0.012106,
-        "mae_model": 0.012374,
-        "mse_naive": 0.000233,
-        "mse_model": 0.000241,
-        "r2": -0.033
-      },
-      "d2": {
-        "n": 60,
-        "mae_naive": 0.016495,
-        "mae_model": 0.016973,
-        "mse_naive": 0.00046,
-        "mse_model": 0.000484,
-        "r2": -0.0543
-      },
-      "d3": {
-        "n": 60,
-        "mae_naive": 0.019593,
-        "mae_model": 0.017901,
-        "mse_naive": 0.000659,
-        "mse_model": 0.000626,
-        "r2": 0.0496
+        "mae_naive": 0.00729,
+        "mae_model": 0.007091,
+        "mse_naive": 0.000101,
+        "mse_model": 9.5e-05,
+        "r2": 0.0634
       }
     },
     "IS3N.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.011811,
-        "mae_model": 0.012061,
-        "mse_naive": 0.000232,
-        "mse_model": 0.000228,
-        "r2": 0.0166
+        "mae_naive": 0.011929,
+        "mae_model": 0.012205,
+        "mse_naive": 0.000235,
+        "mse_model": 0.000231,
+        "r2": 0.0176
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.018244,
-        "mae_model": 0.016981,
-        "mse_naive": 0.000503,
-        "mse_model": 0.000441,
-        "r2": 0.1233
+        "mae_naive": 0.018583,
+        "mae_model": 0.017402,
+        "mse_naive": 0.000512,
+        "mse_model": 0.000451,
+        "r2": 0.1178
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.021941,
-        "mae_model": 0.019525,
-        "mse_naive": 0.000708,
-        "mse_model": 0.000565,
-        "r2": 0.2011
+        "mae_naive": 0.022064,
+        "mae_model": 0.019786,
+        "mse_naive": 0.000711,
+        "mse_model": 0.000572,
+        "r2": 0.1949
       }
     },
     "EXUS.MI": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.004755,
-        "mae_model": 0.00476,
-        "mse_naive": 3.6e-05,
-        "mse_model": 3.6e-05,
-        "r2": 0.008
+        "mae_naive": 0.00493,
+        "mae_model": 0.004946,
+        "mse_naive": 3.9e-05,
+        "mse_model": 3.9e-05,
+        "r2": 0.0041
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.006506,
-        "mae_model": 0.006394,
-        "mse_naive": 7.3e-05,
-        "mse_model": 7e-05,
-        "r2": 0.0413
+        "mae_naive": 0.006725,
+        "mae_model": 0.006607,
+        "mse_naive": 7.6e-05,
+        "mse_model": 7.3e-05,
+        "r2": 0.0398
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.007903,
-        "mae_model": 0.007612,
-        "mse_naive": 0.000108,
-        "mse_model": 9.9e-05,
-        "r2": 0.0822
+        "mae_naive": 0.008123,
+        "mae_model": 0.00782,
+        "mse_naive": 0.000111,
+        "mse_model": 0.000102,
+        "r2": 0.0788
+      }
+    },
+    "EUNN.DE": {
+      "d1": {
+        "n": 60,
+        "mae_naive": 0.009598,
+        "mae_model": 0.009774,
+        "mse_naive": 0.00014,
+        "mse_model": 0.000143,
+        "r2": -0.0199
+      },
+      "d2": {
+        "n": 60,
+        "mae_naive": 0.013725,
+        "mae_model": 0.013385,
+        "mse_naive": 0.000292,
+        "mse_model": 0.000283,
+        "r2": 0.0313
+      },
+      "d3": {
+        "n": 60,
+        "mae_naive": 0.016095,
+        "mae_model": 0.015469,
+        "mse_naive": 0.000377,
+        "mse_model": 0.000351,
+        "r2": 0.0705
+      }
+    },
+    "ICGA.DE": {
+      "d1": {
+        "n": 60,
+        "mae_naive": 0.009841,
+        "mae_model": 0.009973,
+        "mse_naive": 0.00016,
+        "mse_model": 0.000166,
+        "r2": -0.0419
+      },
+      "d2": {
+        "n": 60,
+        "mae_naive": 0.013747,
+        "mae_model": 0.013193,
+        "mse_naive": 0.000273,
+        "mse_model": 0.000252,
+        "r2": 0.0746
+      },
+      "d3": {
+        "n": 60,
+        "mae_naive": 0.014794,
+        "mae_model": 0.015322,
+        "mse_naive": 0.000354,
+        "mse_model": 0.000361,
+        "r2": -0.0192
+      }
+    },
+    "PPFB.DE": {
+      "d1": {
+        "n": 60,
+        "mae_naive": 0.012028,
+        "mae_model": 0.012459,
+        "mse_naive": 0.000226,
+        "mse_model": 0.000258,
+        "r2": -0.144
+      },
+      "d2": {
+        "n": 60,
+        "mae_naive": 0.016694,
+        "mae_model": 0.017509,
+        "mse_naive": 0.000455,
+        "mse_model": 0.000493,
+        "r2": -0.0849
+      },
+      "d3": {
+        "n": 60,
+        "mae_naive": 0.019571,
+        "mae_model": 0.018144,
+        "mse_naive": 0.000636,
+        "mse_model": 0.000601,
+        "r2": 0.0561
       }
     }
   },
   "exp_predictions": {
     "EUNN.DE": {
-      "ref_price": 72.79,
+      "ref_price": 71.02,
       "horizons": {
         "d1": {
-          "champion_price": 73.2525,
-          "challenger_price": 72.4249,
-          "challenger_ret": -0.005,
-          "interval_lo": 70.8431,
-          "interval_hi": 74.0068
+          "champion_price": 71.5439,
+          "challenger_price": 70.7312,
+          "challenger_ret": -0.0041,
+          "interval_lo": 69.1822,
+          "interval_hi": 72.2802
         },
         "d2": {
-          "champion_price": 73.4441,
-          "challenger_price": 72.6645,
-          "challenger_ret": -0.0017,
-          "interval_lo": 70.6846,
-          "interval_hi": 74.6444
+          "champion_price": 71.7609,
+          "challenger_price": 71.0091,
+          "challenger_ret": -0.0002,
+          "interval_lo": 68.8433,
+          "interval_hi": 73.1749
         },
         "d3": {
-          "champion_price": 73.5911,
-          "challenger_price": 72.7674,
-          "challenger_ret": -0.0003,
-          "interval_lo": 70.5572,
-          "interval_hi": 74.9776
+          "champion_price": 70.1125,
+          "challenger_price": 70.9818,
+          "challenger_ret": -0.0005,
+          "interval_lo": 68.8253,
+          "interval_hi": 73.1382
         }
       }
     },
     "EXUS.MI": {
-      "ref_price": 40.865,
+      "ref_price": 40.325,
       "horizons": {
         "d1": {
-          "champion_price": 40.7225,
-          "challenger_price": 40.8769,
-          "challenger_ret": 0.0003,
-          "interval_lo": 40.3799,
-          "interval_hi": 41.3738
+          "champion_price": 40.1698,
+          "challenger_price": 40.3519,
+          "challenger_ret": 0.0007,
+          "interval_lo": 39.8597,
+          "interval_hi": 40.8442
         },
         "d2": {
-          "champion_price": 40.6635,
-          "challenger_price": 40.8956,
-          "challenger_ret": 0.0007,
-          "interval_lo": 40.3172,
-          "interval_hi": 41.4739
+          "champion_price": 40.5445,
+          "challenger_price": 40.3756,
+          "challenger_ret": 0.0013,
+          "interval_lo": 39.7701,
+          "interval_hi": 40.9811
         },
         "d3": {
-          "champion_price": 41.1118,
-          "challenger_price": 40.9275,
+          "champion_price": 40.5938,
+          "challenger_price": 40.3849,
           "challenger_ret": 0.0015,
-          "interval_lo": 40.1085,
-          "interval_hi": 41.7465
+          "interval_lo": 39.5767,
+          "interval_hi": 41.1931
         }
       }
     },
     "ICGA.DE": {
-      "ref_price": 4.8845,
+      "ref_price": 4.871,
       "horizons": {
         "d1": {
-          "champion_price": 4.8593,
-          "challenger_price": 4.9053,
-          "challenger_ret": 0.0043,
-          "interval_lo": 4.8036,
-          "interval_hi": 5.007
+          "champion_price": 4.8967,
+          "challenger_price": 4.8915,
+          "challenger_ret": 0.0042,
+          "interval_lo": 4.7901,
+          "interval_hi": 4.9929
         },
         "d2": {
-          "champion_price": 4.9202,
-          "challenger_price": 4.9378,
-          "challenger_ret": 0.0109,
-          "interval_lo": 4.8074,
-          "interval_hi": 5.0682
+          "champion_price": 4.9073,
+          "challenger_price": 4.8976,
+          "challenger_ret": 0.0055,
+          "interval_lo": 4.7675,
+          "interval_hi": 5.0276
         },
         "d3": {
-          "champion_price": 4.8408,
-          "challenger_price": 4.9149,
-          "challenger_ret": 0.0062,
-          "interval_lo": 4.7328,
-          "interval_hi": 5.097
+          "champion_price": 4.9155,
+          "challenger_price": 4.8988,
+          "challenger_ret": 0.0057,
+          "interval_lo": 4.7172,
+          "interval_hi": 5.0804
         }
       }
     },
     "IS3N.DE": {
-      "ref_price": 47.646,
+      "ref_price": 46.385,
       "horizons": {
         "d1": {
-          "champion_price": 48.0438,
-          "challenger_price": 47.4974,
-          "challenger_ret": -0.0031,
-          "interval_lo": 45.5302,
-          "interval_hi": 49.4645
+          "champion_price": 46.7967,
+          "challenger_price": 46.3221,
+          "challenger_ret": -0.0014,
+          "interval_lo": 44.4069,
+          "interval_hi": 48.2372
         },
         "d2": {
-          "champion_price": 48.2086,
-          "challenger_price": 47.4566,
-          "challenger_ret": -0.004,
-          "interval_lo": 44.9909,
-          "interval_hi": 49.9223
+          "champion_price": 46.9673,
+          "challenger_price": 46.2836,
+          "challenger_ret": -0.0022,
+          "interval_lo": 43.8831,
+          "interval_hi": 48.684
         },
         "d3": {
-          "champion_price": 48.335,
-          "challenger_price": 47.2968,
-          "challenger_ret": -0.0073,
-          "interval_lo": 44.0127,
-          "interval_hi": 50.581
+          "champion_price": 47.0981,
+          "challenger_price": 46.1948,
+          "challenger_ret": -0.0041,
+          "interval_lo": 42.9975,
+          "interval_hi": 49.392
         }
       }
     },
     "LYP6.DE": {
-      "ref_price": 324.75,
+      "ref_price": 321.0,
       "horizons": {
         "d1": {
-          "champion_price": 325.8482,
-          "challenger_price": 324.9614,
-          "challenger_ret": 0.0007,
-          "interval_lo": 320.2449,
-          "interval_hi": 329.678
+          "champion_price": 319.8411,
+          "challenger_price": 320.9678,
+          "challenger_ret": -0.0001,
+          "interval_lo": 316.3057,
+          "interval_hi": 325.6299
         },
         "d2": {
-          "champion_price": 326.3031,
-          "challenger_price": 325.057,
-          "challenger_ret": 0.0009,
-          "interval_lo": 320.0549,
-          "interval_hi": 330.0591
+          "champion_price": 319.361,
+          "challenger_price": 321.4164,
+          "challenger_ret": 0.0013,
+          "interval_lo": 316.4721,
+          "interval_hi": 326.3607
         },
         "d3": {
-          "champion_price": 322.8478,
-          "challenger_price": 325.319,
-          "challenger_ret": 0.0018,
-          "interval_lo": 318.6215,
-          "interval_hi": 332.0165
+          "champion_price": 318.9927,
+          "challenger_price": 321.9297,
+          "challenger_ret": 0.0029,
+          "interval_lo": 315.3096,
+          "interval_hi": 328.5499
         }
       }
     },
     "PPFB.DE": {
-      "ref_price": 73.54,
+      "ref_price": 73.04,
       "horizons": {
         "d1": {
-          "champion_price": 74.0521,
-          "challenger_price": 73.8722,
-          "challenger_ret": 0.0045,
-          "interval_lo": 71.989,
-          "interval_hi": 75.7553
+          "champion_price": 72.5039,
+          "challenger_price": 73.3452,
+          "challenger_ret": 0.0042,
+          "interval_lo": 71.4983,
+          "interval_hi": 75.1921
         },
         "d2": {
-          "champion_price": 74.2643,
-          "challenger_price": 74.1506,
-          "challenger_ret": 0.0083,
-          "interval_lo": 71.3888,
-          "interval_hi": 76.9124
+          "champion_price": 73.7981,
+          "challenger_price": 73.473,
+          "challenger_ret": 0.0059,
+          "interval_lo": 70.7299,
+          "interval_hi": 76.216
         },
         "d3": {
-          "champion_price": 72.6529,
-          "challenger_price": 74.4092,
-          "challenger_ret": 0.0118,
-          "interval_lo": 71.1705,
-          "interval_hi": 77.6479
+          "champion_price": 72.1115,
+          "challenger_price": 73.4882,
+          "challenger_ret": 0.0061,
+          "interval_lo": 70.2716,
+          "interval_hi": 76.7048
         }
       }
     },
     "SGLN.L": {
-      "ref_price": 73.5845,
+      "ref_price": 0.8534,
       "horizons": {
         "d1": {
-          "champion_price": 74.129,
-          "challenger_price": 73.8213,
-          "challenger_ret": 0.0032,
-          "interval_lo": 71.996,
-          "interval_hi": 75.6465
+          "champion_price": 0.8468,
+          "challenger_price": 0.8548,
+          "challenger_ret": 0.0016,
+          "interval_lo": 0.8341,
+          "interval_hi": 0.8755
         },
         "d2": {
-          "champion_price": 72.8145,
-          "challenger_price": 74.1721,
-          "challenger_ret": 0.008,
-          "interval_lo": 71.3401,
-          "interval_hi": 77.0041
+          "champion_price": 0.844,
+          "challenger_price": 0.8594,
+          "challenger_ret": 0.007,
+          "interval_lo": 0.8265,
+          "interval_hi": 0.8923
         },
         "d3": {
-          "champion_price": 74.5276,
-          "challenger_price": 74.3985,
-          "challenger_ret": 0.0111,
-          "interval_lo": 70.8787,
-          "interval_hi": 77.9183
+          "champion_price": 0.8419,
+          "challenger_price": 0.8616,
+          "challenger_ret": 0.0096,
+          "interval_lo": 0.8211,
+          "interval_hi": 0.9021
         }
       }
     }
   },
   "anomalia": {
-    "date": "2026-08-17",
+    "date": "2026-08-18",
     "alerta": false,
     "market": {
-      "vix_hoje": 15.03,
-      "vix_ontem": 14.25,
+      "vix_hoje": 15.84,
+      "vix_ontem": 15.19,
       "regime_hoje": 1,
-      "regime_ontem": 0,
-      "variacao_1d": 0.0547,
+      "regime_ontem": 1,
+      "variacao_1d": 0.0428,
       "transicao": false,
       "spike": false
     },
     "tickers": {
       "ICGA.DE": {
-        "retorno_1d": 0.0082,
+        "retorno_1d": 0.0075,
         "atr_pct": 0.0104,
-        "multiplo_atr": 0.79,
+        "multiplo_atr": 0.73,
         "alerta": false
       },
       "PPFB.DE": {
-        "retorno_1d": -0.0014,
-        "atr_pct": 0.0142,
-        "multiplo_atr": 0.1,
+        "retorno_1d": 0.0073,
+        "atr_pct": 0.0145,
+        "multiplo_atr": 0.51,
         "alerta": false
       },
       "SGLN.L": {
-        "retorno_1d": -0.0015,
-        "atr_pct": 0.0151,
-        "multiplo_atr": 0.1,
+        "retorno_1d": -0.0133,
+        "atr_pct": 0.0157,
+        "multiplo_atr": 0.84,
         "alerta": false
       },
       "EXUS.MI": {
-        "retorno_1d": -0.001,
+        "retorno_1d": 0.0001,
         "atr_pct": 0.0071,
-        "multiplo_atr": 0.14,
+        "multiplo_atr": 0.02,
         "alerta": false
       },
       "LYP6.DE": {
-        "retorno_1d": -0.0012,
+        "retorno_1d": -0.0019,
         "atr_pct": 0.0069,
-        "multiplo_atr": 0.18,
+        "multiplo_atr": 0.27,
         "alerta": false
       },
       "IS3N.DE": {
-        "retorno_1d": 0.0087,
-        "atr_pct": 0.0169,
-        "multiplo_atr": 0.52,
+        "retorno_1d": 0.0171,
+        "atr_pct": 0.0171,
+        "multiplo_atr": 1.0,
         "alerta": false
       },
       "EUNN.DE": {
-        "retorno_1d": -0.0029,
-        "atr_pct": 0.0129,
-        "multiplo_atr": 0.22,
+        "retorno_1d": 0.0022,
+        "atr_pct": 0.013,
+        "multiplo_atr": 0.17,
         "alerta": false
       }
     },
