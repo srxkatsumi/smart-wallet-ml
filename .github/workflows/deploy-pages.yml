@@ -5,6 +5,14 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+  # O commit automático do pipeline diário (executar_diario.yml) termina com
+  # "[skip ci]" na mensagem — isso faz o GitHub Actions não disparar NENHUM
+  # workflow via push para esse commit, mesmo tocando docs/**. workflow_run
+  # não é afetado por "[skip ci]": reage à conclusão do outro workflow, não
+  # ao push em si.
+  workflow_run:
+    workflows: ["📈 Carteira Inteligente — Execução Diária"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -18,6 +26,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -25,6 +34,8 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: ⚙️ Configurar Pages
         uses: actions/configure-pages@v5

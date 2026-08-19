@@ -210,7 +210,7 @@
   grid.innerHTML = Object.entries(SITE_DATA.favoritos).map(([ticker, f]) => `
     <a class="tile" href="favoritos.html#${ticker}">
       <div class="tile-ticker">${ticker} <span style="float:right">${acertouOntemIcon(f.acertou_ontem)}</span></div>
-      <div class="tile-price">${fmtPrice(f.price)}</div>
+      <div class="tile-price">€${fmtPrice(f.price)}</div>
       <div class="tile-forecasts">
         <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
         <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
@@ -262,10 +262,11 @@
     <thead><tr><th>Ativo</th><th style="text-align:center">Direção</th><th style="text-align:center">Modelos</th><th style="text-align:right">Força</th></tr></thead>
     <tbody>${cons.map(r => {
       const arrows = r.pct_up >= 0.75 ? '▲▲▲' : r.pct_up >= 0.6 ? '▲▲' : r.pct_up >= 0.5 ? '▲' : '▼';
-      const color = r.direction === 'ALTA' ? 'var(--up)' : 'var(--down)';
+      const color = r.direction === 'UP' ? 'var(--up)' : 'var(--down)';
+      const direcao = r.direction === 'UP' ? 'ALTA' : 'BAIXA';
       return `<tr>
         <td style="font-family:var(--mono);font-weight:600">${r.ticker}</td>
-        <td style="text-align:center;color:${color};font-weight:700">${r.direction}${r.strength === 'fraco' ? ' (fraco)' : ''}</td>
+        <td style="text-align:center;color:${color};font-weight:700">${direcao}${r.strength === 'weak' ? ' (fraco)' : ''}</td>
         <td style="text-align:center;font-size:11px;color:var(--ink-muted)">${r.up_count}/${r.total} modelos</td>
         <td style="text-align:right;color:${color}">${arrows}</td>
       </tr>`;
