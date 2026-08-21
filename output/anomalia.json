@@ -1,56 +1,56 @@
 {
-  "date": "2026-08-20",
+  "date": "2026-08-21",
   "alerta": false,
   "market": {
-    "vix_hoje": 16.01,
-    "vix_ontem": 14.89,
+    "vix_hoje": 15.13,
+    "vix_ontem": 16.01,
     "regime_hoje": 1,
-    "regime_ontem": 0,
-    "variacao_1d": 0.0752,
+    "regime_ontem": 1,
+    "variacao_1d": -0.055,
     "transicao": false,
     "spike": false
   },
   "tickers": {
     "ICGA.DE": {
-      "retorno_1d": -0.0017,
-      "atr_pct": 0.0102,
-      "multiplo_atr": 0.17,
-      "alerta": false
-    },
-    "PPFB.DE": {
-      "retorno_1d": 0.029,
-      "atr_pct": 0.0159,
-      "multiplo_atr": 1.83,
-      "alerta": false
-    },
-    "SGLN.L": {
-      "retorno_1d": 0.0301,
-      "atr_pct": 0.0166,
-      "multiplo_atr": 1.81,
-      "alerta": false
-    },
-    "EXUS.MI": {
-      "retorno_1d": -0.0058,
-      "atr_pct": 0.0073,
-      "multiplo_atr": 0.79,
-      "alerta": false
-    },
-    "LYP6.DE": {
-      "retorno_1d": -0.0026,
-      "atr_pct": 0.0066,
-      "multiplo_atr": 0.4,
-      "alerta": false
-    },
-    "IS3N.DE": {
-      "retorno_1d": 0.0051,
-      "atr_pct": 0.0174,
+      "retorno_1d": 0.0029,
+      "atr_pct": 0.0098,
       "multiplo_atr": 0.29,
       "alerta": false
     },
+    "PPFB.DE": {
+      "retorno_1d": 0.0258,
+      "atr_pct": 0.0161,
+      "multiplo_atr": 1.6,
+      "alerta": false
+    },
+    "SGLN.L": {
+      "retorno_1d": 0.0252,
+      "atr_pct": 0.0167,
+      "multiplo_atr": 1.51,
+      "alerta": false
+    },
+    "EXUS.MI": {
+      "retorno_1d": 0.003,
+      "atr_pct": 0.0065,
+      "multiplo_atr": 0.46,
+      "alerta": false
+    },
+    "LYP6.DE": {
+      "retorno_1d": 0.0055,
+      "atr_pct": 0.0059,
+      "multiplo_atr": 0.92,
+      "alerta": false
+    },
+    "IS3N.DE": {
+      "retorno_1d": 0.0133,
+      "atr_pct": 0.016,
+      "multiplo_atr": 0.83,
+      "alerta": false
+    },
     "EUNN.DE": {
-      "retorno_1d": -0.0148,
-      "atr_pct": 0.0142,
-      "multiplo_atr": 1.04,
+      "retorno_1d": 0.0016,
+      "atr_pct": 0.0131,
+      "multiplo_atr": 0.12,
       "alerta": false
     }
   },
