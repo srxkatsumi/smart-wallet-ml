@@ -120,15 +120,24 @@ def update_ensemble_weights(df_log: pd.DataFrame,
 
     weights_updated = False
     for day_n in HORIZONS:
-        day_key    = f"d{day_n}"
-        validadas_h= validadas[validadas["horizon"] == day_n].tail(30)
+        day_key = f"d{day_n}"
+        subset  = validadas[validadas["horizon"] == day_n]
+
+        # Janela pelos últimos 30 target_date distintos, não pelas últimas 30
+        # linhas: um único dia valida centenas de tickers de uma vez, então
+        # tail(30) por linha colapsava a janela pretendida de ~30 dias de
+        # histórico num único dia de mercado (ver scripts/ablation_ensemble_weights.py,
+        # que mediu isso a custar -1.6 a -2.0pp de acurácia vs. pesos iguais).
+        dates       = sorted(subset["target_date"].unique())[-30:]
+        validadas_h = subset[subset["target_date"].isin(dates)]
 
         if len(validadas_h) < MIN_VALIDATIONS_WEIGHT:
             continue
 
-        n     = len(validadas_h)
-        decay = np.exp(WEIGHT_DECAY_FACTOR * np.arange(n))
-        decay = decay / decay.sum()
+        n_dias      = len(dates)
+        decay_dia   = np.exp(WEIGHT_DECAY_FACTOR * np.arange(n_dias))
+        decay_dia   = decay_dia / decay_dia.sum()
+        peso_por_data = dict(zip(dates, decay_dia))
 
         new_weights = {}
         for model_col, key in [("model_rf", "rf"), ("model_gb", "gb"), ("model_sgd", "sgd")]:
@@ -143,8 +152,12 @@ def update_ensemble_weights(df_log: pd.DataFrame,
                     ((validadas_h[model_col] != validadas_h["direction"]) &
                      (validadas_h["correct"] == False))
                 )
-            ).astype(float).values
-            acc_weighted  = (modelo_certo * decay).sum()
+            ).astype(float)
+            # Acurácia média por dia primeiro, só depois decay entre dias:
+            # senão um dia com mais tickers pesaria mais que um dia com menos,
+            # em vez de cada dia contribuir só pela sua posição na janela.
+            acc_por_dia  = modelo_certo.groupby(validadas_h["target_date"]).mean().reindex(dates)
+            acc_weighted = sum(acc_por_dia[d] * peso_por_data[d] for d in dates)
             new_weights[key] = max(0.1, acc_weighted)
 
         total = sum(new_weights.values())

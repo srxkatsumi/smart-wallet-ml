@@ -16,8 +16,10 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from datetime import date
+from scipy.stats import binomtest
 
 from config.settings import WEIGHT_DECAY_FACTOR, MIN_VALIDATIONS_WEIGHT
+from evaluation.significance import apply_bh_correction
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +142,7 @@ def _predict_family(family: str, X: np.ndarray, y: np.ndarray,
 
 
 def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
-    """Recalcula pesos de cada família com base no histórico de acertos (últimas 30 semanas)."""
+    """Recalcula pesos de cada família com base no histórico de acertos (últimos 30 dias validados)."""
     validated = log[log["validated"] == True].copy()  # noqa: E712
     updated = False
 
@@ -152,15 +154,27 @@ def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
 
         new_weights = {}
         for family in _FAMILIES:
-            rows = validated[validated["family"] == family].tail(30)
-            if len(rows) < MIN_VALIDATIONS_WEIGHT or correct_col not in rows.columns:
+            fam_rows = validated[validated["family"] == family]
+            if correct_col not in fam_rows.columns:
                 new_weights[family] = current_weights[day_key].get(family, 1.0)
                 continue
-            vals  = rows[correct_col].astype(float).values
-            n     = len(vals)
-            decay = np.exp(WEIGHT_DECAY_FACTOR * np.arange(n))
-            decay = decay / decay.sum()
-            acc_weighted      = (vals * decay).sum()
+
+            # Janela pelos últimos 30 week_date distintos, não pelas últimas
+            # 30 linhas: cada dia valida vários tickers da carteira de uma vez
+            # (ver o mesmo fix em models/validator.py:update_ensemble_weights).
+            dates = sorted(fam_rows["week_date"].unique())[-30:]
+            rows  = fam_rows[fam_rows["week_date"].isin(dates)]
+            if len(rows) < MIN_VALIDATIONS_WEIGHT:
+                new_weights[family] = current_weights[day_key].get(family, 1.0)
+                continue
+
+            n_dias    = len(dates)
+            decay_dia = np.exp(WEIGHT_DECAY_FACTOR * np.arange(n_dias))
+            decay_dia = decay_dia / decay_dia.sum()
+            peso_por_data = dict(zip(dates, decay_dia))
+
+            acc_por_dia  = rows[correct_col].astype(float).groupby(rows["week_date"]).mean().reindex(dates)
+            acc_weighted = sum(acc_por_dia[d] * peso_por_data[d] for d in dates)
             new_weights[family] = max(0.1, acc_weighted)
 
         total = sum(new_weights.values())
@@ -445,7 +459,15 @@ def _validate_past_predictions(log: pd.DataFrame,
 
 
 def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
-    """Constrói tabela de acurácia por família (semana anterior)."""
+    """
+    Constrói tabela de acurácia por família (semana anterior).
+
+    Cada família tem um p-valor (teste binomial unilateral, H1: acurácia > 50%),
+    e o conjunto passa por correção de Benjamini-Hochberg antes de ordenar: com
+    13 famílias testadas por semana, uma família parecer "significativa" por
+    puro acaso é comum se cada p-valor for lido isoladamente (ver
+    apply_bh_correction). 'sig' reflete o p-valor já corrigido.
+    """
     validated = log[log["validated"] == True].copy()  # noqa: E712
     if validated.empty:
         return []
@@ -455,14 +477,19 @@ def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
         fam_rows = validated[validated["family"] == family]
         if fam_rows.empty:
             continue
-        acc = fam_rows["correct_d1"].astype(float).mean()
+        n     = len(fam_rows)
+        k     = int(fam_rows["correct_d1"].astype(float).sum())
+        acc   = k / n
+        p_val = binomtest(k, n, p=0.5, alternative="greater").pvalue
         results.append({
             "family":   family,
             "accuracy": round(float(acc), 3),
-            "n":        len(fam_rows),
+            "n":        n,
             "vs_acaso": round(float(acc) - 0.5, 3),
+            "p":        round(float(p_val), 4),
         })
 
+    apply_bh_correction(results)
     results.sort(key=lambda x: x["accuracy"], reverse=True)
     return results
 

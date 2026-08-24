@@ -196,7 +196,7 @@ No prices, tickers, or portfolio weights are included.
 This is a personal data science project — not an investment product.*
 
 Built by **Vicky Costa** — Data Analyst & Data Science student
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycosta/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycostasanches/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)
 """
 

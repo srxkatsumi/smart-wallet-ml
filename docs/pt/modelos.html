@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modelos · Carteira Inteligente</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">Carteira Inteligente</a>
+    <div class="nav-links">
+      <a href="index.html" data-page="inicio">Início</a>
+      <a href="favoritos.html" data-page="favoritos">Favoritos</a>
+      <a href="experimentos.html" data-page="experimentos">Experimentos</a>
+      <a href="watchlist.html" data-page="watchlist">Watchlist</a>
+      <a href="alertas.html" data-page="alertas">Alertas</a>
+      <a href="modelos.html" data-page="modelos">Modelos</a>
+      <a href="https://www.linkedin.com/in/vickycostasanches/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Metodologia</a>
+      <a href="../models.html">🇬🇧 EN</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1 class="page-title">Modelos</h1>
+    <div class="page-subtitle">Os três modelos por trás de cada previsão, e a razão de cada um estar lá</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Um ensemble por horizonte, não um único modelo reaproveitado três vezes</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0 0 10px">
+          Um atalho comum é treinar um único modelo e reaproveitar a saída dele para D+1, D+2 e D+3. Isso mistura
+          dois problemas diferentes: os padrões que fazem um ativo subir amanhã são estruturalmente diferentes dos
+          padrões que fazem ele subir daqui a três dias. O movimento de amanhã é dominado por momentum de
+          curtíssimo prazo e pelo sentimento do mercado no aftermarket de hoje; um horizonte de 3 dias é mais
+          influenciado pela persistência da tendência e pelo regime macroeconómico. Treinar um único modelo nos
+          dois borra o sinal de ambos.
+        </p>
+        <p style="margin:0">
+          Por isso são treinados três ensembles completamente separados, um por horizonte, cada um aprendendo só o
+          que é relevante para o seu próprio prazo. Todos os três são construídos com os mesmos três modelos
+          abaixo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">O ensemble de produção</div>
+    <div class="tile-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
+
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title">🌲 Random Forest</div>
+          <div class="card-subtitle">100 árvores, profundidade máxima 5, class weight balanced</div>
+        </div>
+        <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.8">
+          <p style="margin:0 0 8px">
+            Treina 100 árvores de decisão ligeiramente diferentes, cada uma sobre uma amostra bootstrap dos dados
+            de treino, e combina os votos delas. É o mais próximo de perguntar a mesma questão a 100 analistas,
+            cada um a trabalhar com uma fatia diferente do mesmo histórico, e ficar com a resposta da maioria.
+          </p>
+          <p style="margin:0">
+            <strong style="color:var(--ink-faint)">Por que está aqui:</strong> é o modelo mais estável do ensemble.
+            A profundidade rasa evita que as árvores memorizem ruído, e continua útil mesmo quando algumas features
+            são irrelevantes num dado dia, situação comum em séries temporais financeiras onde a utilidade de um
+            indicador muda com o regime de mercado. Sem ele, o ensemble ficaria apoiado em dois modelos, um deles
+            linear, e perderia bastante cobertura de padrões não lineares complexos.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title">📈 Gradient Boosting</div>
+          <div class="card-subtitle">100 estimadores, taxa de aprendizado 0.05, profundidade máxima 3</div>
+        </div>
+        <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.8">
+          <p style="margin:0 0 8px">
+            Constrói as suas árvores em sequência: cada nova árvore é treinada especificamente sobre os erros da
+            anterior. A taxa de aprendizado baixa (0.05) faz cada árvore empurrar a previsão final só um pouco, o
+            que é deliberado. Isso impede o modelo de memorizar as particularidades do passado em vez de aprender
+            um padrão que generaliza.
+          </p>
+          <p style="margin:0">
+            <strong style="color:var(--ink-faint)">Por que está aqui:</strong> captura sinais de momentum de curto
+            prazo e interações subtis entre indicadores que as árvores independentes do Random Forest tendem a não
+            apanhar. Sem ele, o ensemble subestimaria situações em que a tendência dos últimos dias é genuinamente
+            preditiva.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title">📐 SGD Classifier</div>
+          <div class="card-subtitle">log_loss, regularização L2, aprendizado incremental diário</div>
+        </div>
+        <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.8">
+          <p style="margin:0 0 8px">
+            Um modelo linear: aprende um peso por feature e prevê a partir da soma ponderada delas, sem conseguir
+            modelar interações entre features como os outros dois. É também o único modelo do ensemble com
+            aprendizado verdadeiramente incremental: todos os dias atualiza-se com as 5 linhas mais recentes via
+            <code>partial_fit</code>, sem esquecer o que aprendeu antes. Uma vez por mês passa por uma reinicialização
+            completa, com o scaler reajustado e o modelo retreinado do zero, para que os coeficientes lineares não
+            fiquem ancorados a uma realidade de mercado que já não existe.
+          </p>
+          <p style="margin:0">
+            <strong style="color:var(--ink-faint)">Por que está aqui:</strong> funciona como um contrapeso. Quando
+            os dois modelos não lineares concordam em algo que na verdade é ruído, o modelo linear, mais simples,
+            frequentemente discorda, e essa discordância puxa o ensemble para uma estimativa mais conservadora. A
+            simplicidade é deliberada, não uma limitação, e sem ele os dois modelos não lineares poderiam reforçar
+            o mesmo padrão falso sem nada a contestá-lo.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Como os três votos viram uma única previsão</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0">
+          Cada modelo produz uma probabilidade calibrada, e a previsão final é uma média ponderada das três, não
+          um simples voto por maioria. O peso de cada modelo é a sua própria acurácia recente, medida sobre os
+          últimos 30 dias de negociação distintos e decaída exponencialmente para que os dias mais recentes contem
+          mais, sem deixar um único dia ruidoso dominar a estimativa. Cada previsão validada atualiza estes pesos
+          antes da previsão do dia seguinte ser feita, então um modelo que tem falhado ultimamente perde
+          influência, e um que tem acertado ganha.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Além da produção: o framework de pesquisa</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">38 modelos em 13 famílias, avaliados offline</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:12px;color:var(--ink-muted);line-height:1.85;margin:0 0 12px">
+          Separado dos três modelos de produção, um framework de pesquisa treina e avalia 38 modelos adicionais
+          agrupados em 13 famílias, desde variantes clássicas de boosting até Foundation Models pré-treinados e
+          predição conformal. Nada disto toca diretamente em <code>predictions_log.csv</code> nem nos pesos de
+          produção; o consenso ponderado dele é combinado 50/50 com a previsão de produção só para os ativos que
+          cobre. A questão não é que mais modelos sejam automaticamente melhores: é testar se a forma diferente de
+          cada família olhar para os mesmos dados acrescenta algo que um ensemble simples como o de cima já não
+          captura sozinho.
+        </p>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Família</th><th>Modelos</th><th>O que acrescenta</th></tr></thead>
+            <tbody id="families-table-body"><!-- preenchido abaixo --></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-warning">
+      <strong>Antes de continuar</strong>
+      Este site é um objeto de estudo pessoal de Machine Learning aplicado a mercados financeiros.
+      As previsões não têm significância estatística comprovada (veja a página de Metodologia) e
+      não devem ser levadas a sério como base de decisão. Nenhuma informação aqui é conselho financeiro.
+      O valor deste projeto não é prever mercados, é a engenharia e a disciplina estatística por trás dele.
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/vickycostasanches/" target="_blank" rel="noopener">Sobre Mim</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Código-fonte</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_Errors.md" target="_blank" rel="noopener">Registo de incidentes</a>
+    </div>
+    <div class="footer-meta">Carteira Inteligente</div>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+<script>
+  setActiveNav('modelos');
+
+  const FAMILIES = [
+    ["Clássico avançado", "XGBoost, LightGBM, CatBoost, SVM", "O mesmo aprendizado de padrões tabulares do ensemble de produção, com mais três variantes de boosting/kernel. O baseline obrigatório contra o qual todas as outras famílias são medidas."],
+    ["Estado oculto", "Cadeias de Markov, HMM", "Modela regimes ocultos do mercado (bull, bear, lateral) que não são diretamente observáveis mas influenciam o comportamento dos preços."],
+    ["Séries temporais", "ARIMA, SARIMA, ETS, Holt-Winters, Prophet", "Testa autocorrelação temporal diretamente, com modelos construídos especificamente para dados com memória e dependência temporal."],
+    ["Neural recorrente", "LSTM, GRU", "Memória de longo alcance: aprende dependências entre observações distantes na sequência, algo que os modelos tabulares não conseguem por design."],
+    ["Neural com atenção", "Transformer, TFT, N-BEATS", "Atenção seletiva: aprende a olhar para os momentos do passado mais relevantes para cada previsão futura, em vez de pesar todo o histórico por igual."],
+    ["Bayesiano", "Gaussian Process, BNN (MC Dropout)", "Incerteza calibrada com base na teoria da probabilidade: além da previsão, quantifica quão confiante o modelo está de facto."],
+    ["Generativo", "VAE, GAN", "Aprende a distribuição dos dados, testando se existe estrutura latente separável entre sessões UP e DOWN."],
+    ["Reinforcement", "DQN, PPO", "Otimiza uma política, não uma previsão. Trata a decisão como uma sequência de ações com recompensa acumulada, um enquadramento fundamentalmente diferente de todas as outras famílias."],
+    ["Contrarian / sanidade", "CB, EWI, PEL", "Inverte ou corrige o ensemble. Deteta quando o modelo principal está pior que o acaso e aprende com a autocorrelação dos seus erros."],
+    ["Arquiteturas eficientes", "TCN, DLinear, NLinear, PatchTST", "Alternativas ao Transformer pós-2022 que o superam em múltiplos benchmarks com muito menos complexidade e parâmetros."],
+    ["Foundation Models", "Chronos, TimesFM, Moirai", "Pré-treinados em biliões de pontos de dados de séries temporais. Funcionam zero-shot, sem treino específico para a tarefa."],
+    ["Incerteza calibrada", "Conformal Prediction", "A única família com garantia matemática: se reporta um conjunto de previsão a 90%, o valor real cai lá dentro pelo menos 90% das vezes, sem suposições sobre o modelo subjacente."],
+    ["Deteção de drift", "ADWIN, Page-Hinkley", "Deteção formal de ponto de mudança em vez de verificação manual. Sinaliza quando o mercado mudou estatisticamente para um regime em que os modelos não foram treinados."],
+  ];
+  document.getElementById('families-table-body').innerHTML = FAMILIES.map(([name, models, why]) => `
+    <tr>
+      <td style="font-weight:600;color:var(--ink-faint);white-space:nowrap;vertical-align:top">${name}</td>
+      <td style="color:var(--ink-ghost);white-space:nowrap;vertical-align:top">${models}</td>
+      <td style="vertical-align:top">${why}</td>
+    </tr>`).join('');
+</script>
+</body>
+</html>

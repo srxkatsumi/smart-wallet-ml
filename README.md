@@ -1,6 +1,6 @@
 # ML Portfolio Forecasting System
 
-A fully automated ML pipeline that runs every weekday after market close, analyses a real investment portfolio, and predicts the 1–3 day price direction for each asset using an ensemble of 38 models across 13 families — from classic Random Forests to Foundation Models (Chronos, TimesFM, Moirai) and conformal prediction.
+A fully automated ML pipeline that runs every weekday after market close, analyses a real investment portfolio, and predicts the 1–3 day price direction for each asset using a production ensemble of three models (Random Forest, Gradient Boosting, SGD Classifier). A separate research framework evaluates 38 models across 13 families offline, from classic boosting variants to Foundation Models (Chronos, TimesFM, Moirai) and conformal prediction, and its consensus is blended into the production forecast for covered tickers.
 Built in Python with GitHub Actions as the sole orchestrator: no cloud infrastructure, no paid APIs, no manual steps. Every prediction is logged, validated against realised prices, and used to update ensemble weights — the system continuously learns from its own mistakes.
 
 [![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
@@ -689,5 +689,5 @@ All 25 original models are implemented and tested. Transversal layers (phases 9-
 
 Built by **Vicky Costa**, Data Analyst | Data Science student
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycosta/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycostasanches/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)

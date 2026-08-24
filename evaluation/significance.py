@@ -28,6 +28,33 @@ def _wilson_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return round(centre - margin, 4), round(centre + margin, 4)
 
 
+def apply_bh_correction(results: list[dict], alpha: float = 0.05, p_key: str = "p") -> None:
+    """
+    Benjamini-Hochberg FDR correction across several simultaneous p-values,
+    applied in place. Adds 'p_adj' (adjusted p-value) and 'sig' (p_adj < alpha)
+    to each dict in `results`.
+
+    Use whenever a table ranks several models/families side by side (e.g. the
+    13-family research comparison): with m comparisons at alpha=0.05, the
+    chance of at least one spurious p<0.05 by chance alone is 1 - (1-alpha)^m
+    (about 49 % already at m=13) if left uncorrected. BH controls the false
+    discovery rate instead of treating every low raw p-value as a real find.
+    """
+    m = len(results)
+    if m == 0:
+        return
+    ranked = sorted(results, key=lambda r: r[p_key])
+    prev_adj = 1.0
+    for i in range(m - 1, -1, -1):
+        r    = ranked[i]
+        rank = i + 1
+        adj  = min(r[p_key] * m / rank, 1.0)
+        adj  = min(adj, prev_adj)
+        prev_adj = adj
+        r["p_adj"] = round(float(adj), 4)
+        r["sig"]   = bool(adj < alpha)
+
+
 def compute_significance(df_log: pd.DataFrame) -> dict:
     """
     Computes per-horizon accuracy, p-value, and CI from predictions_log.

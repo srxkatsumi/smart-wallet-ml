@@ -163,6 +163,19 @@ Also fixed the same day: the regression-experiment's Diebold-Mariano test used t
 
 ---
 
+## ERR-012: Adaptive ensemble weights collapsed onto a single trading day (2026-08-20)
+
+**Symptom**
+An external review flagged that the adaptive weighting mechanism (`models/validator.py:update_ensemble_weights`) looked like it reacted too fast to short-term noise. The decay math itself was fine (the most recent day holds only about 10% of a 30-entry window, not the roughly 90% the review assumed), but running a direct ablation (adaptive weights vs. a simple RF/GB/SGD majority vote over the 61,823 real validated predictions) showed the mechanism performing **worse** than fixed weights, and by a lot: minus 1.6 to 2.0pp of accuracy across the three horizons (McNemar, p<0.0001).
+
+**Root cause**
+`validadas[validadas["horizon"] == day_n].tail(30)` grabs the last 30 **rows**, not the last 30 days. The watchlist tracks 500+ tickers, all validated on the same `target_date`. Confirmed directly against the data: `tail(30)` for D+1 returned 30 rows, every one of them from the same day. The window the code and the README described as roughly 30 days of history was, in practice, about 30 tickers from a single trading day, and the exponential decay was ordering those tickers (an arbitrary, non-chronological order) as if they were sequential time steps. `MIN_VALIDATIONS_WEIGHT=5` made it worse: weights had been swinging on a single day of history since the first days of operation. The same pattern existed in `research/runner.py:_update_research_weights`, with a smaller effect (the research portfolio only has 12 tickers, so the window collapsed to about 5 days instead of 1).
+
+**Fix applied**
+Rewrote the window to the last 30 distinct `target_date`/`week_date` values, not the last 30 rows. Inside the window, accuracy is averaged per day first, then decay is applied across days, so a day with more tickers doesn't outweigh a day with fewer. Applied in `models/validator.py` and `research/runner.py`. Added regression tests (`tests/test_validator.py`, `tests/test_research_runner.py`) that reproduce the many-tickers-one-day scenario and lock in the correct behavior. `scripts/ablation_ensemble_weights.py` keeps the ablation used to measure the problem and confirm the fix: corrected weights recover the 1.6 to 2.0pp the bug was costing, and land statistically indistinguishable from fixed weights (0 McNemar discordant pairs) on the current history, which is still too short to reliably separate RF/GB/SGD skill.
+
+---
+
 ## Production validations (current state)
 
 | Validation | Where | What it catches |

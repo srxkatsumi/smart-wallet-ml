@@ -1,7 +1,7 @@
 # Carteira Inteligente — Como eu construí um sistema de ML para prever minha carteira de investimentos
 
-Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo — usando um ensemble de 38 modelos em 13 famílias, desde Random Forests clássicos até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal.
-Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraestrutura cloud, sem APIs pagas, sem passos manuais. Cada previsão é registada, validada contra preços reais, e usada para actualizar os pesos do ensemble — o sistema aprende continuamente com os seus próprios erros.
+Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo, usando um ensemble operacional de três modelos (Random Forest, Gradient Boosting, SGD Classifier). Um framework de pesquisa separado avalia 38 modelos em 13 famílias offline, desde variantes clássicas de boosting até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal, cujo consenso é combinado com a previsão de produção para os ativos cobertos.
+Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraestrutura cloud, sem APIs pagas, sem passos manuais. Cada previsão é registada, validada contra preços reais, e usada para atualizar os pesos do ensemble — o sistema aprende continuamente com os seus próprios erros.
 
 [![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
 
@@ -222,7 +222,7 @@ Transformer, TFT (Temporal Fusion Transformer) e N-BEATS. O Transformer aprende 
 Gaussian Process e BNN (Bayesian Neural Network). A vantagem principal é a quantificação de incerteza: em vez de prever apenas a direção, estes modelos dizem também "quão confiantes estão" com base na teoria da probabilidade. Fundamental para um júri académico que questione a robustez das previsões.
 
 **Família 7 — Modelos generativos**
-VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de prever a próxima observação, aprendem a distribuição dos dados e geram amostras sintéticas que respeitam os padrões aprendidos. A pergunta central é: o modelo aprende alguma estrutura real, ou apenas reproduce ruído?
+VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de prever a próxima observação, aprendem a distribuição dos dados e geram amostras sintéticas que respeitam os padrões aprendidos. A pergunta central é: o modelo aprende alguma estrutura real, ou apenas reproduz ruído?
 
 ---
 
@@ -231,13 +231,13 @@ VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de 
 | Família | Modelos | O que diferencia |
 |---------|---------|-----------------|
 | Clássico | RF, GB, SGD, XGBoost, LightGBM, CatBoost, SVM | Aprende padrões tabulares pontuais. Baseline obrigatório — referência contra a qual todos os outros são comparados. |
-| Estado oculto | Markov, HMM | Modela regimes ocultos do mercado (bull, bear, lateral) que não são directamente observáveis mas influenciam o comportamento dos preços. |
-| Séries temporais | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Testa autocorrelação temporal directamente. Modelos construídos especificamente para dados com memória e dependência temporal. |
+| Estado oculto | Markov, HMM | Modela regimes ocultos do mercado (bull, bear, lateral) que não são diretamente observáveis mas influenciam o comportamento dos preços. |
+| Séries temporais | ARIMA, SARIMA, ETS, Holt-Winters, Prophet | Testa autocorrelação temporal diretamente. Modelos construídos especificamente para dados com memória e dependência temporal. |
 | Neural recorrente | LSTM, GRU | Memória de longo alcance. Aprende dependências entre observações distantes na sequência — algo que os modelos clássicos não conseguem por design. |
 | Neural com atenção | Transformer, TFT, N-BEATS | Atenção selectiva. O modelo aprende a "olhar" para os momentos do passado mais relevantes para cada previsão futura. |
 | Bayesiano | Gaussian Process, BNN (MC Dropout) | Incerteza calibrada. Além da previsão, quantifica quão confiante está — com base na teoria da probabilidade, não em heurísticas. |
 | Generativo | VAE, GAN | Aprende a distribuição dos dados. Testa se existe estrutura latente separável entre sessões UP e DOWN. |
-| Reinforcement | DQN, PPO | Optimiza política, não previsão. Trata a decisão como uma sequência de acções com recompensa acumulada — completamente diferente de todas as outras famílias. |
+| Reinforcement | DQN, PPO | Optimiza política, não previsão. Trata a decisão como uma sequência de ações com recompensa acumulada — completamente diferente de todas as outras famílias. |
 | Contrarian / Sanidade | CB, EWI, PEL | Inverte ou corrige o ensemble. Detecta quando o modelo principal é pior que o acaso e aprende com a autocorrelação dos erros. |
 | Arquitecturas eficientes | TCN, DLinear, NLinear, PatchTST | Alternativas ao Transformer (pós-2022) que em múltiplos benchmarks o superam com muito menos complexidade e parâmetros. |
 | Foundation Models | Chronos, TimesFM, Moirai | Modelos pré-treinados em biliões de pontos de dados de séries temporais. Funcionam sem treino específico — zero-shot. |
@@ -250,9 +250,9 @@ VAE (Variational Autoencoder) e GAN (Generative Adversarial Network). Em vez de 
 
 Todas as outras famílias resolvem o mesmo problema: "dado X hoje, qual é a probabilidade de UP amanhã?" O RL resolve um problema diferente: "dada a sequência de observações até agora, qual é a melhor política de decisão para maximizar a recompensa acumulada?"
 
-**DQN (Mnih et al., 2015 — Nature):** aprende Q(estado, acção) — o valor esperado de tomar a acção UP ou DOWN em cada estado. A política emerge implicitamente: escolhe a acção com maior Q-value.
+**DQN (Mnih et al., 2015 — Nature):** aprende Q(estado, ação) — o valor esperado de tomar a ação UP ou DOWN em cada estado. A política emerge implicitamente: escolhe a ação com maior Q-value.
 
-**PPO (Schulman et al., 2017 — arXiv):** aprende a política π(acção|estado) directamente com um Actor-Critic. O Actor decide o que fazer; o Crítico avalia se foi boa decisão. O clipping ε=0.2 impede que a política mude demasiado de uma vez, tornando o treino estável.
+**PPO (Schulman et al., 2017 — arXiv):** aprende a política π(ação|estado) diretamente com um Actor-Critic. O Actor decide o que fazer; o Crítico avalia se foi boa decisão. O clipping ε=0.2 impede que a política mude demasiado de uma vez, tornando o treino estável.
 
 A diferença conceptual fundamental: modelos supervisionados minimizam uma loss pontual. Modelos de RL optimizam recompensa acumulada sobre uma sequência de decisões. Para trading, esta distinção é real — uma decisão errada hoje pode ter consequências que se estendem pelos dias seguintes.
 
@@ -292,7 +292,7 @@ O PatchTST resolve um problema fundamental do Transformer original: quando aplic
 
 O PatchTST divide a série em "patches" (segmentos sobrepostos de, por exemplo, 16 dias) e trata cada patch como um token. Para 500 dias com patches de 16, há apenas ~31 tokens em vez de 500. A atenção fica muito mais eficiente e cada token contém contexto local em vez de um único ponto isolado.
 
-Exemplo prático com BTC-USD: em vez de o Transformer "olhar" para cada dia de preço separadamente, o PatchTST olha para blocos de 16 dias. Cada bloco captura um mini-ciclo de mercado. A atenção entre blocos captura como mini-ciclos passados se relacionam com o mini-ciclo actual.
+Exemplo prático com BTC-USD: em vez de o Transformer "olhar" para cada dia de preço separadamente, o PatchTST olha para blocos de 16 dias. Cada bloco captura um mini-ciclo de mercado. A atenção entre blocos captura como mini-ciclos passados se relacionam com o mini-ciclo atual.
 
 ---
 
@@ -306,7 +306,7 @@ A ideia é a mesma que levou ao sucesso do ChatGPT: pré-treinar num corpus mass
 
 O Chronos (Ansari et al., 2024) converte séries temporais em tokens discretos usando quantização, e depois aplica um Transformer de linguagem (baseado na arquitectura T5 do Google) para prever os próximos tokens. Foi pré-treinado em ~700.000 séries temporais de domínios variados: energia, tráfego, vendas, meteorologia, finanças.
 
-Exemplo prático com LLY: em vez de treinar o Chronos nos preços históricos da Eli Lilly, simplesmente paso os últimos 50 preços de fecho e peço ao modelo para prever os próximos 3. O modelo usa o conhecimento acumulado de 700.000 séries para fazer a previsão, sem saber que se trata de uma acção farmacêutica ou sequer que se trata de dados financeiros.
+Exemplo prático com LLY: em vez de treinar o Chronos nos preços históricos da Eli Lilly, simplesmente paso os últimos 50 preços de fecho e peço ao modelo para prever os próximos 3. O modelo usa o conhecimento acumulado de 700.000 séries para fazer a previsão, sem saber que se trata de uma ação farmacêutica ou sequer que se trata de dados financeiros.
 
 A questão central: o Chronos, sem nunca ter visto dados da LLY, consegue bater o ensemble RF/GB/SGD que foi treinado especificamente nos dados da LLY durante meses? Se sim, é um argumento poderoso de que os padrões de séries temporais são transferíveis entre domínios.
 
@@ -382,11 +382,11 @@ O ADWIN mantém uma janela deslizante de observações recentes e testa continua
 
 Se a diferença for significativa (acima de um threshold configurável), o ADWIN detecta drift e descarta a parte mais antiga da janela, adaptando-se ao novo regime.
 
-Exemplo prático com o VIX: durante um mercado calmo (VIX entre 12 e 18), o modelo aprende que RSI14 e MACD são as features mais preditivas. Quando o VIX sobe abruptamente para 35 (regime de crise), a relação entre as features e os retornos muda completamente. O ADWIN detecta esta mudança estatisticamente e sinaliza que os modelos foram treinados num regime diferente do actual.
+Exemplo prático com o VIX: durante um mercado calmo (VIX entre 12 e 18), o modelo aprende que RSI14 e MACD são as features mais preditivas. Quando o VIX sobe abruptamente para 35 (regime de crise), a relação entre as features e os retornos muda completamente. O ADWIN detecta esta mudança estatisticamente e sinaliza que os modelos foram treinados num regime diferente do atual.
 
 **Page-Hinkley (Page, 1954)**
 
-O teste de Page-Hinkley foi criado originalmente para controlo de qualidade industrial (detectar quando uma linha de produção sai do limite de tolerância) e aplica-se directamente à acurácia do modelo: monitoriza a soma cumulativa dos desvios entre a acurácia observada e a acurácia esperada.
+O teste de Page-Hinkley foi criado originalmente para controlo de qualidade industrial (detectar quando uma linha de produção sai do limite de tolerância) e aplica-se diretamente à acurácia do modelo: monitoriza a soma cumulativa dos desvios entre a acurácia observada e a acurácia esperada.
 
 Fórmula:
 ```
@@ -416,7 +416,7 @@ As 33 features estão organizadas em 5 grupos:
 
 | Grupo | Features | Quantidade |
 |-------|---------|-----------|
-| Indicadores técnicos | SMA, RSI, MACD, Bollinger Bands, ATR, retornos curtos, volume (OBV/vol_ratio), VIX, SPY, regime, classe de activo | 20 |
+| Indicadores técnicos | SMA, RSI, MACD, Bollinger Bands, ATR, retornos curtos, volume (OBV/vol_ratio), VIX, SPY, regime, classe de ativo | 20 |
 | Momentum multi-horizonte | Retorno a 1, 3, 6 e 12 meses | 4 |
 | Extremos anuais | Distância ao máximo e mínimo de 52 semanas | 2 |
 | Efeitos de calendário | Dia da semana, mês, semana de expiração de opções | 3 |
@@ -683,23 +683,23 @@ vix_regime = 2  se VIX ≥ 25    (medo / crise)
 
 **Exemplo:** num dia com VIX a 28, `vix_regime = 2`. Num dia típico de bull market calmo com VIX a 13, `vix_regime = 0`.
 
-**Por que incluí:** o `vix_level` dá o valor contínuo do VIX. O `vix_regime` converte-o em categorias discretas que permitem ao modelo aprender regras diferentes para cada regime. Uma árvore de decisão aprende facilmente "se regime = 2, o comportamento dos ativos muda desta forma" — algo que o valor contínuo torna mais difícil de capturar directamente.
+**Por que incluí:** o `vix_level` dá o valor contínuo do VIX. O `vix_regime` converte-o em categorias discretas que permitem ao modelo aprender regras diferentes para cada regime. Uma árvore de decisão aprende facilmente "se regime = 2, o comportamento dos ativos muda desta forma" — algo que o valor contínuo torna mais difícil de capturar diretamente.
 
 ---
 
-### 18. asset_class — Classe de activo
+### 18. asset_class — Classe de ativo
 
-**O que mede:** a categoria do ativo: acção individual, ETF de renda variável, criptomoeda ou ETF de matéria-prima.
+**O que mede:** a categoria do ativo: ação individual, ETF de renda variável, criptomoeda ou ETF de matéria-prima.
 
 **Codificação:**
 ```
-0 = acção individual (NVDA, LLY, ALV.DE...)
+0 = ação individual (NVDA, LLY, ALV.DE...)
 1 = ETF de renda variável (EMIM.AS, IWDA.AS, VWCE.DE...)
 2 = criptomoeda (BTC-USD)
 3 = ETF de matéria-prima (SGLN.L — ouro físico)
 ```
 
-**Por que incluí:** o BTC-USD e a NVDA são modelados com as mesmas features, mas têm distribuições de retorno completamente diferentes — o Bitcoin tem volatilidade habitual de 3 a 5% por dia, a NVDA de 1 a 2%, e um ETF global de mercados desenvolvidos de 0.3 a 0.8%. Sem esta feature, o modelo não sabe que está a trabalhar com activos de naturezas muito diferentes. Com ela, aprende comportamentos e limites de confiança distintos por categoria.
+**Por que incluí:** o BTC-USD e a NVDA são modelados com as mesmas features, mas têm distribuições de retorno completamente diferentes — o Bitcoin tem volatilidade habitual de 3 a 5% por dia, a NVDA de 1 a 2%, e um ETF global de mercados desenvolvidos de 0.3 a 0.8%. Sem esta feature, o modelo não sabe que está a trabalhar com ativos de naturezas muito diferentes. Com ela, aprende comportamentos e limites de confiança distintos por categoria.
 
 ---
 
@@ -709,7 +709,7 @@ vix_regime = 2  se VIX ≥ 25    (medo / crise)
 
 **Fórmula:** `vol_ratio = Volume_hoje / Média_Móvel_20d(Volume)`
 
-**Exemplo:** se a NVDA negoceia habitualmente 45 milhões de acções por dia e hoje negociou 90 milhões, `vol_ratio = 2.0`. Um valor de 0.4 indica um dia de volume muito baixo — movimento de "mercado vazio", menos confiável.
+**Exemplo:** se a NVDA negoceia habitualmente 45 milhões de ações por dia e hoje negociou 90 milhões, `vol_ratio = 2.0`. Um valor de 0.4 indica um dia de volume muito baixo — movimento de "mercado vazio", menos confiável.
 
 **Por que incluí:** volume confirma ou desmente movimentos de preço. Uma subida de 3% com volume 3× o normal é estruturalmente diferente de uma subida de 3% com volume a metade do normal. O modelo aprende a ponderar a direção pelo suporte de liquidez.
 
@@ -791,7 +791,7 @@ Os indicadores técnicos clássicos (`ret_1d`, `ret_5d`) capturam apenas o que a
 
 ### 25. high52w_dist — Distância ao máximo de 52 semanas
 
-**O que mede:** a distância percentual entre o preço actual e o máximo das últimas 252 sessões.
+**O que mede:** a distância percentual entre o preço atual e o máximo das últimas 252 sessões.
 
 **Fórmula:** `high52w_dist = (Close − Max_252d) / Max_252d`
 
@@ -805,7 +805,7 @@ Os indicadores técnicos clássicos (`ret_1d`, `ret_5d`) capturam apenas o que a
 
 ### 26. low52w_dist — Distância ao mínimo de 52 semanas
 
-**O que mede:** a distância percentual entre o preço actual e o mínimo das últimas 252 sessões.
+**O que mede:** a distância percentual entre o preço atual e o mínimo das últimas 252 sessões.
 
 **Fórmula:** `low52w_dist = (Close − Min_252d) / Min_252d`
 
@@ -865,7 +865,7 @@ is_options_expiry = 1.0  se |data − terceira_sexta| ≤ 2 dias
 
 **Fórmula:** `btc_ret_1d = (BTC_Close_ontem − BTC_Close_anteontem) / BTC_Close_anteontem`
 
-**Exemplo:** se o Bitcoin caiu 4% ontem, `btc_ret_1d = −0.04`. Grandes quedas no Bitcoin frequentemente precedem pressão de venda em activos de risco no dia seguinte — especialmente tecnologia e activos de alta volatilidade.
+**Exemplo:** se o Bitcoin caiu 4% ontem, `btc_ret_1d = −0.04`. Grandes quedas no Bitcoin frequentemente precedem pressão de venda em ativos de risco no dia seguinte — especialmente tecnologia e ativos de alta volatilidade.
 
 **Por que incluí:** o Bitcoin funciona como barómetro de apetite por risco. Com a entrada de investidores institucionais no mercado cripto em 2024-2025, a correlação entre BTC e semicondutores (NVDA, AMD) ou small-caps tornou-se mais significativa. É informação macro que nenhuma feature baseada no próprio ativo consegue capturar.
 
@@ -877,9 +877,9 @@ is_options_expiry = 1.0  se |data − terceira_sexta| ≤ 2 dias
 
 **Fórmula:** `gold_ret_1d = (GLD_Close_ontem − GLD_Close_anteontem) / GLD_Close_anteontem`
 
-**Exemplo:** se o ouro subiu 1.5% ontem, `gold_ret_1d = +0.015`. Subidas no ouro frequentemente coincidem com queda em acções — os investidores estão a comprar refúgio.
+**Exemplo:** se o ouro subiu 1.5% ontem, `gold_ret_1d = +0.015`. Subidas no ouro frequentemente coincidem com queda em ações — os investidores estão a comprar refúgio.
 
-**Por que incluí:** o ouro é o activo de refúgio por excelência. Quando os investidores ficam assustados, vendem acções e compram ouro — a correlação inversa entre ouro e renda variável é uma das mais estáveis em finanças. Um forte dia de ouro é informação relevante para prever o comportamento dos outros ativos da carteira no dia seguinte.
+**Por que incluí:** o ouro é o ativo de refúgio por excelência. Quando os investidores ficam assustados, vendem ações e compram ouro — a correlação inversa entre ouro e renda variável é uma das mais estáveis em finanças. Um forte dia de ouro é informação relevante para prever o comportamento dos outros ativos da carteira no dia seguinte.
 
 ---
 
@@ -889,9 +889,9 @@ is_options_expiry = 1.0  se |data − terceira_sexta| ≤ 2 dias
 
 **Fórmula:** `corr_spy_20d = correlação_Pearson(ret_1d_ativo, ret_1d_SPY)` — janela rolante de 20 dias
 
-**Valores:** de −1 (correlação inversa perfeita) a +1 (correlação directa perfeita). 0 = sem correlação.
+**Valores:** de −1 (correlação inversa perfeita) a +1 (correlação direta perfeita). 0 = sem correlação.
 
-**Exemplo:** num período de bull market calmo, a NVDA pode ter `corr_spy_20d ≈ 0.8` (move com o mercado de forma amplificada). A LLY (Healthcare defensivo) pode ter `corr_spy_20d ≈ 0.3` numa crise — comporta-se como activo defensivo.
+**Exemplo:** num período de bull market calmo, a NVDA pode ter `corr_spy_20d ≈ 0.8` (move com o mercado de forma amplificada). A LLY (Healthcare defensivo) pode ter `corr_spy_20d ≈ 0.3` numa crise — comporta-se como ativo defensivo.
 
 **Por que incluí:** mede o "beta implícito recente" de um ativo. Com correlação alta, as features de contexto (`spy_ret_1d`, `vix_level`) são muito mais relevantes. Com correlação baixa ou negativa, os indicadores técnicos do próprio ativo dominam. O modelo aprende a pesar cada grupo de features em função desta correlação.
 
@@ -899,7 +899,7 @@ is_options_expiry = 1.0  se |data − terceira_sexta| ≤ 2 dias
 
 ### 33. vwap_dist — Distância ao VWAP de 20 dias
 
-**O que mede:** a distância percentual entre o preço actual e o VWAP (Volume-Weighted Average Price) dos últimos 20 dias.
+**O que mede:** a distância percentual entre o preço atual e o VWAP (Volume-Weighted Average Price) dos últimos 20 dias.
 
 **Fórmula:**
 ```
@@ -910,7 +910,7 @@ vwap_dist = (Close − VWAP_20d) / VWAP_20d
 
 **Exemplo:** se o EMIM.AS tem VWAP de 20 dias a 30.50 euros e hoje fechou a 31.20 euros, `vwap_dist = +2.3%`. Preço acima do VWAP indica que os compradores pagaram em média mais do que a média ponderada por volume.
 
-**Por que incluí:** o VWAP é o preço de referência dos traders institucionais — grandes fundos avaliam a qualidade de execução das suas ordens comparando com o VWAP. Preços consistentemente acima do VWAP indicam pressão compradora institucional; abaixo, pressão vendedora. É a única feature do sistema que incorpora directamente o comportamento institucional no preço.
+**Por que incluí:** o VWAP é o preço de referência dos traders institucionais — grandes fundos avaliam a qualidade de execução das suas ordens comparando com o VWAP. Preços consistentemente acima do VWAP indicam pressão compradora institucional; abaixo, pressão vendedora. É a única feature do sistema que incorpora diretamente o comportamento institucional no preço.
 
 ---
 
@@ -1186,7 +1186,7 @@ Um ρ de 0.5 indicaria drift moderado. Com 33 features reais, o cálculo é mais
 - ρ < 0.70: as features mudaram de importância significativamente. Pode indicar mudança de regime de mercado. O email mostra um alerta de drift.
 - ρ muito baixo ou negativo: o modelo está "vendo" padrões completamente diferentes. Situação rara mas indica que o mercado mudou estruturalmente.
 
-**O que fazer quando há drift:** o sistema alerta no email. A feature `vix_regime` (Fase 21) já categoriza o mercado em três estados — calmo, moderado e crise — dando ao modelo contexto explícito de regime e reduzindo a sensibilidade a mudanças de distribuição. Walk-Forward Validation (roadmap) permitirá avaliar se os modelos se degradam por regime de forma sistemática.
+**O que fazer quando há drift:** o sistema alerta no email. A feature `vix_regime` (Fase 21) já categoriza o mercado em três estados — calmo, moderado e crise — dando ao modelo contexto explícito de regime e reduzindo a sensibilidade a mudanças de distribuição. A Walk-Forward Validation diária (ver Roadmap, Semanas 4 e 5) dá a base para avaliar se os modelos se degradam por regime de forma sistemática, embora essa quebra por regime específica ainda não esteja implementada.
 
 ---
 
@@ -1326,7 +1326,7 @@ O roadmap técnico traduzido para o que cada item significa na prática:
 
 - ✅ Enriquecimento de features: expansão de 20 para 33 features — momentum multi-horizonte (1m/3m/6m/12m), distância aos extremos anuais (52-week high/low), efeitos de calendário (dia da semana, mês, semana de expiração de opções) e sinais cross-asset (Bitcoin, ouro, correlação com SPY, VWAP institucional).
 - ✅ Regime de mercado como feature explícita: `vix_regime` categoriza o VIX em calmo/moderado/crise (0/1/2), permitindo ao modelo aprender comportamentos distintos por regime.
-- ⬜ Walk-Forward Validation: testar o modelo de forma mais honesta, simulando como ele teria performado no passado sem usar dados futuros no treinamento.
+- ✅ Walk-Forward Validation: testa o modelo de forma mais honesta, simulando como ele teria performado no passado sem usar dados futuros no treinamento. Corre todos os dias sobre os últimos 30 dias úteis (`evaluation/walk_forward.py`), com resultados cumulativos em `output/wfv_log.csv` e `output/wfv_results.json`.
 
 **Semana 6 — Melhorar o email**
 
@@ -1422,7 +1422,7 @@ Ainda não decidimos "trocar tudo de uma vez" pra usar o modelo de regressão na
 
 Construído por **Vicky Costa** — Analista de Dados, estudante de Ciência de Dados
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycosta/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycostasanches/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)
 
 *Este arquivo é uma documentação educativa. Não constitui conselho financeiro.*

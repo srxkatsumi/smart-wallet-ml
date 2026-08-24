@@ -163,6 +163,19 @@ Também corrigido no mesmo dia: o teste de Diebold-Mariano do experimento de reg
 
 ---
 
+## ERR-012: Pesos adaptativos do ensemble colapsavam para um único dia de mercado (2026-08-20)
+
+**Sintoma**
+Uma revisão externa apontou que o mecanismo de pesos adaptativos (`models/validator.py:update_ensemble_weights`) parecia reagir rápido demais ao ruído de curto prazo. A matemática do decay em si estava certa (o dia mais recente pesa só ~10% de uma janela de 30, não ~90% como a revisão assumiu), mas rodar um ablation direto (pesos adaptativos vs. voto majoritário simples de RF/GB/SGD sobre as 61.823 previsões validadas reais) mostrou o mecanismo a performar **pior** que pesos fixos, de forma muito significativa: −1,6 a −2,0pp de acurácia nos três horizontes (McNemar, p<0,0001).
+
+**Causa raiz**
+`validadas[validadas["horizon"] == day_n].tail(30)` pega as últimas 30 **linhas**, não os últimos 30 dias. O watchlist tem mais de 500 tickers validados no mesmo `target_date`. Confirmado diretamente nos dados: `tail(30)` para D+1 devolvia 30 linhas, todas do mesmo dia. A janela que o código e o README descreviam como ~30 dias de histórico era, na prática, ~30 tickers de um único dia de mercado, e o decay exponencial ordenava esses tickers (ordem arbitrária, não cronológica) como se fossem passos temporais sequenciais. `MIN_VALIDATIONS_WEIGHT=5` piorava o efeito: os pesos já estavam a oscilar com histórico de um único dia desde os primeiros dias de operação. O mesmo padrão existia em `research/runner.py:_update_research_weights`, com efeito menor (a carteira de pesquisa tem só 12 tickers, então a janela colapsava para ~5 dias em vez de 1).
+
+**Solução aplicada**
+Reescrita a janela para os últimos 30 `target_date`/`week_date` **distintos**, não as últimas 30 linhas. Dentro da janela, a acurácia é calculada primeiro por dia, e só depois o decay é aplicado entre dias, para um dia com mais tickers não pesar mais que um dia com menos. Aplicado em `models/validator.py` e `research/runner.py`. Testes de regressão adicionados (`tests/test_validator.py`, `tests/test_research_runner.py`) que reproduzem o cenário de um dia com muitos tickers e travam o comportamento correto. `scripts/ablation_ensemble_weights.py` guarda o ablation usado para medir o problema e confirmar a correção: os pesos corrigidos recuperam as −1,6 a −2,0pp que o bug estava a custar, e ficam estatisticamente indistinguíveis de pesos fixos (0 divergências de McNemar) no histórico atual, ainda curto demais para separar RF/GB/SGD de forma confiável.
+
+---
+
 ## Validações em produção (estado atual)
 
 | Validação | Onde | O que deteta |

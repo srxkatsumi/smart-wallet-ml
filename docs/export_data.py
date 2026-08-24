@@ -19,9 +19,12 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from pathlib import Path
+from scipy.stats import binomtest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+
+from evaluation.significance import apply_bh_correction
 
 MIN_VAL = 15  # mesmo limiar de reports/email_report.py:_calcular_tendencia
 CHART_WINDOW_DAYS = 90   # janela exibida nos gráficos (dias úteis)
@@ -105,7 +108,11 @@ _FAMILY_LABELS = {
 
 
 def comparacao_familias(log: pd.DataFrame) -> list:
-    """Espelha research/runner.py:_build_comparison: acurácia acumulada por família."""
+    """
+    Espelha research/runner.py:_build_comparison: acurácia acumulada por família,
+    com p-valor (teste binomial) e correção de Benjamini-Hochberg pelas 13
+    famílias testadas simultaneamente (ver evaluation/significance.py).
+    """
     validated = log[log["validated"] == True].copy()  # noqa: E712
     if validated.empty:
         return []
@@ -114,14 +121,19 @@ def comparacao_familias(log: pd.DataFrame) -> list:
         fam_rows = validated[validated["family"] == family]
         if fam_rows.empty:
             continue
-        acc = float(fam_rows["correct_d1"].astype(float).mean())
+        n     = len(fam_rows)
+        k     = int(fam_rows["correct_d1"].astype(float).sum())
+        acc   = k / n
+        p_val = binomtest(k, n, p=0.5, alternative="greater").pvalue
         results.append({
             "family": family,
             "label": _FAMILY_LABELS[family],
             "accuracy": round(acc, 3),
-            "n": len(fam_rows),
+            "n": n,
             "vs_acaso": round(acc - 0.5, 3),
+            "p": round(float(p_val), 4),
         })
+    apply_bh_correction(results)
     results.sort(key=lambda x: x["accuracy"], reverse=True)
     return results
 

@@ -2,11 +2,20 @@ import numpy as np
 import pandas as pd
 import pytest
 from pathlib import Path
+import data.storage as storage
 from features.engineering import FEATURE_COLS
 from research.runner import (
     _build_comparison, _build_consensus, _validate_past_predictions,
-    _RES_COLS,
+    _update_research_weights, _RES_COLS,
 )
+
+
+@pytest.fixture(autouse=True)
+def _no_disk_writes(monkeypatch):
+    # _update_research_weights persists via a local `from data.storage import
+    # save_research_weights`, straight to output/research_weights.json (real
+    # production state). Block that here so these tests can never clobber it.
+    monkeypatch.setattr(storage, "save_research_weights", lambda *a, **k: None)
 
 
 def _make_featured_df(n: int = 100, seed: int = 42) -> pd.DataFrame:
@@ -42,6 +51,39 @@ def test_build_comparison_returns_sorted():
     if r:
         accs = [x["accuracy"] for x in r]
         assert accs == sorted(accs, reverse=True)
+
+
+# ── _update_research_weights ──────────────────────────────────────────────
+
+def test_update_research_weights_uses_distinct_days_not_rows():
+    """
+    Same tail(30)-on-rows bug as models/validator.py: a single week_date with
+    many tickers can dominate a family's own row history. classico_avancado
+    is right on 5 older dates (1 row each) and wrong on 40 rows on the single
+    most recent date. A row-windowed tail(30) lands entirely inside that
+    40-row date (all wrong) and floors the weight to 0.1; a day-windowed
+    scheme still sees 5 of 6 days as correct and keeps the weight well above
+    the floor.
+    """
+    def _rows(week_date: str, n: int, correct: bool) -> list[dict]:
+        return [
+            {"week_date": week_date, "family": "classico_avancado",
+             "validated": True, "correct_d1": correct}
+            for _ in range(n)
+        ]
+
+    older_days = [
+        _rows(f"2026-01-{10 + i:02d}", 1, True) for i in range(5)
+    ]
+    log = pd.DataFrame(
+        [row for day in older_days for row in day] +
+        _rows("2026-01-15", 40, False)
+    )
+    current = {f"d{h}": {} for h in [1, 2, 3]}
+    weights = _update_research_weights(log, current)
+
+    d1 = weights["d1"]
+    assert d1["classico_avancado"] > 0.5, f"collapsed to the floor: {d1}"
 
 
 # ── _build_consensus ──────────────────────────────────────────────────────

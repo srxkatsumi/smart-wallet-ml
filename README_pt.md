@@ -1,6 +1,6 @@
 # Carteira Inteligente — Sistema de Previsão de Carteira com Machine Learning
 
-Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo — usando um ensemble de 38 modelos em 13 famílias, desde Random Forests clássicos até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal.
+Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo, usando um ensemble operacional de três modelos (Random Forest, Gradient Boosting, SGD Classifier). Um framework de pesquisa separado avalia 38 modelos em 13 famílias offline, desde variantes clássicas de boosting até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal, cujo consenso é combinado com a previsão de produção para os ativos cobertos.
 Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraestrutura cloud, sem APIs pagas, sem passos manuais. Cada previsão é registada, validada contra preços reais, e usada para actualizar os pesos do ensemble — o sistema aprende continuamente com os seus próprios erros.
 
 [![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
@@ -691,5 +691,5 @@ Os 25 modelos originais estão implementados e testados. As camadas transversais
 
 Construído por **Vicky Costa** — Analista de Dados | Estudante de Ciência de Dados
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycosta/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycostasanches/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)

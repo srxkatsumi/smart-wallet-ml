@@ -17,7 +17,8 @@
       <a href="experiments.html" data-page="experiments">Experiments</a>
       <a href="watchlist.html" data-page="watchlist">Watchlist</a>
       <a href="alerts.html" data-page="alerts">Alerts</a>
-      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="models.html" data-page="models">Models</a>
+      <a href="https://www.linkedin.com/in/vickycostasanches/" target="_blank" rel="noopener">About Me</a>
       <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_educativo.md" target="_blank" rel="noopener">Methodology</a>
       <a href="pt/index.html">🇧🇷 PT</a>
     </div>
@@ -27,7 +28,7 @@
 <header class="page-header">
   <div class="wrap">
     <h1 class="page-title">Home</h1>
-    <div class="page-subtitle">Summary of the three channels: portfolio, experiment and alerts</div>
+    <div class="page-subtitle">Fully automated ML pipeline, run entirely on GitHub Actions: no cloud infrastructure, no paid APIs, no manual steps</div>
     <div class="status-strip" id="status-strip"><!-- JS --></div>
   </div>
 </header>
@@ -97,7 +98,7 @@
       <div class="card-body">
         <table id="familias-table"><!-- JS --></table>
         <div style="margin-top:12px;font-size:10.5px;color:var(--ink-ghost);line-height:1.7">
-          ★ best family this week · vs Random = difference from 50% · ⚠ = ensemble sanity check
+          ★ best family this week, only if significant after Benjamini-Hochberg correction across the 13 families · vs Random = difference from 50% · ⚠ = ensemble sanity check
         </div>
       </div>
     </div>
@@ -124,10 +125,12 @@
       This site is a personal study project applying Machine Learning to financial markets.
       The forecasts have no proven statistical significance (see the Methodology page) and
       should not be taken seriously as a basis for decisions. Nothing here is financial advice.
+      The value of this project isn't market prediction, it's the engineering and the statistical discipline behind it.
     </div>
     <div class="footer-links">
-      <a href="https://www.linkedin.com/in/vickycosta/" target="_blank" rel="noopener">About Me</a>
+      <a href="https://www.linkedin.com/in/vickycostasanches/" target="_blank" rel="noopener">About Me</a>
       <a href="https://github.com/srxkatsumi/smart-wallet-ml" target="_blank" rel="noopener">Source code</a>
+      <a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_Errors_EN.md" target="_blank" rel="noopener">Incident log</a>
     </div>
     <div class="footer-meta" id="footer-meta"><!-- JS --></div>
   </div>
@@ -143,8 +146,12 @@
 
   document.getElementById('status-strip').innerHTML = `
     <div class="status-item">
-      <div class="label">D+1 accuracy</div>
-      <div class="value">${fmtPct(acc.d1)}</div>
+      <div class="label">Tests</div>
+      <div class="value" style="font-size:18px">135 <small>across 22 files</small></div>
+    </div>
+    <div class="status-item">
+      <div class="label">Audit trail</div>
+      <div class="value" style="font-size:16px">Immutable <small>since May 2026</small></div>
     </div>
     <div class="status-item">
       <div class="label">Validated records</div>
@@ -250,7 +257,7 @@
     <thead><tr><th>Family</th><th style="text-align:right">D+1 accuracy</th><th style="text-align:right">vs Random</th></tr></thead>
     <tbody>${fam.map((r, i) => `
       <tr>
-        <td>${r.label}${i === 0 ? ' ★' : ''}${r.family === 'contrarian' ? ' ⚠' : ''}</td>
+        <td>${r.label}${i === 0 && r.sig ? ' ★' : ''}${r.family === 'contrarian' ? ' ⚠' : ''}</td>
         <td style="text-align:right;font-family:var(--mono);font-weight:600">${(r.accuracy * 100).toFixed(0)}%</td>
         <td style="text-align:right;font-family:var(--mono);font-weight:600;color:${r.vs_acaso >= 0 ? 'var(--up)' : 'var(--down)'}">${r.vs_acaso >= 0 ? '+' : ''}${(r.vs_acaso * 100).toFixed(0)}%</td>
       </tr>`).join('')}</tbody>

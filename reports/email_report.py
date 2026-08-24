@@ -240,7 +240,7 @@ def _build_research_section(research_data: dict) -> str:
         vs_pct   = r["vs_acaso"] * 100
         sign     = "+" if vs_pct >= 0 else ""
         vs_color = "#1e7a4c" if vs_pct >= 0 else "#b8453a"
-        star     = " ★" if r == comparison[0] else ""
+        star     = " ★" if r == comparison[0] and r.get("sig") else ""
         comp_rows += (
             f'<tr><td style="padding:7px 8px 7px 0;font-size:12px;color:#1a1a1a">'
             f'{family_labels.get(r["family"], r["family"])}{star}</td>'
@@ -301,7 +301,7 @@ def _build_research_section(research_data: dict) -> str:
       <div>
         <div style="font-size:13px;font-weight:600;color:#1a1740;margin-bottom:10px">Comparação de famílias — semana anterior</div>
         {comp_html}
-        <div style="margin-top:8px;font-size:10px;color:#a8a39a">★ melhor família da semana &nbsp;·&nbsp; vs Acaso = diferença face a 50% &nbsp;·&nbsp; ⚠ = teste de sanidade do ensemble</div>
+        <div style="margin-top:8px;font-size:10px;color:#a8a39a">★ melhor família da semana, apenas se significativa após correção de Benjamini-Hochberg pelas 13 famílias &nbsp;·&nbsp; vs Acaso = diferença face a 50% &nbsp;·&nbsp; ⚠ = teste de sanidade do ensemble</div>
         {"<div style='margin-top:10px;padding:8px 10px;background:#fff3cd;border-left:3px solid #d4a017;border-radius:3px;font-size:11px;color:#7a5c00'><strong>Alerta Contrarian:</strong> a família Contrarian foi a mais precisa esta semana. Se CB supera o ensemble principal, o ensemble pode estar a errar de forma sistemática e previsível. Verificar acurácia recente do ensemble.</div>" if contrarian_warning else ""}
       </div>
       <div>
