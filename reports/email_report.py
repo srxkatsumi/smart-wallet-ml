@@ -552,6 +552,7 @@ def build_html(resultados_ml: dict, etf_tickers: list[str],
         </td>
       </tr>
     </table>
+    <a href="https://srxkatsumi.github.io/smart-wallet-ml/pt/" style="display:inline-block;margin-top:22px;background:rgba(168,160,255,0.15);border:1px solid rgba(168,160,255,0.35);border-radius:4px;padding:9px 18px;color:#f4f2ff;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:0.02em">Ver no site →</a>
   </div>
 
   {ctx_warning_html}
