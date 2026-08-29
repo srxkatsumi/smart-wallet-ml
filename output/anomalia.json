@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-28",
+  "date": "2026-08-29",
   "alerta": false,
   "market": {
-    "vix_hoje": 14.51,
-    "vix_ontem": 15.21,
+    "vix_hoje": 14.43,
+    "vix_ontem": 14.51,
     "regime_hoje": 0,
-    "regime_ontem": 1,
-    "variacao_1d": -0.046,
+    "regime_ontem": 0,
+    "variacao_1d": -0.0055,
     "transicao": false,
     "spike": false
   },
