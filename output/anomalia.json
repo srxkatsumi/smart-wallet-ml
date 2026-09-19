@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-17",
+  "date": "2026-09-18",
   "alerta": false,
   "market": {
-    "vix_hoje": 15.44,
-    "vix_ontem": 17.71,
-    "regime_hoje": 1,
+    "vix_hoje": 14.81,
+    "vix_ontem": 15.44,
+    "regime_hoje": 0,
     "regime_ontem": 1,
-    "variacao_1d": -0.1282,
+    "variacao_1d": -0.0408,
     "transicao": false,
     "spike": false
   },
@@ -24,9 +24,9 @@
       "alerta": false
     },
     "SGLN.L": {
-      "retorno_1d": 0.0177,
-      "atr_pct": 0.0202,
-      "multiplo_atr": 0.88,
+      "retorno_1d": 0.0075,
+      "atr_pct": 0.0207,
+      "multiplo_atr": 0.36,
       "alerta": false
     },
     "EXUS.MI": {
