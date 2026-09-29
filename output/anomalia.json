@@ -1,56 +1,56 @@
 {
-  "date": "2026-09-25",
+  "date": "2026-09-29",
   "alerta": false,
   "market": {
-    "vix_hoje": 14.87,
-    "vix_ontem": 15.67,
-    "regime_hoje": 0,
-    "regime_ontem": 1,
-    "variacao_1d": -0.0511,
+    "vix_hoje": 16.07,
+    "vix_ontem": 14.87,
+    "regime_hoje": 1,
+    "regime_ontem": 0,
+    "variacao_1d": 0.0807,
     "transicao": false,
     "spike": false
   },
   "tickers": {
     "ICGA.DE": {
-      "retorno_1d": -0.0062,
-      "atr_pct": 0.0106,
-      "multiplo_atr": 0.59,
+      "retorno_1d": -0.0061,
+      "atr_pct": 0.01,
+      "multiplo_atr": 0.61,
       "alerta": false
     },
     "PPFB.DE": {
-      "retorno_1d": -0.0062,
-      "atr_pct": 0.0129,
-      "multiplo_atr": 0.48,
+      "retorno_1d": 0.0053,
+      "atr_pct": 0.0128,
+      "multiplo_atr": 0.41,
       "alerta": false
     },
     "SGLN.L": {
-      "retorno_1d": -0.0048,
-      "atr_pct": 0.0138,
-      "multiplo_atr": 0.35,
+      "retorno_1d": 0.0061,
+      "atr_pct": 0.0136,
+      "multiplo_atr": 0.45,
       "alerta": false
     },
     "EXUS.MI": {
-      "retorno_1d": -0.009,
-      "atr_pct": 0.0097,
-      "multiplo_atr": 0.92,
+      "retorno_1d": 0.0063,
+      "atr_pct": 0.0102,
+      "multiplo_atr": 0.62,
       "alerta": false
     },
     "LYP6.DE": {
-      "retorno_1d": -0.0057,
-      "atr_pct": 0.0098,
-      "multiplo_atr": 0.58,
+      "retorno_1d": 0.0033,
+      "atr_pct": 0.0099,
+      "multiplo_atr": 0.34,
       "alerta": false
     },
     "IS3N.DE": {
-      "retorno_1d": -0.0106,
-      "atr_pct": 0.0135,
-      "multiplo_atr": 0.78,
+      "retorno_1d": 0.0071,
+      "atr_pct": 0.0136,
+      "multiplo_atr": 0.52,
       "alerta": false
     },
     "EUNN.DE": {
-      "retorno_1d": -0.0165,
-      "atr_pct": 0.0131,
-      "multiplo_atr": 1.26,
+      "retorno_1d": 0.0195,
+      "atr_pct": 0.0138,
+      "multiplo_atr": 1.42,
       "alerta": false
     }
   },
