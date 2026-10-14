@@ -1,185 +1,185 @@
 {
   "tickers": {
-    "SGLN.L": {
+    "EXUS.MI": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.00981,
-        "mae_model": 0.010154,
-        "mse_naive": 0.00019,
-        "mse_model": 0.000195,
-        "r2": -0.0279
+        "mae_naive": 0.005155,
+        "mae_model": 0.005123,
+        "mse_naive": 3.8e-05,
+        "mse_model": 3.8e-05,
+        "r2": 0.0089
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.014399,
-        "mae_model": 0.014656,
-        "mse_naive": 0.000356,
-        "mse_model": 0.000375,
-        "r2": -0.0545
+        "mae_naive": 0.006452,
+        "mae_model": 0.006454,
+        "mse_naive": 6.7e-05,
+        "mse_model": 6.8e-05,
+        "r2": -0.0186
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.016878,
-        "mae_model": 0.017877,
-        "mse_naive": 0.000515,
-        "mse_model": 0.000574,
-        "r2": -0.1149
-      }
-    },
-    "ICGA.DE": {
-      "d1": {
-        "n": 60,
-        "mae_naive": 0.007755,
-        "mae_model": 0.007669,
-        "mse_naive": 9.8e-05,
-        "mse_model": 9.8e-05,
-        "r2": -0.003
-      },
-      "d2": {
-        "n": 60,
-        "mae_naive": 0.009684,
-        "mae_model": 0.009874,
-        "mse_naive": 0.000139,
-        "mse_model": 0.000151,
-        "r2": -0.087
-      },
-      "d3": {
-        "n": 60,
-        "mae_naive": 0.010659,
-        "mae_model": 0.011465,
-        "mse_naive": 0.000183,
-        "mse_model": 0.000211,
-        "r2": -0.1519
+        "mae_naive": 0.007001,
+        "mae_model": 0.007015,
+        "mse_naive": 7.9e-05,
+        "mse_model": 7.9e-05,
+        "r2": -0.0024
       }
     },
     "LYP6.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.004669,
-        "mae_model": 0.005092,
+        "mae_naive": 0.004721,
+        "mae_model": 0.005094,
         "mse_naive": 3.5e-05,
         "mse_model": 4.4e-05,
-        "r2": -0.2566
+        "r2": -0.2379
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.005803,
-        "mae_model": 0.006088,
-        "mse_naive": 5.6e-05,
-        "mse_model": 6.8e-05,
-        "r2": -0.2182
+        "mae_naive": 0.005974,
+        "mae_model": 0.006282,
+        "mse_naive": 6e-05,
+        "mse_model": 7.3e-05,
+        "r2": -0.2228
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.006791,
-        "mae_model": 0.007459,
+        "mae_naive": 0.006846,
+        "mae_model": 0.007611,
         "mse_naive": 7.1e-05,
-        "mse_model": 8.6e-05,
-        "r2": -0.2186
+        "mse_model": 8.9e-05,
+        "r2": -0.2494
+      }
+    },
+    "SGLN.L": {
+      "d1": {
+        "n": 60,
+        "mae_naive": 0.009857,
+        "mae_model": 0.010176,
+        "mse_naive": 0.00019,
+        "mse_model": 0.000195,
+        "r2": -0.0277
+      },
+      "d2": {
+        "n": 60,
+        "mae_naive": 0.014508,
+        "mae_model": 0.014649,
+        "mse_naive": 0.000358,
+        "mse_model": 0.000374,
+        "r2": -0.0446
+      },
+      "d3": {
+        "n": 60,
+        "mae_naive": 0.016736,
+        "mae_model": 0.018004,
+        "mse_naive": 0.00051,
+        "mse_model": 0.000574,
+        "r2": -0.1261
       }
     },
     "IS3N.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.009709,
-        "mae_model": 0.009258,
-        "mse_naive": 0.000145,
-        "mse_model": 0.000132,
-        "r2": 0.0858
+        "mae_naive": 0.009581,
+        "mae_model": 0.009269,
+        "mse_naive": 0.000143,
+        "mse_model": 0.000133,
+        "r2": 0.0731
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.013372,
-        "mae_model": 0.012801,
-        "mse_naive": 0.000276,
-        "mse_model": 0.000247,
-        "r2": 0.1056
+        "mae_naive": 0.013283,
+        "mae_model": 0.012555,
+        "mse_naive": 0.000275,
+        "mse_model": 0.000243,
+        "r2": 0.1162
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.017226,
-        "mae_model": 0.016625,
-        "mse_naive": 0.000413,
-        "mse_model": 0.000393,
-        "r2": 0.0477
-      }
-    },
-    "EXUS.MI": {
-      "d1": {
-        "n": 60,
-        "mae_naive": 0.00508,
-        "mae_model": 0.005074,
-        "mse_naive": 3.8e-05,
-        "mse_model": 3.8e-05,
-        "r2": 0.0046
-      },
-      "d2": {
-        "n": 60,
-        "mae_naive": 0.006338,
-        "mae_model": 0.006418,
-        "mse_naive": 6.4e-05,
-        "mse_model": 6.7e-05,
-        "r2": -0.0484
-      },
-      "d3": {
-        "n": 60,
-        "mae_naive": 0.007055,
-        "mae_model": 0.007109,
-        "mse_naive": 8e-05,
-        "mse_model": 8.1e-05,
-        "r2": -0.0104
+        "mae_naive": 0.017125,
+        "mae_model": 0.016576,
+        "mse_naive": 0.00041,
+        "mse_model": 0.000392,
+        "r2": 0.0441
       }
     },
     "EUNN.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.008279,
-        "mae_model": 0.008343,
-        "mse_naive": 0.000103,
-        "mse_model": 0.000106,
-        "r2": -0.0293
+        "mae_naive": 0.008163,
+        "mae_model": 0.0081,
+        "mse_naive": 0.000101,
+        "mse_model": 0.000101,
+        "r2": 0.0007
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.011792,
-        "mae_model": 0.01105,
-        "mse_naive": 0.000206,
-        "mse_model": 0.00019,
-        "r2": 0.076
+        "mae_naive": 0.011705,
+        "mae_model": 0.010864,
+        "mse_naive": 0.000204,
+        "mse_model": 0.000186,
+        "r2": 0.0862
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.013241,
-        "mae_model": 0.012091,
-        "mse_naive": 0.000275,
-        "mse_model": 0.000251,
-        "r2": 0.0876
+        "mae_naive": 0.012874,
+        "mae_model": 0.011749,
+        "mse_naive": 0.000265,
+        "mse_model": 0.00024,
+        "r2": 0.0967
+      }
+    },
+    "ICGA.DE": {
+      "d1": {
+        "n": 60,
+        "mae_naive": 0.007276,
+        "mae_model": 0.007238,
+        "mse_naive": 8.1e-05,
+        "mse_model": 8.4e-05,
+        "r2": -0.0314
+      },
+      "d2": {
+        "n": 60,
+        "mae_naive": 0.00997,
+        "mae_model": 0.010149,
+        "mse_naive": 0.000147,
+        "mse_model": 0.000159,
+        "r2": -0.0825
+      },
+      "d3": {
+        "n": 60,
+        "mae_naive": 0.010821,
+        "mae_model": 0.011566,
+        "mse_naive": 0.000186,
+        "mse_model": 0.000213,
+        "r2": -0.1451
       }
     },
     "PPFB.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.009519,
-        "mae_model": 0.010015,
+        "mae_naive": 0.009518,
+        "mae_model": 0.01002,
         "mse_naive": 0.000169,
         "mse_model": 0.000176,
-        "r2": -0.0391
+        "r2": -0.0394
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.014226,
-        "mae_model": 0.014665,
-        "mse_naive": 0.00033,
-        "mse_model": 0.000352,
-        "r2": -0.067
+        "mae_naive": 0.014432,
+        "mae_model": 0.014793,
+        "mse_naive": 0.000334,
+        "mse_model": 0.000355,
+        "r2": -0.0631
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.016956,
-        "mae_model": 0.017642,
-        "mse_naive": 0.000505,
-        "mse_model": 0.000561,
-        "r2": -0.1116
+        "mae_naive": 0.017114,
+        "mae_model": 0.01783,
+        "mse_naive": 0.000508,
+        "mse_model": 0.000564,
+        "r2": -0.1105
       }
     }
   }
