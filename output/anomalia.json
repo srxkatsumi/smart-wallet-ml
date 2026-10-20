@@ -1,60 +1,58 @@
 {
-  "date": "2026-10-16",
-  "alerta": true,
+  "date": "2026-10-20",
+  "alerta": false,
   "market": {
-    "vix_hoje": 19.99,
-    "vix_ontem": 16.46,
+    "vix_hoje": 18.44,
+    "vix_ontem": 19.99,
     "regime_hoje": 1,
     "regime_ontem": 1,
-    "variacao_1d": 0.2145,
+    "variacao_1d": -0.0775,
     "transicao": false,
-    "spike": true
+    "spike": false
   },
   "tickers": {
     "ICGA.DE": {
-      "retorno_1d": -0.0036,
-      "atr_pct": 0.0124,
-      "multiplo_atr": 0.29,
+      "retorno_1d": -0.0072,
+      "atr_pct": 0.0128,
+      "multiplo_atr": 0.56,
       "alerta": false
     },
     "PPFB.DE": {
-      "retorno_1d": 0.0081,
-      "atr_pct": 0.0143,
-      "multiplo_atr": 0.57,
+      "retorno_1d": 0.0016,
+      "atr_pct": 0.0123,
+      "multiplo_atr": 0.13,
       "alerta": false
     },
     "SGLN.L": {
-      "retorno_1d": 0.0081,
-      "atr_pct": 0.0147,
-      "multiplo_atr": 0.55,
+      "retorno_1d": -0.0012,
+      "atr_pct": 0.0124,
+      "multiplo_atr": 0.09,
       "alerta": false
     },
     "EXUS.MI": {
-      "retorno_1d": -0.0017,
-      "atr_pct": 0.0094,
-      "multiplo_atr": 0.18,
+      "retorno_1d": 0.0061,
+      "atr_pct": 0.0095,
+      "multiplo_atr": 0.64,
       "alerta": false
     },
     "LYP6.DE": {
-      "retorno_1d": 0.0035,
+      "retorno_1d": 0.0071,
       "atr_pct": 0.0101,
-      "multiplo_atr": 0.35,
+      "multiplo_atr": 0.7,
       "alerta": false
     },
     "IS3N.DE": {
-      "retorno_1d": -0.0198,
-      "atr_pct": 0.0154,
-      "multiplo_atr": 1.28,
+      "retorno_1d": -0.01,
+      "atr_pct": 0.0155,
+      "multiplo_atr": 0.65,
       "alerta": false
     },
     "EUNN.DE": {
-      "retorno_1d": -0.0189,
-      "atr_pct": 0.012,
-      "multiplo_atr": 1.57,
+      "retorno_1d": 0.0048,
+      "atr_pct": 0.0122,
+      "multiplo_atr": 0.39,
       "alerta": false
     }
   },
-  "motivos": [
-    "VIX saltou 21% num dia (16.46→19.99)"
-  ]
+  "motivos": []
 }
