@@ -13,6 +13,11 @@ METADATA_FILE= OUTPUT_DIR / "model_metadata.csv"
 RECALIB_FILE = OUTPUT_DIR / "ultima_recalibracao.json"
 HTML_REPORT  = OUTPUT_DIR / "resumo_diario.html"
 
+# ── Calibração de confiança (ERR-013) ───────────────────────────────────────
+CONFIDENCE_CALIB_FILE = OUTPUT_DIR / "confidence_calibration.json"
+CONFIDENCE_CALIB_DAYS = 30   # mesma cadência do RECALIBRATION_DAYS do SGD
+MIN_N_CALIBRATION     = 200  # por horizonte; abaixo disso o isotonic fit é ruído
+
 # ── Experimento de regressão (email separado, não afeta a carteira) ────────
 EXPERIMENTO_MODELS_DIR       = OUTPUT_DIR / "models" / "experimento"
 EXPERIMENTO_PRED_LOG         = OUTPUT_DIR / "predictions_experimentos_log.csv"
@@ -73,6 +78,7 @@ PRED_COLS = [
     "actual_price", "actual_change_pct", "correct",
     "atr_at_prediction", "predicted_price",
     "model_rf", "model_gb", "model_sgd",
+    "confidence_calibrated",
 ]
 
 EXPERIMENTO_PRED_COLS = [

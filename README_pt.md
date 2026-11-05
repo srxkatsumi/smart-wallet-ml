@@ -368,7 +368,16 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 │   └── engineering.py               ← indicadores técnicos + matriz de features ML
 ├── models/
 │   ├── ensemble.py                  ← treino RF + GB + SGD + atualização de pesos adaptativos
-│   └── validator.py                 ← validação de previsões contra preços realizados
+│   ├── validator.py                 ← validação de previsões contra preços realizados
+│   └── calibration.py               ← calibração pós-hoc de confiança (ver "Incidentes", ERR-013)
+├── maomao/
+│   ├── brain.py                     ← rede pulsada (LIF) pequena: humor de mercado, não direção de preço
+│   ├── sensors.py                   ← canais sensoriais a partir de retorno real já acontecido
+│   ├── learning.py                  ← aprendizado com recompensa tardia (clustering de volatilidade)
+│   ├── daily.py                     ← um passo orquestrado por execução do pipeline, idempotente por dia (x2: carteira + mercado)
+│   ├── backfill.py                  ← replay único contra histórico real do yfinance/predictions_log
+│   ├── state.py                     ← persiste pesos aprendidos + histórico de humor entre execuções
+│   └── README.md                    ← arquitetura completa + crédito a github.com/mille-okws/pestinha
 ├── portfolio/
 │   ├── pnl.py                       ← G/P, fees, breakeven, alvos de saída
 │   ├── exit_signals.py              ← lógica de sinais de saída

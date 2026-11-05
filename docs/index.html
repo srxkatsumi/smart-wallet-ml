@@ -35,6 +35,11 @@
 
 <main class="wrap">
 
+  <div class="tile-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-bottom:20px">
+    <div class="card" style="margin-bottom:0" id="pet-widget-portfolio"><!-- JS: docs/assets/pet.js --></div>
+    <div class="card" style="margin-bottom:0" id="pet-widget-market"><!-- JS: docs/assets/pet.js --></div>
+  </div>
+
   <section class="section">
     <div class="tile-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
 
@@ -137,9 +142,13 @@
 </footer>
 
 <script src="assets/data.js"></script>
+<script src="assets/maomao_data.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/pet.js"></script>
 <script>
   setActiveNav('home');
+  renderPet('pet-widget-portfolio', MAOMAO_DATA.portfolio, 'en', 'portfolio');
+  renderPet('pet-widget-market', MAOMAO_DATA.market, 'en', 'market');
 
   const acc = SITE_DATA.accuracy;
   const tend = SITE_DATA.tendencia;

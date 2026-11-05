@@ -196,6 +196,7 @@ jobs:
         run: |
           python docs/export_alerts.py
           python docs/export_data.py
+          python docs/export_maomao.py
           if [ "$(date +%u)" = "1" ]; then
             python docs/export_watchlist.py --refresh
           else

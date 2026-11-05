@@ -349,7 +349,16 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 │   └── engineering.py               ← technical indicators + ML feature matrix
 ├── models/
 │   ├── ensemble.py                  ← RF + GB + SGD training + adaptive weight updates
-│   └── validator.py                 ← forecast validation against realised prices
+│   ├── validator.py                 ← forecast validation against realised prices
+│   └── calibration.py               ← post-hoc confidence calibration (see "Incidents & fixes", ERR-013)
+├── maomao/
+│   ├── brain.py                     ← small spiking (LIF) network: market mood, not price direction
+│   ├── sensors.py                   ← derives sensory channels from real, already-realised outcomes
+│   ├── learning.py                  ← delayed reward-modulated learning (volatility clustering)
+│   ├── daily.py                     ← one orchestrated step per pipeline run, idempotent per day (x2: portfolio + market)
+│   ├── backfill.py                  ← one-off replay against real yfinance/predictions_log history
+│   ├── state.py                     ← persists learned weights + mood history across runs
+│   └── README.md                    ← full architecture + credit to github.com/mille-okws/pestinha
 ├── portfolio/
 │   ├── pnl.py                       ← P&L, fees, breakeven, exit targets
 │   ├── exit_signals.py              ← exit signal logic

@@ -350,10 +350,38 @@ td {
   text-transform: uppercase;
 }
 
+/* ── Pet widget (prototype) ───────────────────────────────────────────────
+   Mood is driven only by evaluation.anomaly.detect_anomaly() output and the
+   realized 30-day accuracy trend — never by a predicted direction. See
+   docs/assets/pet.js and README_Errors.md ERR-013. */
+
+.pet-widget {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+}
+
+.pet-sprite { flex: 0 0 auto; line-height: 0; }
+
+.pet-label {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.pet-detail {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+
 /* ── Responsivo ───────────────────────────────────────────────────────── */
 
 @media (max-width: 560px) {
   .status-strip { gap: 18px; }
   .page-title { font-size: 24px; }
   table { display: block; overflow-x: auto; }
+  .pet-widget { padding: 12px 16px; }
 }

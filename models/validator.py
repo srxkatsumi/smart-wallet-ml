@@ -179,7 +179,9 @@ def update_ensemble_weights(df_log: pd.DataFrame,
 
 
 def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
-                         today: pd.Timestamp) -> pd.DataFrame:
+                         today: pd.Timestamp, calib_curves: dict | None = None) -> pd.DataFrame:
+    from models.calibration import apply_calibration
+
     hoje_str       = today.strftime("%Y-%m-%d")
     novas_previsoes= []
 
@@ -221,6 +223,7 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
                 "model_rf":          h_data["preds_ind"].get("rf", ""),
                 "model_gb":          h_data["preds_ind"].get("gb", ""),
                 "model_sgd":         h_data["preds_ind"].get("sgd", ""),
+                "confidence_calibrated": round(apply_calibration(conf, day, calib_curves or {}), 4),
             })
 
     if novas_previsoes:

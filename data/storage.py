@@ -49,6 +49,16 @@ def load_predictions_log() -> pd.DataFrame:
         df.to_csv(PRED_LOG, index=False)
         logger.info("CSV migrado: colunas adicionadas — %s", added)
 
+    # Migração: confidence_calibrated (ERR-013). Sem backfill aqui de propósito —
+    # models.calibration.monthly_calibration_refresh reaplica a curva atual a
+    # todo o histórico na primeira execução após este deploy, o que já cobre
+    # as linhas antigas corretamente (ao contrário de actual_change_pct acima,
+    # não há como calcular o valor calibrado sem a curva isotônica ajustada).
+    if "confidence_calibrated" not in df.columns:
+        df["confidence_calibrated"] = np.nan
+        df.to_csv(PRED_LOG, index=False)
+        logger.info("CSV migrado: coluna adicionada — confidence_calibrated")
+
     logger.info("predictions_log carregado: %d registos", len(df))
     return df
 

@@ -176,6 +176,21 @@ Reescrita a janela para os últimos 30 `target_date`/`week_date` **distintos**, 
 
 ---
 
+## ERR-013: Confiança do ensemble sem informação em produção — calibração isotônica pós-hoc (2026-11-05)
+
+**Sintoma**
+Não foi um incidente — uma revisão deliberada da qualidade do modelo mediu a acurácia real por faixa de confiança reportada e achou acurácia praticamente plana entre o decil mais baixo (<55%) e o mais alto (>80%) de confiança, nas ~48 mil previsões já validadas de todo o watchlist.
+
+**Causa raiz**
+`models/ensemble.py` já calibra RF e GB individualmente com `CalibratedClassifierCV(method="isotonic")`, mas essa calibração é feita sobre as *dobras de treino* de cada modelo isoladamente. O SGD nunca passa por calibração (usa `predict_proba` bruto do `log_loss`). A confiança final reportada é a média ponderada dos três (`confidence = max(prob_ens, 1 - prob_ens)`), e média de probabilidades já calibradas individualmente não preserva calibração do conjunto — e o componente SGD não calibrado degrada ainda mais o resultado combinado. Medido diretamente: Brier score de 0,2855–0,2921 nos três horizontes, **pior** do que simplesmente prever 0,5 constante (Brier=0,25) — a confiança reportada hoje é menos honesta que não dizer nada.
+
+**Solução aplicada**
+Novo módulo `models/calibration.py`: ajusta uma curva isotônica por horizonte (confiança bruta → acurácia empírica), agregada por todos os tickers do watchlist (por ticker o histórico é pequeno demais — 66 a 150 validações — pra um fit confiável; agregado há ~48 mil). Pontos agrupados em bins de frequência igual antes do fit (reliability diagram padrão) — ajustar isotonic direto em floats quase todos únicos deixa uma única observação extrema fixar o valor da curva na borda. Guarda mínimo de 200 validações por horizonte (`MIN_N_CALIBRATION`) antes de ativar; sem isso, cai no valor bruto sem alterar. Reajusta a cada 30 dias (`CONFIDENCE_CALIB_DAYS`, mesma cadência do `monthly_recalibration` do SGD) e reaplica a curva nova a todo o histórico já validado, não só às previsões novas do dia.
+
+Gravado em coluna nova `confidence_calibrated`, lado a lado com `confidence` (nunca sobrescrita — o valor bruto é o que alimenta o próximo refit). Resultado no histórico real: Brier cai de 0,2855–0,2921 para ~0,25 nos três horizontes, e a curva calibrada fica dentro de ±3pp de 50% em toda a faixa — confirmação numérica de que a confiança não carrega sinal explorável hoje, em vez de inventar uma calibração que os dados não sustentam. Testes de regressão em `tests/test_calibration.py`, incluindo um caso sintético com confiança genuinamente informativa (recupera curva crescente) e um com confiança pura ruído (mantém-se plana) — trava os dois comportamentos.
+
+---
+
 ## Validações em produção (estado atual)
 
 | Validação | Onde | O que deteta |
@@ -191,4 +206,4 @@ Reescrita a janela para os últimos 30 `target_date`/`week_date` **distintos**, 
 
 ---
 
-*Última actualização: 2026-08-17*
+*Última actualização: 2026-11-05*

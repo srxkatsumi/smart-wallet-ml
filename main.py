@@ -139,6 +139,16 @@ def main():
     except Exception as e:
         logger.warning("Cálculo de significância falhou (não bloqueia): %s", e)
 
+    # ── Calibração de confiança (ERR-013): reajusta a curva isotônica contra
+    # o histórico validado e reaplica a todo o log quando é hora de reajustar
+    # (mesma cadência do recalibration do SGD) ────────────────────────────
+    calib_curves = {}
+    try:
+        from models.calibration import monthly_calibration_refresh
+        df_log, calib_curves = monthly_calibration_refresh(df_log)
+    except Exception as e:
+        logger.warning("Calibração de confiança falhou (não bloqueia): %s", e)
+
     # ── Deteção de anomalia (email separado, só dispara em evento fora do normal) ─
     try:
         from evaluation.anomaly import detect_anomaly, save_anomaly
@@ -149,6 +159,23 @@ def main():
             save_html_alerta(build_html_alerta(anomaly))
     except Exception as e:
         logger.warning("Deteção de anomalia falhou (não bloqueia): %s", e)
+        anomaly = {}
+
+    # ── MaoMao: rede neural pulsada do pet do site, evolui com o mercado real
+    # (ver maomao/README.md — inspirado no Pestinha, implementação própria).
+    # Dois humores independentes: carteira (só os 7 ETFs) e mercado (watchlist
+    # inteiro) ──────────────────────────────────────────────────────────────
+    try:
+        from maomao.daily import run_daily_step
+        run_daily_step(df_log, anomaly, etf_acumul)
+    except Exception as e:
+        logger.warning("MaoMao (carteira) falhou (não bloqueia): %s", e)
+
+    try:
+        from maomao.daily import run_market_step
+        run_market_step(df_log, anomaly, all_tickers)
+    except Exception as e:
+        logger.warning("MaoMao (mercado) falhou (não bloqueia): %s", e)
 
     # ── ML training (uses today's updated weights) ────────────────────────
     from config.settings import MODELS_DIR
@@ -182,7 +209,7 @@ def main():
         logger.warning("Research pipeline falhou (não bloqueia): %s", e)
 
     # ── Save today's predictions (já com blend research+produção) ────────
-    df_log = save_new_predictions(df_log, resultados_ml, hoje)
+    df_log = save_new_predictions(df_log, resultados_ml, hoje, calib_curves)
     save_public_log(df_log, my_tickers)
 
     # ── Experimento de regressão (desafiante vs. campeão, email separado) ──
