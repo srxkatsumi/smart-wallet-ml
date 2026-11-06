@@ -1,60 +1,61 @@
 {
-  "date": "2026-11-05",
+  "date": "2026-11-06",
   "alerta": true,
   "market": {
-    "vix_hoje": 16.61,
-    "vix_ontem": 20.83,
-    "regime_hoje": 1,
+    "vix_hoje": 28.18,
+    "vix_ontem": 16.61,
+    "regime_hoje": 2,
     "regime_ontem": 1,
-    "variacao_1d": -0.2026,
-    "transicao": false,
+    "variacao_1d": 0.6966,
+    "transicao": true,
     "spike": true
   },
   "tickers": {
     "ICGA.DE": {
-      "retorno_1d": -0.008,
-      "atr_pct": 0.0125,
-      "multiplo_atr": 0.64,
-      "alerta": false
+      "retorno_1d": 0.0387,
+      "atr_pct": 0.0138,
+      "multiplo_atr": 2.8,
+      "alerta": true
     },
     "PPFB.DE": {
-      "retorno_1d": -0.0086,
-      "atr_pct": 0.0146,
-      "multiplo_atr": 0.59,
+      "retorno_1d": 0.0274,
+      "atr_pct": 0.0153,
+      "multiplo_atr": 1.79,
       "alerta": false
     },
     "SGLN.L": {
-      "retorno_1d": -0.0101,
-      "atr_pct": 0.0154,
-      "multiplo_atr": 0.66,
+      "retorno_1d": 0.0264,
+      "atr_pct": 0.016,
+      "multiplo_atr": 1.65,
       "alerta": false
     },
     "EXUS.MI": {
-      "retorno_1d": -0.0075,
-      "atr_pct": 0.0088,
-      "multiplo_atr": 0.86,
+      "retorno_1d": 0.015,
+      "atr_pct": 0.0091,
+      "multiplo_atr": 1.65,
       "alerta": false
     },
     "LYP6.DE": {
-      "retorno_1d": -0.0067,
-      "atr_pct": 0.0093,
-      "multiplo_atr": 0.72,
+      "retorno_1d": 0.0196,
+      "atr_pct": 0.01,
+      "multiplo_atr": 1.96,
       "alerta": false
     },
     "IS3N.DE": {
-      "retorno_1d": -0.0146,
-      "atr_pct": 0.0183,
-      "multiplo_atr": 0.8,
+      "retorno_1d": 0.0076,
+      "atr_pct": 0.0165,
+      "multiplo_atr": 0.46,
       "alerta": false
     },
     "EUNN.DE": {
-      "retorno_1d": -0.0062,
-      "atr_pct": 0.0132,
-      "multiplo_atr": 0.47,
+      "retorno_1d": 0.002,
+      "atr_pct": 0.0122,
+      "multiplo_atr": 0.16,
       "alerta": false
     }
   },
   "motivos": [
-    "VIX saltou -20% num dia (20.83→16.61)"
+    "VIX transitou pra regime alto (16.61→28.18)",
+    "ICGA.DE: retorno 2.8x o ATR normal"
   ]
 }
