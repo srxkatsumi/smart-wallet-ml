@@ -120,16 +120,24 @@ jobs:
       # 3a — Rodar testes (falha rápido — não queima ~1h20 de runtime num commit quebrado)
       - name: 🧪 Rodar testes
         run: |
-          pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
+          pytest tests/ --ignore=tests/test_classical.py
+
+      # Baseado em XGBoost, que já derrubou o interpretador em macOS/arm64. Não
+      # bloqueia até confirmar que é estável no runner Ubuntu.
+      - name: 🧪 Rodar testes XGBoost (não bloqueia)
+        continue-on-error: true
+        run: pytest tests/test_classical.py
 
       # 3b — Restaurar cache dos modelos de investigação (treino incremental)
       - name: ♻️ Restaurar cache dos modelos de investigação
         uses: actions/cache@v4
         with:
           path: output/models/research/
-          key: research-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-${{ steps.date.outputs.week }}
+          # run_id: uma chave de cache é imutável, e com a chave semanal só a
+          # primeira execução da semana salvava o que treinou.
+          key: research-models-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
-            research-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-
+            research-models-${{ runner.os }}-
 
       # 3c — Restaurar cache dos modelos SGD (partial_fit incremental — não
       # commitado no git, ver .gitignore; guarda de n_features_in_ em
@@ -140,9 +148,9 @@ jobs:
           path: |
             output/models/
             !output/models/research/
-          key: sgd-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-${{ steps.date.outputs.week }}
+          key: sgd-models-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
-            sgd-models-${{ runner.os }}-${{ hashFiles('requirements.txt') }}-
+            sgd-models-${{ runner.os }}-
 
       # 4 — Executar pipeline principal
       - name: 🚀 Executar main.py
@@ -153,14 +161,11 @@ jobs:
       # 4b — Validar que os dados foram gerados correctamente
       - name: ✅ Validar dados gerados
         run: |
-          TODAY=$(date +%Y-%m-%d)
-          YESTERDAY=$(date -d yesterday +%Y-%m-%d)
-          # main.py calcula "hoje" a meio da execução (main.py:121); em runs
-          # longos (~1h30-2h) que atravessam a meia-noite UTC, esse "hoje"
-          # pode ficar um dia atrás do $(date) recalculado aqui depois. Aceita
-          # os dois para não falhar por um bug de fuso, não de dados reais.
-          COUNT=$(python -c "import pandas as pd; log=pd.read_csv('output/predictions_log.csv'); print(len(log[log['pred_date'].isin(['${TODAY}', '${YESTERDAY}'])]))" 2>/dev/null || echo 0)
-          echo "Previsões geradas para $TODAY (ou $YESTERDAY, se a execução atravessou a meia-noite UTC): $COUNT"
+          # Por data da barra, não da execução: num feriado sem barra nova nada é
+          # previsto de novo, e isso não é falha. Falha é o feed parar por dias.
+          SINCE=$(date -d '5 days ago' +%Y-%m-%d)
+          COUNT=$(python -c "import pandas as pd; log=pd.read_csv('output/predictions_log.csv'); print((log['ref_date'].dropna().astype(str) >= '${SINCE}').sum())" 2>/dev/null || echo 0)
+          echo "Previsões com barra desde $SINCE: $COUNT"
           if [ "$COUNT" -lt 10 ]; then
             echo "❌ FALHA: apenas $COUNT previsões geradas — esperado ≥ 10"
             exit 1
@@ -197,7 +202,9 @@ jobs:
           python docs/export_alerts.py
           python docs/export_data.py
           python docs/export_maomao.py
-          if [ "$(date +%u)" = "1" ]; then
+          # Por idade do cache, não por dia da semana: as execuções atrasam e mudam de data.
+          CACHE=docs/assets/dividends_cache.json
+          if [ ! -f "$CACHE" ] || [ "$(git log -1 --format=%ct -- "$CACHE")" -lt "$(date -d '7 days ago' +%s)" ]; then
             python docs/export_watchlist.py --refresh
           else
             python docs/export_watchlist.py
@@ -235,6 +242,11 @@ jobs:
           git add output/wfv_log.csv                2>/dev/null || true
           git add output/wfv_results.json           2>/dev/null || true
           git add output/significance.json          2>/dev/null || true
+
+          # Estado que precisa sobreviver entre execuções: o checkout de cada
+          # run só traz o que foi commitado aqui.
+          git add output/maomao_state.json output/maomao_market_state.json 2>/dev/null || true
+          git add output/confidence_calibration.json 2>/dev/null || true
 
           # Experimento de regressão (email separado — não afeta a carteira)
           git add output/predictions_experimentos_log.csv 2>/dev/null || true
@@ -309,7 +321,7 @@ jobs:
         id: send_email
         if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         continue-on-error: true
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7 # v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
@@ -327,7 +339,7 @@ jobs:
         id: send_email_experimento
         if: success() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         continue-on-error: true
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7 # v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
@@ -345,7 +357,7 @@ jobs:
         id: send_email_alerta
         if: success() && steps.anomalia.outputs.alerta == 'true' && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
         continue-on-error: true
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7 # v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
@@ -399,7 +411,7 @@ jobs:
       # 8 — Enviar email de falha com link para os logs
       - name: 📧 Notificar falha por email
         if: failure() && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7 # v3
         with:
           server_address: smtp.gmail.com
           server_port: 465

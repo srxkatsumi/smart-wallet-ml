@@ -35,8 +35,9 @@ BATCH_SIZE = 64
 
 def _make_sequences(X: np.ndarray, y: np.ndarray, seq_len: int):
     seqs, labels = [], []
-    for i in range(seq_len, len(X)):
-        seqs.append(X[i - seq_len:i])
+    # A janela inclui a linha i: o rótulo y[i] é o movimento depois do fecho de i.
+    for i in range(seq_len - 1, len(X)):
+        seqs.append(X[i - seq_len + 1:i + 1])
         labels.append(y[i])
     return np.array(seqs, dtype=np.float32), np.array(labels, dtype=np.float32)
 
@@ -98,9 +99,9 @@ def _predict_rnn(model: nn.Module, X: np.ndarray, scaler: RobustScaler,
     with torch.no_grad():
         probs_seq = model(torch.from_numpy(seqs)).squeeze(1).numpy()
 
-    # as primeiras SEQ_LEN posições não têm sequência — usa média histórica
+    # as primeiras posições não têm sequência completa: usa média histórica
     probs = np.full(len(X), y_mean)
-    probs[SEQ_LEN:] = probs_seq
+    probs[SEQ_LEN - 1:] = probs_seq
     return probs
 
 

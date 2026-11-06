@@ -28,21 +28,58 @@ import numpy as np
 import pandas as pd
 from sklearn.isotonic import IsotonicRegression
 
-from config.settings import HORIZONS, CONFIDENCE_CALIB_FILE, CONFIDENCE_CALIB_DAYS, MIN_N_CALIBRATION
+from config.settings import (
+    HORIZONS, CONFIDENCE_CALIB_FILE, CONFIDENCE_CALIB_DAYS, MIN_N_CALIBRATION, MIN_DAYS_CALIBRATION,
+)
+from data.storage import aligned_rows
 
 logger = logging.getLogger(__name__)
 
 _GRID = np.linspace(0.5, 1.0, 51)  # confidence só existe em [0.5, 1.0] (é max(p, 1-p))
 
 
+def _fit_curve(subset: pd.DataFrame) -> np.ndarray | None:
+    # Agrupa em bins de frequência igual antes do fit isotônico. Ajustar
+    # diretamente sobre ~n floats quase todos únicos deixa uma única
+    # observação extrema definir o valor da curva na borda (um acerto ou
+    # erro isolado na confiança mais alta observada "fixa" esse extremo em
+    # 0 ou 1). Agrupar primeiro e pesar pelo tamanho do bin é a prática
+    # padrão de reliability diagram — suaviza exatamente esse efeito.
+    n_bins = max(3, min(20, len(subset) // 20))
+    subset = subset.copy()
+    subset["bin"] = pd.qcut(subset["confidence"], n_bins, duplicates="drop")
+    grouped = subset.groupby("bin", observed=True).agg(
+        conf_mean=("confidence", "mean"),
+        acc_mean=("correct", "mean"),
+        n=("correct", "size"),
+    )
+    if len(grouped) < 3:
+        return None
+    iso = IsotonicRegression(out_of_bounds="clip", y_min=0.0, y_max=1.0)
+    iso.fit(grouped["conf_mean"].values, grouped["acc_mean"].values, sample_weight=grouped["n"].values)
+    return iso.predict(_GRID)
+
+
+def _holdout_split(subset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Período mais antigo para ajustar, 30% mais recentes para medir."""
+    if "target_date" in subset.columns:
+        dates = sorted(subset["target_date"].unique())
+        cut   = dates[int(len(dates) * 0.7)]
+        return subset[subset["target_date"] < cut], subset[subset["target_date"] >= cut]
+    cut = int(len(subset) * 0.7)
+    return subset.iloc[:cut], subset.iloc[cut:]
+
+
 def fit_calibration(df_log: pd.DataFrame) -> dict:
     """
     Ajusta uma curva isotônica por horizonte (confidence -> P(correct) empírica).
 
-    Horizontes com menos de MIN_N_CALIBRATION linhas validadas são omitidos do
-    resultado; apply_calibration cai de volta para o valor bruto nesse caso.
+    Horizontes com menos de MIN_N_CALIBRATION linhas validadas, ou de
+    MIN_DAYS_CALIBRATION dias, são omitidos do resultado; apply_calibration cai
+    de volta para o valor bruto nesse caso. O Brier é medido fora da amostra, com
+    uma curva ajustada só no período anterior; a curva guardada usa todo o histórico.
     """
-    validated = df_log[df_log["correct"].notna()].copy()
+    validated = aligned_rows(df_log[df_log["correct"].notna()]).copy()
     validated["correct"]    = validated["correct"].astype(float)
     validated["confidence"] = validated["confidence"].astype(float)
 
@@ -54,32 +91,20 @@ def fit_calibration(df_log: pd.DataFrame) -> dict:
         if n < MIN_N_CALIBRATION:
             logger.info("Calibração D+%d: histórico insuficiente (%d/%d)", day, n, MIN_N_CALIBRATION)
             continue
+        if "target_date" in subset.columns and subset["target_date"].nunique() < MIN_DAYS_CALIBRATION:
+            logger.info("Calibração D+%d: poucos dias (%d/%d)", day, subset["target_date"].nunique(), MIN_DAYS_CALIBRATION)
+            continue
 
-        # Agrupa em bins de frequência igual antes do fit isotônico. Ajustar
-        # diretamente sobre ~n floats quase todos únicos deixa uma única
-        # observação extrema definir o valor da curva na borda (um acerto ou
-        # erro isolado na confiança mais alta observada "fixa" esse extremo em
-        # 0 ou 1). Agrupar primeiro e pesar pelo tamanho do bin é a prática
-        # padrão de reliability diagram — suaviza exatamente esse efeito.
-        n_bins  = max(3, min(20, n // 20))
-        subset  = subset.copy()
-        subset["bin"] = pd.qcut(subset["confidence"], n_bins, duplicates="drop")
-        grouped = subset.groupby("bin", observed=True).agg(
-            conf_mean=("confidence", "mean"),
-            acc_mean=("correct", "mean"),
-            n=("correct", "size"),
-        )
-        if len(grouped) < 3:
+        y = _fit_curve(subset)
+        fit_part, test_part = _holdout_split(subset)
+        y_holdout = _fit_curve(fit_part) if len(fit_part) else None
+        if y is None or y_holdout is None or test_part.empty:
             logger.info("Calibração D+%d: poucos bins com dados suficientes — ignorado", day)
             continue
 
-        iso = IsotonicRegression(out_of_bounds="clip", y_min=0.0, y_max=1.0)
-        iso.fit(grouped["conf_mean"].values, grouped["acc_mean"].values, sample_weight=grouped["n"].values)
-        y = iso.predict(_GRID)
-
-        calibrated_fitted = np.interp(subset["confidence"].values, _GRID, y)
-        brier_raw = float(np.mean((subset["confidence"].values - subset["correct"].values) ** 2))
-        brier_cal = float(np.mean((calibrated_fitted - subset["correct"].values) ** 2))
+        calibrated_test = np.interp(test_part["confidence"].values, _GRID, y_holdout)
+        brier_raw = float(np.mean((test_part["confidence"].values - test_part["correct"].values) ** 2))
+        brier_cal = float(np.mean((calibrated_test - test_part["correct"].values) ** 2))
 
         curves[key] = {
             "x": _GRID.tolist(),
@@ -89,7 +114,7 @@ def fit_calibration(df_log: pd.DataFrame) -> dict:
             "brier_calibrated": round(brier_cal, 4),
         }
         logger.info(
-            "Calibração D+%d: n=%d Brier %.4f -> %.4f",
+            "Calibração D+%d: n=%d Brier fora da amostra %.4f -> %.4f",
             day, n, brier_raw, brier_cal,
         )
 

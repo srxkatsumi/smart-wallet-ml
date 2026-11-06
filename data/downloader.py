@@ -35,20 +35,36 @@ def load_fx_rates() -> tuple[float, float, float]:
     return EUR_USD, EUR_GBP, GBP_EUR
 
 
-def to_eur(preco: float, moeda: str, gbp_pence: bool = False) -> float:
-    if moeda == "USD":
-        return preco / EUR_USD
-    if moeda == "GBP":
-        return (preco / 100 * GBP_EUR) if gbp_pence else (preco * GBP_EUR)
-    return preco
+def _gbp_pence_to_eur(df: pd.DataFrame, period: str) -> pd.DataFrame:
+    """
+    Converte com o câmbio de cada dia, não com o de hoje aplicado à série toda:
+    com taxa única, o ref_price gravado ontem e o preço real de hoje ficariam em
+    câmbios diferentes, e essa diferença entraria no retorno e no `correct`.
+    """
+    try:
+        fx = yf.download("EURGBP=X", period=period, interval="1d", auto_adjust=True, progress=False)
+        if isinstance(fx.columns, pd.MultiIndex):
+            fx.columns = fx.columns.get_level_values(0)
+        fx.index = pd.to_datetime(fx.index).normalize()
+        eur_gbp = fx["Close"].dropna().sort_index()
+        if eur_gbp.empty:
+            raise ValueError("sem dados")
+        rate = 1 / eur_gbp.reindex(df.index, method="ffill").bfill()
+    except Exception as e:
+        logger.warning("EURGBP=X histórico indisponível (%s), usando taxa única", e)
+        rate = pd.Series(GBP_EUR, index=df.index)
+    for col in ("Open", "High", "Low", "Close"):
+        if col in df.columns:
+            df[col] = df[col] / 100 * rate
+    return df
 
 
-def download_context() -> tuple[dict, list[str]]:
+def download_context(period: str = PRICE_PERIOD) -> tuple[dict, list[str]]:
     context_data = {}
     warnings     = []
     for ctx_ticker, ctx_name in [("^VIX", "vix"), ("SPY", "spy"), ("BTC-USD", "btc"), ("GLD", "gold")]:
         try:
-            df = yf.download(ctx_ticker, period=PRICE_PERIOD, interval="1d",
+            df = yf.download(ctx_ticker, period=period, interval="1d",
                              auto_adjust=True, progress=False)
             if df.empty:
                 raise ValueError("sem dados")
@@ -75,7 +91,7 @@ def download_context() -> tuple[dict, list[str]]:
     return context_data, warnings
 
 
-def download_prices(tickers: list[str]) -> dict:
+def download_prices(tickers: list[str], period: str = PRICE_PERIOD) -> dict:
     raw_data  = {}
     n_batches = (len(tickers) + DOWNLOAD_BATCH_SIZE - 1) // DOWNLOAD_BATCH_SIZE
 
@@ -85,7 +101,7 @@ def download_prices(tickers: list[str]) -> dict:
 
         for ticker in batch:
             try:
-                df = yf.download(ticker, period=PRICE_PERIOD, interval="1d",
+                df = yf.download(ticker, period=period, interval="1d",
                                  auto_adjust=True, progress=False)
                 if df.empty:
                     logger.warning("%s: sem dados", ticker)
@@ -101,10 +117,8 @@ def download_prices(tickers: list[str]) -> dict:
                     logger.warning("%s: sem dados válidos após limpeza", ticker)
                     continue
                 if ticker in GBP_PENCE_TICKERS:
-                    for col in ("Open", "High", "Low", "Close"):
-                        if col in df.columns:
-                            df[col] = df[col].apply(lambda v: to_eur(v, "GBP", gbp_pence=True))
-                    logger.info("%s: preços convertidos de GBp para EUR (GBP_EUR=%.4f)", ticker, GBP_EUR)
+                    df = _gbp_pence_to_eur(df, period)
+                    logger.info("%s: preços convertidos de GBp para EUR, câmbio diário", ticker)
                 raw_data[ticker] = df
                 logger.info("%s: %dd | último=%.2f", ticker, len(df), df["Close"].iloc[-1])
             except Exception as e:

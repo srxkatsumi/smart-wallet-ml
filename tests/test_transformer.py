@@ -41,7 +41,7 @@ def test_first_positions_use_mean():
     md = train(X, y)
     probs = predict(md, X)
     seq_len = tf_mod.SEQ_LEN
-    np.testing.assert_allclose(probs[:seq_len], float(y.mean()), atol=1e-6)
+    np.testing.assert_allclose(probs[:seq_len - 1], float(y.mean()), atol=1e-6)
 
 
 def test_predict_different_length():

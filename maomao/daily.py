@@ -6,7 +6,7 @@ orquestração: `run_daily_step` (humor de carteira, só os 7 ETFs) e
 maomao/README.md para a diferença entre os dois.
 
 Idempotente por data: se este dia já foi processado (outra reexecução
-redundante do mesmo dia — ver README_Errors.md ERR-010/ERR-013), devolve o
+redundante do mesmo dia — ver README_Errors.md ERR-010), devolve o
 último humor já calculado em vez de reprocessar.
 """
 import logging

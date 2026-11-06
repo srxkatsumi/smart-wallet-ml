@@ -14,7 +14,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from config.settings import ALERTA_FILE, ALERTA_ATR_MULTIPLICADOR, ALERTA_VIX_SPIKE_PCT
+from config.settings import ALERTA_FILE, ALERTA_ATR_MULTIPLICADOR, ALERTA_VIX_SPIKE_PCT, MAX_BAR_AGE_DAYS
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +28,21 @@ def bin_vix_regime(level: float) -> int:
     return 0
 
 
-def _detect_market(context_data: dict) -> dict:
+def _is_stale(index, as_of: pd.Timestamp) -> bool:
+    if not isinstance(index, pd.DatetimeIndex) or len(index) == 0:
+        return False
+    return (as_of - index[-1]).days > MAX_BAR_AGE_DAYS
+
+
+def _detect_market(context_data: dict, as_of: pd.Timestamp) -> dict:
     vix = context_data.get("vix")
     if vix is None or len(vix.dropna()) < 2:
         return {"transicao": False, "spike": False}
 
     vix_clean = vix.dropna()
+    if _is_stale(vix_clean.index, as_of):
+        logger.warning("VIX sem dados frescos (última barra: %s), sem alerta de mercado", vix_clean.index[-1])
+        return {"transicao": False, "spike": False}
     vix_hoje  = float(vix_clean.iloc[-1])
     vix_ontem = float(vix_clean.iloc[-2])
     regime_hoje  = bin_vix_regime(vix_hoje)
@@ -54,11 +63,14 @@ def _detect_market(context_data: dict) -> dict:
     }
 
 
-def _detect_tickers(featured_data: dict, portfolio_tickers: list[str]) -> dict:
+def _detect_tickers(featured_data: dict, portfolio_tickers: list[str], as_of: pd.Timestamp) -> dict:
     resultado = {}
     for ticker in portfolio_tickers:
         df = featured_data.get(ticker)
         if df is None or df.empty or "ATR14" not in df.columns or "ret_1d" not in df.columns:
+            continue
+        if _is_stale(df.index, as_of):
+            logger.warning("%s sem dados frescos (última barra: %s), fora do alerta", ticker, df.index[-1])
             continue
         close = float(df["Close"].iloc[-1])
         atr   = float(df["ATR14"].iloc[-1])
@@ -77,9 +89,12 @@ def _detect_tickers(featured_data: dict, portfolio_tickers: list[str]) -> dict:
     return resultado
 
 
-def detect_anomaly(context_data: dict, featured_data: dict, portfolio_tickers: list[str]) -> dict:
-    market  = _detect_market(context_data)
-    tickers = _detect_tickers(featured_data, portfolio_tickers)
+def detect_anomaly(context_data: dict, featured_data: dict, portfolio_tickers: list[str],
+                   as_of: pd.Timestamp | None = None) -> dict:
+    """`as_of`: data de referência para a checagem de dados velhos; o replay histórico passa a do dia revivido."""
+    as_of   = pd.Timestamp.now().normalize() if as_of is None else as_of
+    market  = _detect_market(context_data, as_of)
+    tickers = _detect_tickers(featured_data, portfolio_tickers, as_of)
 
     market_alerta = market.get("transicao", False) or market.get("spike", False)
     tickers_em_alerta = [t for t, r in tickers.items() if r["alerta"]]
@@ -88,7 +103,8 @@ def detect_anomaly(context_data: dict, featured_data: dict, portfolio_tickers: l
     if market.get("transicao"):
         motivos.append(f"VIX transitou pra regime alto ({market['vix_ontem']}→{market['vix_hoje']})")
     elif market.get("spike"):
-        motivos.append(f"VIX saltou {market['variacao_1d']*100:.0f}% num dia ({market['vix_ontem']}→{market['vix_hoje']})")
+        verbo = "subiu" if market["variacao_1d"] > 0 else "caiu"
+        motivos.append(f"VIX {verbo} {abs(market['variacao_1d'])*100:.0f}% num dia ({market['vix_ontem']}→{market['vix_hoje']})")
     for t in tickers_em_alerta:
         motivos.append(f"{t}: retorno {tickers[t]['multiplo_atr']:.1f}x o ATR normal")
 

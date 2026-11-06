@@ -1,11 +1,12 @@
 import logging
 import numpy as np
 import pandas as pd
-import yfinance as yf
 
-from data.storage import save_predictions_log, save_ensemble_weights
+from data.storage import aligned_rows, save_predictions_log, save_ensemble_weights
 from data.calendars import target_dates
-from config.settings import HORIZONS, MIN_VALIDATIONS_WEIGHT, WEIGHT_DECAY_FACTOR, SPLIT_DETECTION_THRESHOLD
+from config.settings import (
+    HORIZONS, MAX_BAR_AGE_DAYS, MIN_VALIDATIONS_WEIGHT, WEIGHT_DECAY_FACTOR, SPLIT_DETECTION_THRESHOLD,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +115,7 @@ def update_ensemble_weights(df_log: pd.DataFrame,
         except Exception:
             return None
 
-    validadas = df_log[df_log["correct"].notna()].copy()
+    validadas = aligned_rows(df_log[df_log["correct"].notna()]).copy()
     if "horizon" not in validadas.columns or validadas["horizon"].isna().all():
         validadas["horizon"] = validadas.apply(calc_horizon, axis=1)
 
@@ -193,16 +194,28 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
             else np.nan
         )
 
-        tdates = target_dates(today, ticker)
+        # O alvo conta a partir do último fecho do ticker, não do relógio: o
+        # modelo treina para N pregões à frente da barra em que as features foram
+        # calculadas, e a execução pode atrasar ou o feed pode vir com um dia a menos.
+        ref_date = pd.Timestamp(res.get("last_date", today)).normalize()
+        if (today - ref_date).days > MAX_BAR_AGE_DAYS:
+            logger.warning("%s: última barra de %s, sem dados frescos, sem previsão hoje", ticker, ref_date.date())
+            continue
+        ref_date_str = ref_date.strftime("%Y-%m-%d")
+
+        tdates = target_dates(ref_date, ticker)
         for day, (direction, pred_price, conf) in res["preds_dict"].items():
             target_date_str = tdates[day].strftime("%Y-%m-%d")
 
+            # Mesma barra já prevista (reexecução, ou feed sem barra nova).
             ja_existe = (
-                (df_log["ticker"]      == ticker) &
-                (df_log["pred_date"]   == hoje_str) &
-                (df_log["target_date"] == target_date_str)
+                "ref_date" in df_log.columns and not df_log.empty and (
+                    (df_log["ticker"]   == ticker) &
+                    (df_log["ref_date"] == ref_date_str) &
+                    (df_log["horizon"]  == day)
+                ).any()
             )
-            if not df_log.empty and ja_existe.any():
+            if ja_existe:
                 continue
 
             h_data = res["horizons"][day]
@@ -224,6 +237,7 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
                 "model_gb":          h_data["preds_ind"].get("gb", ""),
                 "model_sgd":         h_data["preds_ind"].get("sgd", ""),
                 "confidence_calibrated": round(apply_calibration(conf, day, calib_curves or {}), 4),
+                "ref_date":          ref_date_str,
             })
 
     if novas_previsoes:

@@ -1,6 +1,7 @@
 import logging
 import pandas as pd
 from datetime import datetime, timezone, timedelta
+from data.storage import aligned_rows
 from config.settings import (
     HTML_REPORT, BARCELONA_UTC_OFFSET, METADATA_FILE, TAXA_CRESCIMENTO_BASE,
 )
@@ -135,10 +136,11 @@ def _acertou_ontem(ticker: str, df_log: pd.DataFrame, ontem_str: str):
 
 
 def _calcular_tendencia(df_log: pd.DataFrame, portfolio_tickers: list) -> tuple:
-    validadas = df_log[
+    validadas = aligned_rows(df_log[
         (df_log["correct"].notna()) &
-        (df_log["ticker"].isin(portfolio_tickers))
-    ].copy()
+        (df_log["ticker"].isin(portfolio_tickers)) &
+        (df_log["horizon"] == 1)
+    ]).copy()
     validadas["target_date"] = pd.to_datetime(validadas["target_date"])
     validadas = validadas.sort_values("target_date")
     hoje_ts  = pd.Timestamp.today()
@@ -326,10 +328,10 @@ def build_html(resultados_ml: dict, etf_tickers: list[str],
     data_str     = (f"{dia_semana} · {agora.day} de {mes} de {agora.year} "
                     f"· {agora.strftime('%H:%M')}, Barcelona")
 
-    validadas_portfolio = df_log[
+    validadas_portfolio = aligned_rows(df_log[
         (df_log["correct"].notna()) &
         (df_log["ticker"].isin(my_tickers))
-    ]
+    ])
     n_ativos      = len([t for t in my_tickers if t in resultados_ml])
     n_etfs        = len(etf_tickers)
     n_val         = len(validadas_portfolio)

@@ -19,16 +19,33 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from pathlib import Path
-from scipy.stats import binomtest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from evaluation.significance import apply_bh_correction
+from config.settings import GBP_PENCE_TICKERS
+from data.storage import aligned_rows
+from research.runner import _build_comparison
 
 MIN_VAL = 15  # mesmo limiar de reports/email_report.py:_calcular_tendencia
 CHART_WINDOW_DAYS = 90   # janela exibida nos gráficos (dias úteis)
-GBP_PENCE_TICKERS = {"SGLN.L"}  # cotados em GBp (pence) na LSE, convertidos pra EUR
+# Acima disto um preço de GBP_PENCE_TICKERS no log só pode estar em pence (linhas antigas).
+PENCE_LOG_THRESHOLD = 500
+
+
+def log_price_to_eur(price: float, ticker: str, gbp_eur_rate: float) -> float:
+    """
+    Os logs guardam GBP_PENCE_TICKERS em EUR desde que o download passou a
+    converter; só as linhas mais antigas ainda estão em pence.
+    """
+    if ticker in GBP_PENCE_TICKERS and price > PENCE_LOG_THRESHOLD:
+        return price / 100 * gbp_eur_rate
+    return price
+
+
+def latest_rows_per_ticker(df: pd.DataFrame) -> pd.DataFrame:
+    """Ticker sem barra nova não ganha previsão no dia, mas continua no site com a última que tem."""
+    return df[df["pred_date"] == df.groupby("ticker")["pred_date"].transform("max")]
 
 
 def _load_json(path, default=None):
@@ -40,9 +57,9 @@ def _load_json(path, default=None):
 
 def calcular_tendencia(df_log: pd.DataFrame, tickers: list) -> dict:
     """Espelha reports/email_report.py:_calcular_tendencia: 30 dias úteis vs. os 30 anteriores."""
-    validadas = df_log[
+    validadas = aligned_rows(df_log[
         (df_log["correct"].notna()) & (df_log["ticker"].isin(tickers)) & (df_log["horizon"] == 1)
-    ].copy()
+    ]).copy()
     if validadas.empty:
         return {"estado": "treino", "n": 0}
     validadas["target_date"] = pd.to_datetime(validadas["target_date"])
@@ -62,7 +79,7 @@ def calcular_tendencia(df_log: pd.DataFrame, tickers: list) -> dict:
     return {"estado": "ok", "n": len(recentes), "acc_recente": round(acc_rec, 4), "delta_vs_periodo_anterior": delta}
 
 
-def correlacao_favoritos(df_log: pd.DataFrame, tickers: list) -> dict:
+def correlacao_favoritos(df_log: pd.DataFrame, tickers: list, gbp_eur_rate: float) -> dict:
     """
     Aproxima reports/email_report.py:_build_correlation_html, mas a partir do
     ref_price já registado em predictions_log.csv (não temos o histórico de
@@ -76,6 +93,7 @@ def correlacao_favoritos(df_log: pd.DataFrame, tickers: list) -> dict:
     closes = {}
     for t in tickers:
         s = d1[d1["ticker"] == t].sort_values("pred_date").set_index("pred_date")["ref_price"]
+        s = s.map(lambda p: log_price_to_eur(p, t, gbp_eur_rate))
         s = s[~s.index.duplicated(keep="last")]
         if len(s) >= 10:
             closes[t] = s
@@ -108,40 +126,17 @@ _FAMILY_LABELS = {
 
 
 def comparacao_familias(log: pd.DataFrame) -> list:
-    """
-    Espelha research/runner.py:_build_comparison: acurácia acumulada por família,
-    com p-valor (teste binomial) e correção de Benjamini-Hochberg pelas 13
-    famílias testadas simultaneamente (ver evaluation/significance.py).
-    """
-    validated = log[log["validated"] == True].copy()  # noqa: E712
-    if validated.empty:
-        return []
-    results = []
-    for family in _FAMILY_LABELS:
-        fam_rows = validated[validated["family"] == family]
-        if fam_rows.empty:
-            continue
-        n     = len(fam_rows)
-        k     = int(fam_rows["correct_d1"].astype(float).sum())
-        acc   = k / n
-        p_val = binomtest(k, n, p=0.5, alternative="greater").pvalue
-        results.append({
-            "family": family,
-            "label": _FAMILY_LABELS[family],
-            "accuracy": round(acc, 3),
-            "n": n,
-            "vs_acaso": round(acc - 0.5, 3),
-            "p": round(float(p_val), 4),
-        })
-    apply_bh_correction(results)
-    results.sort(key=lambda x: x["accuracy"], reverse=True)
+    """Mesma tabela de research/runner.py:_build_comparison, com os rótulos do site."""
+    results = _build_comparison(log, None)
+    for r in results:
+        r["label"] = _FAMILY_LABELS.get(r["family"], r["family"])
     return results
 
 
 def consenso_familias(log: pd.DataFrame, tickers: list, research_weights: dict) -> list:
     """Espelha research/runner.py:_build_consensus, usando a última semana registada."""
     last_week = log["week_date"].max()
-    rows = log[log["week_date"] == last_week]
+    rows = log[(log["week_date"] == last_week) & log["direction_d1"].notna()]
     consensus = []
     for ticker in tickers:
         ticker_rows = rows[rows["ticker"] == ticker]
@@ -262,9 +257,9 @@ def accuracy_curve(df_log: pd.DataFrame, ticker: str) -> list:
     usava expanding().mean(), uma média cumulativa desde o início da janela
     exibida: número diferente por desenho, o que gerava a confusão).
     """
-    all_sub = df_log[
+    all_sub = aligned_rows(df_log[
         (df_log["ticker"] == ticker) & (df_log["horizon"] == 1) & (df_log["correct"].notna())
-    ].sort_values("target_date")
+    ]).sort_values("target_date")
     # busca um pouco mais de histórico do que o exibido, pra a janela
     # deslizante já vir "aquecida" (com 15 amostras) no primeiro ponto mostrado
     sub = all_sub.tail(CHART_WINDOW_DAYS + MIN_VAL)
@@ -283,9 +278,8 @@ def experimento_predictions(tickers: list, gbp_eur_rate: float) -> dict:
     """
     Previsões de hoje do desafiante/campeão, por ticker/horizonte, mesma fonte
     do email de Experimentos. predictions_experimentos_log.csv vem da mesma
-    fonte crua que predictions_log.csv, então tem o mesmo problema de moeda
-    pro SGLN.L (GBp, não convertido, ver correção em data/downloader.py) até
-    essa correção chegar em produção; convertido aqui também por enquanto.
+    fonte crua que predictions_log.csv, então tem a mesma mistura de moeda
+    nas linhas antigas do SGLN.L, em GBp (ver log_price_to_eur).
     """
     path = ROOT / "output/predictions_experimentos_log.csv"
     if not path.exists():
@@ -294,25 +288,24 @@ def experimento_predictions(tickers: list, gbp_eur_rate: float) -> dict:
     exp_log = exp_log[exp_log["ticker"].isin(tickers)]
     if exp_log.empty:
         return {}
-    last_date = exp_log["pred_date"].max()
-    today = exp_log[exp_log["pred_date"] == last_date]
+    today = latest_rows_per_ticker(exp_log)
 
     out = {}
     for t in sorted(tickers):
         rows = today[today["ticker"] == t]
         if rows.empty:
             continue
-        fx = (1 / 100 * gbp_eur_rate) if t in GBP_PENCE_TICKERS else 1.0
+        to_eur = lambda p: round(log_price_to_eur(float(p), t, gbp_eur_rate), 4)  # noqa: E731
         horizons = {}
         for _, r in rows.iterrows():
             horizons[f"d{int(r['horizon'])}"] = {
-                "champion_price": round(float(r["champion_pred_price"]) * fx, 4),
-                "challenger_price": round(float(r["challenger_pred_price"]) * fx, 4),
+                "champion_price": to_eur(r["champion_pred_price"]),
+                "challenger_price": to_eur(r["challenger_pred_price"]),
                 "challenger_ret": round(float(r["challenger_pred_ret"]), 4),
-                "interval_lo": round(float(r["challenger_interval_lo"]) * fx, 4),
-                "interval_hi": round(float(r["challenger_interval_hi"]) * fx, 4),
+                "interval_lo": to_eur(r["challenger_interval_lo"]),
+                "interval_hi": to_eur(r["challenger_interval_hi"]),
             }
-        out[t] = {"ref_price": round(float(rows.iloc[0]["ref_price"]) * fx, 4), "horizons": horizons}
+        out[t] = {"ref_price": to_eur(rows.iloc[0]["ref_price"]), "horizons": horizons}
     return out
 
 
@@ -343,7 +336,8 @@ def anomaly_reasons_en(anomalia: dict) -> list:
     if market.get("transicao"):
         reasons.append(f"VIX moved into the high-volatility regime ({market['vix_ontem']} → {market['vix_hoje']})")
     elif market.get("spike"):
-        reasons.append(f"VIX jumped {market['variacao_1d']*100:.0f}% in a day ({market['vix_ontem']} → {market['vix_hoje']})")
+        verb = "rose" if market["variacao_1d"] > 0 else "fell"
+        reasons.append(f"VIX {verb} {abs(market['variacao_1d'])*100:.0f}% in a day ({market['vix_ontem']} → {market['vix_hoje']})")
     for ticker, r in anomalia.get("tickers", {}).items():
         if r.get("alerta"):
             reasons.append(f"{ticker}: move was {r['multiplo_atr']:.1f}x its normal ATR range")
@@ -359,8 +353,8 @@ def main():
     last_date = log[log["ticker"].isin(tickers)]["pred_date"].max()
     ontem_bday = (last_date - pd.offsets.BDay(1)).strftime("%Y-%m-%d")
 
-    today_rows = log[(log["ticker"].isin(tickers)) & (log["pred_date"] == last_date)].sort_values(["ticker", "horizon"])
-    val = log[(log["ticker"].isin(tickers)) & (log["horizon"] == 1) & (log["correct"].notna())]
+    today_rows = latest_rows_per_ticker(log[log["ticker"].isin(tickers)]).sort_values(["ticker", "horizon"])
+    val = aligned_rows(log[(log["ticker"].isin(tickers)) & (log["horizon"] == 1) & (log["correct"].notna())])
 
     print("Fetching live GBP/EUR rate...")
     gbp_eur_rate = fetch_gbp_eur_rate()
@@ -370,10 +364,7 @@ def main():
         rows = today_rows[today_rows["ticker"] == t]
         if rows.empty:
             continue
-        is_pence = t in GBP_PENCE_TICKERS
-        fx = (1 / 100 * gbp_eur_rate) if is_pence else 1.0
-
-        price = float(rows.iloc[0]["ref_price"]) * fx
+        price = log_price_to_eur(float(rows.iloc[0]["ref_price"]), t, gbp_eur_rate)
         horizons = {
             f"d{int(r['horizon'])}": {"direction": r["direction"], "confidence": round(float(r["confidence"]), 4)}
             for _, r in rows.iterrows()
@@ -384,7 +375,7 @@ def main():
         hist = log[(log["ticker"] == t) & (log["horizon"] == 1) & log["ref_price"].notna()].sort_values("pred_date")
         hist = hist.drop_duplicates(subset="pred_date", keep="last")
         price_history = [
-            {"date": d.strftime("%Y-%m-%d"), "price": round(float(p) * fx, 4)}
+            {"date": d.strftime("%Y-%m-%d"), "price": round(log_price_to_eur(float(p), t, gbp_eur_rate), 4)}
             for d, p in zip(hist["pred_date"], hist["ref_price"])
         ]
 
@@ -408,9 +399,9 @@ def main():
     anomalia = _load_alerts_data()
     anomalia = {**anomalia, "reasons_en": anomaly_reasons_en(anomalia)}
 
-    n_total = sig["d1"]["n"] + sig["d2"]["n"] + sig["d3"]["n"]
+    n_total = int(log["correct"].notna().sum())  # trilha de auditoria completa, inclui linhas antigas
     tendencia = calcular_tendencia(log, tickers)
-    correlacao = correlacao_favoritos(log, tickers)
+    correlacao = correlacao_favoritos(log, tickers, gbp_eur_rate)
 
     research_log_path = ROOT / "output/predictions_research_log.csv"
     familias, consenso = [], {"consenso": [], "semana": None}
@@ -423,7 +414,7 @@ def main():
     out = {
         "last_update": str(last_date.date()),
         "accuracy": {
-            "d1": sig["d1"]["acc"], "d2": sig["d2"]["acc"], "d3": sig["d3"]["acc"],
+            "d1": sig["d1"].get("acc"), "d2": sig["d2"].get("acc"), "d3": sig["d3"].get("acc"),
             "n_total": n_total,
         },
         "tendencia": tendencia,

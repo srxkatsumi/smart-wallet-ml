@@ -15,7 +15,7 @@ Procedimento:
   1. Split temporal 70/30 (treino / calibração)
   2. Treino: RF em X_train, y_train
   3. Calibração: s_i = 1 − ŷ[y_cal_i] para todo i no conjunto de calibração
-  4. Predição: p-valor conforme para classe k = #{s_cal ≥ s_k} / (n_cal + 1)
+  4. Predição: p-valor conforme por classe k = #{s_cal da classe k ≥ s_k} / (n_k + 1)
                probabilidade calibrada = pv1 / (pv0 + pv1)
 
 Garantia de cobertura (Vovk et al., 2005):
@@ -44,27 +44,26 @@ MAX_DEPTH    = 4
 ALPHA        = 0.10   # target miscoverage rate → 90% coverage guarantee
 
 
-def _conformal_probs(scores_cal: np.ndarray, p_up: np.ndarray) -> np.ndarray:
+def _conformal_probs(scores_up: np.ndarray, scores_down: np.ndarray, p_up: np.ndarray) -> np.ndarray:
     """
-    Vectorised conformal p-values → calibrated direction probability.
+    Vectorised class-conditional (Mondrian) conformal p-values.
 
-    For each test point with RF probability p:
-      s1 = 1 − p       (nonconformity for class 1 / "up")
-      s0 = p           (nonconformity for class 0 / "down")
-      pv1 = (#{s_cal ≥ s1} + 1) / (n_cal + 1)
-      pv0 = (#{s_cal ≥ s0} + 1) / (n_cal + 1)
+    Each class is compared only with calibration scores of that same class. With
+    one pooled set, the majority class dominates and the ratio inflates: the mean
+    probability reached 0.80 in production for a ~54% base rate.
+
+      s1 = 1 − p ;  pv1 = (#{scores_up   ≥ s1} + 1) / (n_up + 1)
+      s0 = p     ;  pv0 = (#{scores_down ≥ s0} + 1) / (n_down + 1)
       result = pv1 / (pv0 + pv1)
     """
-    n_cal = len(scores_cal)
-    if n_cal == 0:
+    if len(scores_up) == 0 and len(scores_down) == 0:
         return np.full(len(p_up), 0.5)
 
-    s1 = (1.0 - p_up)[:, np.newaxis]          # (n_test, 1)
-    s0 = p_up[:, np.newaxis]                   # (n_test, 1)
-    sc = scores_cal[np.newaxis, :]             # (1, n_cal)
+    s1 = (1.0 - p_up)[:, np.newaxis]
+    s0 = p_up[:, np.newaxis]
 
-    pv1 = (1 + (sc >= s1).sum(axis=1)) / (n_cal + 1)
-    pv0 = (1 + (sc >= s0).sum(axis=1)) / (n_cal + 1)
+    pv1 = (1 + (scores_up[np.newaxis, :] >= s1).sum(axis=1)) / (len(scores_up) + 1)
+    pv0 = (1 + (scores_down[np.newaxis, :] >= s0).sum(axis=1)) / (len(scores_down) + 1)
 
     denom = pv0 + pv1
     return np.where(denom > 1e-9, pv1 / denom, 0.5)
@@ -102,7 +101,8 @@ def train(X: np.ndarray, y: np.ndarray) -> dict:
         "scaler":     scaler,
         "rf":         rf,
         "y_mean":     float(y.mean()),
-        "scores_cal": scores_cal,
+        "scores_up":   scores_cal[y_cal == 1],
+        "scores_down": scores_cal[y_cal == 0],
     }
 
 
@@ -110,6 +110,4 @@ def predict(model_dict: dict, X: np.ndarray) -> np.ndarray:
     sc         = model_dict["scaler"]
     X_sc       = sc.transform(X).astype(np.float32)
     p_up       = model_dict["rf"].predict_proba(X_sc)[:, 1]
-    scores_cal = model_dict["scores_cal"]
-
-    return _conformal_probs(scores_cal, p_up)
+    return _conformal_probs(model_dict["scores_up"], model_dict["scores_down"], p_up)

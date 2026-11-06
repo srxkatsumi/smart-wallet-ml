@@ -121,10 +121,10 @@ def replay(price_history: dict[str, pd.DataFrame], vix: pd.Series,
         vix_series = pd.Series([vix_prev, vix_today]) if vix_prev is not None else pd.Series([vix_today])
         vix_prev = float(vix_today)
 
-        anomaly = detect_anomaly({"vix": vix_series}, featured_data, available)
+        anomaly = detect_anomaly({"vix": vix_series}, featured_data, available, as_of=date)
 
         day_rets = [float(price_history[t].loc[date, "ret_1d"]) * 100 for t in available]
-        by_day_values[str(date.date())] = sum(day_rets) / len(day_rets)
+        by_day_values[str(date.date())] = float(np.median(day_rets))
         by_day = pd.Series(by_day_values)
 
         sensors = compute_sensors_core(by_day, anomaly, state["recent_alertas"], disagreement=0.0)
@@ -136,7 +136,7 @@ def replay(price_history: dict[str, pd.DataFrame], vix: pd.Series,
         state["pending"] = maybe_queue_bets(state["pending"], sensors["date"], mood, sensors)
         state["learned"] = brain.snapshot_learned()
         state["last_processed_date"] = sensors["date"]
-        push_history(state, sensors["date"], mood, bool(anomaly.get("alerta", False)))
+        push_history(state, sensors["date"], mood, sensors["ANOMALY"] >= 1.0)
 
     logger.info(
         "Replay: %d dias de mercado processados (%s -> %s), %d apostas ainda pendentes, aprendido=%s",
@@ -183,6 +183,10 @@ def run_market_backfill(watchlist: list[str]) -> None:
     import pandas as pd
     from config.settings import PRED_LOG
     from maomao.daily import run_market_step
+    import maomao.state as maomao_state
+
+    # Parte do zero: sobre um estado existente, o replay aplicaria o aprendizado duas vezes.
+    maomao_state.save_state(_fresh_default(), maomao_state.MARKET_STATE_FILE)
 
     df_log = pd.read_csv(PRED_LOG)
     vix = download_vix_history()

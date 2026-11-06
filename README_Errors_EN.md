@@ -176,6 +176,42 @@ Rewrote the window to the last 30 distinct `target_date`/`week_date` values, not
 
 ---
 
+## ERR-013: Ensemble confidence carried no information in production: post-hoc isotonic calibration (2026-11-05)
+
+**Symptom**
+Not an incident: a deliberate review measured real accuracy by reported confidence band and found it nearly flat between the lowest (<55%) and highest (>80%) deciles, across ~48k validated predictions.
+
+**Root cause**
+RF and GB are calibrated individually on their own training folds, SGD is not calibrated, and averaging probabilities does not preserve calibration. Brier score was 0.2855–0.2921, worse than a constant 0.5 (0.25).
+
+**Fix**
+`models/calibration.py` fits one isotonic curve per horizon, aggregated across tickers, stored in a new `confidence_calibrated` column next to the raw value. Note: this measurement used the misaligned labels described in ERR-014 and must be repeated.
+
+---
+
+## ERR-014: Full audit: misaligned horizons, research families with no real forecast, biased measurements (2026-11-06)
+
+**Symptom**
+Not an incident. A code audit found SGLN.L on the site at €0.84 (real: ~€70), and 4 of the 13 research families issuing the same "up" forecast every day since September.
+
+**Root cause and fix**
+- **Horizons:** targets were computed from the run's clock, which starts between 00:48 and 02:59 UTC, and the feed sometimes lags a day. "D+1" covered 2 to 3 sessions while the model trains for 1. Targets now count from each ticker's last close, stored in `ref_date`. Tickers with no recent bar get no forecast and stay out of the alert.
+- **Research families:** `predict()` received 1 row, so sequence families returned the base rate. Time-series families returned the first fitted training value. The row used was the last labelled one, 1 to 4 sessions old. All three horizons were validated against the same price, and retraining required a Monday date that almost never occurred. `predict()` now receives the latest 60 rows, sequences include the current bar, each horizon uses its own close, and retraining goes by model age. Failed families get no vote instead of voting "up".
+- **Models:** EWI always inverted and PEL applied lags in the wrong order. The DQN reward was ill-defined, the GAN discriminator did not estimate P(up), and Conformal inflated probabilities (mean 0.80).
+- **`obv_trend` feature:** the ratio blew up when the OBV average neared zero (3,625 times the normal scale on IS3N.DE), crashing the VAE with NaN and distorting linear and neural models. It is now limited to ±5.
+- **50/50 blend:** it never reached the log, because it updated the horizons but not `preds_dict`. Removed: the research consensus is report-only.
+- **Measurement:** WFV and backtest used future labels on D+2/D+3. The CV gap was too short for those horizons, and SGD accuracy was measured on training data. P-values treated ~530 same-day tickers as independent: the day is now the unit. Calibration Brier is now out-of-sample, and SHAP uses scaled data.
+- **Currency:** `data/downloader.py` already converted SGLN.L to EUR and the site exports converted it again. Today's FX rate was also applied to the whole series, mixing FX into `correct`: conversion now uses each day's rate.
+- **Persistence:** the weekly cache key meant only the week's first run saved models. MaoMao state and calibration were not committed.
+
+**Effect on history**
+The log is kept as an audit trail. Metrics, weights and calibration use only rows with `ref_date` (`data/storage.py:aligned_rows`), so accuracy restarts from zero and is reported only after 100 forecasts over 20 days. Earlier conclusions in ERR-013 and about the 13 families must be re-measured on aligned data.
+
+**Still open**
+`confidence_calibrated` still does not appear on the site or in the email: that decision waits for 20 aligned days.
+
+---
+
 ## Production validations (current state)
 
 | Validation | Where | What it catches |

@@ -22,7 +22,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import RobustScaler
 
 from features.engineering import FEATURE_COLS
-from config.settings import N_ESTIMATORS_RF, MAX_DEPTH_RF, EXPERIMENTO_BACKTEST_FILE
+from config.settings import MAX_DEPTH_RF, EXPERIMENTO_BACKTEST_FILE
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,8 @@ def _backtest_ticker(df: pd.DataFrame, horizon: int, n_steps: int = BACKTEST_N_S
 
     for _, test_row in test_rows.iterrows():
         pos      = df.index.get_loc(test_row.name)
-        train_df = df.iloc[:pos].dropna(subset=[ret_col])
+        # Só rótulos já conhecidos no dia do teste: o da linha r usa o fecho r+horizon.
+        train_df = df.iloc[:pos - horizon + 1].dropna(subset=[ret_col])
         if len(train_df) < BACKTEST_MIN_TRAIN:
             continue
 

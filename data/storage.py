@@ -16,6 +16,18 @@ def ensure_dirs():
         d.mkdir(parents=True, exist_ok=True)
 
 
+def aligned_rows(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Só as previsões com horizonte alinhado ao último fecho do ticker. As linhas
+    antigas têm ref_date vazio: o alvo delas vinha do relógio da execução e
+    cobria 2 a 3 pregões (README_Errors.md, ERR-014). Ficam no log como
+    auditoria, mas não entram em métricas.
+    """
+    if "ref_date" not in df.columns:
+        return df
+    return df[df["ref_date"].notna()]
+
+
 def load_predictions_log() -> pd.DataFrame:
     if not PRED_LOG.exists():
         df = pd.DataFrame(columns=PRED_COLS)
@@ -58,6 +70,11 @@ def load_predictions_log() -> pd.DataFrame:
         df["confidence_calibrated"] = np.nan
         df.to_csv(PRED_LOG, index=False)
         logger.info("CSV migrado: coluna adicionada — confidence_calibrated")
+
+    if "ref_date" not in df.columns:
+        df["ref_date"] = pd.Series(dtype="object")
+        df.to_csv(PRED_LOG, index=False)
+        logger.info("CSV migrado: coluna adicionada: ref_date")
 
     logger.info("predictions_log carregado: %d registos", len(df))
     return df

@@ -26,7 +26,6 @@ Interface:
   dvc_track(file_paths)                   -> list de .dvc paths criados
 """
 
-import os
 import warnings
 from pathlib import Path
 

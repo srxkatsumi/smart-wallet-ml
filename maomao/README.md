@@ -151,22 +151,33 @@ aconteceu, em lote, pelos dois lados:
   VIX é baixado (pequeno, rápido), pra reconstruir `anomaly["market"]` de cada dia real (o pipeline só
   guarda o `anomalia.json` de hoje, não um histórico).
 
-**Resultado real do replay (gerado ao escrever este README, 2026-11-05, já com `WEIGHT_GAIN=0.25`):**
+**Resultado real do replay (2026-11-06, com as correções de "Bugs corrigidos no replay" abaixo):**
 
-- **Carteira**, 17 anos replayed (2009-10-20 → 2026-11-05, 4371 dias de mercado): `FEARFUL` aprendeu pesos
-  **negativos** nos canais de stress (`RET_DOWN -0.41`, `STREAK_DOWN -0.31`, `VIX_SPIKE -0.26`, `VOL_SPIKE
-  -0.16`) e positivo em `RET_UP` (+0.17). Interpretação honesta: quando o medo disparou forte nos 7 ETFs da
-  carteira, o retorno médio dos 3 dias seguintes tendeu a **recuperar**, não a continuar caindo — reversão
-  à média de curto prazo depois de picos de volatilidade, um padrão real e conhecido em finanças (diferente
-  de "prever direção", que já medimos ser ruído — ver ERR-013). `EUPHORIC` também aprendeu pesos pequenos e
-  majoritariamente negativos (`STREAK_UP -0.10`, `CALM_STREAK -0.08`) — com o ganho calibrado, chegou a
-  disparar algumas vezes nesses 17 anos, e o mesmo padrão de reversão de curto prazo apareceu, mais fraco.
-- **Mercado**, ~55 dias úteis processados sobre o watchlist inteiro: com o ganho corrigido, `EUPHORIC`
-  já cruzou o limiar de 50% algumas vezes e aprendeu pesos claramente positivos (`RET_UP +0.39`,
-  `CALM_STREAK +0.39`, `STREAK_UP +0.33`, `DISAGREEMENT +0.28`) — ao contrário da carteira, aqui a euforia
-  tendeu a **se confirmar** (ganhos continuaram) nos ~6 meses que temos. `FEARFUL` só aprendeu ajustes
-  pequenos (não chegou a disparar fortes o bastante tantas vezes). Amostra ainda curta (~6 meses) — vale
-  reler esse resultado à medida que mais dias reais se acumulam.
+- **Carteira**, 2009-10-20 a 2026-11-04: `FEARFUL` aprendeu `ANOMALY +0.41`, `RET_DOWN -0.39`,
+  `STREAK_DOWN -0.19`, `RET_UP +0.16`, `STREAK_UP +0.08`, `VIX_SPIKE +0.08`. O sinal é misto: o medo ligado a
+  um alerta tendeu a se confirmar, e o medo ligado a uma simples queda de preço tendeu a ser seguido por
+  recuperação. `EUPHORIC` aprendeu pesos muito pequenos (todos abaixo de 0.06 em módulo).
+- **Mercado**, cerca de 6 meses do watchlist: praticamente nada aprendido (pesos abaixo de 0.01 em módulo).
+  Os pesos de até +0.39 da versão anterior vinham em boa parte dos outliers descritos abaixo, não de um padrão.
+
+Estes pesos descrevem o que a rede acumulou, não são uma evidência testada: nenhum deles passou pelo portão
+de validação do Jinshi (`jinshi/validate.py`). Não trate nenhum como um padrão de mercado comprovado.
+
+### Bugs corrigidos no replay (2026-11-06)
+
+- **VIX caindo aumentava o medo.** `VIX_SPIKE` usava o valor absoluto da variação, e o alerta dispara nos dois
+  sentidos. Agora só a alta do VIX alimenta `VIX_SPIKE`, e um alerta causado só pela queda do VIX não conta em
+  `ANOMALY`.
+- **Outliers na média diária.** O log tem retornos de até +2114% (splits e dados ruins). O retorno do dia agora
+  é a mediana entre os tickers, não a média.
+- **Dias com poucos tickers.** Antes do fecho das bolsas, um dia podia ter só BTC e ETH validados e virar o
+  "humor do mercado". Um dia agora precisa de pelo menos metade da cobertura típica.
+- **Replay de mercado acumulava sobre o estado anterior.** Rodar de novo aplicava o aprendizado duas vezes;
+  agora parte sempre do zero.
+
+Limitação do histórico: até 2026-11-06 os retornos em `predictions_log.csv` cobriam 2 a 3 pregões, não 1
+(`README_Errors.md`, ERR-014). As linhas novas estão alinhadas, mas o replay de mercado ainda foi feito sobre as
+antigas. O replay da carteira não é afetado, porque usa retornos diários do yfinance.
 
 Rodar de novo: `python -m maomao.backfill` (a partir da raiz do repositório).
 
@@ -212,7 +223,7 @@ em `maomao/state.py:save_state`, path sempre explícito (nunca um global do mód
 humores ficam independentes com o mesmo código.
 
 Idempotente por data: o pipeline principal tem um padrão conhecido de reexecuções redundantes no mesmo dia
-(`README_Errors.md`, ERR-010/ERR-013) — `maomao/daily.py` guarda a última data já processada (por humor) e
+(`README_Errors.md`, ERR-010) — `maomao/daily.py` guarda a última data já processada (por humor) e
 nunca reaplica aprendizado duas vezes para o mesmo dia.
 
 ## Onde aparece

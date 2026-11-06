@@ -3,8 +3,7 @@ Família: Séries Temporais
 Modelos: ARIMA, SARIMA, ETS, Holt-Winters, Prophet
 
 Todos os modelos são ajustados sobre a série temporal de y (sequência de
-labels UP=1 / DOWN=0). A saída são probabilidades em [0,1] derivadas dos
-valores ajustados (in-sample fitted values), clipped ao intervalo válido.
+labels UP=1 / DOWN=0). A saída é a previsão do próximo passo, clipped a [0,1].
 
 Contexto académico:
   ARIMA(5,0,1) e SARIMA(1,0,1)(1,0,1,5) testam se existe autocorrelação
@@ -31,92 +30,52 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-
-def _to_prob(values: np.ndarray) -> np.ndarray:
-    return np.clip(values, 0.0, 1.0)
-
-
-def _pad_or_trim(arr: np.ndarray, n: int) -> np.ndarray:
-    if len(arr) >= n:
-        return arr[:n]
-    return np.concatenate([arr, np.full(n - len(arr), arr[-1])])
+# A previsão depende só de y, então precisa de novo ajuste para incorporar cada dia.
+RETRAIN_DAILY = True
 
 
-# ── ARIMA ─────────────────────────────────────────────────────────────────
+def _to_prob(value: float) -> float:
+    return float(np.clip(value, 0.0, 1.0))
+
+
+# Cada modelo guarda a previsão do próximo passo. Os valores ajustados do treino
+# descrevem o passado e não servem como previsão.
+
+def _next_step(forecast_fn, y: np.ndarray) -> float:
+    try:
+        return _to_prob(np.asarray(forecast_fn())[0])
+    except Exception:
+        return float(y.mean())
+
 
 def train_arima(y: np.ndarray) -> dict:
-    try:
-        result = ARIMA(y.astype(float), order=(5, 0, 1)).fit()
-        fitted = _to_prob(result.fittedvalues.values)
-    except Exception:
-        fitted = np.full(len(y), y.mean())
-    return {"type": "arima", "fitted": fitted}
+    def forecast():
+        return ARIMA(y.astype(float), order=(5, 0, 1)).fit().forecast(1)
+    return {"type": "arima", "forecast": _next_step(forecast, y)}
 
-
-def predict_arima(model: dict, n: int) -> np.ndarray:
-    return _pad_or_trim(model["fitted"], n)
-
-
-# ── SARIMA ────────────────────────────────────────────────────────────────
 
 def train_sarima(y: np.ndarray) -> dict:
-    try:
-        result = ARIMA(
-            y.astype(float),
-            order=(1, 0, 1),
-            seasonal_order=(1, 0, 1, 5),
-        ).fit()
-        fitted = _to_prob(result.fittedvalues.values)
-    except Exception:
-        fitted = np.full(len(y), y.mean())
-    return {"type": "sarima", "fitted": fitted}
+    def forecast():
+        return ARIMA(y.astype(float), order=(1, 0, 1), seasonal_order=(1, 0, 1, 5)).fit().forecast(1)
+    return {"type": "sarima", "forecast": _next_step(forecast, y)}
 
-
-def predict_sarima(model: dict, n: int) -> np.ndarray:
-    return _pad_or_trim(model["fitted"], n)
-
-
-# ── ETS (Exponential Smoothing simples) ───────────────────────────────────
 
 def train_ets(y: np.ndarray) -> dict:
-    try:
-        result = ExponentialSmoothing(
-            y.astype(float), trend=None, seasonal=None
-        ).fit(optimized=True)
-        fitted = _to_prob(result.fittedvalues.values)
-    except Exception:
-        fitted = np.full(len(y), y.mean())
-    return {"type": "ets", "fitted": fitted}
+    def forecast():
+        return ExponentialSmoothing(y.astype(float), trend=None, seasonal=None).fit(optimized=True).forecast(1)
+    return {"type": "ets", "forecast": _next_step(forecast, y)}
 
-
-def predict_ets(model: dict, n: int) -> np.ndarray:
-    return _pad_or_trim(model["fitted"], n)
-
-
-# ── Holt-Winters ──────────────────────────────────────────────────────────
 
 def train_holtwinters(y: np.ndarray) -> dict:
-    try:
-        result = ExponentialSmoothing(
-            y.astype(float),
-            trend="add",
-            seasonal="add",
-            seasonal_periods=5,
-        ).fit(optimized=True)
-        fitted = _to_prob(result.fittedvalues.values)
-    except Exception:
-        fitted = np.full(len(y), y.mean())
-    return {"type": "holtwinters", "fitted": fitted}
+    def forecast():
+        return ExponentialSmoothing(
+            y.astype(float), trend="add", seasonal="add", seasonal_periods=5,
+        ).fit(optimized=True).forecast(1)
+    return {"type": "holtwinters", "forecast": _next_step(forecast, y)}
 
-
-def predict_holtwinters(model: dict, n: int) -> np.ndarray:
-    return _pad_or_trim(model["fitted"], n)
-
-
-# ── Prophet ───────────────────────────────────────────────────────────────
 
 def train_prophet(y: np.ndarray) -> dict:
-    try:
+    def forecast():
         from prophet import Prophet
         import logging
         logging.getLogger("prophet").setLevel(logging.WARNING)
@@ -133,15 +92,16 @@ def train_prophet(y: np.ndarray) -> dict:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             model.fit(df)
-        forecast = model.predict(df)
-        fitted = _to_prob(forecast["yhat"].values)
-    except Exception:
-        fitted = np.full(len(y), y.mean())
-    return {"type": "prophet", "fitted": fitted}
+        future = model.make_future_dataframe(periods=1, freq="B").tail(1)
+        return model.predict(future)["yhat"].values
+    return {"type": "prophet", "forecast": _next_step(forecast, y)}
 
 
-def predict_prophet(model: dict, n: int) -> np.ndarray:
-    return _pad_or_trim(model["fitted"], n)
+def _predict_stored(model: dict, n: int) -> np.ndarray:
+    return np.full(n, model["forecast"])
+
+
+predict_arima = predict_sarima = predict_ets = predict_holtwinters = predict_prophet = _predict_stored
 
 
 # ── Interface unificada ───────────────────────────────────────────────────

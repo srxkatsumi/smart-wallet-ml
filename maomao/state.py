@@ -8,7 +8,7 @@ menor — pesos de ~9 canais x 2 pools, não ~16 mil sinapses.
 
 Guarda também a última data já processada: o pipeline principal tem um
 padrão conhecido de reexecuções redundantes no mesmo dia (ver
-README_Errors.md ERR-010/ERR-013) — sem essa guarda, um segundo run no
+README_Errors.md ERR-010) — sem essa guarda, um segundo run no
 mesmo dia duplicaria entradas no histórico e aplicaria a mesma aposta duas
 vezes.
 

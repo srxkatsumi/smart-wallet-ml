@@ -1,6 +1,6 @@
 # ML Portfolio Forecasting System
 
-A fully automated ML pipeline that runs every weekday after market close, analyses a real investment portfolio, and predicts the 1–3 day price direction for each asset using a production ensemble of three models (Random Forest, Gradient Boosting, SGD Classifier). A separate research framework evaluates 38 models across 13 families offline, from classic boosting variants to Foundation Models (Chronos, TimesFM, Moirai) and conformal prediction, and its consensus is blended into the production forecast for covered tickers.
+A fully automated ML pipeline that runs every weekday after market close, analyses a real investment portfolio, and predicts the 1–3 day price direction for each asset using a production ensemble of three models (Random Forest, Gradient Boosting, SGD Classifier). A separate research framework evaluates 38 models across 13 families offline, from classic boosting variants to Foundation Models (Chronos, TimesFM, Moirai) and conformal prediction; its consensus is report-only and does not change production forecasts.
 Built in Python with GitHub Actions as the sole orchestrator: no cloud infrastructure, no paid APIs, no manual steps. Every prediction is logged, validated against realised prices, and used to update ensemble weights — the system continuously learns from its own mistakes.
 
 [![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
@@ -359,11 +359,10 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 │   ├── backfill.py                  ← one-off replay against real yfinance/predictions_log history
 │   ├── state.py                     ← persists learned weights + mood history across runs
 │   └── README.md                    ← full architecture + credit to github.com/mille-okws/pestinha
-├── portfolio/
-│   ├── pnl.py                       ← P&L, fees, breakeven, exit targets
-│   ├── exit_signals.py              ← exit signal logic
-│   ├── projections.py               ← 1 / 3 / 5 / 10-year projections
-│   └── dca.py                       ← DCA simulation
+├── jinshi/
+│   ├── data.py                      ← full-history download through the production feature pipeline
+│   ├── backtest.py                  ← causal walk-forward: full history vs 2 years vs naive (backtest only)
+│   └── validate.py                  ← validation gate: 4 combined criteria for any candidate signal
 ├── reports/
 │   ├── charts.py                    ← chart generation (matplotlib)
 │   └── email_report.py              ← HTML email builder
@@ -451,7 +450,7 @@ The pipeline has multiple independent layers of protection, from before the firs
 116 automated tests across 21 files run in GitHub Actions **before** `main.py`. If any test fails, the pipeline halts immediately — before spending ~1h20-2h of runtime — so the models never train on potentially corrupt code or data.
 
 ```
-pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
+pytest tests/ --ignore=tests/test_classical.py
 ```
 
 `pytest.ini` sets `addopts = --continue-on-collection-errors`: one broken test file (import error, missing fixture) can never again silently abort the entire suite without anyone noticing — every other file still runs and reports. This was added after `tests/test_email_phase15.py` sat broken for weeks (it tested a PnL/lots email section removed in an earlier refactor) with nobody aware, because nothing ran pytest in CI at all until 2026-08-17.
@@ -459,11 +458,10 @@ pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning
 | Area | Representative files | What it validates |
 |------|-----------------------|--------------------|
 | Core pipeline | `test_features.py`, `test_ensemble.py`, `test_config_coverage.py` | RSI14 bounds; ensemble/per-model probabilities in [0, 1]; every portfolio ticker present in `ASSET_CLASSES`/`TICKER_CALENDAR` (see the 2026-08-17 incident below) |
-| Statistical evaluation | `test_evaluation.py`, `test_information_theory.py` | Significance tests, Diebold-Mariano, entropy/mutual-information diagnostics |
-| Research model families (13) | `test_bayesian.py`, `test_markov.py`, `test_timeseries.py`, `test_neural.py`, `test_transformer.py`, `test_efficient.py`, `test_generative.py`, `test_contrarian.py`, `test_reinforcement.py`, `test_transfer_learning.py`, `test_explainability.py`, `test_research_runner.py`, `test_tracking.py` | Each family's `train`/`predict` contract: output shape, probability bounds, behaviour on small datasets |
-| Portfolio math | `test_pnl.py` | Breakeven/fee logic, USD→EUR conversion |
+| Statistical evaluation | `test_evaluation.py` | Significance tests, Diebold-Mariano |
+| Research model families (13) | `test_bayesian.py`, `test_markov.py`, `test_timeseries.py`, `test_neural.py`, `test_transformer.py`, `test_efficient.py`, `test_generative.py`, `test_contrarian.py`, `test_reinforcement.py`, `test_explainability.py`, `test_research_runner.py`, `test_tracking.py` | Each family's `train`/`predict` contract: output shape, probability bounds, behaviour on small datasets |
 
-`test_classical.py` and `test_meta_learning.py` (XGBoost-backed) are currently excluded from the CI step: they crash the interpreter on the maintainer's local macOS/arm64 machine (an `xgboost`/`libomp` ABI issue, not a code bug) and haven't yet been confirmed safe on the Ubuntu runner — pending verification before re-enabling.
+`test_classical.py` (XGBoost-backed) runs in its own non-blocking CI step, in a separate process: run in the same process as PyTorch on macOS/arm64 it crashes the interpreter (an `xgboost`/`libomp` ABI issue, not a code bug). Run it separately locally too.
 
 All tests use synthetic data (`np.random`-generated): no network calls, no files on disk, no dependency on live market data.
 
@@ -558,7 +556,7 @@ The original system was a single Jupyter notebook (AnaliseV5). It was migrated t
 
 ### Implemented improvements
 - ✅ **Contrarian family in Monday research runner** — CB (Contrarian Baseline), EWI (Error-Weighted Inverter) and PEL (Predictive Error Learning) added as the 9th family in the weekly model comparison. If CB ranks first, an amber warning appears in the email flagging potential systematic errors in the main ensemble.
-- ✅ **Modular Python package** — `main.py` + `data/` + `features/` + `models/` + `portfolio/` + `reports/`
+- ✅ **Modular Python package** — `main.py` + `data/` + `features/` + `models/` + `reports/`
 - ✅ **7-column email ML table** — Ativo · Preço · **Var%** · D+1 · D+2 · D+3 · Consenso
 - ✅ **Var% column** — previous-day close-to-close change per asset in the email
 - ✅ **✅/❌ legend in email** — clarifies what the icons represent (D+1 accuracy from the day before)

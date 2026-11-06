@@ -11,14 +11,17 @@ import logging
 import numpy as np
 import pandas as pd
 
-from evaluation.statistical_tests import diebold_mariano
-from config.settings import EXPERIMENTO_SIGNIFICANCE_FILE, MIN_N_EXPERIMENTO
+from data.storage import aligned_rows
+from evaluation.significance import MIN_DIAS
+from evaluation.statistical_tests import dm_from_loss_diff
+from config.settings import EXPERIMENTO_SIGNIFICANCE_FILE, MIN_N_EXPERIMENTO, SPLIT_DETECTION_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
 
 def compute_experimento_significance(df_log: pd.DataFrame) -> dict:
-    validated = df_log[df_log["validated"] == True].copy()
+    validated = aligned_rows(df_log[df_log["validated"] == True]).copy()
+    validated = validated[validated["actual_ret"].astype(float).abs() <= SPLIT_DETECTION_THRESHOLD]
 
     results: dict[str, dict] = {}
     for day in [1, 2, 3]:
@@ -26,8 +29,10 @@ def compute_experimento_significance(df_log: pd.DataFrame) -> dict:
         n      = len(subset)
         key    = f"d{day}"
 
-        if n < MIN_N_EXPERIMENTO:
-            results[key] = {"ready": False, "n": n, "needed": MIN_N_EXPERIMENTO - n}
+        dias   = subset["target_date"].nunique() if n else 0
+
+        if n < MIN_N_EXPERIMENTO or dias < MIN_DIAS:
+            results[key] = {"ready": False, "n": n, "needed": max(MIN_N_EXPERIMENTO - n, MIN_DIAS - dias, 0)}
             continue
 
         actual_ret     = subset["actual_ret"].values.astype(float)
@@ -40,14 +45,13 @@ def compute_experimento_significance(df_log: pd.DataFrame) -> dict:
         mae_champion   = float(np.mean(np.abs(e_champion)))
         mae_challenger = float(np.mean(np.abs(e_challenger)))
 
-        # e1=desafiante, e2=campeão: dm<0 favorece desafiante (guarda a mesma
-        # convenção de evaluation/statistical_tests.py:diebold_mariano).
-        # h=day: previsões D+2/D+3 usam janelas sobrepostas em dias úteis
-        # consecutivos, o que autocorrelaciona os erros — h=1 (default)
-        # subestimaria a variância de longo prazo e inflaria falsos
-        # positivos justamente nos horizontes mais longos (Diebold & Mariano
-        # 1995 recomendam h = horizonte de previsão).
-        dm = diebold_mariano(e_challenger, e_champion, h=day)
+        # e1=desafiante, e2=campeão: dm<0 favorece desafiante. Uma diferença de
+        # perda por dia, em ordem temporal: as linhas são um painel de tickers, e
+        # tratá-las como uma série mistura tickers nas autocovariâncias e conta
+        # como independentes tickers que reagem ao mesmo mercado.
+        # h=day: D+2/D+3 usam janelas sobrepostas (Diebold & Mariano 1995).
+        loss_diff = pd.Series(e_challenger ** 2 - e_champion ** 2).groupby(subset["target_date"].values).mean().sort_index()
+        dm = dm_from_loss_diff(loss_diff.values, h=day)
 
         # Guardrail: acurácia direcional do sinal do retorno previsto
         dir_actual     = np.sign(actual_ret)

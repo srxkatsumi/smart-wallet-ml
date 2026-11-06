@@ -1,9 +1,11 @@
 """
-Research Runner — executa todos os dias úteis.
+Research Runner: executa todos os dias úteis, só para relatório: nada aqui
+altera as previsões de produção.
 
-Segunda-feira: retreina todas as 13 famílias com dados acumulados → guarda
-models em disco. Terça a Sexta: carrega models guardados e corre apenas
-predict() com as features do dia (sem retreino) → muito mais rápido.
+Cada modelo é retreinado quando fica mais velho que RETRAIN_AFTER_DAYS (por
+idade, não por dia da semana: as execuções atrasam e mudam de data), dentro de
+RETRAIN_BUDGET_MIN por noite. Nos outros dias carrega o modelo guardado e corre
+apenas predict() com as features do dia. Famílias com RETRAIN_DAILY ajustam sempre.
 
 Gera para o email a tabela de comparação das 13 famílias e o consenso
 ponderado por ticker. Gera também output/telegram_resumo.txt com a
@@ -12,20 +14,27 @@ tendência diária de acurácia por família (melhora / piora).
 
 import joblib
 import logging
+import time
 import numpy as np
 import pandas as pd
 from pathlib import Path
 from datetime import date
-from scipy.stats import binomtest
 
 from config.settings import WEIGHT_DECAY_FACTOR, MIN_VALIDATIONS_WEIGHT
-from evaluation.significance import apply_bh_correction
+from data.storage import aligned_rows
+from evaluation.significance import apply_bh_correction, daily_cluster_stats
 
 logger = logging.getLogger(__name__)
 
 RESEARCH_LOG        = Path("output/predictions_research_log.csv")
 RESEARCH_MODELS_DIR = Path("output/models/research")
 TELEGRAM_RESUMO     = Path("output/telegram_resumo.txt")
+
+RETRAIN_AFTER_DAYS  = 7
+RETRAIN_BUDGET_MIN  = 60
+LATEST_ROWS         = 60    # histórico recente para predict(); as famílias sequenciais usam 20
+# Mudou quando as sequências passaram a incluir a barra do dia: invalida modelos antigos.
+MODEL_VERSION       = "v2"
 
 # Famílias e módulos de modelos
 _FAMILIES = {
@@ -63,7 +72,13 @@ _FAMILY_LABELS_SHORT: dict[str, str] = {
 
 def _model_path(ticker: str, family: str, horizon: int) -> Path:
     safe = ticker.replace(".", "_").replace("-", "_")
-    return RESEARCH_MODELS_DIR / f"{safe}_{family}_{horizon}.pkl"
+    return RESEARCH_MODELS_DIR / f"{safe}_{family}_{horizon}_{MODEL_VERSION}.pkl"
+
+
+def _remove_old_versions() -> None:
+    for old in RESEARCH_MODELS_DIR.glob("*.pkl"):
+        if not old.name.endswith(f"_{MODEL_VERSION}.pkl"):
+            old.unlink()
 
 
 _RES_COLS = [
@@ -74,7 +89,7 @@ _RES_COLS = [
     "ref_price",
     "actual_d1", "actual_d2", "actual_d3",
     "correct_d1", "correct_d2", "correct_d3",
-    "validated",
+    "validated", "ref_date",
 ]
 
 
@@ -103,22 +118,41 @@ def _get_xy(df_ticker: pd.DataFrame, horizon: int = 1):
     return X, y
 
 
+def _latest_rows(df_ticker: pd.DataFrame) -> np.ndarray | None:
+    """Features mais recentes, inclusive as linhas cujo rótulo ainda não existe."""
+    from features.engineering import FEATURE_COLS
+    rows = df_ticker[FEATURE_COLS].dropna().tail(LATEST_ROWS)
+    return rows.values.astype(np.float32) if len(rows) else None
+
+
+def _needs_retrain(path: Path, always: bool) -> bool:
+    if always or not path.exists():
+        return True
+    return (time.time() - path.stat().st_mtime) / 86400 >= RETRAIN_AFTER_DAYS
+
+
 def _predict_family(family: str, X: np.ndarray, y: np.ndarray,
                     X_latest: np.ndarray,
                     ticker: str = "",
                     horizon: int = 1,
-                    is_monday: bool = True) -> float:
+                    deadline: float = float("inf")) -> float | None:
     """
-    Segunda-feira: retreina e guarda model em disco.
-    Terça-Sexta: carrega model guardado e corre apenas predict().
-    Fallback: retreino completo se o ficheiro não existir.
+    Devolve a probabilidade da última linha de X_latest, ou None se não houver
+    previsão: 0.5 viraria um voto em alta e entraria na acurácia como se fosse real.
     """
     import importlib
     try:
         mod  = importlib.import_module(family)
         path = _model_path(ticker, family, horizon)
+        retrain = _needs_retrain(path, getattr(mod, "RETRAIN_DAILY", False))
 
-        if not is_monday and path.exists():
+        if retrain and time.time() > deadline and not getattr(mod, "RETRAIN_DAILY", False):
+            if not path.exists():
+                logger.info("Orçamento de retreino esgotado: %s fica sem previsão hoje", path.name)
+                return None
+            retrain = False
+
+        if not retrain:
             try:
                 model = joblib.load(path)
                 probs = mod.predict(model, X_latest)
@@ -138,12 +172,12 @@ def _predict_family(family: str, X: np.ndarray, y: np.ndarray,
         return float(np.clip(probs[-1], 0.0, 1.0))
     except Exception as e:
         logger.warning("Família %s falhou: %s", family, e)
-        return 0.5
+        return None
 
 
 def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
     """Recalcula pesos de cada família com base no histórico de acertos (últimos 30 dias validados)."""
-    validated = log[log["validated"] == True].copy()  # noqa: E712
+    validated = aligned_rows(log[log["validated"] == True]).copy()  # noqa: E712
     updated = False
 
     for day_n in [1, 2, 3]:
@@ -154,10 +188,7 @@ def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
 
         new_weights = {}
         for family in _FAMILIES:
-            fam_rows = validated[validated["family"] == family]
-            if correct_col not in fam_rows.columns:
-                new_weights[family] = current_weights[day_key].get(family, 1.0)
-                continue
+            fam_rows = validated[(validated["family"] == family) & validated[correct_col].notna()]
 
             # Janela pelos últimos 30 week_date distintos, não pelas últimas
             # 30 linhas: cada dia valida vários tickers da carteira de uma vez
@@ -165,7 +196,8 @@ def _update_research_weights(log: pd.DataFrame, current_weights: dict) -> dict:
             dates = sorted(fam_rows["week_date"].unique())[-30:]
             rows  = fam_rows[fam_rows["week_date"].isin(dates)]
             if len(rows) < MIN_VALIDATIONS_WEIGHT:
-                new_weights[family] = current_weights[day_key].get(family, 1.0)
+                # Peso neutro: os pesos antigos vêm de validações por horizonte inválidas.
+                new_weights[family] = 1.0
                 continue
 
             n_dias    = len(dates)
@@ -202,9 +234,6 @@ def run_research(featured_data: dict,
     """
     Ponto de entrada principal — chamado todos os dias úteis.
 
-    Segunda-feira : retreina todas as famílias e guarda models em disco.
-    Terça-Sexta   : carrega models guardados e corre apenas predict().
-
     Parameters
     ----------
     featured_data     : dict {ticker: pd.DataFrame} com features calculadas
@@ -217,55 +246,62 @@ def run_research(featured_data: dict,
     """
     from data.storage import load_research_weights
     today_str        = date.today().isoformat()
-    _is_monday       = (date.today().weekday() == 0)
+    deadline         = time.time() + RETRAIN_BUDGET_MIN * 60
     log              = _load_log()
+    if "ref_date" not in log.columns:
+        log["ref_date"] = pd.Series(dtype="object")
     research_weights = load_research_weights()
+    if RESEARCH_MODELS_DIR.exists():
+        _remove_old_versions()
 
-    # ── 1. Validar previsões da semana anterior ───────────────────────────
-    log = _validate_past_predictions(log, close_prices)
+    # ── 1. Validar previsões anteriores ───────────────────────────────────
+    log = _validate_past_predictions(log, featured_data)
 
     # ── 1b. Atualizar pesos com base nos acertos validados ────────────────
     research_weights = _update_research_weights(log, research_weights)
 
-    # ── 2. Treinar e prever para esta semana ──────────────────────────────
+    # ── 2. Treinar (se preciso) e prever ──────────────────────────────────
     new_rows = []
     for ticker in portfolio_tickers:
         if ticker not in featured_data or ticker not in close_prices:
             continue
         df = featured_data[ticker]
         ref_price = close_prices[ticker]
+        ref_date  = str(df.index[-1].date())
+        X_latest  = _latest_rows(df)
 
         for family, module in _FAMILIES.items():
+            ja_existe = (
+                (log["ticker"] == ticker) & (log["family"] == family) & (log["ref_date"] == ref_date)
+            ).any() if not log.empty else False
+            if ja_existe:
+                continue
+
             row = {
                 "week_date":   today_str,
                 "ticker":      ticker,
                 "family":      family,
                 "ref_price":   ref_price,
+                "ref_date":    ref_date,
                 "validated":   False,
             }
             for h in [1, 2, 3]:
                 X, y = _get_xy(df, h)
-                if X is None:
-                    row[f"prob_d{h}"]      = 0.5
-                    row[f"direction_d{h}"] = "up"
-                    continue
-                X_latest = X[-1:].copy()
-                prob = _predict_family(module, X[:-1], y[:-1], X_latest,
-                                       ticker=ticker, horizon=h,
-                                       is_monday=_is_monday)
-                row[f"prob_d{h}"]      = round(prob, 4)
-                row[f"direction_d{h}"] = "up" if prob >= 0.5 else "down"
+                prob = None
+                if X is not None and X_latest is not None:
+                    prob = _predict_family(module, X, y, X_latest,
+                                           ticker=ticker, horizon=h,
+                                           deadline=deadline)
+                row[f"prob_d{h}"]      = round(prob, 4) if prob is not None else None
+                row[f"direction_d{h}"] = None if prob is None else ("up" if prob >= 0.5 else "down")
 
             for col in ["actual_d1", "actual_d2", "actual_d3",
                         "correct_d1", "correct_d2", "correct_d3"]:
                 row[col] = None
 
             new_rows.append(row)
-            logger.info("  %s — %s: D+1=%.0f%% D+2=%.0f%% D+3=%.0f%%",
-                        ticker, family,
-                        row["prob_d1"] * 100,
-                        row["prob_d2"] * 100,
-                        row["prob_d3"] * 100)
+            logger.info("  %s %s: D+1=%s D+2=%s D+3=%s",
+                        ticker, family, row["prob_d1"], row["prob_d2"], row["prob_d3"])
 
     if new_rows:
         log = pd.concat([log, pd.DataFrame(new_rows)], ignore_index=True)
@@ -285,9 +321,8 @@ def run_research(featured_data: dict,
                     "week_date": row["week_date"],
                 },
                 metrics={
-                    "prob_d1": float(row["prob_d1"]),
-                    "prob_d2": float(row["prob_d2"]),
-                    "prob_d3": float(row["prob_d3"]),
+                    f"prob_d{h}": float(row[f"prob_d{h}"])
+                    for h in [1, 2, 3] if row[f"prob_d{h}"] is not None
                 },
                 tags={
                     "ticker": row["ticker"],
@@ -298,7 +333,7 @@ def run_research(featured_data: dict,
             )
 
         # Acurácia validada da semana anterior — uma run por família
-        validated = log[log["validated"] == True].copy()  # noqa: E712
+        validated = aligned_rows(log[log["validated"] == True]).copy()  # noqa: E712
         if not validated.empty:
             for family in _FAMILIES:
                 fam_rows = validated[validated["family"] == family]
@@ -330,26 +365,24 @@ def run_research(featured_data: dict,
     consensus  = _build_consensus(new_rows, portfolio_tickers, research_weights)
 
     # ── 6. Gerar resumo Telegram ──────────────────────────────────────────
-    _generate_telegram_resumo(log, _is_monday)
+    _generate_telegram_resumo(log)
 
-    logger.info("Research run concluído: %d famílias × %d ativos (%s)",
-                len(_FAMILIES), len(portfolio_tickers),
-                "retreino" if _is_monday else "predict only")
+    logger.info("Research run concluído: %d famílias × %d ativos",
+                len(_FAMILIES), len(portfolio_tickers))
     return {"comparison": comparison, "consensus": consensus}
 
 
-def _build_telegram_message(log: pd.DataFrame, is_monday: bool) -> str:
+def _build_telegram_message(log: pd.DataFrame) -> str:
     """
     Mensagem diária de tendência dos modelos para Telegram.
     Mostra acurácia D+1 dos últimos 10 dias e seta de tendência
     comparando com os 10 dias anteriores (se disponíveis).
     """
-    validated = log[log["validated"] == True].copy()  # noqa: E712
+    validated = aligned_rows(log[log["correct_d1"].notna()]).copy() if "correct_d1" in log.columns else log.iloc[0:0]
     today_str = date.today().strftime("%d/%m/%Y")
-    mode_tag  = "🔄 retreino" if is_monday else "⚡ predict"
 
-    if validated.empty or "correct_d1" not in validated.columns:
-        return (f"🤖 Modelos — {today_str} ({mode_tag})\n\n"
+    if validated.empty:
+        return (f"🤖 Modelos — {today_str}\n\n"
                 "Sem dados validados ainda — acurácia disponível a partir de amanhã.")
 
     results = []
@@ -357,19 +390,21 @@ def _build_telegram_message(log: pd.DataFrame, is_monday: bool) -> str:
         rows = validated[validated["family"] == family].copy()
         if rows.empty:
             continue
-        recent  = rows.tail(10)["correct_d1"].astype(float)
-        prev    = rows.tail(20).head(10)["correct_d1"].astype(float)
+        # Por dias distintos, não por linhas: cada dia tem uma linha por ticker.
+        dates   = sorted(rows["week_date"].unique())
+        recent  = rows[rows["week_date"].isin(dates[-10:])]["correct_d1"].astype(float)
+        prev    = rows[rows["week_date"].isin(dates[-20:-10])]["correct_d1"].astype(float)
         acc     = recent.mean()
         trend   = acc - prev.mean() if len(prev) >= 5 else 0.0
         results.append((family, acc, trend, len(rows)))
 
     if not results:
-        return (f"🤖 Modelos — {today_str} ({mode_tag})\n\n"
+        return (f"🤖 Modelos — {today_str}\n\n"
                 "Sem acurácia validada ainda.")
 
     results.sort(key=lambda x: -x[1])
 
-    lines = [f"🤖 Modelos — {today_str} ({mode_tag})", "", "D+1 Acurácia (últ. 10 dias):"]
+    lines = [f"🤖 Modelos — {today_str}", "", "D+1 Acurácia (últ. 10 dias):"]
     for fam, acc, trend, n in results:
         icon  = "🟢" if acc >= 0.60 else ("⚪" if acc >= 0.50 else "🔴")
         if abs(trend) < 0.02:
@@ -416,10 +451,10 @@ def _build_telegram_message(log: pd.DataFrame, is_monday: bool) -> str:
     return "\n".join(lines)
 
 
-def _generate_telegram_resumo(log: pd.DataFrame, is_monday: bool) -> None:
+def _generate_telegram_resumo(log: pd.DataFrame) -> None:
     """Escreve output/telegram_resumo.txt para o workflow enviar via Telegram."""
     try:
-        msg = _build_telegram_message(log, is_monday)
+        msg = _build_telegram_message(log)
         TELEGRAM_RESUMO.parent.mkdir(parents=True, exist_ok=True)
         TELEGRAM_RESUMO.write_text(msg, encoding="utf-8")
         logger.debug("telegram_resumo.txt gerado (%d chars)", len(msg))
@@ -427,48 +462,52 @@ def _generate_telegram_resumo(log: pd.DataFrame, is_monday: bool) -> None:
         logger.warning("Falha ao gerar telegram_resumo.txt: %s", e)
 
 
-def _validate_past_predictions(log: pd.DataFrame,
-                                close_prices: dict) -> pd.DataFrame:
-    """Valida previsões de semanas anteriores que ainda não foram validadas."""
+def _validate_past_predictions(log: pd.DataFrame, featured_data: dict) -> pd.DataFrame:
+    """
+    Cada horizonte é comparado com o fecho N pregões depois de ref_date. A linha
+    só fica validated quando os três horizontes têm resultado. Linhas sem
+    ref_date são de antes desta regra: fecham sem resultado, ficam como histórico.
+    """
     if log.empty:
         return log
-    pending = log[log["validated"] == False].copy()  # noqa: E712
-    if pending.empty:
-        return log
-
-    today = pd.Timestamp.today().normalize()
+    pending = log[log["validated"] == False]  # noqa: E712
     for idx, row in pending.iterrows():
-        ticker = row["ticker"]
-        if ticker not in close_prices:
+        ref_date = row.get("ref_date")
+        if pd.isna(ref_date):
+            log.at[idx, "validated"] = True
             continue
-        current_price = close_prices[ticker]
-        ref           = row.get("ref_price")
-        if not ref or pd.isna(ref):
+        df = featured_data.get(row["ticker"])
+        ref = row.get("ref_price")
+        if df is None or not ref or pd.isna(ref):
             continue
 
+        after = df["Close"][df.index > pd.Timestamp(ref_date)]
         for h in [1, 2, 3]:
-            direction = row.get(f"direction_d{h}", "up")
-            predicted_up = (direction == "up")
-            actual_up    = current_price >= ref
-            log.at[idx, f"actual_d{h}"] = current_price
-            log.at[idx, f"correct_d{h}"] = bool(predicted_up == actual_up)
-
-        log.at[idx, "validated"] = True
+            if len(after) < h:
+                break
+            actual = float(after.iloc[h - 1])
+            log.at[idx, f"actual_d{h}"] = actual
+            direction = row.get(f"direction_d{h}")
+            if isinstance(direction, str):
+                log.at[idx, f"correct_d{h}"] = bool((direction == "up") == (actual >= ref))
+        if len(after) >= 3:
+            log.at[idx, "validated"] = True
 
     return log
 
 
 def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
     """
-    Constrói tabela de acurácia por família (semana anterior).
+    Constrói tabela de acurácia D+1 por família.
 
-    Cada família tem um p-valor (teste binomial unilateral, H1: acurácia > 50%),
-    e o conjunto passa por correção de Benjamini-Hochberg antes de ordenar: com
-    13 famílias testadas por semana, uma família parecer "significativa" por
-    puro acaso é comum se cada p-valor for lido isoladamente (ver
-    apply_bh_correction). 'sig' reflete o p-valor já corrigido.
+    Cada família tem um p-valor (unilateral, H1: acurácia > 50%, com o dia como
+    unidade), e o conjunto passa por correção de Benjamini-Hochberg antes de
+    ordenar: com 13 famílias testadas, uma parecer "significativa" por puro acaso
+    é comum se cada p-valor for lido isoladamente. 'sig' reflete o p-valor corrigido.
     """
-    validated = log[log["validated"] == True].copy()  # noqa: E712
+    if log.empty or "correct_d1" not in log.columns:
+        return []
+    validated = aligned_rows(log[log["correct_d1"].notna()])
     if validated.empty:
         return []
 
@@ -477,16 +516,16 @@ def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
         fam_rows = validated[validated["family"] == family]
         if fam_rows.empty:
             continue
+        correct = fam_rows["correct_d1"].astype(float)
         n     = len(fam_rows)
-        k     = int(fam_rows["correct_d1"].astype(float).sum())
-        acc   = k / n
-        p_val = binomtest(k, n, p=0.5, alternative="greater").pvalue
+        acc   = correct.sum() / n
+        stats = daily_cluster_stats(correct, fam_rows["week_date"])
         results.append({
             "family":   family,
             "accuracy": round(float(acc), 3),
             "n":        n,
             "vs_acaso": round(float(acc) - 0.5, 3),
-            "p":        round(float(p_val), 4),
+            "p":        round(stats["p"], 4),
         })
 
     apply_bh_correction(results)
@@ -497,8 +536,7 @@ def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
 def _build_consensus(new_rows: list, portfolio_tickers: list,
                      research_weights: dict) -> list[dict]:
     """
-    Consenso ponderado por família para D+1, D+2 e D+3.
-    pct_up_d1/d2/d3 são usados pelo blend com a produção em main.py.
+    Consenso ponderado por família para D+1, D+2 e D+3. Famílias sem previsão não votam.
     """
     consensus = []
     for ticker in portfolio_tickers:
@@ -506,13 +544,13 @@ def _build_consensus(new_rows: list, portfolio_tickers: list,
         if not ticker_rows:
             continue
 
-        row: dict = {"ticker": ticker, "total": len(ticker_rows)}
+        row: dict = {"ticker": ticker, "total": sum(1 for r in ticker_rows if r.get("direction_d1"))}
 
         for h in [1, 2, 3]:
             w = research_weights.get(f"d{h}", {})
             weight_up    = sum(w.get(r["family"], 1.0)
                                for r in ticker_rows if r.get(f"direction_d{h}") == "up")
-            weight_total = sum(w.get(r["family"], 1.0) for r in ticker_rows)
+            weight_total = sum(w.get(r["family"], 1.0) for r in ticker_rows if r.get(f"direction_d{h}"))
             pct          = weight_up / max(weight_total, 1e-9)
             row[f"pct_up_d{h}"] = round(pct, 4)
 

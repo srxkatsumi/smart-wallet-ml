@@ -4,6 +4,8 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
+OBV_TREND_LIMIT = 5.0
+
 FEATURE_COLS = [
     # Technical indicators
     "SMA20_dist", "SMA50_dist", "sma_cross",
@@ -84,7 +86,8 @@ def build_features(df: pd.DataFrame, context_data: dict, asset_class: int = 0) -
         direction       = np.sign(d["Close"].diff())
         obv             = (direction * d["Volume"]).cumsum()
         obv_ma20        = obv.rolling(20).mean()
-        d["obv_trend"]  = (obv / obv_ma20.replace(0, np.nan)).fillna(1.0)
+        # Limitado: quando a média do OBV passa perto de zero, a razão chega a milhares.
+        d["obv_trend"]  = (obv / obv_ma20.replace(0, np.nan)).fillna(1.0).clip(-OBV_TREND_LIMIT, OBV_TREND_LIMIT)
     else:
         d["vol_ratio"] = 1.0
         d["obv_trend"] = 1.0

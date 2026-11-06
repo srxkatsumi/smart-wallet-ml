@@ -42,6 +42,7 @@ DQN_BATCH        = 64
 DQN_BUFFER_SIZE  = 2000
 DQN_TARGET_UPD   = 20    # steps entre actualizações da target network
 DQN_GAMMA        = 0.95
+DQN_EPSILON      = 0.1   # exploração: fração de ações aleatórias no treino
 
 PPO_HIDDEN       = 64
 PPO_LR           = 3e-4
@@ -83,8 +84,11 @@ def _train_dqn(X: np.ndarray, y: np.ndarray) -> _QNetwork:
     for _ in range(DQN_EPOCHS):
         for t in range(n - 1):
             s  = torch.from_numpy(X[t].astype(np.float32))
-            a  = int(y[t])
-            r  = 1.0 if a == int(round(q_net(s.unsqueeze(0)).argmax().item())) else -1.0
+            if np.random.random() < DQN_EPSILON:
+                a = int(np.random.randint(2))
+            else:
+                a = int(q_net(s.unsqueeze(0)).argmax().item())
+            r  = 1.0 if a == int(y[t]) else -1.0
             s2 = torch.from_numpy(X[t + 1].astype(np.float32))
             buffer.append((s, a, r, s2))
             step += 1

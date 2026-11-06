@@ -27,6 +27,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from config.settings import GBP_PENCE_TICKERS
+from data.storage import aligned_rows
+
 DIV_CACHE = Path(__file__).resolve().parent / "assets" / "dividends_cache.json"
 FREQ_CACHE = Path(__file__).resolve().parent / "assets" / "dividend_frequency_cache.json"
 DIV_BATCH_SLEEP = 0.15  # be polite to Yahoo across ~540 sequential requests
@@ -158,7 +161,9 @@ def main():
     log["pred_date"] = pd.to_datetime(log["pred_date"])
     last_date = log["pred_date"].max()
 
-    today = log[(log["pred_date"] == last_date) & (log["horizon"] == 1)]
+    # Ticker sem barra nova não ganha previsão no dia, mas continua na página com a última que tem.
+    d1 = log[log["horizon"] == 1]
+    today = d1[d1["pred_date"] == d1.groupby("ticker")["pred_date"].transform("max")]
     d1_log = log[log["horizon"] == 1].sort_values("pred_date")
 
     dividends = fetch_dividends(tickers, refresh=refresh)
@@ -181,16 +186,20 @@ def main():
             if last_two[0]:
                 var_1d = round((last_two[1] / last_two[0] - 1) * 100, 2)
 
-        val = hist[hist["correct"].notna()].tail(15)
+        val = aligned_rows(hist[hist["correct"].notna()]).tail(15)
         acc = round(float(val["correct"].mean()) * 100, 1) if len(val) else None
 
         div = dividends.get(t, {"pays_dividends": False, "yield_pct": 0.0, "rate": 0.0, "currency": "USD",
                                  "is_pence": False, "asset_type": "Other", "distribution": None})
         price_native = round(float(r["ref_price"]), 4) if pd.notna(r["ref_price"]) else None
         currency = div.get("currency", "USD")
-        # predictions_log.csv stores GBp-listed tickers (e.g. SGLN.L) in pence too,
-        # same as the raw dividend rate above, /100 before the FX conversion.
-        price_ccy = (price_native / 100) if (price_native is not None and div.get("is_pence")) else price_native
+        if t in GBP_PENCE_TICKERS:
+            # data/downloader.py already converted these to EUR before the log was written.
+            currency = "EUR"
+            price_ccy = price_native
+        else:
+            # Other LSE-listed tickers reach the log in pence, like the raw dividend rate above.
+            price_ccy = (price_native / 100) if (price_native is not None and div.get("is_pence")) else price_native
         price = round(price_ccy / fx_rates.get(currency, 1.0), 4) if price_ccy is not None else None
 
         # Yahoo's trailingAnnualDividendRate is unreliable for foreign ADRs (e.g. TM,

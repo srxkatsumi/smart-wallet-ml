@@ -191,6 +191,29 @@ Gravado em coluna nova `confidence_calibrated`, lado a lado com `confidence` (nu
 
 ---
 
+## ERR-014: Auditoria completa: horizontes desalinhados, famílias de pesquisa sem previsão real, medições enviesadas (2026-11-06)
+
+**Sintoma**
+Não foi um incidente. Uma auditoria do código achou o preço do SGLN.L no site em €0,84 (real: ~€70), e 4 das 13 famílias de pesquisa com a mesma previsão de alta todos os dias desde setembro.
+
+**Causa raiz e correção**
+- **Horizontes:** o alvo era calculado a partir do relógio da execução, que começa entre 00h48 e 02h59 UTC, e o feed às vezes vem com um dia a menos. O "D+1" cobria 2 a 3 pregões, enquanto o modelo treina para 1. Agora o alvo conta a partir do último fecho de cada ticker, gravado em `ref_date`. Tickers sem barra recente ficam sem previsão e fora do alerta.
+- **Famílias de pesquisa:** `predict()` recebia 1 linha, então as famílias sequenciais devolviam a taxa-base. As de séries temporais devolviam o primeiro valor ajustado do treino. A linha usada era a última com rótulo, de 1 a 4 pregões atrás. Os três horizontes eram validados com o mesmo preço, e o retreino exigia uma data de segunda-feira, que quase nunca ocorre. Agora `predict()` recebe as 60 linhas mais recentes, as sequências incluem a barra do dia, cada horizonte usa o próprio fecho e o retreino é por idade do modelo. Famílias que falham ficam sem voto em vez de votar em alta.
+- **Modelos:** o EWI invertia sempre e o PEL aplicava os lags na ordem errada. A recompensa do DQN era mal definida, o discriminador do GAN não estimava P(alta) e o Conformal inflava a probabilidade (média de 0,80).
+- **Feature `obv_trend`:** a razão explodia quando a média do OBV passava perto de zero (3.625 vezes a escala normal no IS3N.DE), derrubando o VAE com NaN e distorcendo modelos lineares e neurais. Agora é limitada a ±5.
+- **Blend 50/50:** nunca chegou ao log, porque atualizava os horizontes, mas não o `preds_dict`. Foi removido: o consenso de pesquisa é só relatório.
+- **Medição:** WFV e backtest usavam rótulos futuros em D+2/D+3. O gap de CV era curto para esses horizontes, e a acurácia do SGD era medida nos dados de treino. Os p-valores tratavam ~530 tickers do mesmo dia como independentes: agora o dia é a unidade. O Brier da calibração agora é medido fora da amostra, e o SHAP usa dados escalados.
+- **Moeda:** `data/downloader.py` já convertia o SGLN.L para EUR, e os exports do site convertiam de novo. O câmbio de hoje também era aplicado à série inteira, misturando FX no `correct`: agora a conversão usa o câmbio de cada dia.
+- **Persistência:** a chave semanal do cache fazia só a primeira execução da semana salvar modelos. Estado do MaoMao e calibração não eram commitados.
+
+**Efeito no histórico**
+O log foi mantido como auditoria. Métricas, pesos e a calibração usam só linhas com `ref_date` (`data/storage.py:aligned_rows`), então a acurácia recomeça do zero e só é reportada com 100 previsões em 20 dias. As conclusões anteriores do ERR-013 e sobre as 13 famílias precisam ser medidas de novo com os dados alinhados.
+
+**Ainda aberto**
+`confidence_calibrated` continua sem aparecer no site ou no email: a decisão fica para depois de ter 20 dias alinhados.
+
+---
+
 ## Validações em produção (estado atual)
 
 | Validação | Onde | O que deteta |

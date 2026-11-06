@@ -28,7 +28,7 @@ readme = f"""\
 
 An automated machine learning system that runs every weekday and generates daily directional forecasts for a personal investment portfolio.
 
-Every night after market close it downloads fresh prices for **543 assets** across 70 sectors, builds 33 engineered features per asset, trains **16 independent model families**, and blends their predictions into a final ensemble. Each forecast is validated against actual closing prices and the models are reweighted accordingly.
+Every night after market close it downloads fresh prices for **543 assets** across 70 sectors, builds 33 engineered features per asset, and trains a production ensemble of three models. A separate research framework of 13 model families is report-only. Each forecast is validated against actual closing prices and the models are reweighted accordingly.
 
 Charts are published here with a **10-day delay**. No prices, positions, or portfolio holdings are disclosed.
 
@@ -85,7 +85,7 @@ flowchart TD
 | `conformal` | Conformal prediction intervals |
 | `drift` | Concept drift detector |
 
-Each family's vote is weighted by its recent validated accuracy (exponential decay). The final prediction blends production and research 50/50.
+Each family's vote is weighted by its recent validated accuracy (exponential decay). The research consensus is report-only and does not change production forecasts.
 
 ---
 

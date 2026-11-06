@@ -39,6 +39,9 @@ except ImportError:
     _CHRONOS_AVAILABLE = False
     logger.info("chronos package not installed — Foundation uses TimesFM + Moirai only")
 
+_chronos_pipeline = None
+_RET_1D_IDX = 10  # posição de ret_1d em FEATURE_COLS
+
 SEQ_LEN    = 20
 EPOCHS     = 30
 LR         = 5e-4
@@ -113,16 +116,18 @@ class _Moirai(nn.Module):
 
 def _chronos_prob(context: np.ndarray, y_mean: float) -> float:
     """Zero-shot probability of next value > last via Chronos-T5-Tiny."""
+    global _chronos_pipeline
     if not _CHRONOS_AVAILABLE:
         return y_mean
     try:
-        pipeline = _ChronosPipeline.from_pretrained(
-            "amazon/chronos-t5-tiny",
-            device_map="cpu",
-            torch_dtype=torch.float32,
-        )
+        if _chronos_pipeline is None:
+            _chronos_pipeline = _ChronosPipeline.from_pretrained(
+                "amazon/chronos-t5-tiny",
+                device_map="cpu",
+                torch_dtype=torch.float32,
+            )
         series   = torch.tensor(context, dtype=torch.float32).unsqueeze(0)
-        forecast = pipeline.predict(series, prediction_length=1, num_samples=20)
+        forecast = _chronos_pipeline.predict(series, prediction_length=1, num_samples=20)
         samples  = forecast[0, :, 0].numpy()
         return float((samples > float(context[-1])).mean())
     except Exception as exc:
@@ -133,10 +138,11 @@ def _chronos_prob(context: np.ndarray, y_mean: float) -> float:
 # ── Treino e predição genéricos ───────────────────────────────────────────
 
 def _make_sequences(X: np.ndarray, y: np.ndarray, seq_len: int):
-    if len(X) <= seq_len:
+    if len(X) < seq_len:
         return np.empty((0, seq_len, X.shape[1]), dtype=np.float32), np.empty(0, dtype=np.float32)
-    seqs   = np.stack([X[i - seq_len:i] for i in range(seq_len, len(X))])
-    labels = y[seq_len:].astype(np.float32)
+    # A janela inclui a linha i: o rótulo y[i] é o movimento depois do fecho de i.
+    seqs   = np.stack([X[i - seq_len + 1:i + 1] for i in range(seq_len - 1, len(X))])
+    labels = y[seq_len - 1:].astype(np.float32)
     return seqs.astype(np.float32), labels
 
 
@@ -166,7 +172,7 @@ def _predict_model(model: nn.Module, X_sc: np.ndarray, y_mean: float) -> np.ndar
     with torch.no_grad():
         p = model(torch.from_numpy(seqs)).squeeze(1).numpy()
     probs           = np.full(len(X_sc), y_mean)
-    probs[SEQ_LEN:] = p
+    probs[SEQ_LEN - 1:] = p
     return probs
 
 
@@ -187,7 +193,6 @@ def train(X: np.ndarray, y: np.ndarray) -> dict:
         "y_mean":          float(y.mean()),
         "timesfm":         timesfm,
         "moirai":          moirai,
-        "chronos_context": X_sc.mean(axis=1),
     }
 
 
@@ -196,8 +201,9 @@ def predict(model_dict: dict, X: np.ndarray) -> np.ndarray:
     y_mean = model_dict["y_mean"]
     X_sc   = sc.transform(X).astype(np.float32)
 
-    ctx       = np.concatenate([model_dict["chronos_context"], X_sc.mean(axis=1)])
-    p_chr     = _chronos_prob(ctx, y_mean)
+    # Chronos prevê séries de preço: o contexto é o retorno acumulado, não a média das features.
+    ctx   = np.cumsum(X[:, _RET_1D_IDX]) if X.shape[1] > _RET_1D_IDX else X_sc.mean(axis=1)
+    p_chr = _chronos_prob(ctx, y_mean)
 
     probs = np.stack([
         np.full(len(X_sc), p_chr),

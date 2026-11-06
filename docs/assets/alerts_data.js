@@ -4,60 +4,59 @@ const ALERTS_DATA = {
   "date": "2026-11-06",
   "alerta": true,
   "market": {
-    "vix_hoje": 28.18,
-    "vix_ontem": 16.61,
+    "vix_hoje": 27.23,
+    "vix_ontem": 28.18,
     "regime_hoje": 2,
-    "regime_ontem": 1,
-    "variacao_1d": 0.6966,
-    "transicao": true,
-    "spike": true
+    "regime_ontem": 2,
+    "variacao_1d": -0.0337,
+    "transicao": false,
+    "spike": false
   },
   "tickers": {
     "ICGA.DE": {
-      "retorno_1d": 0.0387,
-      "atr_pct": 0.0138,
-      "multiplo_atr": 2.8,
-      "alerta": true
+      "retorno_1d": 0.0073,
+      "atr_pct": 0.0136,
+      "multiplo_atr": 0.54,
+      "alerta": false
     },
     "PPFB.DE": {
-      "retorno_1d": 0.0274,
-      "atr_pct": 0.0153,
-      "multiplo_atr": 1.79,
+      "retorno_1d": 0.0076,
+      "atr_pct": 0.0151,
+      "multiplo_atr": 0.51,
       "alerta": false
     },
     "SGLN.L": {
-      "retorno_1d": 0.0264,
-      "atr_pct": 0.016,
-      "multiplo_atr": 1.65,
+      "retorno_1d": 0.0092,
+      "atr_pct": 0.0157,
+      "multiplo_atr": 0.59,
       "alerta": false
     },
     "EXUS.MI": {
-      "retorno_1d": 0.015,
-      "atr_pct": 0.0091,
-      "multiplo_atr": 1.65,
+      "retorno_1d": -0.0262,
+      "atr_pct": 0.011,
+      "multiplo_atr": 2.38,
       "alerta": false
     },
     "LYP6.DE": {
-      "retorno_1d": 0.0196,
-      "atr_pct": 0.01,
-      "multiplo_atr": 1.96,
+      "retorno_1d": -0.0183,
+      "atr_pct": 0.0111,
+      "multiplo_atr": 1.66,
       "alerta": false
     },
     "IS3N.DE": {
-      "retorno_1d": 0.0076,
-      "atr_pct": 0.0165,
-      "multiplo_atr": 0.46,
+      "retorno_1d": -0.0387,
+      "atr_pct": 0.0194,
+      "multiplo_atr": 1.99,
       "alerta": false
     },
     "EUNN.DE": {
-      "retorno_1d": 0.002,
-      "atr_pct": 0.0122,
-      "multiplo_atr": 0.16,
-      "alerta": false
+      "retorno_1d": -0.0556,
+      "atr_pct": 0.0166,
+      "multiplo_atr": 3.35,
+      "alerta": true
     }
   },
   "motivos": [
-    "VIX transitou pra regime alto (16.61→28.18)",
-    "ICGA.DE: retorno 2.8x o ATR normal"
+    "EUNN.DE: retorno 3.4x o ATR normal"
   ]
 };

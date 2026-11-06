@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from maomao.sensors import compute_sensors, real_returns_by_day, CHANNELS
+from maomao.sensors import compute_sensors, compute_market_sensors, real_returns_by_day, CHANNELS
 
 PORTFOLIO = ["AAA.DE", "BBB.DE"]
 
@@ -76,9 +76,42 @@ def test_anomaly_channel_reflects_todays_alerta_flag():
 
 def test_vix_spike_reads_from_market_variacao_1d():
     df = pd.DataFrame([_row("AAA.DE", "2026-01-02", 100.0, 100.0)])
-    anomaly = {"market": {"variacao_1d": -0.30}}  # -30% num dia -> satura
+    anomaly = {"market": {"variacao_1d": 0.30}}  # +30% num dia -> satura
     out = compute_sensors(df, anomaly, PORTFOLIO)
     assert out["VIX_SPIKE"] == 1.0
+
+
+def test_vix_falling_does_not_feed_stress_channels():
+    df = pd.DataFrame([_row("AAA.DE", "2026-01-02", 100.0, 100.0)])
+    anomaly = {"alerta": True, "market": {"variacao_1d": -0.20, "spike": True, "transicao": False}, "tickers": {}}
+    for fn in (compute_sensors, compute_market_sensors):
+        out = fn(df, anomaly, PORTFOLIO)
+        assert out["VIX_SPIKE"] == 0.0
+        assert out["ANOMALY"] == 0.0
+
+
+def test_ticker_alert_still_counts_when_vix_falls():
+    df = pd.DataFrame([_row("AAA.DE", "2026-01-02", 100.0, 100.0)])
+    anomaly = {"alerta": True, "market": {"variacao_1d": -0.20, "spike": True, "transicao": False},
+               "tickers": {"AAA.DE": {"alerta": True, "multiplo_atr": 3.0}}}
+    assert compute_sensors(df, anomaly, PORTFOLIO)["ANOMALY"] == 1.0
+
+
+def test_day_validated_for_few_tickers_is_ignored():
+    tickers = [f"T{i}" for i in range(10)]
+    rows = [_row(t, "2026-01-02", 100.0, 101.0) for t in tickers]
+    rows += [_row(t, "2026-01-05", 100.0, 99.0) for t in tickers]
+    rows.append(_row("T0", "2026-01-06", 100.0, 90.0))
+    by_day = real_returns_by_day(pd.DataFrame(rows), tickers)
+    assert list(by_day.index) == ["2026-01-02", "2026-01-05"]
+
+
+def test_single_bad_price_does_not_distort_daily_return():
+    rows = [_row(f"T{i}", "2026-01-02", 100.0, 101.0) for i in range(9)]
+    rows.append(_row("SPLIT", "2026-01-02", 1.0, 22.0))
+    df = pd.DataFrame(rows)
+    by_day = real_returns_by_day(df, [r["ticker"] for r in rows])
+    assert by_day["2026-01-02"] == pytest.approx(1.0)
 
 
 def test_calm_streak_grows_with_longer_run_of_no_alert_days():

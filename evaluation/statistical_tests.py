@@ -39,7 +39,7 @@ warnings.filterwarnings("ignore")
 # ── Diebold-Mariano ───────────────────────────────────────────────────────
 
 def diebold_mariano(e1: np.ndarray, e2: np.ndarray,
-                    h: int = 1) -> dict:
+                    h: int = 1, loss: str = "squared") -> dict:
     """
     Testa se dois modelos têm igual acurácia preditiva.
 
@@ -47,12 +47,18 @@ def diebold_mariano(e1: np.ndarray, e2: np.ndarray,
     ----------
     e1, e2 : erros de previsão dos dois modelos (arrays de igual comprimento)
     h      : horizonte de previsão (1 para D+1, 2 para D+2, etc.)
+    loss   : "squared" (padrão) ou "absolute"
 
     Returns
     -------
     dict com: statistic, p_value, conclusion
     """
-    d   = e1 ** 2 - e2 ** 2
+    d = np.abs(e1) - np.abs(e2) if loss == "absolute" else e1 ** 2 - e2 ** 2
+    return dm_from_loss_diff(d, h)
+
+
+def dm_from_loss_diff(d: np.ndarray, h: int = 1) -> dict:
+    """Diebold-Mariano sobre uma série já calculada de diferenças de perda, em ordem temporal."""
     T   = len(d)
     mu  = d.mean()
     gamma_0 = np.var(d, ddof=1)
@@ -210,8 +216,8 @@ def full_report(model_name: str, y_true: np.ndarray,
     }
 
     if baseline_proba is not None:
-        e_model    = (y_true - y_pred_proba) ** 2
-        e_baseline = (y_true - baseline_proba) ** 2
+        e_model    = y_true - y_pred_proba
+        e_baseline = y_true - baseline_proba
         report["diebold_mariano"] = diebold_mariano(e_model, e_baseline)
 
         c_model    = (y_pred_proba >= 0.5).astype(bool) == y_true.astype(bool)

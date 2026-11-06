@@ -1,6 +1,6 @@
 # Carteira Inteligente — Sistema de Previsão de Carteira com Machine Learning
 
-Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo, usando um ensemble operacional de três modelos (Random Forest, Gradient Boosting, SGD Classifier). Um framework de pesquisa separado avalia 38 modelos em 13 famílias offline, desde variantes clássicas de boosting até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal, cujo consenso é combinado com a previsão de produção para os ativos cobertos.
+Pipeline de ML totalmente automatizado que corre todos os dias úteis após o fecho dos mercados, analisa uma carteira de investimentos real e prevê a direção do preço para 1 a 3 dias de cada ativo, usando um ensemble operacional de três modelos (Random Forest, Gradient Boosting, SGD Classifier). Um framework de pesquisa separado avalia 38 modelos em 13 famílias offline, desde variantes clássicas de boosting até Foundation Models (Chronos, TimesFM, Moirai) e predição conformal; o consenso dele é só relatório e não altera as previsões de produção.
 Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraestrutura cloud, sem APIs pagas, sem passos manuais. Cada previsão é registada, validada contra preços reais, e usada para actualizar os pesos do ensemble — o sistema aprende continuamente com os seus próprios erros.
 
 [![Last Updated](https://img.shields.io/github/last-commit/srxkatsumi/smart-wallet-ml?label=last%20updated&color=brightgreen)](https://github.com/srxkatsumi/smart-wallet-ml/commits/main)
@@ -378,11 +378,10 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 │   ├── backfill.py                  ← replay único contra histórico real do yfinance/predictions_log
 │   ├── state.py                     ← persiste pesos aprendidos + histórico de humor entre execuções
 │   └── README.md                    ← arquitetura completa + crédito a github.com/mille-okws/pestinha
-├── portfolio/
-│   ├── pnl.py                       ← G/P, fees, breakeven, alvos de saída
-│   ├── exit_signals.py              ← lógica de sinais de saída
-│   ├── projections.py               ← projeções 1 / 3 / 5 / 10 anos
-│   └── dca.py                       ← simulação DCA
+├── jinshi/
+│   ├── data.py                      ← histórico completo pelo mesmo pipeline de features da produção
+│   ├── backtest.py                  ← walk-forward causal: histórico completo vs 2 anos vs ingénuo (só backtest)
+│   └── validate.py                  ← portão de validação: 4 critérios combinados para qualquer sinal candidato
 ├── reports/
 │   ├── charts.py                    ← geração de gráficos (matplotlib)
 │   └── email_report.py              ← construção do email HTML
@@ -470,7 +469,7 @@ O pipeline tem múltiplas camadas independentes de proteção, desde antes da pr
 116 testes automáticos em 21 arquivos correm no GitHub Actions **antes** do `main.py`. Se algum falhar, o pipeline para imediatamente — antes de gastar ~1h20-2h de execução — os modelos nunca treinam com código ou dados potencialmente corrompidos.
 
 ```
-pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
+pytest tests/ --ignore=tests/test_classical.py
 ```
 
 O `pytest.ini` define `addopts = --continue-on-collection-errors`: um arquivo de teste quebrado (erro de import, fixture ausente) nunca mais consegue abortar a suite inteira em silêncio — todos os outros arquivos continuam correndo e reportando. Isso foi adicionado depois de `tests/test_email_phase15.py` ficar quebrado por semanas (testava uma seção de PnL/lotes do email já removida) sem ninguém perceber, porque nada rodava pytest no CI até 2026-08-17.
@@ -478,11 +477,10 @@ O `pytest.ini` define `addopts = --continue-on-collection-errors`: um arquivo de
 | Área | Arquivos representativos | O que valida |
 |------|---------------------------|---------------|
 | Pipeline principal | `test_features.py`, `test_ensemble.py`, `test_config_coverage.py` | Limites do RSI14; probabilidades do ensemble/por modelo em [0, 1]; todo ticker da carteira presente em `ASSET_CLASSES`/`TICKER_CALENDAR` (ver incidente de 2026-08-17 abaixo) |
-| Avaliação estatística | `test_evaluation.py`, `test_information_theory.py` | Testes de significância, Diebold-Mariano, diagnósticos de entropia/informação mútua |
-| Famílias de research (13) | `test_bayesian.py`, `test_markov.py`, `test_timeseries.py`, `test_neural.py`, `test_transformer.py`, `test_efficient.py`, `test_generative.py`, `test_contrarian.py`, `test_reinforcement.py`, `test_transfer_learning.py`, `test_explainability.py`, `test_research_runner.py`, `test_tracking.py` | Contrato `train`/`predict` de cada família: formato de saída, limites de probabilidade, comportamento com datasets pequenos |
-| Matemática da carteira | `test_pnl.py` | Lógica de breakeven/fees, conversão USD→EUR |
+| Avaliação estatística | `test_evaluation.py` | Testes de significância, Diebold-Mariano |
+| Famílias de research (13) | `test_bayesian.py`, `test_markov.py`, `test_timeseries.py`, `test_neural.py`, `test_transformer.py`, `test_efficient.py`, `test_generative.py`, `test_contrarian.py`, `test_reinforcement.py`, `test_explainability.py`, `test_research_runner.py`, `test_tracking.py` | Contrato `train`/`predict` de cada família: formato de saída, limites de probabilidade, comportamento com datasets pequenos |
 
-`test_classical.py` e `test_meta_learning.py` (baseados em XGBoost) estão excluídos do step de CI por enquanto: derrubam o interpretador na máquina local do mantenedor (macOS/arm64) — parece um problema de ABI do `xgboost`/`libomp`, não um bug de código — e ainda não foram confirmados seguros no runner Ubuntu; a confirmar antes de reativar.
+`test_classical.py` (baseado em XGBoost) roda em um passo próprio da CI, que não bloqueia, em processo separado: no mesmo processo que o PyTorch, em macOS/arm64, derruba o interpretador (problema de ABI do `xgboost`/`libomp`, não bug de código). Localmente, rode-o separado também.
 
 Todos os testes usam dados sintéticos (gerados com `np.random`) — sem chamadas de rede, sem arquivos em disco, sem depender de dados de mercado ao vivo.
 
@@ -560,7 +558,7 @@ O sistema original era um único Jupyter notebook (AnaliseV5). Foi migrado para 
 
 ### Melhorias implementadas
 - ✅ **Família Contrarian no research runner de segunda-feira** — CB (Contrarian Baseline), EWI (Error-Weighted Inverter) e PEL (Predictive Error Learning) adicionados como 9ª família na comparação semanal de modelos. Se o CB ficar em primeiro lugar, um aviso âmbar aparece no email sinalizando possíveis erros sistemáticos no ensemble principal.
-- ✅ **Package Python modular** — `main.py` + `data/` + `features/` + `models/` + `portfolio/` + `reports/`
+- ✅ **Package Python modular** — `main.py` + `data/` + `features/` + `models/` + `reports/`
 - ✅ **Tabela ML de 7 colunas no email** — Ativo · Preço · **Var%** · D+1 · D+2 · D+3 · Consenso
 - ✅ **Coluna Var%** — variação fecho-a-fecho do dia anterior por ativo no email
 - ✅ **Legenda ✅/❌ no email** — clarifica o significado dos ícones (acurácia D+1 do dia anterior)

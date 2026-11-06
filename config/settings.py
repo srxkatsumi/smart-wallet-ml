@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 # ── Paths ─────────────────────────────────────────────────────────────────
@@ -17,6 +16,7 @@ HTML_REPORT  = OUTPUT_DIR / "resumo_diario.html"
 CONFIDENCE_CALIB_FILE = OUTPUT_DIR / "confidence_calibration.json"
 CONFIDENCE_CALIB_DAYS = 30   # mesma cadência do RECALIBRATION_DAYS do SGD
 MIN_N_CALIBRATION     = 200  # por horizonte; abaixo disso o isotonic fit é ruído
+MIN_DAYS_CALIBRATION  = 20   # um único dia traz ~530 linhas correlacionadas, não é amostra
 
 # ── Experimento de regressão (email separado, não afeta a carteira) ────────
 EXPERIMENTO_MODELS_DIR       = OUTPUT_DIR / "models" / "experimento"
@@ -55,12 +55,11 @@ RECALIBRATION_DAYS    = 30
 MIN_SAMPLES_FEATURES  = 60
 SGD_PARTIAL_FIT_DAYS  = 5
 MIN_VALIDATIONS_WEIGHT= 5
+MAX_BAR_AGE_DAYS      = 5    # última barra mais velha que isto: ticker sem dados frescos
 
 # Tickers cotados em GBp (pence) na LSE — convertidos para EUR logo no
 # download, para que features, modelos e o log de previsões fiquem numa
-# única moeda (to_eur() já existia em data/downloader.py mas só era
-# chamada pelo portfolio/pnl.py, código órfão — nunca era aplicada de
-# verdade ao pipeline de produção).
+# única moeda, com o câmbio de cada dia (ver data/downloader.py).
 GBP_PENCE_TICKERS = {"SGLN.L"}
 
 # ── Portfolio settings ────────────────────────────────────────────────────
@@ -78,7 +77,7 @@ PRED_COLS = [
     "actual_price", "actual_change_pct", "correct",
     "atr_at_prediction", "predicted_price",
     "model_rf", "model_gb", "model_sgd",
-    "confidence_calibrated",
+    "confidence_calibrated", "ref_date",
 ]
 
 EXPERIMENTO_PRED_COLS = [
@@ -87,7 +86,7 @@ EXPERIMENTO_PRED_COLS = [
     "challenger_pred_price", "challenger_pred_ret",
     "challenger_interval_lo", "challenger_interval_hi",
     "ref_price", "actual_price", "actual_ret",
-    "champion_sq_err", "challenger_sq_err", "validated",
+    "champion_sq_err", "challenger_sq_err", "validated", "ref_date",
 ]
 
 DEFAULT_WEIGHTS = {

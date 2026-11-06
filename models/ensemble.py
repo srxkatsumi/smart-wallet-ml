@@ -75,7 +75,10 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
     scaler   = RobustScaler()
     X_scaled = scaler.fit_transform(X)
 
-    tscv      = TimeSeriesSplit(n_splits=N_SPLITS_CV, gap=CV_GAP)
+    # Gap de pelo menos o horizonte: o rótulo de D+N usa o fecho N pregões à
+    # frente, e com gap menor ele se sobrepõe às primeiras linhas de validação.
+    gap       = max(CV_GAP, day)
+    tscv      = TimeSeriesSplit(n_splits=N_SPLITS_CV, gap=gap)
     acuracias = {"rf": [], "gb": [], "sgd": []}
 
     # Plain RF/GB used only for CV accuracy tracking
@@ -104,20 +107,23 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
         sgd_model.partial_fit(X_novo, y_novo, classes=[0, 1])
         _save_sgd(ticker, day, sgd_model, scaler_sgd, models_dir)
 
-    for train_idx, val_idx in tscv.split(X_scaled):
-        X_tr, X_val = X_scaled[train_idx], X_scaled[val_idx]
+    for train_idx, val_idx in tscv.split(X):
+        fold_scaler = RobustScaler().fit(X[train_idx])
+        X_tr, X_val = fold_scaler.transform(X[train_idx]), fold_scaler.transform(X[val_idx])
         y_tr, y_val = y[train_idx], y[val_idx]
         rf_cv.fit(X_tr, y_tr)
         gb_cv.fit(X_tr, y_tr)
+        # Modelo próprio por dobra: o sgd_model de produção já viu estas linhas.
+        sgd_cv = SGDClassifier(
+            loss="log_loss", penalty="l2", alpha=SGD_ALPHA,
+            max_iter=SGD_MAX_ITER, random_state=42,
+        ).fit(X_tr, y_tr)
         acuracias["rf"].append(accuracy_score(y_val, rf_cv.predict(X_val)))
         acuracias["gb"].append(accuracy_score(y_val, gb_cv.predict(X_val)))
-
-    for train_idx, val_idx in tscv.split(X_scaled):
-        X_val_sgd = scaler_sgd.transform(df_train[FEATURE_COLS].values[val_idx])
-        acuracias["sgd"].append(accuracy_score(y[val_idx], sgd_model.predict(X_val_sgd)))
+        acuracias["sgd"].append(accuracy_score(y_val, sgd_cv.predict(X_val)))
 
     # Final calibrated models for prediction — TimeSeriesSplit preserves temporal order
-    cal_cv = TimeSeriesSplit(n_splits=3)
+    cal_cv = TimeSeriesSplit(n_splits=3, gap=gap)
     rf_model = CalibratedClassifierCV(
         RandomForestClassifier(n_estimators=N_ESTIMATORS_RF, max_depth=MAX_DEPTH_RF,
                                random_state=42, n_jobs=-1),
@@ -158,6 +164,7 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
         "probs_ind":  probs,
         "rf_model":   rf_model,
         "gb_model":   gb_model,
+        "scaler":     scaler,
     }
 
 

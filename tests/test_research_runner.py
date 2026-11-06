@@ -6,7 +6,7 @@ import data.storage as storage
 from features.engineering import FEATURE_COLS
 from research.runner import (
     _build_comparison, _build_consensus, _validate_past_predictions,
-    _update_research_weights, _RES_COLS,
+    _update_research_weights, _RES_COLS, _get_xy, _latest_rows, _needs_retrain, _predict_family,
 )
 
 
@@ -41,10 +41,10 @@ def test_build_comparison_empty_log():
 
 def test_build_comparison_returns_sorted():
     rows = [
-        {"family": "classico_avancado", "correct_d1": True,  "validated": True},
-        {"family": "classico_avancado", "correct_d1": False, "validated": True},
-        {"family": "neural_recorrente", "correct_d1": True,  "validated": True},
-        {"family": "neural_recorrente", "correct_d1": True,  "validated": True},
+        {"family": "classico_avancado", "correct_d1": True,  "validated": True, "week_date": "2026-06-01"},
+        {"family": "classico_avancado", "correct_d1": False, "validated": True, "week_date": "2026-06-02"},
+        {"family": "neural_recorrente", "correct_d1": True,  "validated": True, "week_date": "2026-06-01"},
+        {"family": "neural_recorrente", "correct_d1": True,  "validated": True, "week_date": "2026-06-02"},
     ]
     log = pd.DataFrame(rows)
     r   = _build_comparison(log, "2026-06-02")
@@ -128,12 +128,78 @@ def test_validate_marks_validated():
         "ticker":      "NVDA",
         "family":      "classico_avancado",
         "ref_price":   100.0,
+        "ref_date":    "2026-06-01",
         "direction_d1": "up",
         "direction_d2": "up",
         "direction_d3": "down",
         "validated":   False,
     }])
-    close_prices = {"NVDA": 105.0}
-    result = _validate_past_predictions(log, close_prices)
-    assert result.iloc[0]["validated"] == True
-    assert result.iloc[0]["correct_d1"] == True
+    closes = pd.DataFrame(
+        {"Close": [100.0, 105.0, 95.0, 90.0]},
+        index=pd.to_datetime(["2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04"]),
+    )
+    result = _validate_past_predictions(log, {"NVDA": closes}).iloc[0]
+    assert result["validated"] == True
+    # cada horizonte usa o próprio fecho: subiu em D+1, caiu em D+2 e D+3
+    assert (result["actual_d1"], result["actual_d2"], result["actual_d3"]) == (105.0, 95.0, 90.0)
+    assert result["correct_d1"] == True
+    assert result["correct_d2"] == False
+    assert result["correct_d3"] == True
+
+
+def test_validate_waits_until_all_horizons_have_a_close():
+    log = pd.DataFrame([{
+        "ticker": "NVDA", "family": "f", "ref_price": 100.0, "ref_date": "2026-06-01",
+        "direction_d1": "up", "direction_d2": "up", "direction_d3": "up", "validated": False,
+    }])
+    closes = pd.DataFrame({"Close": [100.0, 105.0]}, index=pd.to_datetime(["2026-06-01", "2026-06-02"]))
+    result = _validate_past_predictions(log, {"NVDA": closes}).iloc[0]
+    assert result["validated"] == False
+    assert result["correct_d1"] == True
+
+
+def test_rows_without_ref_date_close_without_a_result():
+    log = pd.DataFrame([{
+        "ticker": "NVDA", "family": "f", "ref_price": 100.0, "ref_date": None,
+        "direction_d1": "up", "validated": False,
+    }])
+    closes = pd.DataFrame({"Close": [105.0]}, index=pd.to_datetime(["2026-06-02"]))
+    result = _validate_past_predictions(log, {"NVDA": closes}).iloc[0]
+    assert result["validated"] == True
+    assert "correct_d1" not in result or pd.isna(result["correct_d1"])
+
+
+def test_failed_family_returns_none_instead_of_a_vote():
+    prob = _predict_family("models.nao_existe", np.zeros((60, 3)), np.zeros(60), np.zeros((5, 3)))
+    assert prob is None
+
+
+def test_family_without_prediction_does_not_vote_in_consensus():
+    rows = [
+        {"ticker": "NVDA", "direction_d1": "down", "family": "a"},
+        {"ticker": "NVDA", "direction_d1": None,   "family": "b"},
+    ]
+    r = _build_consensus(rows, ["NVDA"], {})[0]
+    assert r["pct_up"] == 0.0
+    assert r["total"] == 1
+
+
+def test_latest_rows_keep_the_newest_bar_even_without_a_label():
+    df = _make_featured_df(n=100)
+    df.loc[df.index[-3:], ["target_d1", "target_d2", "target_d3"]] = np.nan
+    X, _ = _get_xy(df, 3)
+    latest = _latest_rows(df)
+    assert len(X) == 97
+    np.testing.assert_allclose(latest[-1], df[FEATURE_COLS].iloc[-1].values.astype(np.float32))
+
+
+def test_stale_model_is_retrained_and_fresh_one_is_not(tmp_path):
+    import os, time
+    path = tmp_path / "m.pkl"
+    assert _needs_retrain(path, always=False)
+    path.write_text("x")
+    assert not _needs_retrain(path, always=False)
+    assert _needs_retrain(path, always=True)
+    old = time.time() - 8 * 86400
+    os.utime(path, (old, old))
+    assert _needs_retrain(path, always=False)

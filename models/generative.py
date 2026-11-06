@@ -11,7 +11,7 @@ VAE (Kingma & Welling, 2014 — "Auto-Encoding Variational Bayes", ICLR 2014):
 
 GAN — Discriminador como Estimador de Densidade (Goodfellow et al., 2014 +
   Odena et al., 2017 ACGAN):
-  Os exemplos y=1 são tratados como "reais" e y=0 como "gerados". O
+  Os exemplos y=1 têm alvo 1; os y=0 e as amostras do gerador têm alvo 0. O
   discriminador aprende D(x) = P(x vem da distribuição UP) ≈ P(y=1|x).
   O gerador serve de regularizador implícito do discriminador. Esta
   interpretação como estimador de razão de densidades está fundamentada
@@ -36,6 +36,8 @@ EPOCHS_GAN  = 30
 LR          = 1e-3
 BATCH_SIZE  = 64
 NOISE_DIM   = 32
+INPUT_CLIP  = 10.0   # em unidades do RobustScaler; um outlier extremo leva o VAE a NaN
+LOGVAR_CLIP = 10.0
 
 
 # ── VAE ───────────────────────────────────────────────────────────────────
@@ -53,7 +55,7 @@ class _VAE(nn.Module):
 
     def encode(self, x):
         h = self.enc_fc(x)
-        return self.enc_mu(h), self.enc_logv(h)
+        return self.enc_mu(h), self.enc_logv(h).clamp(-LOGVAR_CLIP, LOGVAR_CLIP)
 
     def reparameterize(self, mu, logvar):
         if self.training:
@@ -147,21 +149,23 @@ def _train_gan(X_sc: np.ndarray, y: np.ndarray) -> _Discriminator:
     opt_D  = torch.optim.Adam(D.parameters(), lr=LR, betas=(0.5, 0.999))
     loss_fn = nn.BCELoss()
 
-    # "real" = y==1 samples, "fake" gerados pelo G
-    real_idx = np.where(y == 1)[0]
-    X_real   = torch.from_numpy(X_sc[real_idx].astype(np.float32))
+    # Alvo 1 só para exemplos reais de alta. Reais de baixa e amostras de G ficam
+    # com alvo 0: sem os reais de baixa, D mediria "real ou gerado", não P(alta).
+    X_real = torch.from_numpy(X_sc[y == 1].astype(np.float32))
+    X_down = torch.from_numpy(X_sc[y == 0].astype(np.float32))
 
     for _ in range(EPOCHS_GAN):
         # ─ treinar D ─
         opt_D.zero_grad()
         real_labels = torch.ones(len(X_real), 1)
         loss_real   = loss_fn(D(X_real), real_labels)
+        loss_down   = loss_fn(D(X_down), torch.zeros(len(X_down), 1))
 
         z     = torch.randn(len(X_real), NOISE_DIM)
         fake  = G(z).detach()
         fake_labels = torch.zeros(len(X_real), 1)
         loss_fake   = loss_fn(D(fake), fake_labels)
-        (loss_real + loss_fake).backward()
+        (loss_real + loss_down + loss_fake).backward()
         opt_D.step()
 
         # ─ treinar G ─
@@ -186,14 +190,14 @@ def _predict_gan(D: _Discriminator, X_sc: np.ndarray) -> np.ndarray:
 def train(X: np.ndarray, y: np.ndarray) -> dict:
     scaler = RobustScaler()
     scaler.fit(X)
-    X_sc   = scaler.transform(X)
+    X_sc   = np.clip(scaler.transform(X), -INPUT_CLIP, INPUT_CLIP)
     vae, clf = _train_vae(X_sc, y)
     D        = _train_gan(X_sc, y)
     return {"scaler": scaler, "vae": vae, "clf": clf, "D": D}
 
 
 def predict(model_dict: dict, X: np.ndarray) -> np.ndarray:
-    X_sc  = model_dict["scaler"].transform(X)
+    X_sc  = np.clip(model_dict["scaler"].transform(X), -INPUT_CLIP, INPUT_CLIP)
     p_vae = _predict_vae(model_dict["vae"], model_dict["clf"], X_sc)
     p_gan = _predict_gan(model_dict["D"], X_sc)
     return (p_vae + p_gan) / 2.0

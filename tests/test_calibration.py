@@ -81,10 +81,25 @@ def test_fit_calibration_stays_flat_when_confidence_is_noise(monkeypatch):
 
 def test_fit_calibration_reports_brier_improvement_when_there_is_signal(monkeypatch):
     monkeypatch.setattr(calibration, "MIN_N_CALIBRATION", 200)
-    df = _validated_rows(n_per_horizon=2000, well_calibrated=True)
+    # Confiança superestimada: há o que corrigir, e o Brier é medido fora da amostra.
+    rng = _rng()
+    confidence = rng.uniform(0.5, 1.0, 2000)
+    correct = rng.uniform(size=2000) < 0.5 + (confidence - 0.5) * 0.4
+    df = pd.DataFrame({"horizon": 1, "confidence": confidence, "correct": correct.astype(float)})
     curves = fit_calibration(df)
-    for key in curves:
-        assert curves[key]["brier_calibrated"] <= curves[key]["brier_raw"]
+    assert curves["d1"]["brier_calibrated"] < curves["d1"]["brier_raw"]
+
+
+def test_fit_calibration_requires_enough_distinct_days():
+    df = _validated_rows(n_per_horizon=2000, well_calibrated=True)
+    df["target_date"] = "2026-01-02"
+    assert fit_calibration(df) == {}
+
+
+def test_fit_calibration_ignores_rows_without_ref_date():
+    df = _validated_rows(n_per_horizon=2000, well_calibrated=True)
+    df["ref_date"] = None
+    assert fit_calibration(df) == {}
 
 
 # ── apply_calibration ────────────────────────────────────────────────────────

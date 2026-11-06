@@ -67,8 +67,8 @@ def _train_base(X: np.ndarray, y: np.ndarray,
 
 def _oof_errors(X: np.ndarray, y: np.ndarray,
                 scaler: RobustScaler) -> np.ndarray:
-    """Out-of-fold errors para evitar lookahead na estimativa de erro."""
-    errors = np.zeros(len(X))
+    """Out-of-fold errors, em ordem temporal. A primeira dobra de treino não tem erro e fica de fora."""
+    errors = np.full(len(X), np.nan)
     tscv   = TimeSeriesSplit(n_splits=5)
     for tr_idx, val_idx in tscv.split(X):
         clf = RandomForestClassifier(
@@ -77,7 +77,7 @@ def _oof_errors(X: np.ndarray, y: np.ndarray,
         clf.fit(scaler.transform(X[tr_idx]), y[tr_idx].astype(int))
         p = clf.predict_proba(scaler.transform(X[val_idx]))[:, 1]
         errors[val_idx] = y[val_idx].astype(float) - p
-    return errors
+    return errors[~np.isnan(errors)]
 
 
 # ── Contrarian Baseline ───────────────────────────────────────────────────
@@ -102,15 +102,9 @@ def train_ewi(X: np.ndarray, y: np.ndarray) -> dict:
     base   = _train_base(X, y, scaler)
     errors = _oof_errors(X, y, scaler)
 
-    # Calcula taxa de erro deslizante nos últimos EWI_WINDOW passos
-    wrong    = (errors != 0).astype(float)
-    n        = len(wrong)
-    err_rate = np.array([
-        wrong[max(0, i - EWI_WINDOW):i].mean() if i > 0 else 0.5
-        for i in range(n)
-    ])
-    # Estado final: inverted se última taxa > threshold
-    last_rate = err_rate[-EWI_WINDOW:].mean() if n >= EWI_WINDOW else 0.5
+    # Errou quando a probabilidade ficou do lado errado de 0.5, ou seja, |erro| > 0.5.
+    wrong     = (np.abs(errors) > 0.5).astype(float)
+    last_rate = wrong[-EWI_WINDOW:].mean() if len(wrong) >= EWI_WINDOW else 0.5
     inverted  = bool(last_rate > EWI_INVERT_TH)
 
     return {
@@ -165,7 +159,8 @@ def train_pel(X: np.ndarray, y: np.ndarray) -> dict:
     if has_ac:
         ar_coefs  = _fit_ar(errors, PEL_AR_ORDER)
         recent_e  = errors[-PEL_AR_ORDER:]
-        correction = float(np.dot(ar_coefs, recent_e[::-1]))
+        # _fit_ar ordena as colunas do lag mais antigo para o mais recente, como recent_e.
+        correction = float(np.dot(ar_coefs, recent_e))
 
     return {
         "type":        "pel",

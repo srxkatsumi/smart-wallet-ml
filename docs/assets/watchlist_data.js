@@ -80,7 +80,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AAL",
       "sector": "Airlines",
-      "price": 12.1525,
+      "price": 12.1825,
       "var_1d": 6.32,
       "direction": "down",
       "confidence": 0.6813,
@@ -96,7 +96,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AAPL",
       "sector": "Big Tech",
-      "price": 311.6231,
+      "price": 312.392,
       "var_1d": 5.31,
       "direction": "up",
       "confidence": 0.8571,
@@ -104,7 +104,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.35,
-      "dividend_rate": 1.0907,
+      "dividend_rate": 1.0934,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -112,7 +112,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ABBV",
       "sector": "Healthcare & Pharma",
-      "price": 262.8704,
+      "price": 263.5191,
       "var_1d": 3.09,
       "direction": "down",
       "confidence": 0.7081,
@@ -120,7 +120,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.61,
-      "dividend_rate": 6.8609,
+      "dividend_rate": 6.8778,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -128,7 +128,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ABNB",
       "sector": "Travel & Hospitality Stocks",
-      "price": 157.2515,
+      "price": 157.6395,
       "var_1d": 5.64,
       "direction": "up",
       "confidence": 0.7176,
@@ -144,7 +144,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ACAD",
       "sector": "US Biotech Stocks",
-      "price": 19.1427,
+      "price": 19.1899,
       "var_1d": 4.38,
       "direction": "up",
       "confidence": 0.7815,
@@ -160,7 +160,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ADBE",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 221.5448,
+      "price": 222.0914,
       "var_1d": 0.95,
       "direction": "up",
       "confidence": 0.5665,
@@ -176,7 +176,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AEM",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 163.564,
+      "price": 163.9676,
       "var_1d": 9.67,
       "direction": "up",
       "confidence": 0.6722,
@@ -184,7 +184,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.83,
-      "dividend_rate": 1.3576,
+      "dividend_rate": 1.3609,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -192,7 +192,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AEP",
       "sector": "US Utilities Stocks",
-      "price": 115.2304,
+      "price": 115.5147,
       "var_1d": -0.48,
       "direction": "up",
       "confidence": 0.7509,
@@ -200,7 +200,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.14,
-      "dividend_rate": 3.6182,
+      "dividend_rate": 3.6272,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -208,7 +208,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AFRM",
       "sector": "Fintech Stocks",
-      "price": 67.396,
+      "price": 67.5623,
       "var_1d": 5.03,
       "direction": "down",
       "confidence": 0.6716,
@@ -224,7 +224,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AG",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 13.7217,
+      "price": 13.7556,
       "var_1d": 9.15,
       "direction": "up",
       "confidence": 0.7202,
@@ -232,7 +232,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.29,
-      "dividend_rate": 0.0398,
+      "dividend_rate": 0.0399,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -240,7 +240,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AGG",
       "sector": "Bonds & Fixed Income",
-      "price": 85.9324,
+      "price": 86.1444,
       "var_1d": 0.46,
       "direction": "up",
       "confidence": 0.5324,
@@ -248,7 +248,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.05,
-      "dividend_rate": 3.4803,
+      "dividend_rate": 3.4889,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -256,7 +256,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AIQ",
       "sector": "AI & Machine Learning",
-      "price": 53.3801,
+      "price": 53.5118,
       "var_1d": 0.55,
       "direction": "up",
       "confidence": 0.7175,
@@ -264,7 +264,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.08,
-      "dividend_rate": 0.0427,
+      "dividend_rate": 0.0428,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -272,7 +272,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ALK",
       "sector": "Airlines",
-      "price": 35.664,
+      "price": 35.752,
       "var_1d": 8.75,
       "direction": "down",
       "confidence": 0.5462,
@@ -288,7 +288,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ALNY",
       "sector": "US Biotech Stocks",
-      "price": 143.6189,
+      "price": 143.9733,
       "var_1d": 0.74,
       "direction": "down",
       "confidence": 0.5341,
@@ -320,7 +320,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AMAT",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 329.357,
+      "price": 330.1697,
       "var_1d": -3.28,
       "direction": "up",
       "confidence": 0.5236,
@@ -328,7 +328,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.43,
-      "dividend_rate": 1.4162,
+      "dividend_rate": 1.4197,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -336,7 +336,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AMD",
       "sector": "Semiconductors",
-      "price": 435.7963,
+      "price": 436.8716,
       "var_1d": 1.01,
       "direction": "up",
       "confidence": 0.7264,
@@ -352,7 +352,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AMGN",
       "sector": "US Healthcare Stocks",
-      "price": 426.6128,
+      "price": 427.6654,
       "var_1d": 3.73,
       "direction": "up",
       "confidence": 0.6123,
@@ -360,7 +360,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.29,
-      "dividend_rate": 9.7694,
+      "dividend_rate": 9.7935,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -368,7 +368,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AMLP",
       "sector": "Energy Sector ETFs",
-      "price": 45.6143,
+      "price": 45.7268,
       "var_1d": -2.74,
       "direction": "up",
       "confidence": 0.7374,
@@ -376,7 +376,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 7.28,
-      "dividend_rate": 3.3207,
+      "dividend_rate": 3.3289,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -384,7 +384,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AMT",
       "sector": "US Real Estate Stocks",
-      "price": 173.7372,
+      "price": 174.1659,
       "var_1d": 4.04,
       "direction": "down",
       "confidence": 0.7756,
@@ -392,7 +392,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.97,
-      "dividend_rate": 6.8974,
+      "dividend_rate": 6.9144,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -400,7 +400,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AMZN",
       "sector": "Big Tech",
-      "price": 237.1924,
+      "price": 237.7776,
       "var_1d": 6.12,
       "direction": "down",
       "confidence": 0.6757,
@@ -416,7 +416,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AOM",
       "sector": "Alternative & Multi-Asset ETFs",
-      "price": 43.8132,
+      "price": 43.9213,
       "var_1d": 0.99,
       "direction": "down",
       "confidence": 0.6586,
@@ -424,7 +424,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.09,
-      "dividend_rate": 1.3538,
+      "dividend_rate": 1.3572,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -432,7 +432,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AQWA",
       "sector": "Water & Environment ETFs",
-      "price": 17.3229,
+      "price": 17.3656,
       "var_1d": 3.38,
       "direction": "down",
       "confidence": 0.642,
@@ -440,7 +440,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.56,
-      "dividend_rate": 0.2702,
+      "dividend_rate": 0.2709,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -448,7 +448,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARCO",
       "sector": "Emerging Market Growth Stocks",
-      "price": 6.3214,
+      "price": 6.337,
       "var_1d": 4.11,
       "direction": "down",
       "confidence": 0.6489,
@@ -456,7 +456,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.52,
-      "dividend_rate": 0.2225,
+      "dividend_rate": 0.2231,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -464,7 +464,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARKF",
       "sector": "AI & Robotics ETFs",
-      "price": 39.2304,
+      "price": 39.3272,
       "var_1d": 3.96,
       "direction": "down",
       "confidence": 0.6649,
@@ -472,7 +472,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.11,
-      "dividend_rate": 0.0432,
+      "dividend_rate": 0.0433,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -480,7 +480,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARKG",
       "sector": "Healthcare ETFs",
-      "price": 44.3036,
+      "price": 44.4129,
       "var_1d": 0.36,
       "direction": "up",
       "confidence": 0.786,
@@ -496,7 +496,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARKK",
       "sector": "AI & Robotics ETFs",
-      "price": 71.6579,
+      "price": 71.8347,
       "var_1d": 0.06,
       "direction": "up",
       "confidence": 0.5982,
@@ -512,7 +512,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARKQ",
       "sector": "AI & Robotics ETFs",
-      "price": 96.061,
+      "price": 96.298,
       "var_1d": -2.89,
       "direction": "up",
       "confidence": 0.7093,
@@ -520,7 +520,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.27,
-      "dividend_rate": 0.2594,
+      "dividend_rate": 0.26,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -528,7 +528,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARKW",
       "sector": "AI & Robotics ETFs",
-      "price": 131.0652,
+      "price": 131.3886,
       "var_1d": 0.74,
       "direction": "up",
       "confidence": 0.6658,
@@ -536,7 +536,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.72,
-      "dividend_rate": 2.2543,
+      "dividend_rate": 2.2599,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -544,7 +544,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARKX",
       "sector": "Space ETFs",
-      "price": 25.7851,
+      "price": 25.8487,
       "var_1d": -3.31,
       "direction": "up",
       "confidence": 0.5016,
@@ -560,7 +560,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ARM",
       "sector": "AI & Machine Learning",
-      "price": 171.0089,
+      "price": 171.4308,
       "var_1d": -5.28,
       "direction": "down",
       "confidence": 0.6268,
@@ -576,7 +576,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ASEA",
       "sector": "Frontier Markets",
-      "price": 17.4219,
+      "price": 17.4649,
       "var_1d": 0.72,
       "direction": "up",
       "confidence": 0.7783,
@@ -584,7 +584,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.68,
-      "dividend_rate": 0.6411,
+      "dividend_rate": 0.6427,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -592,7 +592,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ASML",
       "sector": "Semiconductors",
-      "price": 1334.1011,
+      "price": 1337.3929,
       "var_1d": -3.6,
       "direction": "down",
       "confidence": 0.5886,
@@ -600,7 +600,23 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.51,
-      "dividend_rate": 6.8039,
+      "dividend_rate": 6.8207,
+      "asset_type": "Stock",
+      "distribution": null,
+      "dividend_frequency": "Quarterly"
+    },
+    {
+      "ticker": "AVB",
+      "sector": "US Real Estate Stocks",
+      "price": 58.9019,
+      "var_1d": -64.2,
+      "direction": "down",
+      "confidence": 0.6933,
+      "acc_recent": 46.7,
+      "n_recent": 15,
+      "pays_dividends": true,
+      "dividend_yield_pct": 3.87,
+      "dividend_rate": 2.2795,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -608,7 +624,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AVGO",
       "sector": "Semiconductors",
-      "price": 290.198,
+      "price": 290.914,
       "var_1d": -2.0,
       "direction": "down",
       "confidence": 0.7527,
@@ -616,7 +632,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.71,
-      "dividend_rate": 2.0604,
+      "dividend_rate": 2.0655,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -624,7 +640,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AXP",
       "sector": "US Financials Stocks",
-      "price": 296.5372,
+      "price": 297.2689,
       "var_1d": 2.18,
       "direction": "up",
       "confidence": 0.8054,
@@ -632,7 +648,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.13,
-      "dividend_rate": 3.3509,
+      "dividend_rate": 3.3591,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -640,7 +656,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "AZN",
       "sector": "Healthcare & Pharma",
-      "price": 168.5213,
+      "price": 168.9371,
       "var_1d": 2.79,
       "direction": "up",
       "confidence": 0.6361,
@@ -648,7 +664,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.93,
-      "dividend_rate": 3.2525,
+      "dividend_rate": 3.2605,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -656,7 +672,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BA",
       "sector": "US Industrials & Defense Stocks",
-      "price": 157.8132,
+      "price": 158.2026,
       "var_1d": 2.13,
       "direction": "up",
       "confidence": 0.7509,
@@ -672,7 +688,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BABA",
       "sector": "China & Emerging Asia",
-      "price": 93.8766,
+      "price": 94.1082,
       "var_1d": 4.91,
       "direction": "up",
       "confidence": 0.6539,
@@ -680,7 +696,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.88,
-      "dividend_rate": 0.8261,
+      "dividend_rate": 0.8282,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -688,7 +704,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BAC",
       "sector": "US Financials Stocks",
-      "price": 46.0333,
+      "price": 46.1469,
       "var_1d": 3.97,
       "direction": "up",
       "confidence": 0.7693,
@@ -696,7 +712,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.07,
-      "dividend_rate": 0.9529,
+      "dividend_rate": 0.9552,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -704,7 +720,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BAM",
       "sector": "International ADRs",
-      "price": 48.2445,
+      "price": 48.3635,
       "var_1d": 6.2,
       "direction": "down",
       "confidence": 0.782,
@@ -712,7 +728,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.84,
-      "dividend_rate": 1.8526,
+      "dividend_rate": 1.8572,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -736,7 +752,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BATT",
       "sector": "Clean Energy & EV ETFs",
-      "price": 11.5819,
+      "price": 11.6105,
       "var_1d": 1.96,
       "direction": "up",
       "confidence": 0.6896,
@@ -744,7 +760,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.77,
-      "dividend_rate": 0.205,
+      "dividend_rate": 0.2055,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -752,7 +768,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BBH",
       "sector": "Healthcare ETFs",
-      "price": 233.2693,
+      "price": 233.8449,
       "var_1d": 2.37,
       "direction": "down",
       "confidence": 0.6857,
@@ -760,7 +776,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.47,
-      "dividend_rate": 1.0964,
+      "dividend_rate": 1.0991,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -768,7 +784,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BBRE",
       "sector": "Real Estate ETFs",
-      "price": 95.7043,
+      "price": 95.9405,
       "var_1d": 2.79,
       "direction": "down",
       "confidence": 0.8973,
@@ -776,7 +792,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.59,
-      "dividend_rate": 2.4787,
+      "dividend_rate": 2.4849,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -784,7 +800,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BEKE",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 16.557,
+      "price": 16.5979,
       "var_1d": 5.51,
       "direction": "up",
       "confidence": 0.566,
@@ -792,7 +808,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.55,
-      "dividend_rate": 0.2566,
+      "dividend_rate": 0.2573,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -800,7 +816,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BETZ",
       "sector": "Gaming & Entertainment ETFs",
-      "price": 15.7198,
+      "price": 15.7586,
       "var_1d": 2.12,
       "direction": "up",
       "confidence": 0.6198,
@@ -808,7 +824,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.01,
-      "dividend_rate": 0.7876,
+      "dividend_rate": 0.7895,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -816,7 +832,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BHP",
       "sector": "Mining & Resources",
-      "price": 71.4528,
+      "price": 71.6291,
       "var_1d": 2.57,
       "direction": "up",
       "confidence": 0.8729,
@@ -824,7 +840,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.74,
-      "dividend_rate": 1.9578,
+      "dividend_rate": 1.9626,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -832,7 +848,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BIDU",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 71.7114,
+      "price": 71.8883,
       "var_1d": 4.5,
       "direction": "up",
       "confidence": 0.7611,
@@ -848,7 +864,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BIIB",
       "sector": "US Healthcare Stocks",
-      "price": 226.8765,
+      "price": 227.4363,
       "var_1d": 2.22,
       "direction": "up",
       "confidence": 0.685,
@@ -864,7 +880,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BITB",
       "sector": "Crypto ETFs",
-      "price": 38.7133,
+      "price": 38.8088,
       "var_1d": 2.84,
       "direction": "up",
       "confidence": 0.6415,
@@ -880,7 +896,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BITO",
       "sector": "Crypto ETFs",
-      "price": 9.5134,
+      "price": 9.5368,
       "var_1d": 2.89,
       "direction": "up",
       "confidence": 0.604,
@@ -888,7 +904,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 61.68,
-      "dividend_rate": 5.8678,
+      "dividend_rate": 5.8823,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -896,7 +912,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BKLN",
       "sector": "Bonds: Credit",
-      "price": 18.3313,
+      "price": 18.3765,
       "var_1d": 0.64,
       "direction": "down",
       "confidence": 0.54,
@@ -904,7 +920,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 6.51,
-      "dividend_rate": 1.1934,
+      "dividend_rate": 1.1963,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -912,7 +928,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BKNG",
       "sector": "Travel & Hospitality Stocks",
-      "price": 152.4369,
+      "price": 152.813,
       "var_1d": 9.83,
       "direction": "down",
       "confidence": 0.7158,
@@ -920,7 +936,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.8,
-      "dividend_rate": 1.2195,
+      "dividend_rate": 1.2225,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -928,7 +944,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BLK",
       "sector": "US Financials Stocks",
-      "price": 1091.6483,
+      "price": 1094.3419,
       "var_1d": 5.43,
       "direction": "up",
       "confidence": 0.5989,
@@ -936,7 +952,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.98,
-      "dividend_rate": 21.6146,
+      "dividend_rate": 21.668,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -960,7 +976,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BMY",
       "sector": "US Healthcare Stocks",
-      "price": 57.2318,
+      "price": 57.373,
       "var_1d": 4.02,
       "direction": "up",
       "confidence": 0.6184,
@@ -968,7 +984,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.76,
-      "dividend_rate": 2.1519,
+      "dividend_rate": 2.1572,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -976,7 +992,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BND",
       "sector": "Bonds: Government",
-      "price": 63.7494,
+      "price": 63.9067,
       "var_1d": 0.42,
       "direction": "down",
       "confidence": 0.7383,
@@ -984,7 +1000,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.03,
-      "dividend_rate": 2.5691,
+      "dividend_rate": 2.5754,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -992,7 +1008,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BNDX",
       "sector": "Bonds: Government",
-      "price": 42.3421,
+      "price": 42.4466,
       "var_1d": 0.42,
       "direction": "up",
       "confidence": 0.6842,
@@ -1000,7 +1016,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.54,
-      "dividend_rate": 1.9223,
+      "dividend_rate": 1.9271,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -1008,7 +1024,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BNO",
       "sector": "Commodities ETFs",
-      "price": 53.8526,
+      "price": 53.9855,
       "var_1d": -8.64,
       "direction": "up",
       "confidence": 0.7306,
@@ -1024,7 +1040,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BNTX",
       "sector": "US Biotech Stocks",
-      "price": 80.8681,
+      "price": 81.0677,
       "var_1d": 4.35,
       "direction": "down",
       "confidence": 0.665,
@@ -1040,7 +1056,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BOTZ",
       "sector": "Thematic ETFs",
-      "price": 29.2534,
+      "price": 29.3256,
       "var_1d": 1.52,
       "direction": "up",
       "confidence": 0.6881,
@@ -1048,7 +1064,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.49,
-      "dividend_rate": 0.1433,
+      "dividend_rate": 0.1437,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -1056,7 +1072,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BP",
       "sector": "International ADRs",
-      "price": 40.6659,
+      "price": 40.7662,
       "var_1d": -4.16,
       "direction": "down",
       "confidence": 0.6597,
@@ -1064,7 +1080,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.51,
-      "dividend_rate": 1.834,
+      "dividend_rate": 1.8386,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1072,7 +1088,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BSX",
       "sector": "US Healthcare Stocks",
-      "price": 40.8531,
+      "price": 40.9539,
       "var_1d": 5.33,
       "direction": "down",
       "confidence": 0.7392,
@@ -1088,7 +1104,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BTC-USD",
       "sector": "Crypto",
-      "price": 68014.7803,
+      "price": 68182.6046,
       "var_1d": -5.21,
       "direction": "up",
       "confidence": 0.6871,
@@ -1104,7 +1120,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BUG",
       "sector": "Cybersecurity ETFs",
-      "price": 41.8874,
+      "price": 41.9907,
       "var_1d": 0.32,
       "direction": "down",
       "confidence": 0.6173,
@@ -1120,7 +1136,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "BWX",
       "sector": "Bonds: International",
-      "price": 19.1605,
+      "price": 19.2078,
       "var_1d": 0.8,
       "direction": "down",
       "confidence": 0.7507,
@@ -1128,7 +1144,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.4,
-      "dividend_rate": 0.4599,
+      "dividend_rate": 0.461,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -1136,7 +1152,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "C",
       "sector": "US Financials Stocks",
-      "price": 111.2182,
+      "price": 111.4926,
       "var_1d": 1.65,
       "direction": "up",
       "confidence": 0.7497,
@@ -1144,7 +1160,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.04,
-      "dividend_rate": 2.2689,
+      "dividend_rate": 2.2744,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1152,7 +1168,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CAT",
       "sector": "US Industrials & Defense Stocks",
-      "price": 527.2031,
+      "price": 528.5039,
       "var_1d": -5.23,
       "direction": "down",
       "confidence": 0.6459,
@@ -1160,7 +1176,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.79,
-      "dividend_rate": 4.1649,
+      "dividend_rate": 4.1752,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1168,7 +1184,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CB",
       "sector": "US Financials Stocks",
-      "price": 333.61,
+      "price": 334.4331,
       "var_1d": 2.08,
       "direction": "down",
       "confidence": 0.6977,
@@ -1176,7 +1192,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.2,
-      "dividend_rate": 4.0033,
+      "dividend_rate": 4.0132,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -1184,7 +1200,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CCI",
       "sector": "US Real Estate Stocks",
-      "price": 82.1788,
+      "price": 82.3815,
       "var_1d": 6.46,
       "direction": "down",
       "confidence": 0.7775,
@@ -1192,7 +1208,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.63,
-      "dividend_rate": 4.6267,
+      "dividend_rate": 4.6381,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1200,7 +1216,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CCL",
       "sector": "Travel & Hospitality Stocks",
-      "price": 27.9249,
+      "price": 27.9938,
       "var_1d": 7.26,
       "direction": "down",
       "confidence": 0.6785,
@@ -1208,7 +1224,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.75,
-      "dividend_rate": 0.4887,
+      "dividend_rate": 0.4899,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1216,7 +1232,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CGW",
       "sector": "Water & Environment ETFs",
-      "price": 59.229,
+      "price": 59.3751,
       "var_1d": 2.72,
       "direction": "down",
       "confidence": 0.7711,
@@ -1224,7 +1240,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.54,
-      "dividend_rate": 0.9121,
+      "dividend_rate": 0.9144,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -1232,7 +1248,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CHAT",
       "sector": "AI & Machine Learning",
-      "price": 64.9085,
+      "price": 65.0686,
       "var_1d": -1.81,
       "direction": "up",
       "confidence": 0.7949,
@@ -1240,7 +1256,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.02,
-      "dividend_rate": 1.3112,
+      "dividend_rate": 1.3144,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -1248,7 +1264,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CHTR",
       "sector": "US Telecom & Media Stocks",
-      "price": 107.2149,
+      "price": 107.4795,
       "var_1d": 5.68,
       "direction": "up",
       "confidence": 0.6981,
@@ -1264,7 +1280,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CI",
       "sector": "US Healthcare Stocks",
-      "price": 272.3036,
+      "price": 272.9755,
       "var_1d": 3.37,
       "direction": "down",
       "confidence": 0.67,
@@ -1272,7 +1288,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.25,
-      "dividend_rate": 6.1268,
+      "dividend_rate": 6.1419,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1280,7 +1296,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CIBR",
       "sector": "Thematic ETFs",
-      "price": 86.8062,
+      "price": 87.0204,
       "var_1d": 0.14,
       "direction": "up",
       "confidence": 0.7044,
@@ -1288,7 +1304,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.43,
-      "dividend_rate": 0.3733,
+      "dividend_rate": 0.3742,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1296,7 +1312,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CL",
       "sector": "US Consumer Staples Stocks",
-      "price": 88.0544,
+      "price": 88.2717,
       "var_1d": 3.28,
       "direction": "down",
       "confidence": 0.7323,
@@ -1304,7 +1320,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.33,
-      "dividend_rate": 2.0517,
+      "dividend_rate": 2.0567,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1312,7 +1328,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CLOU",
       "sector": "Technology ETFs",
-      "price": 24.6527,
+      "price": 24.7136,
       "var_1d": 0.8,
       "direction": "up",
       "confidence": 0.6426,
@@ -1328,7 +1344,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CMCSA",
       "sector": "US Telecom & Media Stocks",
-      "price": 22.1563,
+      "price": 22.2109,
       "var_1d": 4.99,
       "direction": "down",
       "confidence": 0.7482,
@@ -1336,7 +1352,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.92,
-      "dividend_rate": 1.0901,
+      "dividend_rate": 1.0928,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1344,7 +1360,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CMG",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 31.3843,
+      "price": 31.4618,
       "var_1d": 5.83,
       "direction": "up",
       "confidence": 0.6192,
@@ -1360,7 +1376,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CNI",
       "sector": "International ADRs",
-      "price": 114.9897,
+      "price": 115.2734,
       "var_1d": 2.11,
       "direction": "down",
       "confidence": 0.7218,
@@ -1368,7 +1384,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.0,
-      "dividend_rate": 2.2998,
+      "dividend_rate": 2.3055,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1376,7 +1392,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "COIN",
       "sector": "US Financials Stocks",
-      "price": 135.0774,
+      "price": 135.4107,
       "var_1d": 4.16,
       "direction": "up",
       "confidence": 0.6516,
@@ -1392,7 +1408,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "COP",
       "sector": "US Energy Stocks",
-      "price": 122.0957,
+      "price": 122.397,
       "var_1d": -5.17,
       "direction": "up",
       "confidence": 0.6651,
@@ -1400,7 +1416,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.49,
-      "dividend_rate": 3.0402,
+      "dividend_rate": 3.0477,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1408,7 +1424,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "COPX",
       "sector": "Energy & Commodities",
-      "price": 66.4777,
+      "price": 66.6417,
       "var_1d": 3.97,
       "direction": "up",
       "confidence": 0.7512,
@@ -1416,7 +1432,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.45,
-      "dividend_rate": 1.6287,
+      "dividend_rate": 1.6327,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -1424,7 +1440,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CORN",
       "sector": "Commodities ETFs",
-      "price": 15.5138,
+      "price": 15.5521,
       "var_1d": 1.22,
       "direction": "down",
       "confidence": 0.6109,
@@ -1440,7 +1456,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "COST",
       "sector": "US Consumer Staples Stocks",
-      "price": 933.0327,
+      "price": 935.3349,
       "var_1d": 2.67,
       "direction": "up",
       "confidence": 0.661,
@@ -1448,7 +1464,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.62,
-      "dividend_rate": 5.7848,
+      "dividend_rate": 5.7991,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1456,7 +1472,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "COWZ",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 63.8921,
+      "price": 64.0497,
       "var_1d": 1.23,
       "direction": "up",
       "confidence": 0.6394,
@@ -1464,7 +1480,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.85,
-      "dividend_rate": 1.182,
+      "dividend_rate": 1.1849,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1472,7 +1488,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CPER",
       "sector": "Commodities ETFs",
-      "price": 34.4068,
+      "price": 34.4917,
       "var_1d": 0.21,
       "direction": "down",
       "confidence": 0.6084,
@@ -1488,7 +1504,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CPNG",
       "sector": "Emerging Market Growth Stocks",
-      "price": 15.2018,
+      "price": 15.2393,
       "var_1d": 11.95,
       "direction": "down",
       "confidence": 0.6475,
@@ -1504,7 +1520,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CRAK",
       "sector": "Energy Sector ETFs",
-      "price": 52.4707,
+      "price": 52.6001,
       "var_1d": -2.89,
       "direction": "down",
       "confidence": 0.5683,
@@ -1512,7 +1528,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.37,
-      "dividend_rate": 0.7188,
+      "dividend_rate": 0.7206,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -1520,7 +1536,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CRM",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 202.4913,
+      "price": 202.9909,
       "var_1d": 2.21,
       "direction": "up",
       "confidence": 0.6362,
@@ -1528,7 +1544,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.84,
-      "dividend_rate": 1.7009,
+      "dividend_rate": 1.7051,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1536,7 +1552,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CRWD",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 214.8756,
+      "price": 215.4058,
       "var_1d": -1.5,
       "direction": "down",
       "confidence": 0.689,
@@ -1552,7 +1568,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CSPX.L",
       "sector": "Global Accumulation ETFs",
-      "price": 739.0205,
+      "price": 740.844,
       "var_1d": 1.45,
       "direction": "down",
       "confidence": 0.667,
@@ -1568,7 +1584,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CSX",
       "sector": "US Industrials & Defense Stocks",
-      "price": 46.4078,
+      "price": 46.5223,
       "var_1d": 2.62,
       "direction": "up",
       "confidence": 0.7214,
@@ -1576,7 +1592,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.09,
-      "dividend_rate": 0.5058,
+      "dividend_rate": 0.5071,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1584,7 +1600,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CVS",
       "sector": "US Healthcare Stocks",
-      "price": 71.2923,
+      "price": 71.4682,
       "var_1d": -12.53,
       "direction": "up",
       "confidence": 0.7505,
@@ -1592,7 +1608,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.86,
-      "dividend_rate": 2.039,
+      "dividend_rate": 2.044,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1600,7 +1616,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "CVX",
       "sector": "Energy & Commodities",
-      "price": 193.4415,
+      "price": 193.9188,
       "var_1d": -3.69,
       "direction": "down",
       "confidence": 0.7798,
@@ -1608,7 +1624,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.47,
-      "dividend_rate": 6.7124,
+      "dividend_rate": 6.729,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1616,7 +1632,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "D",
       "sector": "US Utilities Stocks",
-      "price": 62.1891,
+      "price": 62.3426,
       "var_1d": 4.45,
       "direction": "down",
       "confidence": 0.748,
@@ -1624,7 +1640,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.01,
-      "dividend_rate": 2.4938,
+      "dividend_rate": 2.4999,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1632,7 +1648,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DAL",
       "sector": "Airlines",
-      "price": 79.5664,
+      "price": 79.7627,
       "var_1d": 7.16,
       "direction": "down",
       "confidence": 0.5823,
@@ -1640,7 +1656,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.94,
-      "dividend_rate": 0.7479,
+      "dividend_rate": 0.7498,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1648,7 +1664,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DBA",
       "sector": "Energy & Commodities",
-      "price": 23.5828,
+      "price": 23.641,
       "var_1d": -0.26,
       "direction": "down",
       "confidence": 0.5822,
@@ -1656,7 +1672,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.32,
-      "dividend_rate": 0.7829,
+      "dividend_rate": 0.7849,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -1664,7 +1680,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DBEF",
       "sector": "International Developed: Regional",
-      "price": 49.7959,
+      "price": 49.9187,
       "var_1d": 2.25,
       "direction": "up",
       "confidence": 0.7279,
@@ -1672,7 +1688,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.27,
-      "dividend_rate": 1.1304,
+      "dividend_rate": 1.1332,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -1680,7 +1696,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DDOG",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 168.2628,
+      "price": 168.6779,
       "var_1d": -14.42,
       "direction": "down",
       "confidence": 0.7249,
@@ -1696,7 +1712,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DE",
       "sector": "US Industrials & Defense Stocks",
-      "price": 603.1674,
+      "price": 604.6557,
       "var_1d": 1.6,
       "direction": "up",
       "confidence": 0.6006,
@@ -1704,7 +1720,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.0,
-      "dividend_rate": 6.0317,
+      "dividend_rate": 6.0466,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1712,7 +1728,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DELL",
       "sector": "AI & Machine Learning",
-      "price": 331.9962,
+      "price": 332.8154,
       "var_1d": -8.82,
       "direction": "down",
       "confidence": 0.6345,
@@ -1720,7 +1736,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.57,
-      "dividend_rate": 1.8924,
+      "dividend_rate": 1.897,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1728,7 +1744,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DFEN",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 44.4195,
+      "price": 44.5291,
       "var_1d": -5.03,
       "direction": "up",
       "confidence": 0.6544,
@@ -1736,7 +1752,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.14,
-      "dividend_rate": 0.0622,
+      "dividend_rate": 0.0623,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1744,7 +1760,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DFSV",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 35.4857,
+      "price": 35.5732,
       "var_1d": 1.09,
       "direction": "down",
       "confidence": 0.6308,
@@ -1752,7 +1768,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.35,
-      "dividend_rate": 0.4791,
+      "dividend_rate": 0.4802,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1760,7 +1776,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DFUV",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 51.1333,
+      "price": 51.2594,
       "var_1d": 1.29,
       "direction": "down",
       "confidence": 0.6335,
@@ -1768,7 +1784,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.3,
-      "dividend_rate": 0.6647,
+      "dividend_rate": 0.6664,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1776,7 +1792,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DHS",
       "sector": "Dividend ETFs",
-      "price": 107.7588,
+      "price": 108.0247,
       "var_1d": 1.79,
       "direction": "down",
       "confidence": 0.7514,
@@ -1784,7 +1800,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.19,
-      "dividend_rate": 3.4375,
+      "dividend_rate": 3.446,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -1792,7 +1808,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DIA",
       "sector": "US Core Market ETFs",
-      "price": 475.3209,
+      "price": 476.4937,
       "var_1d": 3.1,
       "direction": "down",
       "confidence": 0.6056,
@@ -1800,7 +1816,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.37,
-      "dividend_rate": 6.5119,
+      "dividend_rate": 6.528,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -1808,7 +1824,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DIS",
       "sector": "US Telecom & Media Stocks",
-      "price": 106.0558,
+      "price": 106.3175,
       "var_1d": 4.18,
       "direction": "up",
       "confidence": 0.7444,
@@ -1816,7 +1832,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.39,
-      "dividend_rate": 1.4742,
+      "dividend_rate": 1.4778,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -1824,7 +1840,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DJP",
       "sector": "Commodities ETFs",
-      "price": 43.1445,
+      "price": 43.251,
       "var_1d": -2.22,
       "direction": "down",
       "confidence": 0.6409,
@@ -1840,7 +1856,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DKNG",
       "sector": "US Consumer: Restaurants & Retail",
-      "price": 20.6049,
+      "price": 20.6557,
       "var_1d": 5.38,
       "direction": "down",
       "confidence": 0.6691,
@@ -1856,7 +1872,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DLR",
       "sector": "US Real Estate Stocks",
-      "price": 164.839,
+      "price": 165.2457,
       "var_1d": 2.57,
       "direction": "down",
       "confidence": 0.5533,
@@ -1864,7 +1880,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.56,
-      "dividend_rate": 4.2199,
+      "dividend_rate": 4.2303,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1872,7 +1888,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DOCU",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 71.7738,
+      "price": 71.9509,
       "var_1d": 0.17,
       "direction": "up",
       "confidence": 0.5714,
@@ -1888,7 +1904,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DRIV",
       "sector": "Clean Energy & EV ETFs",
-      "price": 26.2514,
+      "price": 26.3162,
       "var_1d": 1.7,
       "direction": "up",
       "confidence": 0.6768,
@@ -1896,7 +1912,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.65,
-      "dividend_rate": 0.1706,
+      "dividend_rate": 0.1711,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -1904,7 +1920,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DUK",
       "sector": "US Utilities Stocks",
-      "price": 115.5424,
+      "price": 115.8275,
       "var_1d": 2.43,
       "direction": "down",
       "confidence": 0.5044,
@@ -1912,7 +1928,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.62,
-      "dividend_rate": 4.1826,
+      "dividend_rate": 4.193,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1920,7 +1936,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DVN",
       "sector": "US Energy Stocks",
-      "price": 39.3374,
+      "price": 39.4345,
       "var_1d": -7.35,
       "direction": "up",
       "confidence": 0.6945,
@@ -1928,7 +1944,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.61,
-      "dividend_rate": 1.0267,
+      "dividend_rate": 1.0292,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1936,7 +1952,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DVY",
       "sector": "Dividend ETFs",
-      "price": 146.1778,
+      "price": 146.5385,
       "var_1d": 1.36,
       "direction": "down",
       "confidence": 0.7661,
@@ -1944,7 +1960,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.26,
-      "dividend_rate": 4.7654,
+      "dividend_rate": 4.7772,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1952,7 +1968,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "DXJ",
       "sector": "International Developed: Regional",
-      "price": 53.2464,
+      "price": 53.3777,
       "var_1d": 1.29,
       "direction": "up",
       "confidence": 0.7646,
@@ -1960,7 +1976,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.96,
-      "dividend_rate": 0.5112,
+      "dividend_rate": 0.5124,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -1968,7 +1984,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EBAY",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 111.5837,
+      "price": 111.8591,
       "var_1d": 5.5,
       "direction": "down",
       "confidence": 0.7874,
@@ -1976,7 +1992,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.19,
-      "dividend_rate": 1.3278,
+      "dividend_rate": 1.3311,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -1984,7 +2000,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ECH",
       "sector": "Emerging Markets ETFs",
-      "price": 32.6236,
+      "price": 32.7041,
       "var_1d": 4.04,
       "direction": "down",
       "confidence": 0.5818,
@@ -1992,7 +2008,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.98,
-      "dividend_rate": 0.6459,
+      "dividend_rate": 0.6475,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2000,7 +2016,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ECO",
       "sector": "Water & Environment ETFs",
-      "price": 75.6968,
+      "price": 75.8836,
       "var_1d": -8.96,
       "direction": "up",
       "confidence": 0.8634,
@@ -2008,7 +2024,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 14.76,
-      "dividend_rate": 11.1729,
+      "dividend_rate": 11.2004,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2016,7 +2032,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EEM",
       "sector": "Emerging Markets ETFs",
-      "price": 54.9404,
+      "price": 55.076,
       "var_1d": 0.85,
       "direction": "up",
       "confidence": 0.7625,
@@ -2024,7 +2040,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.73,
-      "dividend_rate": 0.9505,
+      "dividend_rate": 0.9528,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2032,7 +2048,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EFA",
       "sector": "International Developed: Countries",
-      "price": 94.26,
+      "price": 94.4925,
       "var_1d": 2.56,
       "direction": "up",
       "confidence": 0.7185,
@@ -2040,7 +2056,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.19,
-      "dividend_rate": 3.0069,
+      "dividend_rate": 3.0143,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2048,7 +2064,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EIDO",
       "sector": "International Developed: Countries",
-      "price": 8.7823,
+      "price": 8.8039,
       "var_1d": 1.97,
       "direction": "up",
       "confidence": 0.6483,
@@ -2056,7 +2072,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.3,
-      "dividend_rate": 0.2898,
+      "dividend_rate": 0.2905,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2064,7 +2080,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EMB",
       "sector": "Bonds & Fixed Income",
-      "price": 82.4195,
+      "price": 82.6229,
       "var_1d": 1.01,
       "direction": "up",
       "confidence": 0.6048,
@@ -2072,7 +2088,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.15,
-      "dividend_rate": 4.2446,
+      "dividend_rate": 4.2551,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -2096,7 +2112,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EMQQ",
       "sector": "Emerging Markets ETFs",
-      "price": 27.7591,
+      "price": 27.8276,
       "var_1d": 3.84,
       "direction": "up",
       "confidence": 0.5905,
@@ -2104,7 +2120,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.63,
-      "dividend_rate": 1.0077,
+      "dividend_rate": 1.0101,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2112,7 +2128,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EOG",
       "sector": "US Energy Stocks",
-      "price": 131.1187,
+      "price": 131.4422,
       "var_1d": -5.23,
       "direction": "down",
       "confidence": 0.6495,
@@ -2120,7 +2136,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.67,
-      "dividend_rate": 3.5009,
+      "dividend_rate": 3.5095,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2128,7 +2144,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EPHE",
       "sector": "Emerging Markets ETFs",
-      "price": 20.2928,
+      "price": 20.3429,
       "var_1d": 2.2,
       "direction": "up",
       "confidence": 0.6149,
@@ -2136,7 +2152,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.69,
-      "dividend_rate": 0.5459,
+      "dividend_rate": 0.5472,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2144,7 +2160,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EQIX",
       "sector": "US Real Estate Stocks",
-      "price": 939.8267,
+      "price": 942.1456,
       "var_1d": 3.91,
       "direction": "up",
       "confidence": 0.6351,
@@ -2152,7 +2168,23 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.94,
-      "dividend_rate": 18.2326,
+      "dividend_rate": 18.2776,
+      "asset_type": "Stock",
+      "distribution": null,
+      "dividend_frequency": "Quarterly"
+    },
+    {
+      "ticker": "EQR",
+      "sector": "US Real Estate Stocks",
+      "price": 56.8993,
+      "var_1d": 0.0,
+      "direction": "up",
+      "confidence": 0.7025,
+      "acc_recent": 33.3,
+      "n_recent": 15,
+      "pays_dividends": true,
+      "dividend_yield_pct": 4.26,
+      "dividend_rate": 2.4239,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2160,7 +2192,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ESPO",
       "sector": "Gaming & Entertainment ETFs",
-      "price": 90.1586,
+      "price": 90.3811,
       "var_1d": 4.28,
       "direction": "up",
       "confidence": 0.6447,
@@ -2168,7 +2200,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.36,
-      "dividend_rate": 1.2262,
+      "dividend_rate": 1.2292,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2176,7 +2208,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ETH-USD",
       "sector": "Crypto",
-      "price": 2000.7415,
+      "price": 2005.6783,
       "var_1d": -7.22,
       "direction": "down",
       "confidence": 0.7303,
@@ -2192,7 +2224,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ETSY",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 85.8076,
+      "price": 86.0193,
       "var_1d": 7.1,
       "direction": "up",
       "confidence": 0.674,
@@ -2208,7 +2240,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EW",
       "sector": "US Healthcare Stocks",
-      "price": 88.5983,
+      "price": 88.8169,
       "var_1d": 4.39,
       "direction": "up",
       "confidence": 0.6583,
@@ -2224,7 +2256,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWA",
       "sector": "International Developed: Countries",
-      "price": 26.6232,
+      "price": 26.6889,
       "var_1d": 2.68,
       "direction": "down",
       "confidence": 0.8295,
@@ -2232,7 +2264,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.89,
-      "dividend_rate": 0.7694,
+      "dividend_rate": 0.7713,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2240,7 +2272,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWC",
       "sector": "International Developed: Countries",
-      "price": 55.1365,
+      "price": 55.2726,
       "var_1d": 2.71,
       "direction": "down",
       "confidence": 0.5049,
@@ -2248,7 +2280,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.27,
-      "dividend_rate": 0.7002,
+      "dividend_rate": 0.702,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2256,7 +2288,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWD",
       "sector": "International Developed: Countries",
-      "price": 48.1642,
+      "price": 48.2831,
       "var_1d": 2.74,
       "direction": "down",
       "confidence": 0.7277,
@@ -2264,7 +2296,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.44,
-      "dividend_rate": 1.6568,
+      "dividend_rate": 1.6609,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2272,7 +2304,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWG",
       "sector": "International Developed: Countries",
-      "price": 38.7846,
+      "price": 38.8803,
       "var_1d": 3.42,
       "direction": "down",
       "confidence": 0.641,
@@ -2280,7 +2312,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.94,
-      "dividend_rate": 0.7524,
+      "dividend_rate": 0.7543,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2288,7 +2320,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWH",
       "sector": "International Developed: Countries",
-      "price": 20.8724,
+      "price": 20.9239,
       "var_1d": 4.32,
       "direction": "down",
       "confidence": 0.6228,
@@ -2296,7 +2328,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.49,
-      "dividend_rate": 0.9372,
+      "dividend_rate": 0.9395,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2304,7 +2336,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWI",
       "sector": "International Developed: Countries",
-      "price": 52.3548,
+      "price": 52.4839,
       "var_1d": 4.17,
       "direction": "up",
       "confidence": 0.7064,
@@ -2312,7 +2344,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.05,
-      "dividend_rate": 1.5968,
+      "dividend_rate": 1.6008,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2320,7 +2352,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWJ",
       "sector": "China & Emerging Asia",
-      "price": 83.6856,
+      "price": 83.8921,
       "var_1d": 1.37,
       "direction": "up",
       "confidence": 0.714,
@@ -2328,7 +2360,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.86,
-      "dividend_rate": 3.2303,
+      "dividend_rate": 3.2382,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2336,7 +2368,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWK",
       "sector": "International Developed: Countries",
-      "price": 24.0732,
+      "price": 24.1326,
       "var_1d": 2.7,
       "direction": "down",
       "confidence": 0.6531,
@@ -2344,7 +2376,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.83,
-      "dividend_rate": 0.4405,
+      "dividend_rate": 0.4416,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2352,7 +2384,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWL",
       "sector": "International Developed: Countries",
-      "price": 59.3449,
+      "price": 59.4913,
       "var_1d": 3.5,
       "direction": "down",
       "confidence": 0.553,
@@ -2360,7 +2392,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.73,
-      "dividend_rate": 1.0267,
+      "dividend_rate": 1.0292,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2368,7 +2400,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWM",
       "sector": "International Developed: Countries",
-      "price": 24.2426,
+      "price": 24.3024,
       "var_1d": 1.08,
       "direction": "up",
       "confidence": 0.7705,
@@ -2376,7 +2408,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.56,
-      "dividend_rate": 0.863,
+      "dividend_rate": 0.8652,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2384,7 +2416,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWN",
       "sector": "International Developed: Countries",
-      "price": 58.3731,
+      "price": 58.5171,
       "var_1d": 1.84,
       "direction": "up",
       "confidence": 0.7696,
@@ -2392,7 +2424,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.24,
-      "dividend_rate": 2.475,
+      "dividend_rate": 2.4811,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2400,7 +2432,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWO",
       "sector": "International Developed: Countries",
-      "price": 36.4308,
+      "price": 36.5207,
       "var_1d": 3.42,
       "direction": "up",
       "confidence": 0.8025,
@@ -2408,7 +2440,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.98,
-      "dividend_rate": 0.7213,
+      "dividend_rate": 0.7231,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2416,7 +2448,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWP",
       "sector": "International Developed: Countries",
-      "price": 52.649,
+      "price": 52.7789,
       "var_1d": 3.76,
       "direction": "down",
       "confidence": 0.6427,
@@ -2424,7 +2456,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.71,
-      "dividend_rate": 1.4268,
+      "dividend_rate": 1.4303,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2432,7 +2464,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWQ",
       "sector": "International Developed: Countries",
-      "price": 39.1056,
+      "price": 39.2021,
       "var_1d": 3.1,
       "direction": "up",
       "confidence": 0.6964,
@@ -2440,7 +2472,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.83,
-      "dividend_rate": 1.1067,
+      "dividend_rate": 1.1094,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2448,7 +2480,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWS",
       "sector": "International Developed: Countries",
-      "price": 27.2919,
+      "price": 27.3592,
       "var_1d": 1.29,
       "direction": "up",
       "confidence": 0.6333,
@@ -2456,7 +2488,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.67,
-      "dividend_rate": 1.0016,
+      "dividend_rate": 1.0041,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2464,7 +2496,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWT",
       "sector": "International Developed: Countries",
-      "price": 86.5565,
+      "price": 86.7701,
       "var_1d": -1.21,
       "direction": "down",
       "confidence": 0.6535,
@@ -2472,7 +2504,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.04,
-      "dividend_rate": 0.9002,
+      "dividend_rate": 0.9024,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2480,7 +2512,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWU",
       "sector": "International Developed: Countries",
-      "price": 43.626,
+      "price": 43.7336,
       "var_1d": 3.45,
       "direction": "down",
       "confidence": 0.7253,
@@ -2488,7 +2520,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.09,
-      "dividend_rate": 1.348,
+      "dividend_rate": 1.3514,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2496,7 +2528,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWW",
       "sector": "Emerging Markets ETFs",
-      "price": 68.0737,
+      "price": 68.2416,
       "var_1d": 2.17,
       "direction": "up",
       "confidence": 0.6927,
@@ -2504,7 +2536,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.21,
-      "dividend_rate": 2.1852,
+      "dividend_rate": 2.1906,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2512,7 +2544,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWY",
       "sector": "International Developed: Countries",
-      "price": 135.6302,
+      "price": 135.9649,
       "var_1d": -1.9,
       "direction": "up",
       "confidence": 0.7538,
@@ -2520,7 +2552,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.25,
-      "dividend_rate": 1.6954,
+      "dividend_rate": 1.6996,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2528,7 +2560,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EWZ",
       "sector": "Brazil & LatAm",
-      "price": 28.7541,
+      "price": 28.8251,
       "var_1d": 1.64,
       "direction": "up",
       "confidence": 0.6971,
@@ -2536,7 +2568,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.0,
-      "dividend_rate": 1.1502,
+      "dividend_rate": 1.153,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2544,7 +2576,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EXC",
       "sector": "US Utilities Stocks",
-      "price": 41.2276,
+      "price": 41.3293,
       "var_1d": 1.63,
       "direction": "up",
       "confidence": 0.7106,
@@ -2552,7 +2584,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.84,
-      "dividend_rate": 1.5831,
+      "dividend_rate": 1.587,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2560,7 +2592,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EXEL",
       "sector": "US Biotech Stocks",
-      "price": 64.8639,
+      "price": 65.024,
       "var_1d": 0.61,
       "direction": "up",
       "confidence": 0.5554,
@@ -2576,7 +2608,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EXPE",
       "sector": "Travel & Hospitality Stocks",
-      "price": 281.6386,
+      "price": 282.3335,
       "var_1d": 10.54,
       "direction": "down",
       "confidence": 0.6816,
@@ -2584,7 +2616,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.6,
-      "dividend_rate": 1.6898,
+      "dividend_rate": 1.694,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2608,7 +2640,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EZA",
       "sector": "Emerging Markets ETFs",
-      "price": 58.4533,
+      "price": 58.5975,
       "var_1d": 4.1,
       "direction": "down",
       "confidence": 0.5938,
@@ -2616,7 +2648,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 7.98,
-      "dividend_rate": 4.6646,
+      "dividend_rate": 4.6761,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2624,7 +2656,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "EZU",
       "sector": "International Developed: Regional",
-      "price": 60.2187,
+      "price": 60.3673,
       "var_1d": 2.96,
       "direction": "down",
       "confidence": 0.6229,
@@ -2632,7 +2664,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.65,
-      "dividend_rate": 1.5958,
+      "dividend_rate": 1.5997,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2640,7 +2672,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "F",
       "sector": "Auto & Mobility Stocks",
-      "price": 11.2966,
+      "price": 11.3244,
       "var_1d": 2.92,
       "direction": "down",
       "confidence": 0.8542,
@@ -2648,7 +2680,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.16,
-      "dividend_rate": 0.4699,
+      "dividend_rate": 0.4711,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2656,7 +2688,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FAN",
       "sector": "Clean Energy & EV ETFs",
-      "price": 20.5335,
+      "price": 20.5842,
       "var_1d": 3.09,
       "direction": "down",
       "confidence": 0.6637,
@@ -2664,7 +2696,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.99,
-      "dividend_rate": 0.2033,
+      "dividend_rate": 0.2038,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2672,7 +2704,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FANG",
       "sector": "US Energy Stocks",
-      "price": 163.0558,
+      "price": 163.4581,
       "var_1d": -4.92,
       "direction": "down",
       "confidence": 0.6482,
@@ -2680,7 +2712,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.09,
-      "dividend_rate": 3.4079,
+      "dividend_rate": 3.4163,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2688,7 +2720,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FAS",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 167.0858,
+      "price": 167.4981,
       "var_1d": 10.3,
       "direction": "down",
       "confidence": 0.7284,
@@ -2696,7 +2728,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.03,
-      "dividend_rate": 1.721,
+      "dividend_rate": 1.7252,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2704,7 +2736,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FBT",
       "sector": "Healthcare ETFs",
-      "price": 249.1309,
+      "price": 249.7456,
       "var_1d": 1.21,
       "direction": "up",
       "confidence": 0.7228,
@@ -2720,7 +2752,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FBTC",
       "sector": "Crypto ETFs",
-      "price": 62.0554,
+      "price": 62.2085,
       "var_1d": 2.84,
       "direction": "up",
       "confidence": 0.6248,
@@ -2736,7 +2768,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FCG",
       "sector": "Energy Sector ETFs",
-      "price": 25.5533,
+      "price": 25.6163,
       "var_1d": -6.0,
       "direction": "up",
       "confidence": 0.6913,
@@ -2744,7 +2776,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.17,
-      "dividend_rate": 0.5545,
+      "dividend_rate": 0.5559,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2752,7 +2784,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FCX",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 55.8142,
+      "price": 55.9519,
       "var_1d": 1.34,
       "direction": "up",
       "confidence": 0.8097,
@@ -2760,7 +2792,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.78,
-      "dividend_rate": 0.4354,
+      "dividend_rate": 0.4364,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2768,7 +2800,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FDIS",
       "sector": "Consumer ETFs",
-      "price": 94.5096,
+      "price": 94.7428,
       "var_1d": 4.14,
       "direction": "down",
       "confidence": 0.6615,
@@ -2776,7 +2808,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.73,
-      "dividend_rate": 0.6899,
+      "dividend_rate": 0.6916,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2784,7 +2816,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FDN",
       "sector": "Technology ETFs",
-      "price": 243.1037,
+      "price": 243.7035,
       "var_1d": 2.36,
       "direction": "down",
       "confidence": 0.6394,
@@ -2800,7 +2832,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FDVV",
       "sector": "Dividend ETFs",
-      "price": 56.9019,
+      "price": 57.0423,
       "var_1d": 2.84,
       "direction": "down",
       "confidence": 0.5541,
@@ -2808,7 +2840,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.77,
-      "dividend_rate": 1.5762,
+      "dividend_rate": 1.5801,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2816,7 +2848,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FDX",
       "sector": "US Industrials & Defense Stocks",
-      "price": 293.693,
+      "price": 294.4177,
       "var_1d": 3.58,
       "direction": "up",
       "confidence": 0.6966,
@@ -2824,7 +2856,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.5,
-      "dividend_rate": 4.4054,
+      "dividend_rate": 4.4163,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -2832,7 +2864,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FIW",
       "sector": "Water & Environment ETFs",
-      "price": 105.6992,
+      "price": 105.96,
       "var_1d": 2.57,
       "direction": "up",
       "confidence": 0.5496,
@@ -2840,7 +2872,23 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.72,
-      "dividend_rate": 0.761,
+      "dividend_rate": 0.7629,
+      "asset_type": "ETF",
+      "distribution": "Distributing",
+      "dividend_frequency": "Quarterly"
+    },
+    {
+      "ticker": "FLM",
+      "sector": "Industrials & Infrastructure ETFs",
+      "price": 78.4876,
+      "var_1d": 0.0,
+      "direction": "up",
+      "confidence": 0.7605,
+      "acc_recent": 73.3,
+      "n_recent": 15,
+      "pays_dividends": true,
+      "dividend_yield_pct": 2.19,
+      "dividend_rate": 1.7189,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2848,7 +2896,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FLOT",
       "sector": "Bonds: Credit",
-      "price": 45.3468,
+      "price": 45.4587,
       "var_1d": 0.04,
       "direction": "up",
       "confidence": 0.8547,
@@ -2856,7 +2904,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.47,
-      "dividend_rate": 2.027,
+      "dividend_rate": 2.032,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -2864,7 +2912,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FLRN",
       "sector": "Bonds: Credit",
-      "price": 27.39,
+      "price": 27.4575,
       "var_1d": 0.0,
       "direction": "up",
       "confidence": 0.8267,
@@ -2872,15 +2920,47 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.44,
-      "dividend_rate": 1.2161,
+      "dividend_rate": 1.2191,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
     },
     {
+      "ticker": "FM",
+      "sector": "Frontier Markets",
+      "price": 24.3024,
+      "var_1d": 0.0,
+      "direction": "up",
+      "confidence": 0.621,
+      "acc_recent": null,
+      "n_recent": 0,
+      "pays_dividends": true,
+      "dividend_yield_pct": 3.94,
+      "dividend_rate": 0.9575,
+      "asset_type": "ETF",
+      "distribution": "Distributing",
+      "dividend_frequency": null
+    },
+    {
+      "ticker": "FOLD",
+      "sector": "US Biotech Stocks",
+      "price": 12.9512,
+      "var_1d": 0.0,
+      "direction": "up",
+      "confidence": 0.6585,
+      "acc_recent": null,
+      "n_recent": 0,
+      "pays_dividends": false,
+      "dividend_yield_pct": 0.0,
+      "dividend_rate": null,
+      "asset_type": "Other",
+      "distribution": null,
+      "dividend_frequency": null
+    },
+    {
       "ticker": "FOXA",
       "sector": "US Telecom & Media Stocks",
-      "price": 62.0999,
+      "price": 62.2532,
       "var_1d": 3.8,
       "direction": "up",
       "confidence": 0.6278,
@@ -2888,7 +2968,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.85,
-      "dividend_rate": 0.5278,
+      "dividend_rate": 0.5292,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -2896,7 +2976,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FTEC",
       "sector": "Technology ETFs",
-      "price": 245.8587,
+      "price": 246.4654,
       "var_1d": 0.24,
       "direction": "up",
       "confidence": 0.7491,
@@ -2904,7 +2984,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.37,
-      "dividend_rate": 0.9097,
+      "dividend_rate": 0.9119,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2912,7 +2992,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FTNT",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 115.3641,
+      "price": 115.6488,
       "var_1d": 1.0,
       "direction": "down",
       "confidence": 0.6168,
@@ -2928,7 +3008,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FUTY",
       "sector": "Utilities ETFs",
-      "price": 50.1347,
+      "price": 50.2584,
       "var_1d": 0.39,
       "direction": "down",
       "confidence": 0.7092,
@@ -2936,7 +3016,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.65,
-      "dividend_rate": 1.3286,
+      "dividend_rate": 1.3318,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2944,7 +3024,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FXD",
       "sector": "Consumer ETFs",
-      "price": 65.1581,
+      "price": 65.3189,
       "var_1d": 5.53,
       "direction": "down",
       "confidence": 0.6465,
@@ -2952,7 +3032,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.6,
-      "dividend_rate": 0.3909,
+      "dividend_rate": 0.3919,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -2960,7 +3040,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "FXI",
       "sector": "China & Emerging Asia",
-      "price": 30.8404,
+      "price": 30.9165,
       "var_1d": 4.22,
       "direction": "down",
       "confidence": 0.796,
@@ -2968,7 +3048,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.87,
-      "dividend_rate": 0.5767,
+      "dividend_rate": 0.5781,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -2976,7 +3056,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GAMR",
       "sector": "Gaming & Entertainment ETFs",
-      "price": 85.5847,
+      "price": 85.7959,
       "var_1d": 3.07,
       "direction": "down",
       "confidence": 0.6258,
@@ -2984,7 +3064,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.5,
-      "dividend_rate": 0.4279,
+      "dividend_rate": 0.429,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -2992,7 +3072,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GBTC",
       "sector": "Crypto ETFs",
-      "price": 55.083,
+      "price": 55.219,
       "var_1d": 2.92,
       "direction": "up",
       "confidence": 0.6093,
@@ -3008,7 +3088,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GD",
       "sector": "US Industrials & Defense Stocks",
-      "price": 325.3181,
+      "price": 326.1208,
       "var_1d": -2.57,
       "direction": "up",
       "confidence": 0.6104,
@@ -3016,7 +3096,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.66,
-      "dividend_rate": 5.4003,
+      "dividend_rate": 5.4136,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3024,7 +3104,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GE",
       "sector": "US Industrials & Defense Stocks",
-      "price": 293.7376,
+      "price": 294.4624,
       "var_1d": 2.74,
       "direction": "up",
       "confidence": 0.7456,
@@ -3032,7 +3112,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.54,
-      "dividend_rate": 1.5862,
+      "dividend_rate": 1.5901,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3040,7 +3120,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GILD",
       "sector": "US Healthcare Stocks",
-      "price": 155.5664,
+      "price": 155.9502,
       "var_1d": 4.19,
       "direction": "up",
       "confidence": 0.627,
@@ -3048,7 +3128,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.24,
-      "dividend_rate": 3.4847,
+      "dividend_rate": 3.4933,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3056,7 +3136,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GIS",
       "sector": "US Consumer Staples Stocks",
-      "price": 31.9639,
+      "price": 32.0427,
       "var_1d": 5.19,
       "direction": "down",
       "confidence": 0.698,
@@ -3064,7 +3144,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 6.1,
-      "dividend_rate": 1.9498,
+      "dividend_rate": 1.9546,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3072,7 +3152,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GLD",
       "sector": "Precious Metals",
-      "price": 332.1121,
+      "price": 332.9316,
       "var_1d": 3.68,
       "direction": "down",
       "confidence": 0.6034,
@@ -3088,7 +3168,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GLTR",
       "sector": "Commodities ETFs",
-      "price": 154.9333,
+      "price": 155.3156,
       "var_1d": 4.22,
       "direction": "down",
       "confidence": 0.5805,
@@ -3104,7 +3184,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GM",
       "sector": "Auto & Mobility Stocks",
-      "price": 82.4106,
+      "price": 82.6139,
       "var_1d": 4.63,
       "direction": "up",
       "confidence": 0.686,
@@ -3112,7 +3192,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.82,
-      "dividend_rate": 0.6758,
+      "dividend_rate": 0.6774,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3120,7 +3200,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GOLD",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 36.939,
+      "price": 37.0301,
       "var_1d": 5.9,
       "direction": "up",
       "confidence": 0.7062,
@@ -3128,7 +3208,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.73,
-      "dividend_rate": 0.639,
+      "dividend_rate": 0.6406,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3136,7 +3216,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GOOGL",
       "sector": "Big Tech",
-      "price": 257.61,
+      "price": 258.2456,
       "var_1d": 3.18,
       "direction": "up",
       "confidence": 0.8119,
@@ -3144,7 +3224,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.26,
-      "dividend_rate": 0.6698,
+      "dividend_rate": 0.6714,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3152,7 +3232,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GRAB",
       "sector": "Emerging Market Growth Stocks",
-      "price": 2.9958,
+      "price": 3.0032,
       "var_1d": 7.69,
       "direction": "down",
       "confidence": 0.7111,
@@ -3168,7 +3248,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GRID",
       "sector": "Clean Energy & EV ETFs",
-      "price": 144.6532,
+      "price": 145.0101,
       "var_1d": -3.08,
       "direction": "down",
       "confidence": 0.5863,
@@ -3176,7 +3256,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.8,
-      "dividend_rate": 1.1572,
+      "dividend_rate": 1.1601,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3184,7 +3264,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GS",
       "sector": "US Financials Stocks",
-      "price": 827.4048,
+      "price": 829.4464,
       "var_1d": 3.56,
       "direction": "up",
       "confidence": 0.6815,
@@ -3192,7 +3272,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.92,
-      "dividend_rate": 15.8862,
+      "dividend_rate": 15.9254,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3200,7 +3280,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GSG",
       "sector": "Commodities ETFs",
-      "price": 30.4927,
+      "price": 30.568,
       "var_1d": -4.09,
       "direction": "down",
       "confidence": 0.6099,
@@ -3216,7 +3296,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GSK",
       "sector": "International ADRs",
-      "price": 45.6053,
+      "price": 45.7179,
       "var_1d": 5.03,
       "direction": "down",
       "confidence": 0.6287,
@@ -3224,7 +3304,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.47,
-      "dividend_rate": 1.5825,
+      "dividend_rate": 1.5864,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3232,7 +3312,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "GXC",
       "sector": "Emerging Markets ETFs",
-      "price": 75.465,
+      "price": 75.6512,
       "var_1d": 4.16,
       "direction": "down",
       "confidence": 0.6798,
@@ -3240,7 +3320,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.19,
-      "dividend_rate": 1.6527,
+      "dividend_rate": 1.6568,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3248,7 +3328,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HACK",
       "sector": "Cybersecurity ETFs",
-      "price": 106.6621,
+      "price": 106.9253,
       "var_1d": -0.17,
       "direction": "up",
       "confidence": 0.7996,
@@ -3256,7 +3336,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.06,
-      "dividend_rate": 0.064,
+      "dividend_rate": 0.0642,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -3264,7 +3344,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HAIL",
       "sector": "Clean Energy & EV ETFs",
-      "price": 28.3885,
+      "price": 28.4586,
       "var_1d": 1.35,
       "direction": "down",
       "confidence": 0.6522,
@@ -3272,7 +3352,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.74,
-      "dividend_rate": 0.494,
+      "dividend_rate": 0.4952,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3280,7 +3360,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HAL",
       "sector": "US Energy Stocks",
-      "price": 29.4228,
+      "price": 29.4954,
       "var_1d": -3.14,
       "direction": "down",
       "confidence": 0.6198,
@@ -3288,7 +3368,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.92,
-      "dividend_rate": 0.5649,
+      "dividend_rate": 0.5663,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3296,7 +3376,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HCA",
       "sector": "US Healthcare Stocks",
-      "price": 455.3401,
+      "price": 456.4637,
       "var_1d": 10.34,
       "direction": "down",
       "confidence": 0.7476,
@@ -3304,7 +3384,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.73,
-      "dividend_rate": 3.324,
+      "dividend_rate": 3.3322,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3312,7 +3392,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HDB",
       "sector": "Emerging Market Growth Stocks",
-      "price": 21.6926,
+      "price": 21.7462,
       "var_1d": 5.55,
       "direction": "up",
       "confidence": 0.6543,
@@ -3320,7 +3400,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.77,
-      "dividend_rate": 0.384,
+      "dividend_rate": 0.3849,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": null
@@ -3328,7 +3408,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HDV",
       "sector": "Dividend ETFs",
-      "price": 27.702,
+      "price": 27.7704,
       "var_1d": 1.34,
       "direction": "up",
       "confidence": 0.6049,
@@ -3336,7 +3416,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.07,
-      "dividend_rate": 0.8505,
+      "dividend_rate": 0.8526,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3344,7 +3424,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HEDJ",
       "sector": "International Developed: Regional",
-      "price": 51.2581,
+      "price": 51.3846,
       "var_1d": 2.81,
       "direction": "up",
       "confidence": 0.696,
@@ -3352,7 +3432,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.78,
-      "dividend_rate": 0.9124,
+      "dividend_rate": 0.9146,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3360,7 +3440,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HERO",
       "sector": "Gaming & Entertainment ETFs",
-      "price": 24.897,
+      "price": 24.9585,
       "var_1d": 4.72,
       "direction": "down",
       "confidence": 0.6904,
@@ -3368,7 +3448,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.75,
-      "dividend_rate": 0.4357,
+      "dividend_rate": 0.4368,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3376,7 +3456,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HEWJ",
       "sector": "International Developed: Regional",
-      "price": 56.6433,
+      "price": 56.7831,
       "var_1d": 1.37,
       "direction": "up",
       "confidence": 0.7835,
@@ -3384,7 +3464,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.72,
-      "dividend_rate": 2.1071,
+      "dividend_rate": 2.1123,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3392,7 +3472,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HLT",
       "sector": "Travel & Hospitality Stocks",
-      "price": 335.7142,
+      "price": 336.5425,
       "var_1d": 3.49,
       "direction": "up",
       "confidence": 0.6,
@@ -3400,7 +3480,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.18,
-      "dividend_rate": 0.6043,
+      "dividend_rate": 0.6058,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3408,7 +3488,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HMC",
       "sector": "International ADRs",
-      "price": 31.4022,
+      "price": 31.4796,
       "var_1d": 3.62,
       "direction": "down",
       "confidence": 0.773,
@@ -3416,7 +3496,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.99,
-      "dividend_rate": 1.2529,
+      "dividend_rate": 1.256,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": null
@@ -3424,7 +3504,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HOMZ",
       "sector": "Real Estate ETFs",
-      "price": 40.3743,
+      "price": 40.4739,
       "var_1d": 5.61,
       "direction": "down",
       "confidence": 0.7193,
@@ -3432,7 +3512,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.66,
-      "dividend_rate": 1.074,
+      "dividend_rate": 1.0766,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -3440,7 +3520,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HON",
       "sector": "US Industrials & Defense Stocks",
-      "price": 203.7039,
+      "price": 204.2065,
       "var_1d": 1.97,
       "direction": "down",
       "confidence": 0.664,
@@ -3448,7 +3528,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.3,
-      "dividend_rate": 2.6482,
+      "dividend_rate": 2.6547,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3456,7 +3536,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HOOD",
       "sector": "Fintech Stocks",
-      "price": 77.9348,
+      "price": 78.1271,
       "var_1d": 2.02,
       "direction": "up",
       "confidence": 0.684,
@@ -3472,7 +3552,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HSY",
       "sector": "US Consumer Staples Stocks",
-      "price": 155.5842,
+      "price": 155.9681,
       "var_1d": 4.15,
       "direction": "down",
       "confidence": 0.5805,
@@ -3480,7 +3560,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.11,
-      "dividend_rate": 4.8387,
+      "dividend_rate": 4.8506,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -3488,7 +3568,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HUBS",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 193.1562,
+      "price": 193.6328,
       "var_1d": -4.21,
       "direction": "down",
       "confidence": 0.6613,
@@ -3504,7 +3584,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HYD",
       "sector": "Bonds: Credit",
-      "price": 44.045,
+      "price": 44.1537,
       "var_1d": 0.78,
       "direction": "up",
       "confidence": 0.5358,
@@ -3512,7 +3592,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.37,
-      "dividend_rate": 1.9248,
+      "dividend_rate": 1.9295,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -3520,7 +3600,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HYG",
       "sector": "Bonds & Fixed Income",
-      "price": 69.1168,
+      "price": 69.2874,
       "var_1d": 0.7,
       "direction": "up",
       "confidence": 0.801,
@@ -3528,7 +3608,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.94,
-      "dividend_rate": 4.1055,
+      "dividend_rate": 4.1157,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -3536,7 +3616,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "HYLB",
       "sector": "Bonds: Credit",
-      "price": 31.5181,
+      "price": 31.5958,
       "var_1d": 0.83,
       "direction": "up",
       "confidence": 0.7048,
@@ -3544,7 +3624,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 6.53,
-      "dividend_rate": 2.0581,
+      "dividend_rate": 2.0632,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -3552,7 +3632,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IAI",
       "sector": "Financials ETFs",
-      "price": 165.7574,
+      "price": 166.1664,
       "var_1d": 3.48,
       "direction": "up",
       "confidence": 0.7311,
@@ -3560,7 +3640,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.1,
-      "dividend_rate": 1.8233,
+      "dividend_rate": 1.8278,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3568,7 +3648,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IAK",
       "sector": "Financials ETFs",
-      "price": 136.6377,
+      "price": 136.9749,
       "var_1d": 2.39,
       "direction": "up",
       "confidence": 0.6072,
@@ -3576,7 +3656,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.43,
-      "dividend_rate": 3.3203,
+      "dividend_rate": 3.3285,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3584,7 +3664,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IBB",
       "sector": "Healthcare & Pharma",
-      "price": 197.1595,
+      "price": 197.646,
       "var_1d": 2.63,
       "direction": "up",
       "confidence": 0.6462,
@@ -3592,7 +3672,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.22,
-      "dividend_rate": 0.4338,
+      "dividend_rate": 0.4348,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3600,7 +3680,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IBIT",
       "sector": "Crypto ETFs",
-      "price": 40.4162,
+      "price": 40.516,
       "var_1d": 2.91,
       "direction": "up",
       "confidence": 0.6713,
@@ -3632,7 +3712,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ICLN",
       "sector": "Thematic ETFs",
-      "price": 14.8006,
+      "price": 14.8371,
       "var_1d": 3.04,
       "direction": "down",
       "confidence": 0.6443,
@@ -3640,7 +3720,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.05,
-      "dividend_rate": 0.1554,
+      "dividend_rate": 0.1558,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3648,7 +3728,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IDEV",
       "sector": "International Developed: Regional",
-      "price": 81.305,
+      "price": 81.5056,
       "var_1d": 2.47,
       "direction": "down",
       "confidence": 0.6061,
@@ -3656,7 +3736,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.18,
-      "dividend_rate": 2.5855,
+      "dividend_rate": 2.5919,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3664,7 +3744,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IDU",
       "sector": "Utilities ETFs",
-      "price": 99.3688,
+      "price": 99.614,
       "var_1d": 0.0,
       "direction": "up",
       "confidence": 0.6515,
@@ -3672,7 +3752,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.24,
-      "dividend_rate": 2.2259,
+      "dividend_rate": 2.2314,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3680,7 +3760,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IEF",
       "sector": "Bonds: Government",
-      "price": 81.7241,
+      "price": 81.9257,
       "var_1d": 0.55,
       "direction": "up",
       "confidence": 0.5511,
@@ -3688,7 +3768,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.96,
-      "dividend_rate": 3.2363,
+      "dividend_rate": 3.2443,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -3696,7 +3776,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IEFA",
       "sector": "International Developed: Regional",
-      "price": 87.8048,
+      "price": 88.0214,
       "var_1d": 2.49,
       "direction": "down",
       "confidence": 0.6187,
@@ -3704,7 +3784,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.35,
-      "dividend_rate": 2.9415,
+      "dividend_rate": 2.9487,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3712,7 +3792,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IEI",
       "sector": "Bonds: Government",
-      "price": 102.6142,
+      "price": 102.8674,
       "var_1d": 0.3,
       "direction": "up",
       "confidence": 0.6544,
@@ -3720,7 +3800,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.68,
-      "dividend_rate": 3.7762,
+      "dividend_rate": 3.7855,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -3728,7 +3808,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IEMG",
       "sector": "Emerging Markets ETFs",
-      "price": 66.8165,
+      "price": 66.9814,
       "var_1d": 0.9,
       "direction": "up",
       "confidence": 0.6569,
@@ -3736,7 +3816,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.31,
-      "dividend_rate": 1.5435,
+      "dividend_rate": 1.5473,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3744,7 +3824,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IFRA",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 51.6771,
+      "price": 51.8046,
       "var_1d": -1.14,
       "direction": "down",
       "confidence": 0.544,
@@ -3752,7 +3832,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.61,
-      "dividend_rate": 0.832,
+      "dividend_rate": 0.8341,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3760,7 +3840,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IGOV",
       "sector": "Bonds: International",
-      "price": 36.1365,
+      "price": 36.2257,
       "var_1d": 0.8,
       "direction": "up",
       "confidence": 0.6368,
@@ -3768,7 +3848,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.43,
-      "dividend_rate": 0.5168,
+      "dividend_rate": 0.518,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -3776,7 +3856,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IGV",
       "sector": "Technology ETFs",
-      "price": 92.3341,
+      "price": 92.5619,
       "var_1d": 0.88,
       "direction": "up",
       "confidence": 0.6971,
@@ -3792,7 +3872,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IHAK",
       "sector": "Cybersecurity ETFs",
-      "price": 63.3928,
+      "price": 63.5492,
       "var_1d": 1.25,
       "direction": "up",
       "confidence": 0.7628,
@@ -3800,7 +3880,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.07,
-      "dividend_rate": 0.0444,
+      "dividend_rate": 0.0445,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -3808,7 +3888,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IHF",
       "sector": "Healthcare ETFs",
-      "price": 53.9953,
+      "price": 54.1285,
       "var_1d": 1.94,
       "direction": "up",
       "confidence": 0.6937,
@@ -3816,7 +3896,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.93,
-      "dividend_rate": 0.5022,
+      "dividend_rate": 0.5034,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3824,7 +3904,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IHI",
       "sector": "Healthcare ETFs",
-      "price": 53.6922,
+      "price": 53.8246,
       "var_1d": 6.72,
       "direction": "down",
       "confidence": 0.8455,
@@ -3832,7 +3912,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.46,
-      "dividend_rate": 0.247,
+      "dividend_rate": 0.2476,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3840,7 +3920,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ILF",
       "sector": "Brazil & LatAm",
-      "price": 28.8433,
+      "price": 28.9144,
       "var_1d": 1.6,
       "direction": "up",
       "confidence": 0.7146,
@@ -3848,7 +3928,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.34,
-      "dividend_rate": 0.9634,
+      "dividend_rate": 0.9657,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3856,7 +3936,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "INDA",
       "sector": "China & Emerging Asia",
-      "price": 44.6067,
+      "price": 44.7168,
       "var_1d": 2.73,
       "direction": "down",
       "confidence": 0.7647,
@@ -3872,7 +3952,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "INDS",
       "sector": "Real Estate ETFs",
-      "price": 36.4492,
+      "price": 36.5392,
       "var_1d": 2.58,
       "direction": "down",
       "confidence": 0.7449,
@@ -3880,7 +3960,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.22,
-      "dividend_rate": 1.1737,
+      "dividend_rate": 1.1766,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3888,7 +3968,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "INFY",
       "sector": "China & Emerging Asia",
-      "price": 10.9132,
+      "price": 10.9401,
       "var_1d": 2.6,
       "direction": "down",
       "confidence": 0.7124,
@@ -3896,7 +3976,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.39,
-      "dividend_rate": 0.4791,
+      "dividend_rate": 0.4803,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -3904,7 +3984,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "INTC",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 51.9535,
+      "price": 52.0817,
       "var_1d": -3.77,
       "direction": "up",
       "confidence": 0.528,
@@ -3920,7 +4000,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IONS",
       "sector": "US Biotech Stocks",
-      "price": 35.7977,
+      "price": 35.8861,
       "var_1d": -0.67,
       "direction": "down",
       "confidence": 0.7045,
@@ -3934,9 +4014,25 @@ const WATCHLIST_DATA = {
       "dividend_frequency": null
     },
     {
+      "ticker": "IRBO",
+      "sector": "AI & Robotics ETFs",
+      "price": 58.4813,
+      "var_1d": 0.0,
+      "direction": "down",
+      "confidence": 0.6066,
+      "acc_recent": 73.3,
+      "n_recent": 15,
+      "pays_dividends": true,
+      "dividend_yield_pct": 0.58,
+      "dividend_rate": 0.3392,
+      "asset_type": "ETF",
+      "distribution": "Distributing",
+      "dividend_frequency": "Annual"
+    },
+    {
       "ticker": "ISRG",
       "sector": "US Healthcare Stocks",
-      "price": 429.8404,
+      "price": 430.901,
       "var_1d": 9.38,
       "direction": "up",
       "confidence": 0.6631,
@@ -3952,7 +4048,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ITA",
       "sector": "Thematic ETFs",
-      "price": 189.7681,
+      "price": 190.2364,
       "var_1d": -1.54,
       "direction": "down",
       "confidence": 0.5693,
@@ -3960,7 +4056,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.44,
-      "dividend_rate": 0.835,
+      "dividend_rate": 0.837,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3968,7 +4064,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ITOT",
       "sector": "US Core Market ETFs",
-      "price": 149.1201,
+      "price": 149.4881,
       "var_1d": 1.55,
       "direction": "up",
       "confidence": 0.7375,
@@ -3976,7 +4072,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.01,
-      "dividend_rate": 1.5061,
+      "dividend_rate": 1.5098,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -3984,7 +4080,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ITUB",
       "sector": "Brazil & LatAm",
-      "price": 6.4908,
+      "price": 6.5069,
       "var_1d": 3.26,
       "direction": "up",
       "confidence": 0.7473,
@@ -3992,7 +4088,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.33,
-      "dividend_rate": 0.1512,
+      "dividend_rate": 0.1516,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Monthly"
@@ -4000,7 +4096,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IVV",
       "sector": "US Core Market ETFs",
-      "price": 686.6836,
+      "price": 688.3779,
       "var_1d": 1.62,
       "direction": "down",
       "confidence": 0.5954,
@@ -4008,7 +4104,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.09,
-      "dividend_rate": 7.4849,
+      "dividend_rate": 7.5033,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4032,7 +4128,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IWM",
       "sector": "US Broad Market",
-      "price": 253.2322,
+      "price": 253.8571,
       "var_1d": 1.51,
       "direction": "up",
       "confidence": 0.6953,
@@ -4040,7 +4136,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.91,
-      "dividend_rate": 2.3044,
+      "dividend_rate": 2.3101,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4048,7 +4144,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IYF",
       "sector": "Financials ETFs",
-      "price": 121.8906,
+      "price": 122.1914,
       "var_1d": 3.33,
       "direction": "down",
       "confidence": 0.6232,
@@ -4056,7 +4152,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.42,
-      "dividend_rate": 1.7308,
+      "dividend_rate": 1.7351,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4064,7 +4160,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IYM",
       "sector": "Materials ETFs",
-      "price": 163.7067,
+      "price": 164.1106,
       "var_1d": 2.18,
       "direction": "up",
       "confidence": 0.7047,
@@ -4072,7 +4168,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.33,
-      "dividend_rate": 2.1773,
+      "dividend_rate": 2.1827,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4080,7 +4176,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "IYW",
       "sector": "Technology ETFs",
-      "price": 214.7062,
+      "price": 215.236,
       "var_1d": 0.61,
       "direction": "up",
       "confidence": 0.7836,
@@ -4088,7 +4184,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.11,
-      "dividend_rate": 0.2362,
+      "dividend_rate": 0.2368,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4096,7 +4192,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "JD",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 24.7241,
+      "price": 24.7851,
       "var_1d": 3.05,
       "direction": "up",
       "confidence": 0.5597,
@@ -4104,7 +4200,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.4,
-      "dividend_rate": 0.8406,
+      "dividend_rate": 0.8427,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -4112,7 +4208,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "JNJ",
       "sector": "Healthcare & Pharma",
-      "price": 246.3669,
+      "price": 246.9748,
       "var_1d": 3.81,
       "direction": "up",
       "confidence": 0.7412,
@@ -4120,7 +4216,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.98,
-      "dividend_rate": 4.8781,
+      "dividend_rate": 4.8901,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4128,7 +4224,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "JPM",
       "sector": "US Financials Stocks",
-      "price": 313.9413,
+      "price": 314.7159,
       "var_1d": 4.18,
       "direction": "up",
       "confidence": 0.7588,
@@ -4136,7 +4232,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.71,
-      "dividend_rate": 5.3684,
+      "dividend_rate": 5.3816,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4144,7 +4240,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KARS",
       "sector": "Clean Energy & EV ETFs",
-      "price": 23.1994,
+      "price": 23.2567,
       "var_1d": 1.96,
       "direction": "up",
       "confidence": 0.7282,
@@ -4152,7 +4248,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.19,
-      "dividend_rate": 0.0441,
+      "dividend_rate": 0.0442,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -4160,7 +4256,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KBE",
       "sector": "Financials ETFs",
-      "price": 60.4772,
+      "price": 60.6265,
       "var_1d": 1.86,
       "direction": "up",
       "confidence": 0.7941,
@@ -4168,7 +4264,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.11,
-      "dividend_rate": 1.2761,
+      "dividend_rate": 1.2792,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4176,7 +4272,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KBWB",
       "sector": "Financials ETFs",
-      "price": 81.3674,
+      "price": 81.5682,
       "var_1d": 2.41,
       "direction": "up",
       "confidence": 0.7524,
@@ -4184,7 +4280,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.93,
-      "dividend_rate": 1.5704,
+      "dividend_rate": 1.5743,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4192,7 +4288,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KIE",
       "sector": "Financials ETFs",
-      "price": 58.6494,
+      "price": 58.7942,
       "var_1d": 2.19,
       "direction": "down",
       "confidence": 0.7277,
@@ -4200,7 +4296,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.52,
-      "dividend_rate": 0.8915,
+      "dividend_rate": 0.8937,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4208,7 +4304,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KLAC",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 133.5528,
+      "price": 133.8823,
       "var_1d": -4.1,
       "direction": "up",
       "confidence": 0.8109,
@@ -4216,7 +4312,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.5,
-      "dividend_rate": 0.6678,
+      "dividend_rate": 0.6694,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4224,7 +4320,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KO",
       "sector": "US Consumer Staples Stocks",
-      "price": 85.4153,
+      "price": 85.626,
       "var_1d": 1.05,
       "direction": "up",
       "confidence": 0.5357,
@@ -4232,7 +4328,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.33,
-      "dividend_rate": 1.9902,
+      "dividend_rate": 1.9951,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4240,7 +4336,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KRE",
       "sector": "Regional Banks",
-      "price": 66.0943,
+      "price": 66.2574,
       "var_1d": 1.72,
       "direction": "up",
       "confidence": 0.7814,
@@ -4248,7 +4344,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.1,
-      "dividend_rate": 1.388,
+      "dividend_rate": 1.3914,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4256,7 +4352,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "KWEB",
       "sector": "Emerging Markets ETFs",
-      "price": 21.6837,
+      "price": 21.7372,
       "var_1d": 4.47,
       "direction": "down",
       "confidence": 0.6661,
@@ -4264,7 +4360,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 7.43,
-      "dividend_rate": 1.6111,
+      "dividend_rate": 1.6151,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -4272,7 +4368,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LABU",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 232.3777,
+      "price": 232.9511,
       "var_1d": 8.06,
       "direction": "down",
       "confidence": 0.5088,
@@ -4280,7 +4376,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.45,
-      "dividend_rate": 1.0457,
+      "dividend_rate": 1.0483,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -4288,7 +4384,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LCID",
       "sector": "Auto & Mobility Stocks",
-      "price": 3.0047,
+      "price": 3.0121,
       "var_1d": 11.59,
       "direction": "down",
       "confidence": 0.7507,
@@ -4304,7 +4400,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LI",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 10.3247,
+      "price": 10.3502,
       "var_1d": 3.39,
       "direction": "down",
       "confidence": 0.689,
@@ -4320,7 +4416,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LIN",
       "sector": "International ADRs",
-      "price": 467.8582,
+      "price": 469.0126,
       "var_1d": 2.58,
       "direction": "down",
       "confidence": 0.7001,
@@ -4328,7 +4424,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.31,
-      "dividend_rate": 6.1289,
+      "dividend_rate": 6.1441,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4336,7 +4432,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LIT",
       "sector": "Energy & Commodities",
-      "price": 55.1722,
+      "price": 55.3083,
       "var_1d": 2.96,
       "direction": "up",
       "confidence": 0.7396,
@@ -4344,7 +4440,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.72,
-      "dividend_rate": 0.3972,
+      "dividend_rate": 0.3982,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -4352,7 +4448,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LLY",
       "sector": "Healthcare & Pharma",
-      "price": 1264.2799,
+      "price": 1267.3995,
       "var_1d": 0.61,
       "direction": "up",
       "confidence": 0.7213,
@@ -4360,7 +4456,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.55,
-      "dividend_rate": 6.9535,
+      "dividend_rate": 6.9707,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4368,7 +4464,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LMT",
       "sector": "US Industrials & Defense Stocks",
-      "price": 530.5377,
+      "price": 531.8468,
       "var_1d": -6.88,
       "direction": "down",
       "confidence": 0.669,
@@ -4376,7 +4472,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.45,
-      "dividend_rate": 12.9982,
+      "dividend_rate": 13.0302,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4384,7 +4480,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LOW",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 204.5152,
+      "price": 205.0198,
       "var_1d": 7.5,
       "direction": "down",
       "confidence": 0.6965,
@@ -4392,7 +4488,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.31,
-      "dividend_rate": 4.7243,
+      "dividend_rate": 4.736,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4400,7 +4496,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LQD",
       "sector": "Bonds & Fixed Income",
-      "price": 93.1722,
+      "price": 93.4021,
       "var_1d": 0.75,
       "direction": "down",
       "confidence": 0.6609,
@@ -4408,7 +4504,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.66,
-      "dividend_rate": 4.3418,
+      "dividend_rate": 4.3525,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -4416,7 +4512,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LRCX",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 197.427,
+      "price": 197.9141,
       "var_1d": -4.03,
       "direction": "up",
       "confidence": 0.5345,
@@ -4424,7 +4520,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.33,
-      "dividend_rate": 0.6515,
+      "dividend_rate": 0.6531,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4432,7 +4528,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LUV",
       "sector": "Airlines",
-      "price": 41.3881,
+      "price": 41.4902,
       "var_1d": 6.84,
       "direction": "down",
       "confidence": 0.6268,
@@ -4440,7 +4536,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.78,
-      "dividend_rate": 0.7367,
+      "dividend_rate": 0.7385,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4448,7 +4544,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "LVS",
       "sector": "US Consumer: Restaurants & Retail",
-      "price": 36.3238,
+      "price": 36.4134,
       "var_1d": 6.48,
       "direction": "up",
       "confidence": 0.6739,
@@ -4456,7 +4552,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.55,
-      "dividend_rate": 0.9263,
+      "dividend_rate": 0.9285,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4464,7 +4560,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MA",
       "sector": "US Financials Stocks",
-      "price": 599.7615,
+      "price": 601.2414,
       "var_1d": 3.94,
       "direction": "down",
       "confidence": 0.5153,
@@ -4472,7 +4568,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.6,
-      "dividend_rate": 3.5986,
+      "dividend_rate": 3.6074,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4480,7 +4576,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MAR",
       "sector": "Travel & Hospitality Stocks",
-      "price": 378.8141,
+      "price": 379.7488,
       "var_1d": 2.04,
       "direction": "up",
       "confidence": 0.634,
@@ -4488,7 +4584,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.82,
-      "dividend_rate": 3.1063,
+      "dividend_rate": 3.1139,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4496,7 +4592,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MCD",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 249.8442,
+      "price": 250.4606,
       "var_1d": 6.53,
       "direction": "down",
       "confidence": 0.8003,
@@ -4504,7 +4600,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.75,
-      "dividend_rate": 6.8707,
+      "dividend_rate": 6.8877,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4512,7 +4608,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MCHI",
       "sector": "China & Emerging Asia",
-      "price": 45.9709,
+      "price": 46.0843,
       "var_1d": 4.37,
       "direction": "down",
       "confidence": 0.6494,
@@ -4520,7 +4616,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.97,
-      "dividend_rate": 0.9056,
+      "dividend_rate": 0.9079,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -4528,7 +4624,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MDB",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 292.7836,
+      "price": 293.506,
       "var_1d": -2.08,
       "direction": "down",
       "confidence": 0.5591,
@@ -4544,7 +4640,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MDGL",
       "sector": "US Biotech Stocks",
-      "price": 357.0234,
+      "price": 357.9043,
       "var_1d": 1.04,
       "direction": "down",
       "confidence": 0.5458,
@@ -4560,7 +4656,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MDT",
       "sector": "US Healthcare Stocks",
-      "price": 93.5823,
+      "price": 93.8132,
       "var_1d": 6.15,
       "direction": "up",
       "confidence": 0.6177,
@@ -4568,7 +4664,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.09,
-      "dividend_rate": 2.8917,
+      "dividend_rate": 2.8988,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4576,7 +4672,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MDY",
       "sector": "US Core Market ETFs",
-      "price": 606.5555,
+      "price": 608.0521,
       "var_1d": 0.6,
       "direction": "down",
       "confidence": 0.6771,
@@ -4584,7 +4680,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.02,
-      "dividend_rate": 6.1869,
+      "dividend_rate": 6.2021,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4592,7 +4688,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MELI",
       "sector": "Fintech Stocks",
-      "price": 1551.277,
+      "price": 1555.1048,
       "var_1d": 4.68,
       "direction": "down",
       "confidence": 0.6165,
@@ -4608,7 +4704,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "META",
       "sector": "Big Tech",
-      "price": 561.708,
+      "price": 563.094,
       "var_1d": 1.44,
       "direction": "down",
       "confidence": 0.6293,
@@ -4616,7 +4712,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.38,
-      "dividend_rate": 2.1345,
+      "dividend_rate": 2.1398,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4640,7 +4736,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MGM",
       "sector": "US Consumer: Restaurants & Retail",
-      "price": 29.2623,
+      "price": 29.3345,
       "var_1d": 5.8,
       "direction": "up",
       "confidence": 0.6186,
@@ -4656,7 +4752,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MKC",
       "sector": "US Consumer Staples Stocks",
-      "price": 45.008,
+      "price": 45.119,
       "var_1d": 5.43,
       "direction": "down",
       "confidence": 0.7853,
@@ -4664,7 +4760,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.47,
-      "dividend_rate": 1.5618,
+      "dividend_rate": 1.5656,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4672,7 +4768,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MMM",
       "sector": "US Industrials & Defense Stocks",
-      "price": 172.9258,
+      "price": 173.3525,
       "var_1d": 9.55,
       "direction": "up",
       "confidence": 0.5436,
@@ -4680,7 +4776,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.74,
-      "dividend_rate": 3.0089,
+      "dividend_rate": 3.0163,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4688,7 +4784,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MPC",
       "sector": "US Energy Stocks",
-      "price": 350.1135,
+      "price": 350.9774,
       "var_1d": -8.11,
       "direction": "up",
       "confidence": 0.7197,
@@ -4696,7 +4792,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.11,
-      "dividend_rate": 3.8863,
+      "dividend_rate": 3.8958,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4704,7 +4800,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MRK",
       "sector": "Healthcare & Pharma",
-      "price": 134.061,
+      "price": 134.3918,
       "var_1d": 3.93,
       "direction": "down",
       "confidence": 0.7261,
@@ -4712,7 +4808,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.23,
-      "dividend_rate": 2.9896,
+      "dividend_rate": 2.9969,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4720,7 +4816,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MRNA",
       "sector": "US Biotech Stocks",
-      "price": 230.3716,
+      "price": 230.94,
       "var_1d": 13.11,
       "direction": "up",
       "confidence": 0.6763,
@@ -4736,7 +4832,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MRVL",
       "sector": "AI & Machine Learning",
-      "price": 142.4777,
+      "price": 142.8292,
       "var_1d": -7.08,
       "direction": "down",
       "confidence": 0.5796,
@@ -4744,7 +4840,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.1,
-      "dividend_rate": 0.1425,
+      "dividend_rate": 0.1428,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4752,7 +4848,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MS",
       "sector": "US Financials Stocks",
-      "price": 172.9437,
+      "price": 173.3704,
       "var_1d": 4.23,
       "direction": "up",
       "confidence": 0.684,
@@ -4760,7 +4856,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.15,
-      "dividend_rate": 3.7183,
+      "dividend_rate": 3.7275,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4768,7 +4864,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MSFT",
       "sector": "Big Tech",
-      "price": 495.5513,
+      "price": 496.774,
       "var_1d": 6.68,
       "direction": "down",
       "confidence": 0.7449,
@@ -4776,7 +4872,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.75,
-      "dividend_rate": 3.7166,
+      "dividend_rate": 3.7258,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4784,7 +4880,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MTUM",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 243.282,
+      "price": 243.8823,
       "var_1d": -1.97,
       "direction": "down",
       "confidence": 0.5102,
@@ -4792,7 +4888,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.62,
-      "dividend_rate": 1.5083,
+      "dividend_rate": 1.5121,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4800,7 +4896,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MU",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 709.0271,
+      "price": 710.7766,
       "var_1d": -7.0,
       "direction": "up",
       "confidence": 0.5775,
@@ -4808,7 +4904,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.05,
-      "dividend_rate": 0.3545,
+      "dividend_rate": 0.3554,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4816,7 +4912,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MUB",
       "sector": "Bonds: Credit",
-      "price": 93.0474,
+      "price": 93.277,
       "var_1d": 0.44,
       "direction": "up",
       "confidence": 0.7017,
@@ -4824,7 +4920,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.23,
-      "dividend_rate": 3.0054,
+      "dividend_rate": 3.0128,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -4832,7 +4928,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MUFG",
       "sector": "International ADRs",
-      "price": 19.5885,
+      "price": 19.6368,
       "var_1d": 3.29,
       "direction": "up",
       "confidence": 0.7173,
@@ -4840,7 +4936,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.45,
-      "dividend_rate": 0.4799,
+      "dividend_rate": 0.4811,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": null
@@ -4848,7 +4944,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "MXI",
       "sector": "Materials ETFs",
-      "price": 98.1562,
+      "price": 98.3984,
       "var_1d": 3.69,
       "direction": "down",
       "confidence": 0.6287,
@@ -4856,7 +4952,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.73,
-      "dividend_rate": 1.6981,
+      "dividend_rate": 1.7023,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -4864,7 +4960,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NBIX",
       "sector": "US Biotech Stocks",
-      "price": 148.0502,
+      "price": 148.4155,
       "var_1d": 0.73,
       "direction": "up",
       "confidence": 0.6602,
@@ -4880,7 +4976,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NEE",
       "sector": "US Utilities Stocks",
-      "price": 78.862,
+      "price": 79.0566,
       "var_1d": 4.89,
       "direction": "up",
       "confidence": 0.6852,
@@ -4888,7 +4984,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.98,
-      "dividend_rate": 2.3501,
+      "dividend_rate": 2.3559,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4896,7 +4992,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NEM",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 105.3069,
+      "price": 105.5667,
       "var_1d": 9.9,
       "direction": "down",
       "confidence": 0.5935,
@@ -4904,7 +5000,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.79,
-      "dividend_rate": 0.8319,
+      "dividend_rate": 0.834,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -4912,7 +5008,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NERD",
       "sector": "Gaming & Entertainment ETFs",
-      "price": 20.694,
+      "price": 20.7451,
       "var_1d": 4.41,
       "direction": "down",
       "confidence": 0.6905,
@@ -4920,7 +5016,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.71,
-      "dividend_rate": 0.1469,
+      "dividend_rate": 0.1473,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -4928,7 +5024,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NESN.SW",
       "sector": "Swiss Equities",
-      "price": 93.7609,
+      "price": 93.9404,
       "var_1d": 1.77,
       "direction": "up",
       "confidence": 0.6344,
@@ -4936,7 +5032,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.89,
-      "dividend_rate": 3.6473,
+      "dividend_rate": 3.6543,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -4944,7 +5040,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NET",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 237.6827,
+      "price": 238.2692,
       "var_1d": -2.57,
       "direction": "down",
       "confidence": 0.5912,
@@ -4960,7 +5056,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NFLX",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 59.1933,
+      "price": 59.3394,
       "var_1d": 4.68,
       "direction": "up",
       "confidence": 0.6044,
@@ -4976,7 +5072,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NFRA",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 58.5514,
+      "price": 58.6958,
       "var_1d": 1.92,
       "direction": "down",
       "confidence": 0.7093,
@@ -4984,7 +5080,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.67,
-      "dividend_rate": 3.3199,
+      "dividend_rate": 3.3281,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -4992,7 +5088,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NIO",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 2.9423,
+      "price": 2.9495,
       "var_1d": 3.45,
       "direction": "up",
       "confidence": 0.7076,
@@ -5008,7 +5104,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NKE",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 36.1009,
+      "price": 36.19,
       "var_1d": 5.22,
       "direction": "down",
       "confidence": 0.7871,
@@ -5016,7 +5112,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.02,
-      "dividend_rate": 1.4513,
+      "dividend_rate": 1.4548,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5024,7 +5120,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NOBL",
       "sector": "Dividend & Quality",
-      "price": 54.6462,
+      "price": 54.781,
       "var_1d": 3.11,
       "direction": "up",
       "confidence": 0.6056,
@@ -5032,7 +5128,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.04,
-      "dividend_rate": 1.1148,
+      "dividend_rate": 1.1175,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5040,7 +5136,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NOC",
       "sector": "US Industrials & Defense Stocks",
-      "price": 468.4021,
+      "price": 469.5578,
       "var_1d": -4.53,
       "direction": "up",
       "confidence": 0.7331,
@@ -5048,7 +5144,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.79,
-      "dividend_rate": 8.3844,
+      "dividend_rate": 8.4051,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5056,7 +5152,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NOVN.SW",
       "sector": "Swiss Equities",
-      "price": 146.5465,
+      "price": 146.8269,
       "var_1d": 2.1,
       "direction": "up",
       "confidence": 0.514,
@@ -5064,7 +5160,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.9,
-      "dividend_rate": 4.2498,
+      "dividend_rate": 4.258,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -5072,7 +5168,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NOW",
       "sector": "AI & Machine Learning",
-      "price": 97.015,
+      "price": 97.2544,
       "var_1d": -0.32,
       "direction": "down",
       "confidence": 0.5781,
@@ -5088,7 +5184,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NSC",
       "sector": "US Industrials & Defense Stocks",
-      "price": 306.8352,
+      "price": 307.5923,
       "var_1d": 0.94,
       "direction": "up",
       "confidence": 0.6681,
@@ -5096,7 +5192,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.54,
-      "dividend_rate": 4.7253,
+      "dividend_rate": 4.7369,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5104,7 +5200,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NSRGY",
       "sector": "International ADRs",
-      "price": 94.893,
+      "price": 95.1271,
       "var_1d": 0.88,
       "direction": "up",
       "confidence": 0.6582,
@@ -5112,7 +5208,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.96,
-      "dividend_rate": 3.7578,
+      "dividend_rate": 3.767,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -5120,7 +5216,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NTES",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 108.1154,
+      "price": 108.3822,
       "var_1d": 4.33,
       "direction": "down",
       "confidence": 0.6824,
@@ -5128,7 +5224,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.36,
-      "dividend_rate": 2.5515,
+      "dividend_rate": 2.5578,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5136,7 +5232,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NU",
       "sector": "Fintech Stocks",
-      "price": 10.6903,
+      "price": 10.7167,
       "var_1d": 3.27,
       "direction": "down",
       "confidence": 0.6274,
@@ -5152,7 +5248,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NVAX",
       "sector": "US Biotech Stocks",
-      "price": 9.4955,
+      "price": 9.519,
       "var_1d": 10.02,
       "direction": "down",
       "confidence": 0.6637,
@@ -5168,7 +5264,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NVDA",
       "sector": "Big Tech",
-      "price": 178.4359,
+      "price": 178.8762,
       "var_1d": -3.17,
       "direction": "down",
       "confidence": 0.6577,
@@ -5176,7 +5272,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.47,
-      "dividend_rate": 0.8386,
+      "dividend_rate": 0.8407,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5184,7 +5280,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NVO",
       "sector": "Healthcare & Pharma",
-      "price": 37.6077,
+      "price": 37.7005,
       "var_1d": 4.95,
       "direction": "up",
       "confidence": 0.6218,
@@ -5192,7 +5288,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.84,
-      "dividend_rate": 1.4441,
+      "dividend_rate": 1.4477,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -5200,7 +5296,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "NVS",
       "sector": "International ADRs",
-      "price": 147.0962,
+      "price": 147.4591,
       "var_1d": 3.59,
       "direction": "up",
       "confidence": 0.566,
@@ -5208,7 +5304,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.98,
-      "dividend_rate": 4.3835,
+      "dividend_rate": 4.3943,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -5216,7 +5312,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "O",
       "sector": "Real Estate (REITs)",
-      "price": 52.8006,
+      "price": 52.9308,
       "var_1d": 2.99,
       "direction": "down",
       "confidence": 0.6009,
@@ -5224,7 +5320,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.19,
-      "dividend_rate": 2.7403,
+      "dividend_rate": 2.7471,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Monthly"
@@ -5232,7 +5328,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "OIH",
       "sector": "Energy Sector ETFs",
-      "price": 326.3791,
+      "price": 327.1844,
       "var_1d": -4.95,
       "direction": "down",
       "confidence": 0.6165,
@@ -5240,7 +5336,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.26,
-      "dividend_rate": 4.1124,
+      "dividend_rate": 4.1225,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -5248,7 +5344,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "OKTA",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 170.3402,
+      "price": 170.7605,
       "var_1d": 0.72,
       "direction": "up",
       "confidence": 0.5997,
@@ -5264,7 +5360,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ORCL",
       "sector": "AI & Machine Learning",
-      "price": 110.3177,
+      "price": 110.5899,
       "var_1d": -1.95,
       "direction": "down",
       "confidence": 0.6851,
@@ -5272,7 +5368,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.37,
-      "dividend_rate": 1.5114,
+      "dividend_rate": 1.5151,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5280,7 +5376,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "OXY",
       "sector": "US Energy Stocks",
-      "price": 51.1154,
+      "price": 51.2416,
       "var_1d": -5.13,
       "direction": "down",
       "confidence": 0.5992,
@@ -5288,7 +5384,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.83,
-      "dividend_rate": 0.9354,
+      "dividend_rate": 0.9377,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5296,7 +5392,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PAAS",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 36.9925,
+      "price": 37.0838,
       "var_1d": 8.36,
       "direction": "down",
       "confidence": 0.6535,
@@ -5304,7 +5400,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.39,
-      "dividend_rate": 0.5142,
+      "dividend_rate": 0.5155,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -5312,7 +5408,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PALL",
       "sector": "Commodities ETFs",
-      "price": 16.2895,
+      "price": 16.3297,
       "var_1d": 7.85,
       "direction": "down",
       "confidence": 0.6235,
@@ -5328,7 +5424,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PANW",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 310.3125,
+      "price": 311.0782,
       "var_1d": -0.62,
       "direction": "up",
       "confidence": 0.6847,
@@ -5344,7 +5440,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PARA",
       "sector": "US Telecom & Media Stocks",
-      "price": 0.2844,
+      "price": 0.2851,
       "var_1d": -88.27,
       "direction": "down",
       "confidence": 0.6753,
@@ -5360,7 +5456,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PAVE",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 48.0662,
+      "price": 48.1848,
       "var_1d": -1.68,
       "direction": "up",
       "confidence": 0.7206,
@@ -5368,7 +5464,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.77,
-      "dividend_rate": 0.3701,
+      "dividend_rate": 0.371,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -5376,7 +5472,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PBE",
       "sector": "Healthcare ETFs",
-      "price": 93.3238,
+      "price": 93.554,
       "var_1d": 2.28,
       "direction": "down",
       "confidence": 0.6251,
@@ -5384,7 +5480,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.73,
-      "dividend_rate": 1.6145,
+      "dividend_rate": 1.6185,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5392,7 +5488,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PBTP",
       "sector": "Bonds: Inflation",
-      "price": 22.9097,
+      "price": 22.9662,
       "var_1d": -0.16,
       "direction": "up",
       "confidence": 0.7018,
@@ -5400,7 +5496,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.8,
-      "dividend_rate": 1.0997,
+      "dividend_rate": 1.1024,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5408,7 +5504,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PCVX",
       "sector": "US Biotech Stocks",
-      "price": 58.5603,
+      "price": 58.7048,
       "var_1d": 8.01,
       "direction": "down",
       "confidence": 0.6058,
@@ -5424,7 +5520,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PCY",
       "sector": "Bonds: International",
-      "price": 18.3224,
+      "price": 18.3676,
       "var_1d": 1.33,
       "direction": "down",
       "confidence": 0.7703,
@@ -5432,7 +5528,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 6.01,
-      "dividend_rate": 1.1012,
+      "dividend_rate": 1.1039,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -5440,7 +5536,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PDD",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 73.2449,
+      "price": 73.4257,
       "var_1d": 2.47,
       "direction": "down",
       "confidence": 0.6939,
@@ -5456,7 +5552,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PENN",
       "sector": "US Consumer: Restaurants & Retail",
-      "price": 15.5495,
+      "price": 15.5879,
       "var_1d": 2.17,
       "direction": "up",
       "confidence": 0.6699,
@@ -5472,7 +5568,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PEP",
       "sector": "US Consumer Staples Stocks",
-      "price": 126.9817,
+      "price": 127.295,
       "var_1d": 3.75,
       "direction": "down",
       "confidence": 0.6842,
@@ -5480,7 +5576,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.13,
-      "dividend_rate": 5.2443,
+      "dividend_rate": 5.2573,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5488,7 +5584,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PFE",
       "sector": "Healthcare & Pharma",
-      "price": 27.4524,
+      "price": 27.5201,
       "var_1d": 2.63,
       "direction": "up",
       "confidence": 0.6176,
@@ -5496,7 +5592,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 6.13,
-      "dividend_rate": 1.6828,
+      "dividend_rate": 1.687,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5504,7 +5600,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PFF",
       "sector": "Dividend ETFs",
-      "price": 25.6068,
+      "price": 25.6699,
       "var_1d": 1.56,
       "direction": "up",
       "confidence": 0.9268,
@@ -5512,7 +5608,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.51,
-      "dividend_rate": 1.4109,
+      "dividend_rate": 1.4144,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -5520,7 +5616,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PG",
       "sector": "US Consumer Staples Stocks",
-      "price": 149.1825,
+      "price": 149.5506,
       "var_1d": 3.25,
       "direction": "down",
       "confidence": 0.8754,
@@ -5528,7 +5624,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.01,
-      "dividend_rate": 4.4904,
+      "dividend_rate": 4.5015,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5536,7 +5632,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PHO",
       "sector": "Thematic ETFs",
-      "price": 69.0901,
+      "price": 69.2606,
       "var_1d": 1.76,
       "direction": "up",
       "confidence": 0.6107,
@@ -5544,15 +5640,31 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.58,
-      "dividend_rate": 0.4007,
+      "dividend_rate": 0.4017,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
     },
     {
+      "ticker": "PIN",
+      "sector": "Emerging Markets ETFs",
+      "price": 18.0194,
+      "var_1d": 0.0,
+      "direction": "down",
+      "confidence": 0.5612,
+      "acc_recent": 40.0,
+      "n_recent": 15,
+      "pays_dividends": false,
+      "dividend_yield_pct": 0.0,
+      "dividend_rate": null,
+      "asset_type": "ETF",
+      "distribution": "Accumulating",
+      "dividend_frequency": null
+    },
+    {
       "ticker": "PLD",
       "sector": "Real Estate (REITs)",
-      "price": 117.1206,
+      "price": 117.4096,
       "var_1d": 1.77,
       "direction": "down",
       "confidence": 0.5771,
@@ -5560,7 +5672,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.02,
-      "dividend_rate": 3.537,
+      "dividend_rate": 3.5458,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5568,7 +5680,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PLTR",
       "sector": "AI & Machine Learning",
-      "price": 153.0877,
+      "price": 153.4655,
       "var_1d": -2.11,
       "direction": "up",
       "confidence": 0.6517,
@@ -5584,7 +5696,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PNQI",
       "sector": "Technology ETFs",
-      "price": 46.176,
+      "price": 46.2899,
       "var_1d": 4.75,
       "direction": "up",
       "confidence": 0.7501,
@@ -5600,7 +5712,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PPA",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 140.2041,
+      "price": 140.5501,
       "var_1d": -3.01,
       "direction": "up",
       "confidence": 0.6984,
@@ -5608,7 +5720,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.37,
-      "dividend_rate": 0.5188,
+      "dividend_rate": 0.52,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5616,7 +5728,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PPLT",
       "sector": "Commodities ETFs",
-      "price": 12.0723,
+      "price": 12.1021,
       "var_1d": 5.62,
       "direction": "down",
       "confidence": 0.5967,
@@ -5632,7 +5744,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PSCU",
       "sector": "Utilities ETFs",
-      "price": 55.6091,
+      "price": 55.7463,
       "var_1d": 2.79,
       "direction": "down",
       "confidence": 0.7947,
@@ -5640,7 +5752,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.99,
-      "dividend_rate": 0.5505,
+      "dividend_rate": 0.5519,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5648,7 +5760,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PSI",
       "sector": "Technology ETFs",
-      "price": 100.5814,
+      "price": 100.8296,
       "var_1d": -4.3,
       "direction": "down",
       "confidence": 0.5257,
@@ -5656,7 +5768,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.04,
-      "dividend_rate": 0.0402,
+      "dividend_rate": 0.0403,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5664,7 +5776,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PSX",
       "sector": "US Energy Stocks",
-      "price": 231.4861,
+      "price": 232.0573,
       "var_1d": -4.53,
       "direction": "up",
       "confidence": 0.6695,
@@ -5672,7 +5784,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.09,
-      "dividend_rate": 4.8381,
+      "dividend_rate": 4.85,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5680,7 +5792,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PXE",
       "sector": "Energy Sector ETFs",
-      "price": 35.4589,
+      "price": 35.5464,
       "var_1d": -5.89,
       "direction": "down",
       "confidence": 0.5796,
@@ -5688,7 +5800,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.71,
-      "dividend_rate": 0.6063,
+      "dividend_rate": 0.6078,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5696,7 +5808,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "PYPL",
       "sector": "US Financials Stocks",
-      "price": 53.6743,
+      "price": 53.8068,
       "var_1d": 3.42,
       "direction": "up",
       "confidence": 0.7046,
@@ -5704,7 +5816,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.91,
-      "dividend_rate": 0.4884,
+      "dividend_rate": 0.4896,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5712,7 +5824,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "QCLN",
       "sector": "Clean Energy & EV ETFs",
-      "price": 40.2736,
+      "price": 40.3729,
       "var_1d": -0.59,
       "direction": "down",
       "confidence": 0.5623,
@@ -5720,7 +5832,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.17,
-      "dividend_rate": 0.0685,
+      "dividend_rate": 0.0686,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5728,7 +5840,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "QCOM",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 154.4162,
+      "price": 154.7972,
       "var_1d": 5.33,
       "direction": "down",
       "confidence": 0.657,
@@ -5736,7 +5848,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.29,
-      "dividend_rate": 3.5361,
+      "dividend_rate": 3.5449,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5744,7 +5856,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "QQQ",
       "sector": "US Broad Market",
-      "price": 616.9426,
+      "price": 618.4649,
       "var_1d": 0.97,
       "direction": "up",
       "confidence": 0.7012,
@@ -5752,7 +5864,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.44,
-      "dividend_rate": 2.7145,
+      "dividend_rate": 2.7212,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5760,7 +5872,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "QTEC",
       "sector": "Technology ETFs",
-      "price": 255.5147,
+      "price": 256.1452,
       "var_1d": -0.53,
       "direction": "up",
       "confidence": 0.7155,
@@ -5776,7 +5888,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "QUAL",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 202.411,
+      "price": 202.9105,
       "var_1d": 2.3,
       "direction": "down",
       "confidence": 0.5771,
@@ -5784,7 +5896,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.86,
-      "dividend_rate": 1.7407,
+      "dividend_rate": 1.745,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5792,7 +5904,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RCL",
       "sector": "Travel & Hospitality Stocks",
-      "price": 297.0365,
+      "price": 297.7695,
       "var_1d": 6.38,
       "direction": "down",
       "confidence": 0.6403,
@@ -5800,7 +5912,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.71,
-      "dividend_rate": 5.0793,
+      "dividend_rate": 5.0919,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5808,7 +5920,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "REET",
       "sector": "Real Estate ETFs",
-      "price": 24.4566,
+      "price": 24.5169,
       "var_1d": 2.66,
       "direction": "down",
       "confidence": 0.7379,
@@ -5816,7 +5928,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.27,
-      "dividend_rate": 0.7997,
+      "dividend_rate": 0.8017,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5824,7 +5936,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "REGN",
       "sector": "US Healthcare Stocks",
-      "price": 829.7854,
+      "price": 831.8329,
       "var_1d": -4.39,
       "direction": "down",
       "confidence": 0.6727,
@@ -5832,7 +5944,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.45,
-      "dividend_rate": 3.734,
+      "dividend_rate": 3.7432,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -5840,7 +5952,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "REM",
       "sector": "Real Estate ETFs",
-      "price": 15.8794,
+      "price": 15.9186,
       "var_1d": 4.4,
       "direction": "down",
       "confidence": 0.5147,
@@ -5848,7 +5960,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 9.0,
-      "dividend_rate": 1.4291,
+      "dividend_rate": 1.4327,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5856,7 +5968,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "REZ",
       "sector": "Real Estate ETFs",
-      "price": 85.2637,
+      "price": 85.4741,
       "var_1d": 3.25,
       "direction": "down",
       "confidence": 0.8627,
@@ -5864,7 +5976,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.96,
-      "dividend_rate": 1.6712,
+      "dividend_rate": 1.6753,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5872,7 +5984,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RINF",
       "sector": "Bonds: Inflation",
-      "price": 28.7363,
+      "price": 28.8072,
       "var_1d": -0.46,
       "direction": "down",
       "confidence": 0.5132,
@@ -5880,7 +5992,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.63,
-      "dividend_rate": 1.0431,
+      "dividend_rate": 1.0457,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5888,7 +6000,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RIO",
       "sector": "Mining & Resources",
-      "price": 75.3937,
+      "price": 75.5797,
       "var_1d": 3.6,
       "direction": "down",
       "confidence": 0.5303,
@@ -5896,7 +6008,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.42,
-      "dividend_rate": 3.3324,
+      "dividend_rate": 3.3406,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -5904,7 +6016,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RIVN",
       "sector": "Auto & Mobility Stocks",
-      "price": 12.5359,
+      "price": 12.5668,
       "var_1d": 5.79,
       "direction": "up",
       "confidence": 0.6813,
@@ -5920,7 +6032,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RNRG",
       "sector": "Clean Energy & EV ETFs",
-      "price": 28.0301,
+      "price": 28.0993,
       "var_1d": 3.04,
       "direction": "down",
       "confidence": 0.6653,
@@ -5928,7 +6040,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.71,
-      "dividend_rate": 0.4793,
+      "dividend_rate": 0.4805,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -5936,7 +6048,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ROAD",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 88.4824,
+      "price": 88.7007,
       "var_1d": 3.06,
       "direction": "up",
       "confidence": 0.6092,
@@ -5952,7 +6064,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ROBO",
       "sector": "AI & Robotics ETFs",
-      "price": 66.6204,
+      "price": 66.7847,
       "var_1d": 0.34,
       "direction": "up",
       "confidence": 0.7076,
@@ -5960,15 +6072,31 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.37,
-      "dividend_rate": 0.2465,
+      "dividend_rate": 0.2471,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
     },
     {
+      "ticker": "ROG.SW",
+      "sector": "Swiss Equities",
+      "price": null,
+      "var_1d": null,
+      "direction": "down",
+      "confidence": 0.519,
+      "acc_recent": null,
+      "n_recent": 0,
+      "pays_dividends": false,
+      "dividend_yield_pct": 0.0,
+      "dividend_rate": null,
+      "asset_type": "Other",
+      "distribution": null,
+      "dividend_frequency": null
+    },
+    {
       "ticker": "ROKT",
       "sector": "Space ETFs",
-      "price": 88.634,
+      "price": 88.8527,
       "var_1d": -3.71,
       "direction": "up",
       "confidence": 0.8565,
@@ -5976,7 +6104,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.28,
-      "dividend_rate": 0.2482,
+      "dividend_rate": 0.2488,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -5984,7 +6112,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ROST",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 219.1018,
+      "price": 219.6424,
       "var_1d": 6.11,
       "direction": "down",
       "confidence": 0.5773,
@@ -5992,7 +6120,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.74,
-      "dividend_rate": 1.6214,
+      "dividend_rate": 1.6254,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6000,7 +6128,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RPAR",
       "sector": "Alternative & Multi-Asset ETFs",
-      "price": 19.3477,
+      "price": 19.3955,
       "var_1d": 1.35,
       "direction": "up",
       "confidence": 0.7389,
@@ -6008,7 +6136,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.45,
-      "dividend_rate": 0.474,
+      "dividend_rate": 0.4752,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6016,7 +6144,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RSP",
       "sector": "US Broad Market",
-      "price": 199.121,
+      "price": 199.6124,
       "var_1d": 1.86,
       "direction": "down",
       "confidence": 0.7014,
@@ -6024,7 +6152,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.49,
-      "dividend_rate": 2.9669,
+      "dividend_rate": 2.9742,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6032,7 +6160,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RTH",
       "sector": "Consumer ETFs",
-      "price": 253.0985,
+      "price": 253.723,
       "var_1d": 4.21,
       "direction": "down",
       "confidence": 0.873,
@@ -6040,7 +6168,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.9,
-      "dividend_rate": 2.2779,
+      "dividend_rate": 2.2835,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -6048,7 +6176,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RTX",
       "sector": "US Industrials & Defense Stocks",
-      "price": 176.9202,
+      "price": 177.3567,
       "var_1d": -2.64,
       "direction": "up",
       "confidence": 0.7354,
@@ -6056,7 +6184,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.39,
-      "dividend_rate": 2.4592,
+      "dividend_rate": 2.4653,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6064,7 +6192,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "RY",
       "sector": "International ADRs",
-      "price": 187.0488,
+      "price": 187.5103,
       "var_1d": 3.04,
       "direction": "up",
       "confidence": 0.8448,
@@ -6072,7 +6200,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.43,
-      "dividend_rate": 4.5453,
+      "dividend_rate": 4.5565,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -6080,7 +6208,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "S",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 20.9437,
+      "price": 20.9954,
       "var_1d": 1.64,
       "direction": "down",
       "confidence": 0.7212,
@@ -6096,7 +6224,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SAP",
       "sector": "International ADRs",
-      "price": 214.0197,
+      "price": 214.5478,
       "var_1d": 4.22,
       "direction": "up",
       "confidence": 0.6686,
@@ -6104,7 +6232,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.34,
-      "dividend_rate": 2.8679,
+      "dividend_rate": 2.8749,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -6112,7 +6240,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SBAC",
       "sector": "US Real Estate Stocks",
-      "price": 174.29,
+      "price": 174.72,
       "var_1d": 5.84,
       "direction": "up",
       "confidence": 0.5096,
@@ -6120,7 +6248,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.74,
-      "dividend_rate": 4.7755,
+      "dividend_rate": 4.7873,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6128,7 +6256,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SBUX",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 97.8085,
+      "price": 98.0499,
       "var_1d": 4.71,
       "direction": "down",
       "confidence": 0.8401,
@@ -6136,7 +6264,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.32,
-      "dividend_rate": 2.2692,
+      "dividend_rate": 2.2748,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6144,7 +6272,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SCHB",
       "sector": "US Core Market ETFs",
-      "price": 26.2844,
+      "price": 26.3492,
       "var_1d": 1.52,
       "direction": "up",
       "confidence": 0.7462,
@@ -6152,7 +6280,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.04,
-      "dividend_rate": 0.2734,
+      "dividend_rate": 0.274,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6160,7 +6288,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SCHD",
       "sector": "Dividend ETFs",
-      "price": 32.2848,
+      "price": 32.3645,
       "var_1d": 1.86,
       "direction": "up",
       "confidence": 0.6051,
@@ -6168,7 +6296,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.13,
-      "dividend_rate": 1.0105,
+      "dividend_rate": 1.013,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6176,7 +6304,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SCHP",
       "sector": "Bonds: Inflation",
-      "price": 22.7804,
+      "price": 22.8366,
       "var_1d": 0.0,
       "direction": "down",
       "confidence": 0.565,
@@ -6184,7 +6312,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.51,
-      "dividend_rate": 1.0274,
+      "dividend_rate": 1.0299,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -6192,7 +6320,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SCHX",
       "sector": "US Core Market ETFs",
-      "price": 26.8728,
+      "price": 26.9391,
       "var_1d": 1.48,
       "direction": "up",
       "confidence": 0.7251,
@@ -6200,7 +6328,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.03,
-      "dividend_rate": 0.2768,
+      "dividend_rate": 0.2775,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6208,7 +6336,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SDY",
       "sector": "Dividend ETFs",
-      "price": 147.1407,
+      "price": 147.5038,
       "var_1d": 2.41,
       "direction": "down",
       "confidence": 0.6671,
@@ -6216,7 +6344,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.41,
-      "dividend_rate": 3.5461,
+      "dividend_rate": 3.5548,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6224,7 +6352,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SE",
       "sector": "Emerging Market Growth Stocks",
-      "price": 71.4974,
+      "price": 71.6738,
       "var_1d": 4.45,
       "direction": "down",
       "confidence": 0.7478,
@@ -6240,7 +6368,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SGLN.L",
       "sector": "Precious Metals",
-      "price": 0.8388,
+      "price": 69.9276,
       "var_1d": 2.67,
       "direction": "down",
       "confidence": 0.6205,
@@ -6256,7 +6384,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SHEL",
       "sector": "International ADRs",
-      "price": 90.8184,
+      "price": 91.0425,
       "var_1d": -2.25,
       "direction": "up",
       "confidence": 0.6731,
@@ -6264,7 +6392,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.35,
-      "dividend_rate": 3.0424,
+      "dividend_rate": 3.0499,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6272,7 +6400,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SHOP",
       "sector": "Emerging Market Growth Stocks",
-      "price": 136.4415,
+      "price": 136.7782,
       "var_1d": 7.34,
       "direction": "down",
       "confidence": 0.6902,
@@ -6288,7 +6416,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SHY",
       "sector": "Bonds & Fixed Income",
-      "price": 72.6654,
+      "price": 72.8447,
       "var_1d": 0.12,
       "direction": "down",
       "confidence": 0.5258,
@@ -6296,7 +6424,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.65,
-      "dividend_rate": 2.6523,
+      "dividend_rate": 2.6588,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -6320,7 +6448,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SIZE",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 163.8939,
+      "price": 164.2983,
       "var_1d": 1.79,
       "direction": "down",
       "confidence": 0.6306,
@@ -6328,7 +6456,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.37,
-      "dividend_rate": 2.2453,
+      "dividend_rate": 2.2509,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6352,7 +6480,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SKYY",
       "sector": "Technology ETFs",
-      "price": 139.7048,
+      "price": 140.0495,
       "var_1d": 0.46,
       "direction": "up",
       "confidence": 0.6272,
@@ -6368,7 +6496,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SLB",
       "sector": "US Energy Stocks",
-      "price": 45.9709,
+      "price": 46.0843,
       "var_1d": -1.09,
       "direction": "up",
       "confidence": 0.6915,
@@ -6376,7 +6504,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.19,
-      "dividend_rate": 1.0068,
+      "dividend_rate": 1.0092,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6384,7 +6512,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SLV",
       "sector": "Precious Metals",
-      "price": 42.0479,
+      "price": 42.1516,
       "var_1d": 5.17,
       "direction": "up",
       "confidence": 0.5445,
@@ -6400,7 +6528,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SMCI",
       "sector": "AI & Machine Learning",
-      "price": 26.3914,
+      "price": 26.4565,
       "var_1d": -5.7,
       "direction": "down",
       "confidence": 0.5116,
@@ -6416,7 +6544,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SMH",
       "sector": "Technology ETFs",
-      "price": 449.6071,
+      "price": 450.7165,
       "var_1d": -2.75,
       "direction": "down",
       "confidence": 0.5296,
@@ -6424,7 +6552,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.2,
-      "dividend_rate": 0.8992,
+      "dividend_rate": 0.9014,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -6432,7 +6560,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SMOG",
       "sector": "Clean Energy & EV ETFs",
-      "price": 120.0985,
+      "price": 120.3949,
       "var_1d": 2.93,
       "direction": "down",
       "confidence": 0.6583,
@@ -6440,7 +6568,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.5,
-      "dividend_rate": 1.8015,
+      "dividend_rate": 1.8059,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -6448,7 +6576,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SNOW",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 259.099,
+      "price": 259.7383,
       "var_1d": -1.5,
       "direction": "down",
       "confidence": 0.6139,
@@ -6464,7 +6592,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SO",
       "sector": "US Utilities Stocks",
-      "price": 83.0258,
+      "price": 83.2307,
       "var_1d": -0.67,
       "direction": "down",
       "confidence": 0.6682,
@@ -6472,7 +6600,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.42,
-      "dividend_rate": 2.8395,
+      "dividend_rate": 2.8465,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6480,7 +6608,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SOFI",
       "sector": "Fintech Stocks",
-      "price": 15.496,
+      "price": 15.5342,
       "var_1d": 3.64,
       "direction": "down",
       "confidence": 0.6243,
@@ -6496,7 +6624,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SONY",
       "sector": "International ADRs",
-      "price": 23.137,
+      "price": 23.1941,
       "var_1d": 2.21,
       "direction": "down",
       "confidence": 0.7917,
@@ -6504,7 +6632,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.66,
-      "dividend_rate": 0.1527,
+      "dividend_rate": 0.1531,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": null
@@ -6512,7 +6640,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SOXL",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 59.4519,
+      "price": 59.5986,
       "var_1d": -8.81,
       "direction": "down",
       "confidence": 0.5181,
@@ -6520,7 +6648,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.01,
-      "dividend_rate": 0.0059,
+      "dividend_rate": 0.006,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -6528,7 +6656,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SOXS",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 52.0159,
+      "price": 52.1443,
       "var_1d": 8.76,
       "direction": "up",
       "confidence": 0.5992,
@@ -6536,7 +6664,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 41.76,
-      "dividend_rate": 21.7219,
+      "dividend_rate": 21.7755,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6544,7 +6672,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SOXX",
       "sector": "Technology ETFs",
-      "price": 401.5856,
+      "price": 402.5765,
       "var_1d": -3.14,
       "direction": "down",
       "confidence": 0.6509,
@@ -6552,7 +6680,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.29,
-      "dividend_rate": 1.1646,
+      "dividend_rate": 1.1675,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6560,7 +6688,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SOYB",
       "sector": "Commodities ETFs",
-      "price": 22.7982,
+      "price": 22.8545,
       "var_1d": -0.7,
       "direction": "down",
       "confidence": 0.6329,
@@ -6576,7 +6704,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPDW",
       "sector": "International Developed: Regional",
-      "price": 44.8653,
+      "price": 44.976,
       "var_1d": 2.15,
       "direction": "up",
       "confidence": 0.7454,
@@ -6584,7 +6712,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.02,
-      "dividend_rate": 1.3549,
+      "dividend_rate": 1.3583,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -6592,7 +6720,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPGI",
       "sector": "US Financials Stocks",
-      "price": 429.4748,
+      "price": 430.5345,
       "var_1d": 3.36,
       "direction": "up",
       "confidence": 0.6707,
@@ -6600,7 +6728,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.9,
-      "dividend_rate": 3.8653,
+      "dividend_rate": 3.8748,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6608,7 +6736,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPHQ",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 75.465,
+      "price": 75.6512,
       "var_1d": 1.52,
       "direction": "up",
       "confidence": 0.7381,
@@ -6616,15 +6744,31 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.1,
-      "dividend_rate": 0.8301,
+      "dividend_rate": 0.8322,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
     },
     {
+      "ticker": "SPLG",
+      "sector": "US Core Market ETFs",
+      "price": 83.0608,
+      "var_1d": 6.0,
+      "direction": "up",
+      "confidence": 0.7425,
+      "acc_recent": 60.0,
+      "n_recent": 15,
+      "pays_dividends": true,
+      "dividend_yield_pct": 1.13,
+      "dividend_rate": 0.9386,
+      "asset_type": "ETF",
+      "distribution": "Distributing",
+      "dividend_frequency": null
+    },
+    {
       "ticker": "SPLV",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 69.9995,
+      "price": 70.1722,
       "var_1d": 2.12,
       "direction": "up",
       "confidence": 0.5221,
@@ -6632,7 +6776,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.12,
-      "dividend_rate": 1.484,
+      "dividend_rate": 1.4877,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -6640,7 +6784,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPTL",
       "sector": "Bonds: Government",
-      "price": 22.2633,
+      "price": 22.3182,
       "var_1d": 0.73,
       "direction": "up",
       "confidence": 0.6215,
@@ -6648,7 +6792,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.35,
-      "dividend_rate": 0.9685,
+      "dividend_rate": 0.9708,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -6656,7 +6800,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPTM",
       "sector": "US Core Market ETFs",
-      "price": 82.8029,
+      "price": 83.0072,
       "var_1d": 1.56,
       "direction": "up",
       "confidence": 0.7581,
@@ -6664,7 +6808,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.06,
-      "dividend_rate": 0.8777,
+      "dividend_rate": 0.8799,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6672,7 +6816,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPXL",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 251.244,
+      "price": 251.8639,
       "var_1d": 4.85,
       "direction": "up",
       "confidence": 0.7232,
@@ -6680,7 +6824,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.53,
-      "dividend_rate": 1.3316,
+      "dividend_rate": 1.3349,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6688,7 +6832,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPXS",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 21.8709,
+      "price": 21.9249,
       "var_1d": -4.89,
       "direction": "down",
       "confidence": 0.7327,
@@ -6696,7 +6840,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.45,
-      "dividend_rate": 0.9733,
+      "dividend_rate": 0.9757,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6704,7 +6848,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPY",
       "sector": "US Core Market ETFs",
-      "price": 683.6878,
+      "price": 685.3748,
       "var_1d": 1.65,
       "direction": "up",
       "confidence": 0.7407,
@@ -6712,7 +6856,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.01,
-      "dividend_rate": 6.9052,
+      "dividend_rate": 6.9223,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6720,7 +6864,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SPYD",
       "sector": "Dividend ETFs",
-      "price": 45.0347,
+      "price": 45.1458,
       "var_1d": 2.89,
       "direction": "down",
       "confidence": 0.7716,
@@ -6728,7 +6872,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.1,
-      "dividend_rate": 1.8464,
+      "dividend_rate": 1.851,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6736,7 +6880,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SQQQ",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 37.0549,
+      "price": 37.1463,
       "var_1d": -2.78,
       "direction": "down",
       "confidence": 0.7129,
@@ -6744,7 +6888,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 9.13,
-      "dividend_rate": 3.3831,
+      "dividend_rate": 3.3915,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6752,7 +6896,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SRE",
       "sector": "US Utilities Stocks",
-      "price": 73.9136,
+      "price": 74.096,
       "var_1d": -2.88,
       "direction": "up",
       "confidence": 0.7319,
@@ -6760,7 +6904,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.17,
-      "dividend_rate": 2.3431,
+      "dividend_rate": 2.3488,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6768,7 +6912,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SRPT",
       "sector": "US Biotech Stocks",
-      "price": 16.9315,
+      "price": 16.9733,
       "var_1d": 2.43,
       "direction": "down",
       "confidence": 0.6713,
@@ -6784,7 +6928,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SRVR",
       "sector": "Real Estate ETFs",
-      "price": 25.6068,
+      "price": 25.6699,
       "var_1d": 2.43,
       "direction": "down",
       "confidence": 0.53,
@@ -6792,7 +6936,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.82,
-      "dividend_rate": 0.7221,
+      "dividend_rate": 0.7239,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6800,7 +6944,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "STNE",
       "sector": "Fintech Stocks",
-      "price": 6.8564,
+      "price": 6.8733,
       "var_1d": 4.06,
       "direction": "up",
       "confidence": 0.6883,
@@ -6816,7 +6960,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SUB",
       "sector": "Bonds: Credit",
-      "price": 94.4829,
+      "price": 94.716,
       "var_1d": 0.0,
       "direction": "up",
       "confidence": 0.6308,
@@ -6824,7 +6968,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.55,
-      "dividend_rate": 2.4093,
+      "dividend_rate": 2.4153,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -6832,7 +6976,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SVXY",
       "sector": "Alternative & Multi-Asset ETFs",
-      "price": 57.0981,
+      "price": 57.239,
       "var_1d": 4.76,
       "direction": "down",
       "confidence": 0.6609,
@@ -6848,7 +6992,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "SYK",
       "sector": "US Healthcare Stocks",
-      "price": 302.8319,
+      "price": 303.5792,
       "var_1d": 9.37,
       "direction": "down",
       "confidence": 0.6479,
@@ -6856,7 +7000,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.07,
-      "dividend_rate": 3.2403,
+      "dividend_rate": 3.2483,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6864,7 +7008,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "T",
       "sector": "US Telecom & Media Stocks",
-      "price": 19.4636,
+      "price": 19.5117,
       "var_1d": 2.06,
       "direction": "up",
       "confidence": 0.6278,
@@ -6872,7 +7016,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.39,
-      "dividend_rate": 0.8545,
+      "dividend_rate": 0.8566,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6880,7 +7024,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TAIL",
       "sector": "Alternative & Multi-Asset ETFs",
-      "price": 8.9338,
+      "price": 8.9559,
       "var_1d": -0.79,
       "direction": "up",
       "confidence": 0.617,
@@ -6888,7 +7032,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.99,
-      "dividend_rate": 0.2671,
+      "dividend_rate": 0.2678,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6896,7 +7040,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TAN",
       "sector": "Clean Energy & EV ETFs",
-      "price": 40.8264,
+      "price": 40.9271,
       "var_1d": 5.65,
       "direction": "up",
       "confidence": 0.6817,
@@ -6912,7 +7056,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TCEHY",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 48.4674,
+      "price": 48.587,
       "var_1d": 3.82,
       "direction": "up",
       "confidence": 0.6498,
@@ -6920,7 +7064,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.16,
-      "dividend_rate": 0.5622,
+      "dividend_rate": 0.5636,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -6928,7 +7072,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TD",
       "sector": "International ADRs",
-      "price": 114.3031,
+      "price": 114.5852,
       "var_1d": 2.77,
       "direction": "up",
       "confidence": 0.8149,
@@ -6936,7 +7080,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.73,
-      "dividend_rate": 3.1205,
+      "dividend_rate": 3.1282,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -6944,7 +7088,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TECL",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 145.946,
+      "price": 146.3061,
       "var_1d": -0.16,
       "direction": "up",
       "confidence": 0.7497,
@@ -6952,7 +7096,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.17,
-      "dividend_rate": 0.2481,
+      "dividend_rate": 0.2487,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -6960,7 +7104,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TGT",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 145.42,
+      "price": 145.7788,
       "var_1d": 5.63,
       "direction": "down",
       "confidence": 0.6441,
@@ -6968,7 +7112,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.8,
-      "dividend_rate": 4.0718,
+      "dividend_rate": 4.0818,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -6976,7 +7120,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "THD",
       "sector": "Emerging Markets ETFs",
-      "price": 61.1103,
+      "price": 61.2611,
       "var_1d": 1.48,
       "direction": "down",
       "confidence": 0.6437,
@@ -6984,7 +7128,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.49,
-      "dividend_rate": 2.1327,
+      "dividend_rate": 2.138,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -6992,7 +7136,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "THNQ",
       "sector": "AI & Robotics ETFs",
-      "price": 74.4263,
+      "price": 74.61,
       "var_1d": -1.07,
       "direction": "up",
       "confidence": 0.755,
@@ -7000,7 +7144,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.15,
-      "dividend_rate": 0.1116,
+      "dividend_rate": 0.1119,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -7008,7 +7152,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TIP",
       "sector": "Bonds & Fixed Income",
-      "price": 94.5988,
+      "price": 94.8322,
       "var_1d": 0.0,
       "direction": "down",
       "confidence": 0.6029,
@@ -7016,7 +7160,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.47,
-      "dividend_rate": 4.2286,
+      "dividend_rate": 4.239,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7024,7 +7168,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TIPX",
       "sector": "Bonds: Inflation",
-      "price": 16.4144,
+      "price": 16.4549,
       "var_1d": -0.05,
       "direction": "up",
       "confidence": 0.8475,
@@ -7032,7 +7176,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.17,
-      "dividend_rate": 0.8486,
+      "dividend_rate": 0.8507,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7040,7 +7184,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TJX",
       "sector": "US Consumer Discretionary Stocks",
-      "price": 129.068,
+      "price": 129.3865,
       "var_1d": 5.18,
       "direction": "up",
       "confidence": 0.6737,
@@ -7048,7 +7192,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.37,
-      "dividend_rate": 1.7682,
+      "dividend_rate": 1.7726,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7056,7 +7200,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TLT",
       "sector": "Bonds & Fixed Income",
-      "price": 72.8972,
+      "price": 73.0771,
       "var_1d": 0.8,
       "direction": "up",
       "confidence": 0.5999,
@@ -7064,7 +7208,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.75,
-      "dividend_rate": 3.4626,
+      "dividend_rate": 3.4712,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7072,7 +7216,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TM",
       "sector": "Auto & Mobility Stocks",
-      "price": 177.8385,
+      "price": 178.2773,
       "var_1d": 3.35,
       "direction": "down",
       "confidence": 0.6711,
@@ -7080,7 +7224,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.18,
-      "dividend_rate": 5.6553,
+      "dividend_rate": 5.6692,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": null
@@ -7088,7 +7232,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TNA",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 53.9596,
+      "price": 54.0928,
       "var_1d": 4.4,
       "direction": "down",
       "confidence": 0.6433,
@@ -7096,7 +7240,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.3,
-      "dividend_rate": 0.1619,
+      "dividend_rate": 0.1623,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7104,7 +7248,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TQQQ",
       "sector": "Leveraged ETFs (signals only)",
-      "price": 55.4932,
+      "price": 55.6301,
       "var_1d": 2.79,
       "direction": "up",
       "confidence": 0.7161,
@@ -7112,7 +7256,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.58,
-      "dividend_rate": 0.3219,
+      "dividend_rate": 0.3227,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7120,7 +7264,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TSLA",
       "sector": "Big Tech",
-      "price": 343.4354,
+      "price": 344.2828,
       "var_1d": -3.34,
       "direction": "up",
       "confidence": 0.651,
@@ -7136,7 +7280,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TSM",
       "sector": "Semiconductors",
-      "price": 352.8507,
+      "price": 353.7214,
       "var_1d": -2.24,
       "direction": "up",
       "confidence": 0.8652,
@@ -7144,7 +7288,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.04,
-      "dividend_rate": 3.6696,
+      "dividend_rate": 3.6787,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7152,7 +7296,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TUR",
       "sector": "Emerging Markets ETFs",
-      "price": 28.1032,
+      "price": 28.1726,
       "var_1d": 4.47,
       "direction": "up",
       "confidence": 0.8172,
@@ -7160,7 +7304,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.21,
-      "dividend_rate": 0.6211,
+      "dividend_rate": 0.6226,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -7168,7 +7312,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TWLO",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 190.3566,
+      "price": 190.8263,
       "var_1d": -0.13,
       "direction": "up",
       "confidence": 0.7512,
@@ -7184,7 +7328,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "TXN",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 277.7245,
+      "price": 278.4098,
       "var_1d": -0.32,
       "direction": "up",
       "confidence": 0.6421,
@@ -7192,7 +7336,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.15,
-      "dividend_rate": 5.9711,
+      "dividend_rate": 5.9858,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7200,7 +7344,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UAL",
       "sector": "Airlines",
-      "price": 103.2116,
+      "price": 103.4663,
       "var_1d": 7.98,
       "direction": "down",
       "confidence": 0.6918,
@@ -7216,7 +7360,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UFO",
       "sector": "Space ETFs",
-      "price": 35.138,
+      "price": 35.2247,
       "var_1d": -2.86,
       "direction": "up",
       "confidence": 0.7143,
@@ -7224,7 +7368,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.34,
-      "dividend_rate": 0.1195,
+      "dividend_rate": 0.1198,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -7232,7 +7376,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UNG",
       "sector": "Commodities ETFs",
-      "price": 8.2651,
+      "price": 8.2855,
       "var_1d": 1.53,
       "direction": "up",
       "confidence": 0.7024,
@@ -7248,7 +7392,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UNH",
       "sector": "Healthcare & Pharma",
-      "price": 365.0032,
+      "price": 365.9038,
       "var_1d": 1.22,
       "direction": "up",
       "confidence": 0.6617,
@@ -7256,7 +7400,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.38,
-      "dividend_rate": 8.6871,
+      "dividend_rate": 8.7085,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7264,7 +7408,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UNP",
       "sector": "US Industrials & Defense Stocks",
-      "price": 275.0854,
+      "price": 275.7641,
       "var_1d": 1.68,
       "direction": "up",
       "confidence": 0.6132,
@@ -7272,7 +7416,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.84,
-      "dividend_rate": 5.0616,
+      "dividend_rate": 5.0741,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7280,7 +7424,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UPS",
       "sector": "US Industrials & Defense Stocks",
-      "price": 101.9188,
+      "price": 102.1703,
       "var_1d": 4.71,
       "direction": "up",
       "confidence": 0.5627,
@@ -7288,7 +7432,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 6.43,
-      "dividend_rate": 6.5534,
+      "dividend_rate": 6.5695,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7296,7 +7440,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UPST",
       "sector": "Fintech Stocks",
-      "price": 20.8456,
+      "price": 20.897,
       "var_1d": 9.41,
       "direction": "up",
       "confidence": 0.6396,
@@ -7312,7 +7456,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "URA",
       "sector": "Energy & Commodities",
-      "price": 29.1553,
+      "price": 29.2273,
       "var_1d": -1.06,
       "direction": "up",
       "confidence": 0.6771,
@@ -7320,7 +7464,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.3,
-      "dividend_rate": 1.5452,
+      "dividend_rate": 1.549,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -7328,7 +7472,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "USMV",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 93.1722,
+      "price": 93.4021,
       "var_1d": 1.73,
       "direction": "down",
       "confidence": 0.8028,
@@ -7336,7 +7480,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.48,
-      "dividend_rate": 1.3789,
+      "dividend_rate": 1.3824,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7344,7 +7488,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "USO",
       "sector": "Commodities ETFs",
-      "price": 129.6476,
+      "price": 129.9675,
       "var_1d": -8.07,
       "direction": "up",
       "confidence": 0.717,
@@ -7360,7 +7504,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "UVXY",
       "sector": "Volatility",
-      "price": 14.4796,
+      "price": 14.5153,
       "var_1d": -14.12,
       "direction": "down",
       "confidence": 0.7278,
@@ -7376,7 +7520,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "V",
       "sector": "US Financials Stocks",
-      "price": 389.2458,
+      "price": 390.2063,
       "var_1d": 3.84,
       "direction": "down",
       "confidence": 0.5559,
@@ -7384,7 +7528,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.72,
-      "dividend_rate": 2.8026,
+      "dividend_rate": 2.8095,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7392,7 +7536,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VALE",
       "sector": "Mining & Resources",
-      "price": 10.191,
+      "price": 10.2161,
       "var_1d": 4.1,
       "direction": "up",
       "confidence": 0.7353,
@@ -7400,7 +7544,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 8.19,
-      "dividend_rate": 0.8346,
+      "dividend_rate": 0.8367,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -7408,7 +7552,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VAW",
       "sector": "Materials ETFs",
-      "price": 209.8916,
+      "price": 210.4095,
       "var_1d": 2.86,
       "direction": "down",
       "confidence": 0.6926,
@@ -7416,7 +7560,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.42,
-      "dividend_rate": 2.9805,
+      "dividend_rate": 2.9878,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7424,7 +7568,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VB",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 263.8244,
+      "price": 264.4754,
       "var_1d": 1.22,
       "direction": "down",
       "confidence": 0.6899,
@@ -7432,7 +7576,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.22,
-      "dividend_rate": 3.2187,
+      "dividend_rate": 3.2266,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7440,7 +7584,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VBK",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 297.9103,
+      "price": 298.6454,
       "var_1d": 0.45,
       "direction": "up",
       "confidence": 0.7486,
@@ -7448,7 +7592,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.45,
-      "dividend_rate": 1.3406,
+      "dividend_rate": 1.3439,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7456,7 +7600,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VBR",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 222.2402,
+      "price": 222.7886,
       "var_1d": 1.74,
       "direction": "down",
       "confidence": 0.6675,
@@ -7464,7 +7608,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.77,
-      "dividend_rate": 3.9337,
+      "dividend_rate": 3.9434,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7472,7 +7616,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VCIT",
       "sector": "Bonds: Credit",
-      "price": 71.0516,
+      "price": 71.2269,
       "var_1d": 0.61,
       "direction": "down",
       "confidence": 0.7238,
@@ -7480,7 +7624,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.88,
-      "dividend_rate": 3.4673,
+      "dividend_rate": 3.4759,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7488,7 +7632,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VCLT",
       "sector": "Bonds: Credit",
-      "price": 63.1431,
+      "price": 63.2989,
       "var_1d": 1.03,
       "direction": "up",
       "confidence": 0.7545,
@@ -7496,7 +7640,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.78,
-      "dividend_rate": 3.6497,
+      "dividend_rate": 3.6587,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7504,7 +7648,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VCR",
       "sector": "Consumer ETFs",
-      "price": 363.9779,
+      "price": 364.876,
       "var_1d": 4.24,
       "direction": "down",
       "confidence": 0.6948,
@@ -7512,7 +7656,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.73,
-      "dividend_rate": 2.657,
+      "dividend_rate": 2.6636,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7520,7 +7664,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VDC",
       "sector": "Consumer ETFs",
-      "price": 222.8465,
+      "price": 223.3964,
       "var_1d": 3.26,
       "direction": "down",
       "confidence": 0.7496,
@@ -7528,7 +7672,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.08,
-      "dividend_rate": 4.6352,
+      "dividend_rate": 4.6466,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7536,7 +7680,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VEA",
       "sector": "International Developed: Regional",
-      "price": 63.1431,
+      "price": 63.2989,
       "var_1d": 2.09,
       "direction": "up",
       "confidence": 0.7293,
@@ -7544,7 +7688,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.56,
-      "dividend_rate": 1.6165,
+      "dividend_rate": 1.6205,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7552,7 +7696,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VEEV",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 276.9577,
+      "price": 277.6411,
       "var_1d": 2.45,
       "direction": "up",
       "confidence": 0.6556,
@@ -7568,7 +7712,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VFH",
       "sector": "Financials ETFs",
-      "price": 127.8911,
+      "price": 128.2067,
       "var_1d": 3.28,
       "direction": "up",
       "confidence": 0.5677,
@@ -7576,7 +7720,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.67,
-      "dividend_rate": 2.1358,
+      "dividend_rate": 2.1411,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7584,7 +7728,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VGIT",
       "sector": "Bonds: Government",
-      "price": 51.374,
+      "price": 51.5008,
       "var_1d": 0.33,
       "direction": "down",
       "confidence": 0.6774,
@@ -7592,7 +7736,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.89,
-      "dividend_rate": 1.9984,
+      "dividend_rate": 2.0034,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7600,7 +7744,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VGK",
       "sector": "Europe Broad",
-      "price": 80.458,
+      "price": 80.6565,
       "var_1d": 3.08,
       "direction": "down",
       "confidence": 0.6215,
@@ -7608,7 +7752,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.84,
-      "dividend_rate": 2.285,
+      "dividend_rate": 2.2906,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7616,7 +7760,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VGLT",
       "sector": "Bonds: Government",
-      "price": 46.7912,
+      "price": 46.9066,
       "var_1d": 0.81,
       "direction": "down",
       "confidence": 0.7129,
@@ -7624,7 +7768,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.77,
-      "dividend_rate": 2.2319,
+      "dividend_rate": 2.2374,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7632,7 +7776,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VGSH",
       "sector": "Bonds: Government",
-      "price": 51.4988,
+      "price": 51.6259,
       "var_1d": 0.07,
       "direction": "up",
       "confidence": 0.759,
@@ -7640,7 +7784,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.85,
-      "dividend_rate": 1.9827,
+      "dividend_rate": 1.9876,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Monthly"
@@ -7648,7 +7792,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VGT",
       "sector": "Technology ETFs",
-      "price": 103.0244,
+      "price": 103.2786,
       "var_1d": 0.23,
       "direction": "up",
       "confidence": 0.7171,
@@ -7656,7 +7800,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.38,
-      "dividend_rate": 0.3915,
+      "dividend_rate": 0.3925,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7664,7 +7808,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VIXY",
       "sector": "Alternative & Multi-Asset ETFs",
-      "price": 14.5866,
+      "price": 14.6226,
       "var_1d": -9.71,
       "direction": "down",
       "confidence": 0.6883,
@@ -7680,7 +7824,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VLO",
       "sector": "US Energy Stocks",
-      "price": 325.7371,
+      "price": 326.5409,
       "var_1d": -5.76,
       "direction": "up",
       "confidence": 0.8015,
@@ -7688,7 +7832,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.38,
-      "dividend_rate": 4.4952,
+      "dividend_rate": 4.5063,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -7696,7 +7840,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VLUE",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 172.0966,
+      "price": 172.5213,
       "var_1d": 0.18,
       "direction": "down",
       "confidence": 0.5713,
@@ -7704,7 +7848,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.47,
-      "dividend_rate": 2.5298,
+      "dividend_rate": 2.5361,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7712,7 +7856,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VNET",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 3.1384,
+      "price": 3.1462,
       "var_1d": 18.12,
       "direction": "down",
       "confidence": 0.5408,
@@ -7728,7 +7872,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VNQ",
       "sector": "Real Estate (REITs)",
-      "price": 87.4035,
+      "price": 87.6192,
       "var_1d": 3.18,
       "direction": "down",
       "confidence": 0.8156,
@@ -7736,7 +7880,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.51,
-      "dividend_rate": 3.0679,
+      "dividend_rate": 3.0754,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7744,7 +7888,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VNQI",
       "sector": "Real Estate (REITs)",
-      "price": 39.3641,
+      "price": 39.4613,
       "var_1d": 2.82,
       "direction": "up",
       "confidence": 0.5816,
@@ -7752,7 +7896,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.68,
-      "dividend_rate": 1.8422,
+      "dividend_rate": 1.8468,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Annual"
@@ -7760,7 +7904,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VO",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 73.4411,
+      "price": 73.6223,
       "var_1d": 0.86,
       "direction": "down",
       "confidence": 0.6463,
@@ -7768,7 +7912,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.32,
-      "dividend_rate": 0.9694,
+      "dividend_rate": 0.9718,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7776,7 +7920,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VOD",
       "sector": "International ADRs",
-      "price": 14.5152,
+      "price": 14.5511,
       "var_1d": 4.23,
       "direction": "down",
       "confidence": 0.633,
@@ -7784,7 +7928,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.37,
-      "dividend_rate": 0.4892,
+      "dividend_rate": 0.4904,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Semi-annual"
@@ -7792,7 +7936,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VOO",
       "sector": "US Core Market ETFs",
-      "price": 628.3819,
+      "price": 629.9324,
       "var_1d": 1.62,
       "direction": "up",
       "confidence": 0.7272,
@@ -7800,7 +7944,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.07,
-      "dividend_rate": 6.7237,
+      "dividend_rate": 6.7403,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7808,7 +7952,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VPU",
       "sector": "Utilities ETFs",
-      "price": 167.9596,
+      "price": 168.374,
       "var_1d": 0.4,
       "direction": "up",
       "confidence": 0.5641,
@@ -7816,7 +7960,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.7,
-      "dividend_rate": 4.5349,
+      "dividend_rate": 4.5461,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7824,7 +7968,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VRTX",
       "sector": "US Healthcare Stocks",
-      "price": 489.5241,
+      "price": 490.732,
       "var_1d": 3.44,
       "direction": "down",
       "confidence": 0.5068,
@@ -7840,7 +7984,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VTEX",
       "sector": "Fintech Stocks",
-      "price": 3.7358,
+      "price": 3.745,
       "var_1d": 5.54,
       "direction": "up",
       "confidence": 0.6429,
@@ -7856,7 +8000,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VTI",
       "sector": "US Core Market ETFs",
-      "price": 336.0619,
+      "price": 336.8911,
       "var_1d": 1.54,
       "direction": "down",
       "confidence": 0.5417,
@@ -7864,7 +8008,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.06,
-      "dividend_rate": 3.5623,
+      "dividend_rate": 3.571,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7872,7 +8016,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VTV",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 205.9418,
+      "price": 206.4499,
       "var_1d": 1.5,
       "direction": "up",
       "confidence": 0.5979,
@@ -7880,7 +8024,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.86,
-      "dividend_rate": 3.8305,
+      "dividend_rate": 3.84,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7888,7 +8032,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VUG",
       "sector": "Factor & Smart Beta ETFs",
-      "price": 76.8024,
+      "price": 76.9919,
       "var_1d": 1.54,
       "direction": "up",
       "confidence": 0.7533,
@@ -7896,7 +8040,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.4,
-      "dividend_rate": 0.3072,
+      "dividend_rate": 0.308,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7920,7 +8064,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VWO",
       "sector": "Emerging Markets ETFs",
-      "price": 50.1792,
+      "price": 50.3031,
       "var_1d": 1.7,
       "direction": "up",
       "confidence": 0.7201,
@@ -7928,7 +8072,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.36,
-      "dividend_rate": 1.1842,
+      "dividend_rate": 1.1872,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7936,7 +8080,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VXF",
       "sector": "US Core Market ETFs",
-      "price": 208.1351,
+      "price": 208.6487,
       "var_1d": 0.77,
       "direction": "up",
       "confidence": 0.6889,
@@ -7944,7 +8088,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.04,
-      "dividend_rate": 2.1646,
+      "dividend_rate": 2.1699,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7952,7 +8096,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VXX",
       "sector": "Volatility",
-      "price": 15.2107,
+      "price": 15.2482,
       "var_1d": -9.64,
       "direction": "down",
       "confidence": 0.6838,
@@ -7968,7 +8112,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VYM",
       "sector": "Dividend & Quality",
-      "price": 147.3369,
+      "price": 147.7005,
       "var_1d": 1.21,
       "direction": "up",
       "confidence": 0.6942,
@@ -7976,7 +8120,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.24,
-      "dividend_rate": 3.3003,
+      "dividend_rate": 3.3085,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -7984,7 +8128,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "VZ",
       "sector": "US Telecom & Media Stocks",
-      "price": 41.1652,
+      "price": 41.2667,
       "var_1d": 2.06,
       "direction": "down",
       "confidence": 0.6561,
@@ -7992,15 +8136,31 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 5.72,
-      "dividend_rate": 2.3546,
+      "dividend_rate": 2.3605,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
     },
     {
+      "ticker": "WBD",
+      "sector": "US Telecom & Media Stocks",
+      "price": 27.6631,
+      "var_1d": 0.03,
+      "direction": "down",
+      "confidence": 0.6046,
+      "acc_recent": 33.3,
+      "n_recent": 15,
+      "pays_dividends": false,
+      "dividend_yield_pct": 0.0,
+      "dividend_rate": null,
+      "asset_type": "Stock",
+      "distribution": null,
+      "dividend_frequency": null
+    },
+    {
       "ticker": "WCBR",
       "sector": "Cybersecurity ETFs",
-      "price": 40.2201,
+      "price": 40.3193,
       "var_1d": -0.4,
       "direction": "down",
       "confidence": 0.6245,
@@ -8016,7 +8176,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WCLD",
       "sector": "Technology ETFs",
-      "price": 38.7222,
+      "price": 38.8177,
       "var_1d": 1.38,
       "direction": "up",
       "confidence": 0.5246,
@@ -8032,7 +8192,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WDAY",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 179.9605,
+      "price": 180.4046,
       "var_1d": 1.97,
       "direction": "down",
       "confidence": 0.6,
@@ -8048,7 +8208,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WEAT",
       "sector": "Commodities ETFs",
-      "price": 19.6063,
+      "price": 19.6547,
       "var_1d": 0.27,
       "direction": "down",
       "confidence": 0.687,
@@ -8064,7 +8224,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WFC",
       "sector": "US Financials Stocks",
-      "price": 77.9526,
+      "price": 78.1449,
       "var_1d": 2.22,
       "direction": "up",
       "confidence": 0.6031,
@@ -8072,7 +8232,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.39,
-      "dividend_rate": 1.8631,
+      "dividend_rate": 1.8677,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8080,7 +8240,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WIT",
       "sector": "China & Emerging Asia",
-      "price": 1.9259,
+      "price": 1.9306,
       "var_1d": 0.47,
       "direction": "down",
       "confidence": 0.7597,
@@ -8088,7 +8248,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 4.59,
-      "dividend_rate": 0.0884,
+      "dividend_rate": 0.0886,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Annual"
@@ -8096,7 +8256,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WMT",
       "sector": "US Consumer Staples Stocks",
-      "price": 115.168,
+      "price": 115.4521,
       "var_1d": 3.45,
       "direction": "down",
       "confidence": 0.5236,
@@ -8104,7 +8264,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.95,
-      "dividend_rate": 1.0941,
+      "dividend_rate": 1.0968,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8112,7 +8272,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WPM",
       "sector": "Mining & Precious Metals Stocks",
-      "price": 117.2454,
+      "price": 117.5347,
       "var_1d": 11.99,
       "direction": "down",
       "confidence": 0.6386,
@@ -8120,7 +8280,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.49,
-      "dividend_rate": 0.5745,
+      "dividend_rate": 0.5759,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8128,7 +8288,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WY",
       "sector": "US Real Estate Stocks",
-      "price": 19.3923,
+      "price": 19.4402,
       "var_1d": 5.63,
       "direction": "up",
       "confidence": 0.5899,
@@ -8136,7 +8296,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.44,
-      "dividend_rate": 0.6671,
+      "dividend_rate": 0.6687,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8144,7 +8304,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "WYNN",
       "sector": "US Consumer: Restaurants & Retail",
-      "price": 73.45,
+      "price": 73.6312,
       "var_1d": 6.05,
       "direction": "up",
       "confidence": 0.6645,
@@ -8152,7 +8312,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.0,
-      "dividend_rate": 0.7345,
+      "dividend_rate": 0.7363,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8160,7 +8320,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XAR",
       "sector": "Industrials & Infrastructure ETFs",
-      "price": 201.0826,
+      "price": 201.5787,
       "var_1d": -3.65,
       "direction": "up",
       "confidence": 0.6197,
@@ -8168,7 +8328,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.31,
-      "dividend_rate": 0.6234,
+      "dividend_rate": 0.6249,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8176,7 +8336,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XBI",
       "sector": "Healthcare & Pharma",
-      "price": 141.8536,
+      "price": 142.2036,
       "var_1d": 2.67,
       "direction": "up",
       "confidence": 0.6435,
@@ -8184,7 +8344,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.39,
-      "dividend_rate": 0.5532,
+      "dividend_rate": 0.5546,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8192,7 +8352,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XEL",
       "sector": "US Utilities Stocks",
-      "price": 71.7738,
+      "price": 71.9509,
       "var_1d": 2.21,
       "direction": "up",
       "confidence": 0.6489,
@@ -8200,7 +8360,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 3.11,
-      "dividend_rate": 2.2322,
+      "dividend_rate": 2.2377,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8208,7 +8368,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XES",
       "sector": "Energy Sector ETFs",
-      "price": 88.946,
+      "price": 89.1655,
       "var_1d": -5.82,
       "direction": "up",
       "confidence": 0.718,
@@ -8216,7 +8376,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.17,
-      "dividend_rate": 1.0407,
+      "dividend_rate": 1.0432,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8224,7 +8384,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XHE",
       "sector": "Healthcare ETFs",
-      "price": 88.7231,
+      "price": 88.942,
       "var_1d": 7.58,
       "direction": "up",
       "confidence": 0.6397,
@@ -8232,7 +8392,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.06,
-      "dividend_rate": 0.0532,
+      "dividend_rate": 0.0534,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Semi-annual"
@@ -8240,7 +8400,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLB",
       "sector": "Materials ETFs",
-      "price": 48.0572,
+      "price": 48.1758,
       "var_1d": 2.49,
       "direction": "up",
       "confidence": 0.6613,
@@ -8248,7 +8408,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.68,
-      "dividend_rate": 0.8074,
+      "dividend_rate": 0.8094,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8256,7 +8416,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLE",
       "sector": "US Sector ETFs",
-      "price": 56.6344,
+      "price": 56.7742,
       "var_1d": -4.74,
       "direction": "down",
       "confidence": 0.6374,
@@ -8264,7 +8424,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.55,
-      "dividend_rate": 1.4442,
+      "dividend_rate": 1.4477,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8272,7 +8432,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLF",
       "sector": "US Sector ETFs",
-      "price": 52.7827,
+      "price": 52.913,
       "var_1d": 3.51,
       "direction": "down",
       "confidence": 0.7438,
@@ -8280,7 +8440,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.42,
-      "dividend_rate": 0.7495,
+      "dividend_rate": 0.7514,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8288,7 +8448,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLI",
       "sector": "US Sector ETFs",
-      "price": 151.0905,
+      "price": 151.4633,
       "var_1d": -1.09,
       "direction": "up",
       "confidence": 0.6725,
@@ -8296,7 +8456,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.15,
-      "dividend_rate": 1.7375,
+      "dividend_rate": 1.7418,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8304,7 +8464,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLK",
       "sector": "US Sector ETFs",
-      "price": 157.3674,
+      "price": 157.7557,
       "var_1d": -0.01,
       "direction": "up",
       "confidence": 0.7401,
@@ -8312,7 +8472,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.45,
-      "dividend_rate": 0.7082,
+      "dividend_rate": 0.7099,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8320,7 +8480,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLP",
       "sector": "US Sector ETFs",
-      "price": 81.9737,
+      "price": 82.176,
       "var_1d": 3.36,
       "direction": "up",
       "confidence": 0.6012,
@@ -8328,7 +8488,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.58,
-      "dividend_rate": 2.1149,
+      "dividend_rate": 2.1201,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8336,7 +8496,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLU",
       "sector": "US Sector ETFs",
-      "price": 38.8827,
+      "price": 38.9786,
       "var_1d": 0.44,
       "direction": "down",
       "confidence": 0.6285,
@@ -8344,7 +8504,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.7,
-      "dividend_rate": 1.0498,
+      "dividend_rate": 1.0524,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8352,7 +8512,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLV",
       "sector": "US Sector ETFs",
-      "price": 169.1009,
+      "price": 169.5181,
       "var_1d": 3.06,
       "direction": "up",
       "confidence": 0.5608,
@@ -8360,7 +8520,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.56,
-      "dividend_rate": 2.638,
+      "dividend_rate": 2.6445,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8368,7 +8528,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XLY",
       "sector": "US Sector ETFs",
-      "price": 109.0694,
+      "price": 109.3386,
       "var_1d": 4.26,
       "direction": "down",
       "confidence": 0.6328,
@@ -8376,7 +8536,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.78,
-      "dividend_rate": 0.8507,
+      "dividend_rate": 0.8528,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8384,7 +8544,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XNTK",
       "sector": "Technology ETFs",
-      "price": 291.1966,
+      "price": 291.9151,
       "var_1d": -0.32,
       "direction": "up",
       "confidence": 0.7771,
@@ -8392,7 +8552,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.16,
-      "dividend_rate": 0.4659,
+      "dividend_rate": 0.4671,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8400,7 +8560,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XOM",
       "sector": "Energy & Commodities",
-      "price": 150.9211,
+      "price": 151.2935,
       "var_1d": -4.62,
       "direction": "down",
       "confidence": 0.7787,
@@ -8408,7 +8568,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.5,
-      "dividend_rate": 3.773,
+      "dividend_rate": 3.7823,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"
@@ -8416,7 +8576,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XOP",
       "sector": "Energy Sector ETFs",
-      "price": 159.855,
+      "price": 160.2494,
       "var_1d": -6.39,
       "direction": "down",
       "confidence": 0.5714,
@@ -8424,7 +8584,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 1.83,
-      "dividend_rate": 2.9253,
+      "dividend_rate": 2.9326,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8432,7 +8592,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XPEV",
       "sector": "Chinese Stocks (US-listed)",
-      "price": 8.7823,
+      "price": 8.8039,
       "var_1d": 1.86,
       "direction": "down",
       "confidence": 0.7689,
@@ -8448,7 +8608,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XPH",
       "sector": "Healthcare ETFs",
-      "price": 58.275,
+      "price": 58.4188,
       "var_1d": 1.65,
       "direction": "up",
       "confidence": 0.7072,
@@ -8456,7 +8616,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.49,
-      "dividend_rate": 0.2855,
+      "dividend_rate": 0.2863,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8464,7 +8624,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "XRT",
       "sector": "Consumer ETFs",
-      "price": 83.5608,
+      "price": 83.7669,
       "var_1d": 5.54,
       "direction": "down",
       "confidence": 0.7559,
@@ -8472,7 +8632,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 0.75,
-      "dividend_rate": 0.6267,
+      "dividend_rate": 0.6283,
       "asset_type": "ETF",
       "distribution": "Distributing",
       "dividend_frequency": "Quarterly"
@@ -8480,7 +8640,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ZM",
       "sector": "US Tech: Mid & Growth Stocks",
-      "price": 81.8845,
+      "price": 82.0866,
       "var_1d": 0.0,
       "direction": "up",
       "confidence": 0.6886,
@@ -8496,7 +8656,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ZS",
       "sector": "US Tech: Large Cap Stocks",
-      "price": 200.1107,
+      "price": 200.6045,
       "var_1d": -0.29,
       "direction": "down",
       "confidence": 0.6937,
@@ -8512,7 +8672,7 @@ const WATCHLIST_DATA = {
     {
       "ticker": "ZTS",
       "sector": "US Healthcare Stocks",
-      "price": 79.5307,
+      "price": 79.727,
       "var_1d": 7.48,
       "direction": "down",
       "confidence": 0.8167,
@@ -8520,7 +8680,7 @@ const WATCHLIST_DATA = {
       "n_recent": 15,
       "pays_dividends": true,
       "dividend_yield_pct": 2.73,
-      "dividend_rate": 2.1712,
+      "dividend_rate": 2.1765,
       "asset_type": "Stock",
       "distribution": null,
       "dividend_frequency": "Quarterly"

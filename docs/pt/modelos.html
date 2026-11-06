@@ -158,11 +158,12 @@
         <p style="font-size:12px;color:var(--ink-muted);line-height:1.85;margin:0 0 12px">
           Separado dos três modelos de produção, um framework de pesquisa treina e avalia 38 modelos adicionais
           agrupados em 13 famílias, desde variantes clássicas de boosting até Foundation Models pré-treinados e
-          predição conformal. Nada disto toca diretamente em <code>predictions_log.csv</code> nem nos pesos de
-          produção; o consenso ponderado dele é combinado 50/50 com a previsão de produção só para os ativos que
-          cobre. A questão não é que mais modelos sejam automaticamente melhores: é testar se a forma diferente de
-          cada família olhar para os mesmos dados acrescenta algo que um ensemble simples como o de cima já não
-          captura sozinho.
+          predição conformal. Nada disto toca em <code>predictions_log.csv</code> nem nos pesos de produção: o consenso
+          aparece só como relatório. A questão não é que mais modelos sejam automaticamente melhores: é testar se a
+          forma diferente de cada família olhar para os mesmos dados acrescenta algo que um ensemble simples como o
+          de cima já não captura sozinho. Até novembro de 2026, várias famílias não usavam os dados do dia e a
+          validação por horizonte estava errada, então os resultados anteriores a essa correção não são evidência
+          sobre elas (<a href="https://github.com/srxkatsumi/smart-wallet-ml/blob/main/README_Errors.md" target="_blank" rel="noopener">ERR-014</a>).
         </p>
         <div style="overflow-x:auto">
           <table>
@@ -172,6 +173,91 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="section">
+    <div class="eyebrow" style="margin-left:2px">Além da previsão: dois experimentos complementares</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🐾 MaoMao, o pet financeiro do site</div>
+        <div class="card-subtitle">Rede neural pulsada (LIF), dois cérebros independentes, aprendizado real por recompensa</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0 0 10px">
+          O MaoMao é inspirado na arquitetura do <a href="https://github.com/mille-okws/pestinha" target="_blank" rel="noopener">Pestinha</a>,
+          um pet de desktop com rede neural pulsada de verdade. É uma implementação original, escrita do zero para este projeto,
+          nenhuma linha do código do Pestinha foi copiada, porque o Pestinha é licenciado sob GPL-3.0-or-later e copiar o código
+          arrastaria essa licença para este repositório. O que foi reaproveitado é a arquitetura, adaptada para sinais
+          financeiros em vez de atividade de mouse e teclado.
+        </p>
+        <p style="margin:0 0 10px">
+          Existem dois cérebros completamente independentes, mesma arquitetura, sensores diferentes: um vê só os 7 ETFs da
+          carteira real, o outro vê o watchlist inteiro. Cada um recebe 9 canais sensoriais por dia (retorno, pico de
+          volatilidade, pico do VIX, sequências de alta/baixa, alerta de anomalia, discordância entre modelos, sequência de
+          calma) e os converte num humor através de quatro populações de neurónios LIF (integração e disparo com vazamento):
+        </p>
+        <div style="overflow-x:auto;margin:0 0 10px">
+          <table>
+            <thead><tr><th>Humor</th><th>Reage a</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">Calmo</td><td>Sequência de dias calmos, baixa volatilidade, sem alerta</td></tr>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">Medo</td><td>Pico de volatilidade ou do VIX, sequência de baixas, alerta ativo</td></tr>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">Euforia</td><td>Sequência de altas, baixa volatilidade (complacência)</td></tr>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">Confuso</td><td>Os três modelos do ensemble discordando entre si</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin:0 0 10px">
+          Só as sinapses dos humores Medo e Euforia aprendem, e aprendem de um jeito bem específico: quando um deles dispara
+          forte, essa "aposta" só é julgada 3 dias depois, contra o retorno real que de fato aconteceu, nunca contra a direção
+          prevista pelo ensemble (nas medições atuais esse sinal não mostra informação, e ensinar o pet a confiar nele recriaria o mesmo
+          problema dentro de um sistema mais difícil de auditar). Isso testa clustering de retorno e volatilidade, um fenómeno
+          real e parcialmente documentado em finanças.
+        </p>
+        <p style="margin:0">
+          Para não nascer do zero, o MaoMao foi treinado com um replay histórico real via yfinance antes de entrar no site: até
+          17 anos de histórico para os 7 ETFs da carteira, e os ~6 meses já documentados do watchlist para o humor de mercado.
+          O resultado é modesto. Na carteira, o sinal é misto: o medo ligado a um alerta tendeu a se confirmar, e o medo ligado
+          a uma simples queda de preço tendeu a ser seguido por recuperação. No mercado, quase nada foi aprendido até agora.
+          Nada disto passou pelo portão do Jinshi, então não são padrões comprovados. Por agora o MaoMao vive só no site (os
+          dois humores lado a lado) e só entra nos emails depois de o Jinshi estar pronto.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚖️ Jinshi, o portão de validação</div>
+        <div class="card-subtitle">Não é um 14º modelo de previsão: é o framework que testa se um sinal candidato é real</div>
+      </div>
+      <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
+        <p style="margin:0 0 10px">
+          O Jinshi nasceu com um objetivo diferente do que tem hoje: prever o valor real do preço (não só a direção) treinando com todo o histórico disponível. Foi testado com um backtest causal a 1 dia: um regressor treinado com o histórico completo contra o mesmo regressor treinado só com os últimos 2 anos (o que a produção usa hoje) e contra um baseline ingénuo (prever que o preço de amanhã é igual ao de hoje). Entraram 5 dos 7 ETFs da carteira, com histórico a partir de 2009 a 2021 conforme o ativo, e o Bitcoin desde 2014. Os outros 2 ETFs têm histórico curto demais para este teste.
+        </p>
+        <p style="margin:0 0 10px">
+          Nenhum dos 6 ativos foi aprovado em nenhuma das duas comparações. Contra a janela de 2 anos, o histórico completo errou menos em 4 dos 5 ETFs, mas a diferença não sobreviveu à correção estatística e ficou abaixo do custo de operar em todos. Contra o baseline ingénuo, perdeu em 4 dos 6 ativos, e no Bitcoin o erro médio foi de 3,24% contra 2,59%. Com 26 a 173 previsões por ativo, o teste tem pouca potência: isto não prova que o efeito não existe, só que não foi demonstrado.
+        </p>
+        <p style="margin:0 0 10px">
+          Em vez de lançar um 14º modelo de previsão que não passa neste teste, o Jinshi virou outra coisa: um portão formal de validação que um sinal candidato (preço, volatilidade, o que for) precisa atravessar para ser considerado real. São 4 critérios combinados, nenhum isolado basta:
+        </p>
+        <div style="overflow-x:auto;margin:0 0 10px">
+          <table>
+            <thead><tr><th>Critério</th><th>O que exige</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">1. Significância corrigida</td><td>O candidato é melhor que o baseline, e isso sobrevive à correção de Benjamini-Hochberg para múltiplas comparações</td></tr>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">2. Tamanho de efeito</td><td>A melhora do erro supera o custo de operar (0,15% em spread e taxa). É uma condição mínima, não prova de lucro</td></tr>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">3. Robustez</td><td>O candidato vence nas duas metades cronológicas do período testado, não só num evento isolado</td></tr>
+              <tr><td style="font-weight:600;color:var(--ink-faint);white-space:nowrap">4. Razão económica</td><td>Precisa de uma explicação de por que o efeito deveria existir, não só ter aparecido nos dados</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin:0">
+          O primeiro trabalho real do Jinshi foi reprovar a sua própria ideia original. Por agora é uma ferramenta interna de pesquisa, só backtest, sem previsão pública. Os modelos de produção e o MaoMao ainda não passaram por este portão.
+        </p>
+      </div>
+    </div>
+
   </section>
 
 </main>

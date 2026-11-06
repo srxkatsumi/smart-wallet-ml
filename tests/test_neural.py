@@ -41,7 +41,7 @@ def test_predict_first_positions_use_mean():
     probs = predict(model_dict, X)
     seq_len = neural_mod.SEQ_LEN
     expected_mean = float(y.mean())
-    np.testing.assert_allclose(probs[:seq_len], expected_mean, atol=1e-6)
+    np.testing.assert_allclose(probs[:seq_len - 1], expected_mean, atol=1e-6)
 
 
 def test_small_dataset_does_not_crash():

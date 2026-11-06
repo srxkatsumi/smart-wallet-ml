@@ -6,40 +6,6 @@ import numpy as np
 import pandas as pd
 
 
-def _blend_research(resultados_ml: dict, consensus: list[dict]) -> None:
-    """
-    Blends 13-family research consensus into production ensemble (50/50).
-    Updates resultados_ml in-place for tickers that appear in consensus.
-    Only affects tickers in the research portfolio (etoro_tickers).
-    """
-    if not consensus:
-        return
-    cons_map = {c["ticker"]: c for c in consensus}
-    blended_count = 0
-    for ticker, res in resultados_ml.items():
-        c = cons_map.get(ticker)
-        if c is None:
-            continue
-        for day in [1, 2, 3]:
-            h = res["horizons"].get(day)
-            if h is None:
-                continue
-            research_prob = c.get(f"pct_up_d{day}", c.get("pct_up"))
-            if research_prob is None:
-                continue
-            blended        = 0.5 * h["prob"] + 0.5 * float(research_prob)
-            h["prob"]      = round(blended, 4)
-            h["direction"] = "up" if blended > 0.5 else "down"
-            h["confidence"]= round(max(blended, 1 - blended), 4)
-        h1 = res["horizons"].get(1)
-        if h1:
-            res["direction"]  = h1["direction"]
-            res["confidence"] = h1["confidence"]
-            res["prob"]       = h1["prob"]
-        blended_count += 1
-    if blended_count:
-        logger.info("Blend research→produção: %d tickers actualizados", blended_count)
-
 np.random.seed(42)
 
 logging.basicConfig(
@@ -196,7 +162,7 @@ def main():
     resultados_ml = train_all(training_data, ensemble_weights, MODELS_DIR)
     save_model_metadata(resultados_ml, my_tickers)
 
-    # ── Research pipeline → blend com produção antes de gravar previsões ──
+    # ── Research pipeline: só relatório, não altera as previsões de produção ──
     research_data = None
     try:
         from research.runner import run_research
@@ -204,11 +170,10 @@ def main():
         _rd_prices     = {t: res["close_now"] for t, res in resultados_ml.items()}
         _research_tickers = list(etoro) if etoro else list(etf_acumul)
         research_data  = run_research(_rd_features, _research_tickers, _rd_prices)
-        _blend_research(resultados_ml, (research_data or {}).get("consensus", []))
     except Exception as e:
         logger.warning("Research pipeline falhou (não bloqueia): %s", e)
 
-    # ── Save today's predictions (já com blend research+produção) ────────
+    # ── Save today's predictions ─────────────────────────────────────────
     df_log = save_new_predictions(df_log, resultados_ml, hoje, calib_curves)
     save_public_log(df_log, my_tickers)
 
@@ -301,10 +266,12 @@ def main():
             if not res:
                 continue
             rf_cal = res["horizons"][1].get("rf_model")
+            scaler = res["horizons"][1].get("scaler")
             df_t   = res.get("df")
-            if rf_cal is None or df_t is None:
+            if rf_cal is None or df_t is None or scaler is None:
                 continue
-            X = df_t[FEATURE_COLS].dropna().values
+            # O RF foi treinado em dados escalados: sem isto, os SHAP saem de splits errados.
+            X = scaler.transform(df_t[FEATURE_COLS].dropna().values)
             if len(X) < 10:
                 continue
             try:

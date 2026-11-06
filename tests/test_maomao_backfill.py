@@ -119,6 +119,42 @@ def test_replay_sustained_selloff_produces_learned_fearful_weight():
     assert any(w > 0 for w in learned_fearful.values())
 
 
+def test_market_backfill_rerun_starts_from_scratch(tmp_path, monkeypatch):
+    import config.settings
+    import maomao.backfill as backfill
+    import maomao.state as maomao_state
+
+    dates = pd.date_range("2026-01-01", periods=8, freq="B").strftime("%Y-%m-%d")
+    log_path = tmp_path / "log.csv"
+    pd.DataFrame({
+        "ticker": "AAA", "horizon": 1, "target_date": dates, "ref_price": 100.0, "actual_price": 101.0,
+        "model_rf": "up", "model_gb": "up", "model_sgd": "up",
+    }).to_csv(log_path, index=False)
+    state_path = tmp_path / "market.json"
+
+    monkeypatch.setattr(config.settings, "PRED_LOG", log_path)
+    monkeypatch.setattr(maomao_state, "MARKET_STATE_FILE", state_path)
+    monkeypatch.setattr(backfill, "download_vix_history",
+                        lambda: pd.Series(18.0, index=pd.to_datetime(dates)))
+
+    backfill.run_market_backfill(["AAA"])
+    first = [h["date"] for h in maomao_state.load_state(state_path)["mood_history"]]
+    backfill.run_market_backfill(["AAA"])
+    second = [h["date"] for h in maomao_state.load_state(state_path)["mood_history"]]
+
+    assert first == list(dates)
+    assert second == first
+
+
+def test_workflow_persists_state_between_runs():
+    from pathlib import Path
+
+    workflow = (Path(__file__).parent.parent / ".github/workflows/executar_diario.yml").read_text(encoding="utf-8")
+    for state_file in ("output/maomao_state.json", "output/maomao_market_state.json",
+                       "output/confidence_calibration.json"):
+        assert state_file in workflow
+
+
 def test_replay_disagreement_channel_is_always_zero():
     """DISAGREEMENT nunca pode vir de outro lugar que não o ensemble real —
     no replay histórico isso significa ficar sempre 0.0 (ver docstring do

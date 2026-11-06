@@ -47,7 +47,20 @@ def real_returns_by_day(df_log: pd.DataFrame, tickers: list[str]) -> pd.Series:
     if sub.empty:
         return pd.Series(dtype=float)
     sub["real_ret"] = (sub["actual_price"] / sub["ref_price"] - 1) * 100
-    return sub.groupby("target_date")["real_ret"].mean().sort_index()
+    # Mediana: splits e dados ruins chegam a +2114% e um só distorceria a média.
+    grouped = sub.groupby("target_date")["real_ret"]
+    # Antes do fecho das bolsas, um dia pode ter só cripto validado (2 de ~530 tickers).
+    counts = grouped.size()
+    return grouped.median()[counts >= counts.median() / 2].sort_index()
+
+
+def _alert_is_only_vix_falling(anomaly: dict) -> bool:
+    market = anomaly.get("market", {})
+    return (
+        float(market.get("variacao_1d", 0.0)) < 0
+        and not market.get("transicao", False)
+        and not any(t.get("alerta", False) for t in anomaly.get("tickers", {}).values())
+    )
 
 
 def compute_sensors_core(by_day: pd.Series, anomaly: dict,
@@ -73,9 +86,10 @@ def compute_sensors_core(by_day: pd.Series, anomaly: dict,
     streak_up   = min(1.0, _streak(up_days) / 5.0)       # 5 dias seguidos já satura
     streak_down = min(1.0, _streak(down_days) / 5.0)
 
-    alerta  = bool(anomaly.get("alerta", False))
+    # VIX caindo é medo recuando: não pode alimentar FEARFUL pelos canais de stress.
+    alerta  = bool(anomaly.get("alerta", False)) and not _alert_is_only_vix_falling(anomaly)
     market  = anomaly.get("market", {})
-    vix_var = abs(float(market.get("variacao_1d", 0.0)))
+    vix_var = max(0.0, float(market.get("variacao_1d", 0.0)))
     vol_spike = max(
         (float(t.get("multiplo_atr", 0.0)) for t in anomaly.get("tickers", {}).values()),
         default=0.0,
@@ -143,9 +157,10 @@ def compute_market_sensors(df_log: pd.DataFrame, anomaly: dict, watchlist: list[
     if by_day.empty:
         return {c: 0.0 for c in CHANNELS} | {"date": None}
     market = anomaly.get("market", {})
+    vix_subiu_forte = market.get("spike", False) and float(market.get("variacao_1d", 0.0)) > 0
     market_anomaly = {
         **anomaly,
-        "alerta": bool(market.get("spike", False) or market.get("transicao", False)),
+        "alerta": bool(vix_subiu_forte or market.get("transicao", False)),
     }
     disagreement = _disagreement_from_log(df_log, watchlist, by_day.index[-1])
     return compute_sensors_core(by_day, market_anomaly, recent_alertas, disagreement)

@@ -1062,7 +1062,7 @@ Durante várias semanas, este projeto teve os 21 arquivos de teste no repositór
 A correção não foi só "ligar os testes". Foi também aceitar que, um dia, algum arquivo de teste vai voltar a quebrar (por um refactor, uma renomeação, um import esquecido) — e a suite não pode morrer inteira por causa de um arquivo. Por isso o projeto usa `--continue-on-collection-errors`: mesmo que um arquivo não consiga nem ser carregado, os outros 20 continuam a correr e a reportar os seus resultados normalmente.
 
 ```
-pytest tests/ --ignore=tests/test_classical.py --ignore=tests/test_meta_learning.py
+pytest tests/ --ignore=tests/test_classical.py
 ```
 
 Esses dois últimos ficam de fora por agora — na máquina de desenvolvimento (Mac com chip Apple Silicon) eles derrubam o próprio interpretador Python por causa de uma incompatibilidade de biblioteca (`xgboost`/`libomp`), não por um erro no código do projeto. Ainda não confirmámos se isso também acontece no servidor Linux onde o GitHub Actions corre — por precaução, ficam de fora até essa confirmação.

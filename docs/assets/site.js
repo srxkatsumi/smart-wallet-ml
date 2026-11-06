@@ -12,6 +12,7 @@ function fmtPrice(v) {
 }
 
 function fmtPct(v, digits = 1) {
+  if (v === null || v === undefined) return '-';
   return (v * 100).toFixed(digits) + '%';
 }
 

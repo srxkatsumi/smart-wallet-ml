@@ -7,7 +7,9 @@ import logging
 import numpy as np
 import pandas as pd
 
-from config.settings import EXPERIMENTO_PRED_LOG, EXPERIMENTO_PRED_COLS
+from config.settings import (
+    EXPERIMENTO_PRED_LOG, EXPERIMENTO_PRED_COLS, MAX_BAR_AGE_DAYS, SPLIT_DETECTION_THRESHOLD,
+)
 from data.calendars import target_dates
 
 logger = logging.getLogger(__name__)
@@ -20,6 +22,8 @@ def load_experimento_log() -> pd.DataFrame:
         logger.info("[Experimento] predictions_experimentos_log.csv criado em %s", EXPERIMENTO_PRED_LOG)
         return df
     df = pd.read_csv(EXPERIMENTO_PRED_LOG)
+    if "ref_date" not in df.columns:
+        df["ref_date"] = pd.Series(dtype="object")
     logger.info("[Experimento] log carregado: %d registos", len(df))
     return df
 
@@ -55,6 +59,15 @@ def validate_experimento_predictions(df_log: pd.DataFrame, training_data: dict) 
         ref      = float(row["ref_price"])
         actual_ret = (actual / ref) - 1
 
+        if abs(actual_ret) > SPLIT_DETECTION_THRESHOLD:
+            logger.warning("[Experimento] %s: variação de %.1f%%, provável split, sem erro calculado",
+                           ticker, actual_ret * 100)
+            df_log.at[idx, "actual_price"] = actual
+            df_log.at[idx, "actual_ret"]   = actual_ret
+            df_log.at[idx, "validated"]    = True
+            updated += 1
+            continue
+
         champion_ret   = float(row["champion_pred_ret"])
         challenger_ret = float(row["challenger_pred_ret"])
 
@@ -84,7 +97,11 @@ def save_new_experimento_predictions(df_log: pd.DataFrame, resultados_ml: dict,
         if ml_res is None:
             continue
 
-        tdates    = target_dates(today, ticker)
+        ref_date = pd.Timestamp(ml_res.get("last_date", today)).normalize()
+        if (today - ref_date).days > MAX_BAR_AGE_DAYS:
+            continue
+        ref_date_str = ref_date.strftime("%Y-%m-%d")
+        tdates    = target_dates(ref_date, ticker)
         close_now = exp_res["close_now"]
 
         for day, h_exp in exp_res["horizons"].items():
@@ -93,11 +110,13 @@ def save_new_experimento_predictions(df_log: pd.DataFrame, resultados_ml: dict,
             target_date_str = tdates[day].strftime("%Y-%m-%d")
 
             ja_existe = (
-                (df_log["ticker"]      == ticker) &
-                (df_log["pred_date"]   == hoje_str) &
-                (df_log["target_date"] == target_date_str)
+                not df_log.empty and (
+                    (df_log["ticker"]   == ticker) &
+                    (df_log["ref_date"] == ref_date_str) &
+                    (df_log["horizon"]  == day)
+                ).any()
             )
-            if not df_log.empty and ja_existe.any():
+            if ja_existe:
                 continue
 
             _, champion_price, _ = ml_res["preds_dict"][day]
@@ -120,6 +139,7 @@ def save_new_experimento_predictions(df_log: pd.DataFrame, resultados_ml: dict,
                 "champion_sq_err":        np.nan,
                 "challenger_sq_err":      np.nan,
                 "validated":              False,
+                "ref_date":               ref_date_str,
             })
 
     if novas:

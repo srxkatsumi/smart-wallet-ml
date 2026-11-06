@@ -1,31 +1,25 @@
 """
 Statistical significance of directional forecast accuracy.
 
-One-sided binomial test: H0 = accuracy ≤ 0.50 (no better than random).
-Wilson score 95 % confidence interval for the accuracy proportion.
+One-sided t-test on daily accuracy: H0 = accuracy ≤ 0.50 (no better than random).
 
-Stays silent (returns empty dict) until MIN_N validated predictions exist
-per horizon — below that threshold any accuracy figure is meaningless.
+Stays silent until MIN_N validated predictions over MIN_DIAS days exist per
+horizon — below that threshold any accuracy figure is meaningless.
 """
 import json
 import logging
 import math
-import numpy as np
 import pandas as pd
 from pathlib import Path
-from scipy.stats import binomtest
+from scipy.stats import t as student_t
+
+from data.storage import aligned_rows
 
 logger = logging.getLogger(__name__)
 
 SIGNIFICANCE_FILE = Path("output/significance.json")
-MIN_N = 100   # minimum validated predictions per horizon before reporting
-
-
-def _wilson_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
-    """Wilson score 95 % CI for a proportion."""
-    centre = (k + z ** 2 / 2) / (n + z ** 2)
-    margin = z * math.sqrt(k * (n - k) / n + z ** 2 / 4) / (n + z ** 2)
-    return round(centre - margin, 4), round(centre + margin, 4)
+MIN_N    = 100   # minimum validated predictions per horizon before reporting
+MIN_DIAS = 20    # minimum distinct target dates: below this the daily t-test is unstable
 
 
 def apply_bh_correction(results: list[dict], alpha: float = 0.05, p_key: str = "p") -> None:
@@ -55,51 +49,85 @@ def apply_bh_correction(results: list[dict], alpha: float = 0.05, p_key: str = "
         r["sig"]   = bool(adj < alpha)
 
 
+def daily_cluster_stats(correct: pd.Series, dates: pd.Series) -> dict:
+    """
+    Teste unilateral (H1: acurácia > 50%) com o DIA como unidade. Tickers no mesmo
+    dia reagem ao mesmo mercado, então ~530 previsões de um dia não são 530
+    observações independentes, e um binomial sobre as linhas encolhe o p-valor.
+    """
+    daily = correct.astype(float).groupby(dates.values).mean()
+    n     = len(daily)
+    mean  = float(daily.mean()) if n else 0.5
+    se    = float(daily.std(ddof=1) / math.sqrt(n)) if n >= 2 else 0.0
+    if se == 0:
+        return {"p": 1.0, "ci_lo": round(mean, 4), "ci_hi": round(mean, 4), "n_dias": n}
+    t_crit = student_t.ppf(0.975, n - 1)
+    return {
+        "p":      float(student_t.sf((mean - 0.5) / se, n - 1)),
+        "ci_lo":  round(mean - t_crit * se, 4),
+        "ci_hi":  round(mean + t_crit * se, 4),
+        "n_dias": n,
+    }
+
+
+def _relevant_move_accuracy(subset: pd.DataFrame, day: int) -> tuple[float | None, int]:
+    """Acurácia só nos movimentos acima de 0.3 ATR, o mesmo limiar usado nos rótulos de treino."""
+    cols = {"actual_price", "ref_price", "atr_at_prediction"}
+    if not cols.issubset(subset.columns):
+        return None, 0
+    threshold = subset["atr_at_prediction"].astype(float) * 0.3 * math.sqrt(day)
+    relevant  = subset[(subset["actual_price"] - subset["ref_price"]).abs() > threshold]
+    if relevant.empty:
+        return None, 0
+    return round(float(relevant["correct"].astype(float).mean()), 4), len(relevant)
+
+
 def compute_significance(df_log: pd.DataFrame) -> dict:
     """
-    Computes per-horizon accuracy, p-value, and CI from predictions_log.
+    Por horizonte, sobre as previsões com horizonte alinhado (ver aligned_rows).
 
-    Returns a dict with keys d1, d2, d3. Each value has:
-      ready    – True when n >= MIN_N (safe to interpret)
-      n        – number of validated predictions
-      k        – number of correct predictions
-      acc      – accuracy (k/n)
-      p        – p-value (one-sided binomial, H1: acc > 0.50)
-      ci_lo/hi – 95 % Wilson CI
-      sig      – True if p < 0.05
+    Cada valor tem ready, n, k, acc, n_dias, p (t unilateral sobre a acurácia
+    diária), ci_lo/ci_hi (IC 95% por dia), sig, e a acurácia só nos movimentos
+    acima do limiar de treino (acc_mov_relevante, n_mov_relevante). Fica em
+    silêncio (ready=False) até MIN_N linhas em MIN_DIAS dias.
     """
-    validated = df_log[df_log["correct"].notna()].copy()
+    validated = aligned_rows(df_log[df_log["correct"].notna()]).copy()
     validated["correct"] = validated["correct"].astype(float)
 
     results: dict[str, dict] = {}
     for day in [1, 2, 3]:
-        subset = validated[validated["horizon"] == day]["correct"]
+        subset = validated[validated["horizon"] == day]
         n      = len(subset)
         key    = f"d{day}"
+        dias   = subset["target_date"].nunique() if n else 0
 
-        if n < MIN_N:
-            results[key] = {"ready": False, "n": n, "needed": MIN_N - n}
+        if n < MIN_N or dias < MIN_DIAS:
+            results[key] = {"ready": False, "n": n, "n_dias": dias,
+                            "needed": max(MIN_N - n, MIN_DIAS - dias, 0)}
             continue
 
-        k     = int(subset.sum())
+        k     = int(subset["correct"].sum())
         acc   = k / n
-        p_val = binomtest(k, n, p=0.5, alternative="greater").pvalue
-        ci_lo, ci_hi = _wilson_ci(k, n)
+        stats = daily_cluster_stats(subset["correct"], subset["target_date"])
+        acc_rel, n_rel = _relevant_move_accuracy(subset, day)
 
         results[key] = {
-            "ready": True,
-            "n":     n,
-            "k":     k,
-            "acc":   round(acc, 4),
-            "p":     round(float(p_val), 4),
-            "ci_lo": ci_lo,
-            "ci_hi": ci_hi,
-            "sig":   bool(p_val < 0.05),
+            "ready":  True,
+            "n":      n,
+            "k":      k,
+            "acc":    round(acc, 4),
+            "n_dias": stats["n_dias"],
+            "p":      round(stats["p"], 4),
+            "ci_lo":  stats["ci_lo"],
+            "ci_hi":  stats["ci_hi"],
+            "sig":    bool(stats["p"] < 0.05),
+            "acc_mov_relevante": acc_rel,
+            "n_mov_relevante":   n_rel,
         }
         logger.info(
-            "Significância D+%d: %.1f%% (n=%d) p=%.4f %s",
-            day, acc * 100, n, p_val,
-            "✅ significativo" if p_val < 0.05 else ("⏳ tendência" if p_val < 0.10 else "—"),
+            "Significância D+%d: %.1f%% (n=%d, %d dias) p=%.4f %s",
+            day, acc * 100, n, stats["n_dias"], stats["p"],
+            "✅ significativo" if stats["p"] < 0.05 else ("⏳ tendência" if stats["p"] < 0.10 else "—"),
         )
 
     return results
@@ -137,7 +165,7 @@ def format_telegram_line(sig: dict) -> str | None:
             return f"\n📐 Significância: aguarda +{d1['needed']} previsões validadas (D+1)"
         return None
 
-    lines = ["\n📐 Significância (p-val binomial, H1: acc > 50%):"]
+    lines = ["\n📐 Significância (p por dia, H1: acc > 50%):"]
     for key in ["d1", "d2", "d3"]:
         r = sig.get(key, {})
         if not r.get("ready"):

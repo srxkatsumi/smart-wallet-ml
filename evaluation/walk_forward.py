@@ -2,12 +2,11 @@
 Walk-Forward Validation (WFV): honest out-of-sample accuracy.
 
 For each of the last n_steps trading days where outcomes are known:
-  - Train only on data strictly before that day (expanding window)
+  - Train only on labels already known that day (expanding window)
   - Predict D+1 / D+2 / D+3 direction with RF(50 trees)
   - Compare prediction to actual outcome
 
-Runs every market day, appends to output/wfv_log.csv,
-and trims entries older than 30 days.
+Runs every market day and appends to output/wfv_log.csv.
 """
 import json
 import logging
@@ -29,6 +28,9 @@ WFV_JSON_FILE = Path("output/wfv_results.json")
 WFV_N_STEPS   = 30   # trading days lookback window
 WFV_MIN_TRAIN = 252  # minimum rows required before first WFV step
 
+# Antes desta data o WFV usava rótulos futuros em D+2/D+3 e só pontuava movimentos grandes.
+WFV_METHOD_SINCE = date(2026, 11, 7)
+
 _LOG_COLS = ["date", "ticker", "acc_d1", "acc_d2", "acc_d3", "n_d1", "n_d2", "n_d3"]
 
 
@@ -41,8 +43,7 @@ def run_walk_forward(df: pd.DataFrame, n_steps: int = WFV_N_STEPS) -> dict:
     Returns dict with acc_d1/acc_d2/acc_d3 and n_d1/n_d2/n_d3,
     or {} if there isn't enough historical data.
     """
-    valid_mask = df["target_d1"].notna()
-    valid_df   = df[valid_mask]
+    valid_df = df[df["fwd_ret_d1"].notna()]
 
     if len(valid_df) < WFV_MIN_TRAIN + n_steps:
         return {}
@@ -51,20 +52,21 @@ def run_walk_forward(df: pd.DataFrame, n_steps: int = WFV_N_STEPS) -> dict:
     results   = {1: [], 2: [], 3: []}
 
     for _, test_row in test_rows.iterrows():
-        pos      = df.index.get_loc(test_row.name)
-        train_df = df.iloc[:pos]
+        pos = df.index.get_loc(test_row.name)
 
         X_te = np.array(test_row[FEATURE_COLS].values, dtype=float).reshape(1, -1)
         if np.any(np.isnan(X_te)):
             X_te = np.nan_to_num(X_te, nan=0.0)
 
         for day in [1, 2, 3]:
-            target_col = f"target_d{day}"
-            actual     = test_row.get(target_col)
-            if pd.isna(actual):
+            fwd_ret = test_row.get(f"fwd_ret_d{day}")
+            if pd.isna(fwd_ret):
                 continue
+            actual = int(fwd_ret >= 0)  # mesma regra do `correct` em produção: todo movimento conta
 
-            train_valid = train_df.dropna(subset=[target_col])
+            # Só rótulos já conhecidos no dia do teste: o da linha r usa o fecho r+day.
+            target_col  = f"target_d{day}"
+            train_valid = df.iloc[:pos - day + 1].dropna(subset=[target_col])
             if len(train_valid) < WFV_MIN_TRAIN:
                 continue
 
@@ -83,7 +85,7 @@ def run_walk_forward(df: pd.DataFrame, n_steps: int = WFV_N_STEPS) -> dict:
             )
             rf.fit(X_tr_sc, y_tr)
             pred = int(rf.predict(X_te_sc)[0])
-            results[day].append(int(pred == int(actual)))
+            results[day].append(int(pred == actual))
 
     out = {}
     for day, hits in results.items():
@@ -118,9 +120,9 @@ def _build_summary(log: pd.DataFrame, today: date, n_steps: int) -> dict:
         vals = today_rows[col].dropna().tolist()
         return round(float(np.mean(vals)), 4) if vals else None
 
-    # 30-day trend: mean acc_d1 per day, for plotting
+    # Trend: mean acc_d1 per day, for plotting
     daily_trend = (
-        log.groupby("date")["acc_d1"]
+        log[log["date"] >= WFV_METHOD_SINCE].groupby("date")["acc_d1"]
         .mean()
         .dropna()
         .reset_index()
@@ -161,7 +163,7 @@ def run_portfolio_wfv(
 ) -> dict:
     """
     Runs WFV for all portfolio tickers, appends to wfv_log.csv,
-    trims entries older than WFV_RETENTION days, and saves wfv_results.json.
+    and saves wfv_results.json.
     Returns the summary dict.
     """
     today = run_date or date.today()

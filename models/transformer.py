@@ -42,8 +42,9 @@ N_BLOCKS   = 3   # N-BEATS
 
 def _make_sequences(X: np.ndarray, y: np.ndarray, seq_len: int):
     seqs, labels = [], []
-    for i in range(seq_len, len(X)):
-        seqs.append(X[i - seq_len:i])
+    # A janela inclui a linha i: o rótulo y[i] é o movimento depois do fecho de i.
+    for i in range(seq_len - 1, len(X)):
+        seqs.append(X[i - seq_len + 1:i + 1])
         labels.append(y[i])
     return np.array(seqs, dtype=np.float32), np.array(labels, dtype=np.float32)
 
@@ -143,7 +144,7 @@ def _predict_model(model: nn.Module, X_sc: np.ndarray, y_mean: float) -> np.ndar
     with torch.no_grad():
         p = model(torch.from_numpy(seqs)).squeeze(1).numpy()
     probs = np.full(len(X_sc), y_mean)
-    probs[SEQ_LEN:] = p
+    probs[SEQ_LEN - 1:] = p
     return probs
 
 
