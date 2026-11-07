@@ -1,32 +1,20 @@
 {
   "d1": {
-    "ready": true,
-    "n": 49331,
-    "k": 24340,
-    "acc": 0.4934,
-    "p": 0.9983,
-    "ci_lo": 0.489,
-    "ci_hi": 0.4978,
-    "sig": false
+    "ready": false,
+    "n": 0,
+    "n_dias": 0,
+    "needed": 100
   },
   "d2": {
-    "ready": true,
-    "n": 48790,
-    "k": 24262,
-    "acc": 0.4973,
-    "p": 0.8866,
-    "ci_lo": 0.4928,
-    "ci_hi": 0.5017,
-    "sig": false
+    "ready": false,
+    "n": 0,
+    "n_dias": 0,
+    "needed": 100
   },
   "d3": {
-    "ready": true,
-    "n": 48769,
-    "k": 24473,
-    "acc": 0.5018,
-    "p": 0.2127,
-    "ci_lo": 0.4974,
-    "ci_hi": 0.5063,
-    "sig": false
+    "ready": false,
+    "n": 0,
+    "n_dias": 0,
+    "needed": 100
   }
 }
