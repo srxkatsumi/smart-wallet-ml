@@ -21,6 +21,7 @@ from pathlib import Path
 from datetime import date
 
 from config.settings import WEIGHT_DECAY_FACTOR, MIN_VALIDATIONS_WEIGHT
+from data.downloader import official_close
 from data.storage import aligned_rows
 from evaluation.significance import apply_bh_correction, daily_cluster_stats
 
@@ -480,6 +481,7 @@ def _validate_past_predictions(log: pd.DataFrame, featured_data: dict) -> pd.Dat
         ref = row.get("ref_price")
         if df is None or not ref or pd.isna(ref):
             continue
+        ref = official_close(df, ref_date) or ref
 
         after = df["Close"][df.index > pd.Timestamp(ref_date)]
         for h in [1, 2, 3]:

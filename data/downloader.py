@@ -2,6 +2,7 @@ import logging
 import time
 import yfinance as yf
 import pandas as pd
+from data.calendars import last_completed_session
 from config.settings import (
     PRICE_PERIOD, EUR_USD_FALLBACK, EUR_GBP_FALLBACK,
     DOWNLOAD_BATCH_SIZE, DOWNLOAD_BATCH_SLEEP, GBP_PENCE_TICKERS,
@@ -57,6 +58,52 @@ def _gbp_pence_to_eur(df: pd.DataFrame, period: str) -> pd.DataFrame:
         if col in df.columns:
             df[col] = df[col] / 100 * rate
     return df
+
+
+def official_close(prices: pd.DataFrame, ref_date) -> float | None:
+    """Fechamento diário da barra de referência, quando já existe na série."""
+    if pd.isna(ref_date) or prices is None or "Close" not in prices.columns:
+        return None
+    rows = prices["Close"][prices.index == pd.Timestamp(ref_date)]
+    return float(rows.iloc[0]) if len(rows) and pd.notna(rows.iloc[0]) else None
+
+
+def _fill_missing_sessions(df: pd.DataFrame, ticker: str, now: pd.Timestamp | None = None) -> pd.DataFrame:
+    """
+    A série diária do yfinance para bolsas europeias chega com um dia de atraso: na
+    execução da madrugada o pregão de ontem ainda falta, e a previsão sairia para um
+    dia já encerrado. Os candles de 1 hora já têm esse pregão, então ele é montado
+    a partir deles. O fechamento sai até ~0,3% diferente do oficial (o último candle
+    não inclui o leilão); a validação usa o oficial assim que ele aparece.
+    """
+    try:
+        last_session = last_completed_session(ticker, now)
+    except Exception as e:
+        logger.warning("%s: calendário indisponível (%s), sem completar a série", ticker, e)
+        return df
+    if last_session is None or df.index[-1] >= last_session:
+        return df
+    try:
+        intra = yf.download(ticker, period="5d", interval="1h", auto_adjust=True, progress=False)
+    except Exception as e:
+        logger.warning("%s: candles de 1h indisponíveis (%s)", ticker, e)
+        return df
+    if intra is None or intra.empty:
+        return df
+    if isinstance(intra.columns, pd.MultiIndex):
+        intra.columns = intra.columns.get_level_values(0)
+    intra = intra.dropna(subset=["Close"])
+    by_day = intra.groupby(pd.to_datetime(intra.index.date))
+    bars = pd.DataFrame({
+        "Open": by_day["Open"].first(), "High": by_day["High"].max(),
+        "Low": by_day["Low"].min(), "Close": by_day["Close"].last(), "Volume": by_day["Volume"].sum(),
+    })
+    bars = bars[(bars.index > df.index[-1]) & (bars.index <= last_session)]
+    if bars.empty:
+        return df
+    logger.info("%s: %s montado a partir dos candles de 1h (série diária ainda sem ele)",
+                ticker, ", ".join(str(d.date()) for d in bars.index))
+    return pd.concat([df, bars[[c for c in df.columns if c in bars.columns]]]).sort_index()
 
 
 def download_context(period: str = PRICE_PERIOD) -> tuple[dict, list[str]]:
@@ -116,6 +163,7 @@ def download_prices(tickers: list[str], period: str = PRICE_PERIOD) -> dict:
                 if df.empty:
                     logger.warning("%s: sem dados válidos após limpeza", ticker)
                     continue
+                df = _fill_missing_sessions(df, ticker)
                 if ticker in GBP_PENCE_TICKERS:
                     df = _gbp_pence_to_eur(df, period)
                     logger.info("%s: preços convertidos de GBp para EUR, câmbio diário", ticker)

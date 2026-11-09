@@ -11,6 +11,7 @@ from config.settings import (
     EXPERIMENTO_PRED_LOG, EXPERIMENTO_PRED_COLS, MAX_BAR_AGE_DAYS, SPLIT_DETECTION_THRESHOLD,
 )
 from data.calendars import target_dates
+from data.downloader import official_close
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ def validate_experimento_predictions(df_log: pd.DataFrame, training_data: dict) 
             continue
 
         actual   = float(future_prices.iloc[0])
-        ref      = float(row["ref_price"])
+        ref      = official_close(df_tick, row.get("ref_date")) or float(row["ref_price"])
         actual_ret = (actual / ref) - 1
 
         if abs(actual_ret) > SPLIT_DETECTION_THRESHOLD:

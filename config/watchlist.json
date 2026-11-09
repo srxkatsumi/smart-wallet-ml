@@ -22,7 +22,7 @@
     ],
 
     "Swiss Equities": [
-      "NESN.SW", "NOVN.SW", "ROG.SW"
+      "NESN.SW", "NOVN.SW"
     ],
 
     "Global Accumulation ETFs": [
@@ -90,11 +90,11 @@
     ],
 
     "Frontier Markets": [
-      "FM", "ASEA"
+      "ASEA"
     ],
 
     "US Core Market ETFs": [
-      "VTI", "VOO", "SPY", "DIA", "IVV", "ITOT", "SCHB", "SCHX", "MDY", "VXF", "SPTM", "SPLG"
+      "VTI", "VOO", "SPY", "DIA", "IVV", "ITOT", "SCHB", "SCHX", "MDY", "VXF", "SPTM"
     ],
 
     "Factor & Smart Beta ETFs": [
@@ -108,7 +108,7 @@
     ],
 
     "AI & Robotics ETFs": [
-      "ARKK", "ARKQ", "ARKW", "ARKF", "THNQ", "ROBO", "IRBO"
+      "ARKK", "ARKQ", "ARKW", "ARKF", "THNQ", "ROBO"
     ],
 
     "Clean Energy & EV ETFs": [
@@ -132,7 +132,7 @@
     ],
 
     "Industrials & Infrastructure ETFs": [
-      "PAVE", "IFRA", "XAR", "PPA", "DFEN", "NFRA", "ROAD", "FLM"
+      "PAVE", "IFRA", "XAR", "PPA", "DFEN", "NFRA", "ROAD"
     ],
 
     "Consumer ETFs": [
@@ -163,11 +163,11 @@
 
     "Emerging Markets ETFs": [
       "VWO", "EEM", "IEMG", "EMQQ", "KWEB", "GXC",
-      "TUR", "EWW", "EZA", "PIN", "EPHE", "THD", "ECH"
+      "TUR", "EWW", "EZA", "EPHE", "THD", "ECH"
     ],
 
     "Bonds: Government": [
-      "BND", "BNDX", "VGIT", "VGLT", "VGSH", "IEF", "SHV", "IEI", "SPTL"
+      "BND", "BNDX", "VGIT", "VGLT", "VGSH", "IEF", "IEI", "SPTL"
     ],
 
     "Bonds: Credit": [
@@ -175,7 +175,7 @@
     ],
 
     "Bonds: International": [
-      "IGOV", "BWX", "PCY", "EMSH"
+      "IGOV", "BWX", "PCY"
     ],
 
     "Bonds: Inflation": [
@@ -223,13 +223,13 @@
 
     "US Tech: Mid & Growth Stocks": [
       "SNOW", "OKTA", "FTNT", "S", "MDB", "TWLO",
-      "ZM", "DOCU", "SPLK", "HUBS", "VEEV", "WDAY"
+      "ZM", "DOCU", "HUBS", "VEEV", "WDAY"
     ],
 
     "US Financials Stocks": [
       "JPM", "BAC", "WFC", "GS", "MS", "C",
       "BLK", "SPGI", "CB", "AXP", "V", "MA",
-      "PYPL", "SQ", "COIN"
+      "PYPL", "COIN"
     ],
 
     "US Healthcare Stocks": [
@@ -240,7 +240,7 @@
 
     "US Consumer Staples Stocks": [
       "WMT", "COST", "PG", "KO", "PEP", "CL",
-      "GIS", "K", "MKC", "HSY"
+      "GIS", "MKC", "HSY"
     ],
 
     "US Consumer Discretionary Stocks": [
@@ -264,16 +264,16 @@
     ],
 
     "US Telecom & Media Stocks": [
-      "T", "VZ", "CMCSA", "DIS", "CHTR", "PARA", "WBD", "FOXA"
+      "T", "VZ", "CMCSA", "DIS", "CHTR", "PARA", "FOXA"
     ],
 
     "US Real Estate Stocks": [
-      "AMT", "CCI", "EQIX", "DLR", "SBAC", "WY", "AVB", "EQR"
+      "AMT", "CCI", "EQIX", "DLR", "SBAC", "WY"
     ],
 
     "US Biotech Stocks": [
       "MRNA", "BNTX", "NVAX", "IONS", "ALNY",
-      "ACAD", "NBIX", "SRPT", "EXEL", "MDGL", "FOLD", "PCVX"
+      "ACAD", "NBIX", "SRPT", "EXEL", "MDGL", "PCVX"
     ],
 
     "Fintech Stocks": [

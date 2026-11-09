@@ -212,6 +212,21 @@ The log is kept as an audit trail. Metrics, weights and calibration use only row
 
 ---
 
+## ERR-015: European ETF forecasts targeted a session that had already closed (2026-11-09)
+
+**Symptom**
+In the first run with aligned horizons (ERR-014), forecasts for the ~20 European tickers, including the 7 portfolio ETFs, started from the 05/11 bar with a 06/11 target, a day that had already closed when the forecast was published.
+
+**Root cause**
+At the overnight run, yfinance's daily series does not yet have the previous day's European session. Before ERR-014 the lag was hidden inside the 2 to 3 session horizon.
+
+**Fix**
+When the last completed session in the ticker's calendar is missing, `data/downloader.py` builds that bar from hourly candles, which already have it. The built close differs from the official one by up to ~0.3%, because the last candle misses the closing auction, so validation compares against the official close of the reference bar as soon as it appears (`official_close`). Measured on the 7 ETFs for 06/11: -0.26% to +0.06%.
+
+15 tickers with no forecast in the last 10 days were also removed from the watchlist (no yfinance data, or training always failing, like SHV).
+
+---
+
 ## Production validations (current state)
 
 | Validation | Where | What it catches |

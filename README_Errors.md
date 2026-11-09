@@ -214,6 +214,21 @@ O log foi mantido como auditoria. Métricas, pesos e a calibração usam só lin
 
 ---
 
+## ERR-015: Previsões dos ETFs europeus saíam para um pregão já encerrado (2026-11-09)
+
+**Sintoma**
+Na primeira execução com os horizontes alinhados (ERR-014), as previsões dos ~20 tickers europeus, incluindo os 7 ETFs da carteira, partiram da barra de 05/11 com alvo em 06/11, um dia que já tinha fechado quando a previsão saiu.
+
+**Causa raiz**
+Na execução da madrugada, a série diária do yfinance ainda não tem o pregão europeu do dia anterior. Antes do ERR-014 o atraso ficava escondido no horizonte de 2 a 3 pregões.
+
+**Correção**
+Quando falta o último pregão encerrado no calendário do ticker, `data/downloader.py` monta essa barra a partir dos candles de 1 hora, que já a têm. O fechamento montado difere do oficial em até ~0,3%, porque o último candle não inclui o leilão. Por isso a validação compara com o fechamento oficial da barra de referência assim que ele aparece na série (`official_close`). Medido nos 7 ETFs para 06/11: diferença de -0,26% a +0,06%.
+
+Também saíram da watchlist 15 tickers sem nenhuma previsão nos últimos 10 dias (sem dados no yfinance ou com treino sempre falhando, como o SHV).
+
+---
+
 ## Validações em produção (estado atual)
 
 | Validação | Onde | O que deteta |

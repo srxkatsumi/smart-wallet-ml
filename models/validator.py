@@ -4,6 +4,7 @@ import pandas as pd
 
 from data.storage import aligned_rows, save_predictions_log, save_ensemble_weights
 from data.calendars import target_dates
+from data.downloader import official_close
 from config.settings import (
     HORIZONS, MAX_BAR_AGE_DAYS, MIN_VALIDATIONS_WEIGHT, WEIGHT_DECAY_FACTOR, SPLIT_DETECTION_THRESHOLD,
 )
@@ -70,6 +71,8 @@ def validate_past_predictions(df_log: pd.DataFrame,
         ref = row.get("ref_price")
         if pd.isna(ref):
             ref = row["pred_price"]
+        # A barra de referência pode ter vindo dos candles de 1h; o oficial é a base certa.
+        ref = official_close(df_tick, row.get("ref_date")) or ref
 
         # Detect probable stock split / reverse split: >40% move from reference
         if ref and ref > 0 and abs(actual / ref - 1) > SPLIT_DETECTION_THRESHOLD:
