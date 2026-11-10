@@ -1,16 +1,16 @@
 {
-  "last_processed_date": "2026-11-05",
+  "last_processed_date": "2026-11-09",
   "learned": {
     "FEARFUL": {
-      "RET_UP": 0.16387646621050486,
+      "RET_UP": 0.16140030472334255,
       "RET_DOWN": -0.3886668713556049,
-      "VOL_SPIKE": -0.05193267158230127,
+      "VOL_SPIKE": -0.054457960210093935,
       "VIX_SPIKE": 0.07517558973864928,
-      "STREAK_UP": 0.08314379489025568,
+      "STREAK_UP": 0.08263873716469715,
       "STREAK_DOWN": -0.19363133872711422,
-      "ANOMALY": 0.4081886533045676,
+      "ANOMALY": 0.40566336467677494,
       "DISAGREEMENT": 0.0,
-      "CALM_STREAK": 0.03738967786394215
+      "CALM_STREAK": 0.034864389236149484
     },
     "EUPHORIC": {
       "RET_UP": 0.02181505192011323,
@@ -24,25 +24,8 @@
       "CALM_STREAK": -0.050566831893919625
     }
   },
-  "pending": [
-    {
-      "date": "2026-11-04",
-      "pool": "FEARFUL",
-      "eligibility": {
-        "RET_UP": 0.9805459304375486,
-        "RET_DOWN": 0.0,
-        "VOL_SPIKE": 1.0,
-        "VIX_SPIKE": 0.0,
-        "STREAK_UP": 0.2,
-        "STREAK_DOWN": 0.0,
-        "ANOMALY": 1.0,
-        "DISAGREEMENT": 0.0,
-        "CALM_STREAK": 1.0
-      }
-    }
-  ],
+  "pending": [],
   "recent_alertas": [
-    true,
     false,
     false,
     false,
@@ -56,18 +39,10 @@
     false,
     false,
     true,
+    false,
     false
   ],
   "mood_history": [
-    {
-      "date": "2026-09-25",
-      "mood": {
-        "CALM": 0.2989201097023353,
-        "FEARFUL": 0.2974016099781538,
-        "EUPHORIC": 0.16676117974044938,
-        "CONFUSED": 0.0
-      }
-    },
     {
       "date": "2026-09-28",
       "mood": {
@@ -327,6 +302,15 @@
         "FEARFUL": 0.3785219953086708,
         "EUPHORIC": 0.09306326199720014,
         "CONFUSED": 0.1861377851291081
+      }
+    },
+    {
+      "date": "2026-11-09",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.2698172069550311,
+        "EUPHORIC": 0.0,
+        "CONFUSED": 0.4011342849479459
       }
     }
   ]
