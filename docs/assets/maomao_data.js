@@ -5,15 +5,6 @@ const MAOMAO_DATA = {
   "portfolio": {
     "mood_history": [
       {
-        "date": "2026-09-28",
-        "mood": {
-          "CALM": 0.0,
-          "FEARFUL": 0.5322887404457521,
-          "EUPHORIC": 0.0,
-          "CONFUSED": 0.0
-        }
-      },
-      {
         "date": "2026-09-29",
         "mood": {
           "CALM": 0.38847268021606096,
@@ -273,6 +264,15 @@ const MAOMAO_DATA = {
           "EUPHORIC": 0.0,
           "CONFUSED": 0.4011342849479459
         }
+      },
+      {
+        "date": "2026-11-10",
+        "mood": {
+          "CALM": 0.0,
+          "FEARFUL": 0.2958816041613005,
+          "EUPHORIC": 0.0,
+          "CONFUSED": 0.45421643268225903
+        }
       }
     ],
     "learned": {
@@ -302,15 +302,6 @@ const MAOMAO_DATA = {
   },
   "market": {
     "mood_history": [
-      {
-        "date": "2026-09-21",
-        "mood": {
-          "CALM": 0.4686455963830753,
-          "FEARFUL": 0.0,
-          "EUPHORIC": 0.34814673947230945,
-          "CONFUSED": 0.24021286468618025
-        }
-      },
       {
         "date": "2026-09-22",
         "mood": {
@@ -570,6 +561,15 @@ const MAOMAO_DATA = {
           "FEARFUL": 0.15377052226409266,
           "EUPHORIC": 0.17000000307458762,
           "CONFUSED": 0.32598865271171534
+        }
+      },
+      {
+        "date": "2026-11-10",
+        "mood": {
+          "CALM": 0.3598091632138393,
+          "FEARFUL": 0.27444691587269676,
+          "EUPHORIC": 0.0,
+          "CONFUSED": 0.2480494776538493
         }
       }
     ],
