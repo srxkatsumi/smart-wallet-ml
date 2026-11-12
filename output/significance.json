@@ -1,20 +1,20 @@
 {
   "d1": {
     "ready": false,
+    "n": 1596,
+    "n_dias": 5,
+    "needed": 15
+  },
+  "d2": {
+    "ready": false,
     "n": 1064,
     "n_dias": 4,
     "needed": 16
   },
-  "d2": {
-    "ready": false,
-    "n": 532,
-    "n_dias": 2,
-    "needed": 18
-  },
   "d3": {
     "ready": false,
-    "n": 22,
+    "n": 531,
     "n_dias": 2,
-    "needed": 78
+    "needed": 18
   }
 }
