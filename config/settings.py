@@ -120,11 +120,14 @@ ASSET_CLASSES: dict[str, int] = {
     "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
     "LYP6.DE": 1, "IS3N.DE": 1, "EUNN.DE": 1,
     "SGLN.L":  3, "PPFB.DE": 3,  # iShares Physical Gold ETC (Xetra)
+    "AFRM":    0,  # Affirm Holdings (Nasdaq), ação da carteira
 }
 
 # ── Market calendar mapping (pandas-market-calendars) ────────────────────
 # Tickers not listed here default to NYSE.
 TICKER_CALENDAR: dict[str, str] = {
+    # Nasdaq segue o calendário da NYSE
+    "AFRM":    "NYSE",
     # London Stock Exchange
     "EXUS.MI": "XMIL",   # Borsa Italiana (EUR)
     "SGLN.L":  "LSE",

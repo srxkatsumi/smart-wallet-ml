@@ -1,7 +1,7 @@
 """
 Ponto de entrada diário do MaoMao, chamado uma vez por execução do pipeline
 principal (ver main.py). Duas redes independentes, mesma lógica de
-orquestração: `run_daily_step` (humor de carteira, só os 7 ETFs) e
+orquestração: `run_daily_step` (humor de carteira, só os ativos da carteira) e
 `run_market_step` (humor de mercado, watchlist inteiro) — ver
 maomao/README.md para a diferença entre os dois.
 
@@ -62,7 +62,7 @@ def _run_step(compute_sensors_fn, df_log, anomaly: dict, tickers: list[str],
 
 
 def run_daily_step(df_log, anomaly: dict, portfolio: list[str]) -> dict:
-    """Humor de carteira — só os 7 ETFs investidos de verdade."""
+    """Humor de carteira — só os ativos investidos de verdade (ETFs e ações)."""
     return _run_step(compute_sensors, df_log, anomaly, portfolio,
                      maomao_state.PORTFOLIO_STATE_FILE, "carteira")
 

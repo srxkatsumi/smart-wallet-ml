@@ -5,7 +5,7 @@ download_prices, build_all_features, evaluation.anomaly.detect_anomaly), não
 uma reimplementação da lógica, pra não repetir o tipo de divergência silenciosa
 que já apareceu antes entre o gráfico de acurácia e o header (ver export_data.py).
 
-Diferente dos outros export_*.py, este baixa dados reais (VIX + os 7 ETFs da
+Diferente dos outros export_*.py, este baixa dados reais (VIX + os ativos da
 carteira) e roda o feature engineering, mas não treina modelo nenhum, rápido
 (uns 10-30s), sem cache necessário.
 
@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from data.storage import load_portfolio_config
+from data.storage import load_portfolio_config, portfolio_tickers
 from data.downloader import download_context, download_prices
 from features.engineering import build_all_features
 from config.settings import MIN_SAMPLES_FEATURES
@@ -27,14 +27,14 @@ from evaluation.anomaly import detect_anomaly
 
 def main():
     portfolio_cfg = load_portfolio_config()
-    etf_acumul = portfolio_cfg["etf_acumulacao"]
+    etf_acumul = portfolio_tickers(portfolio_cfg)
 
     print("Baixando contexto (VIX, SPY)...")
     context_data, ctx_warnings = download_context()
     if ctx_warnings:
         print("Avisos:", ctx_warnings)
 
-    print(f"Baixando {len(etf_acumul)} ETFs da carteira: {etf_acumul}")
+    print(f"Baixando {len(etf_acumul)} ativos da carteira: {etf_acumul}")
     raw_data = download_prices(etf_acumul)
 
     print("Calculando features (ATR14, retornos)...")

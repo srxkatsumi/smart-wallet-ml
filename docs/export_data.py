@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from config.settings import GBP_PENCE_TICKERS
-from data.storage import aligned_rows
+from data.storage import aligned_rows, portfolio_tickers
 from research.runner import _build_comparison
 
 MIN_VAL = 15  # mesmo limiar de reports/email_report.py:_calcular_tendencia
@@ -33,13 +33,23 @@ CHART_WINDOW_DAYS = 90   # janela exibida nos gráficos (dias úteis)
 PENCE_LOG_THRESHOLD = 500
 
 
-def log_price_to_eur(price: float, ticker: str, gbp_eur_rate: float) -> float:
+def is_usd_ticker(ticker: str) -> bool:
+    """Tickers americanos não têm sufixo de bolsa (AFRM); os europeus têm (.DE, .MI, .L)."""
+    return "." not in ticker
+
+
+def log_price_to_eur(price: float, ticker: str, gbp_eur_rate: float,
+                     usd_eur_rate: float | None = None) -> float:
     """
     Os logs guardam GBP_PENCE_TICKERS em EUR desde que o download passou a
-    converter; só as linhas mais antigas ainda estão em pence.
+    converter; só as linhas mais antigas ainda estão em pence. Ações em dólar
+    ficam em USD no log (o modelo prevê o preço da bolsa onde são negociadas)
+    e só são convertidas aqui, para exibir em euro, quando `usd_eur_rate` vem.
     """
     if ticker in GBP_PENCE_TICKERS and price > PENCE_LOG_THRESHOLD:
         return price / 100 * gbp_eur_rate
+    if usd_eur_rate is not None and is_usd_ticker(ticker):
+        return price * usd_eur_rate
     return price
 
 
@@ -184,6 +194,31 @@ def fetch_gbp_eur_rate() -> float:
     return 1 / 0.85  # fallback, mesma ordem de grandeza de EUR_GBP_FALLBACK em config/settings.py
 
 
+def fetch_usd_eur_history(period: str = "2y") -> pd.Series:
+    """USD→EUR de cada dia (1 / EURUSD=X), para converter cada preço com o câmbio do próprio dia."""
+    try:
+        fx = yf.download("EURUSD=X", period=period, interval="1d", auto_adjust=True, progress=False)
+        if isinstance(fx.columns, pd.MultiIndex):
+            fx.columns = fx.columns.get_level_values(0)
+        s = fx["Close"].dropna()
+        s.index = pd.to_datetime(s.index).tz_localize(None).normalize()
+        if not s.empty:
+            return (1 / s).sort_index()
+    except Exception:
+        pass
+    return pd.Series(dtype=float)
+
+
+def usd_eur_on(usd_eur_hist: pd.Series, date) -> float:
+    """Câmbio do dia (ou do último dia com cotação antes dele); fallback na mesma ordem de EUR_USD_FALLBACK."""
+    if usd_eur_hist is not None and not usd_eur_hist.empty:
+        rate = usd_eur_hist.asof(pd.Timestamp(date).normalize())
+        if pd.notna(rate):
+            return float(rate)
+        return float(usd_eur_hist.iloc[0])
+    return 1 / 1.08
+
+
 def technical_indicators(close: pd.Series) -> pd.DataFrame:
     """Espelha exatamente features/engineering.py:build_features: SMA20/50, Bollinger, RSI14, MACD."""
     out = pd.DataFrame(index=close.index)
@@ -209,7 +244,7 @@ def technical_indicators(close: pd.Series) -> pd.DataFrame:
     return out
 
 
-def chart_data_for_ticker(ticker: str, gbp_eur_rate: float) -> dict | None:
+def chart_data_for_ticker(ticker: str, gbp_eur_rate: float, usd_eur_hist: pd.Series | None = None) -> dict | None:
     """Baixa OHLC ao vivo (yfinance, mesma fonte do pipeline) e monta as séries dos 4 painéis."""
     try:
         raw = yf.download(ticker, period="1y", auto_adjust=True, progress=False)
@@ -224,6 +259,9 @@ def chart_data_for_ticker(ticker: str, gbp_eur_rate: float) -> dict | None:
     is_pence = ticker in GBP_PENCE_TICKERS
     if is_pence:
         close = close / 100 * gbp_eur_rate
+    elif is_usd_ticker(ticker):
+        idx = pd.to_datetime(close.index).tz_localize(None).normalize()
+        close = close * pd.Series([usd_eur_on(usd_eur_hist, d) for d in idx], index=close.index)
 
     ind = technical_indicators(close).tail(CHART_WINDOW_DAYS)
     dates = [d.strftime("%Y-%m-%d") for d in ind.index]
@@ -274,7 +312,7 @@ def accuracy_curve(df_log: pd.DataFrame, ticker: str) -> list:
     return curve[-CHART_WINDOW_DAYS:]
 
 
-def experimento_predictions(tickers: list, gbp_eur_rate: float) -> dict:
+def experimento_predictions(tickers: list, gbp_eur_rate: float, usd_eur_hist: pd.Series | None = None) -> dict:
     """
     Previsões de hoje do desafiante/campeão, por ticker/horizonte, mesma fonte
     do email de Experimentos. predictions_experimentos_log.csv vem da mesma
@@ -295,7 +333,8 @@ def experimento_predictions(tickers: list, gbp_eur_rate: float) -> dict:
         rows = today[today["ticker"] == t]
         if rows.empty:
             continue
-        to_eur = lambda p: round(log_price_to_eur(float(p), t, gbp_eur_rate), 4)  # noqa: E731
+        rate = usd_eur_on(usd_eur_hist, rows.iloc[0]["pred_date"])
+        to_eur = lambda p: round(log_price_to_eur(float(p), t, gbp_eur_rate, rate), 4)  # noqa: E731
         horizons = {}
         for _, r in rows.iterrows():
             horizons[f"d{int(r['horizon'])}"] = {
@@ -346,7 +385,7 @@ def anomaly_reasons_en(anomalia: dict) -> list:
 
 def main():
     portfolio = _load_json("config/portfolio.json")
-    tickers = portfolio["etf_acumulacao"]
+    tickers = portfolio_tickers(portfolio)
 
     log = pd.read_csv(ROOT / "output/predictions_log.csv")
     log["pred_date"] = pd.to_datetime(log["pred_date"])
@@ -358,13 +397,15 @@ def main():
 
     print("Fetching live GBP/EUR rate...")
     gbp_eur_rate = fetch_gbp_eur_rate()
+    usd_eur_hist = fetch_usd_eur_history()
 
     favoritos = {}
     for t in sorted(tickers):
         rows = today_rows[today_rows["ticker"] == t]
         if rows.empty:
             continue
-        price = log_price_to_eur(float(rows.iloc[0]["ref_price"]), t, gbp_eur_rate)
+        price = log_price_to_eur(float(rows.iloc[0]["ref_price"]), t, gbp_eur_rate,
+                                 usd_eur_on(usd_eur_hist, rows.iloc[0]["pred_date"]))
         horizons = {
             f"d{int(r['horizon'])}": {"direction": r["direction"], "confidence": round(float(r["confidence"]), 4)}
             for _, r in rows.iterrows()
@@ -375,7 +416,8 @@ def main():
         hist = log[(log["ticker"] == t) & (log["horizon"] == 1) & log["ref_price"].notna()].sort_values("pred_date")
         hist = hist.drop_duplicates(subset="pred_date", keep="last")
         price_history = [
-            {"date": d.strftime("%Y-%m-%d"), "price": round(log_price_to_eur(float(p), t, gbp_eur_rate), 4)}
+            {"date": d.strftime("%Y-%m-%d"),
+             "price": round(log_price_to_eur(float(p), t, gbp_eur_rate, usd_eur_on(usd_eur_hist, d)), 4)}
             for d, p in zip(hist["pred_date"], hist["ref_price"])
         ]
 
@@ -388,14 +430,14 @@ def main():
             "n_recent": len(sub),
             "acertou_ontem": acertou_ontem(t, log, ontem_bday),
             "price_history": price_history,
-            "chart": chart_data_for_ticker(t, gbp_eur_rate),
+            "chart": chart_data_for_ticker(t, gbp_eur_rate, usd_eur_hist),
             "accuracy_curve": accuracy_curve(log, t),
         }
 
     sig = _load_json("output/significance.json")
     sig_exp = _load_json("output/significance_experimentos.json")
     backtest_exp = _load_json("output/backtest_experimentos.json", default={"tickers": {}})
-    exp_predictions = experimento_predictions(tickers, gbp_eur_rate)
+    exp_predictions = experimento_predictions(tickers, gbp_eur_rate, usd_eur_hist)
     anomalia = _load_alerts_data()
     anomalia = {**anomalia, "reasons_en": anomaly_reasons_en(anomalia)}
 

@@ -36,7 +36,7 @@ def real_returns_by_day(df_log: pd.DataFrame, tickers: list[str]) -> pd.Series:
     de previsão — ver nota em README_Errors.md sobre actual_change_pct ser
     (actual/pred - 1), não (actual/ref - 1)). Única fonte de verdade de
     retorno real para maomao.sensors e maomao.learning, pra nunca haver duas
-    contas divergentes. `tickers` pode ser a carteira (7 ETFs) ou o
+    contas divergentes. `tickers` pode ser a carteira (ETFs e ações) ou o
     watchlist inteiro — a função não assume qual.
     """
     sub = df_log[
@@ -127,7 +127,7 @@ def _disagreement_from_log(df_log: pd.DataFrame, tickers: list[str], last_date) 
 def compute_sensors(df_log: pd.DataFrame, anomaly: dict, portfolio: list[str],
                     recent_alertas: list[bool] | None = None) -> dict:
     """
-    Humor de CARTEIRA: intensidade de cada canal pros 7 ETFs que você
+    Humor de CARTEIRA: intensidade de cada canal pros ativos da carteira que você
     realmente tem investidos. Lê output/anomalia.json (que já roda só sobre
     esses 7) e output/predictions_log.csv filtrado a eles.
     """

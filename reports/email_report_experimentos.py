@@ -25,7 +25,10 @@ def _build_previsoes_html(resultados_exp: dict, resultados_ml: dict, my_tickers:
     for ticker in sorted(t for t in my_tickers if t in resultados_exp):
         exp_res = resultados_exp[ticker]
         ml_res  = resultados_ml.get(ticker, {})
-        close_now = exp_res["close_now"]
+        # Mesmo fator do email diário: ações em dólar aparecem em euro (close_eur vem de main.py)
+        fx = (ml_res["close_eur"] / ml_res["close_now"]
+              if ml_res.get("close_eur") and ml_res.get("close_now") else 1.0)
+        close_now = exp_res["close_now"] * fx
         row_cells = (
             f'<td style="padding:8px 6px;font-size:12px;font-weight:600;color:#1a1740">{ticker}</td>'
             f'<td style="padding:8px 6px;text-align:right;font-size:11px;color:#5a5a5a;'
@@ -42,11 +45,11 @@ def _build_previsoes_html(resultados_exp: dict, resultados_ml: dict, my_tickers:
             cell = (
                 f'<div>{_ret_cell(h["pred_ret"])}</div>'
                 f'<div style="font-size:9.5px;color:#a8a39a;margin-top:2px">'
-                f'€{h["pred_price"]:,.2f} [€{h["interval_lo"]:,.2f}–€{h["interval_hi"]:,.2f}]</div>'
+                f'€{h["pred_price"]*fx:,.2f} [€{h["interval_lo"]*fx:,.2f}–€{h["interval_hi"]*fx:,.2f}]</div>'
             )
             if champion_price is not None:
                 cell += (f'<div style="font-size:9px;color:#c9c2b3;margin-top:1px">'
-                         f'campeão: €{champion_price:,.2f}</div>')
+                         f'campeão: €{champion_price*fx:,.2f}</div>')
             row_cells += f'<td style="padding:8px 6px;text-align:center">{cell}</td>'
         rows += f'<tr style="border-bottom:1px solid #f0ede4">{row_cells}</tr>'
 

@@ -168,10 +168,15 @@ def load_portfolio_config() -> dict:
         return json.load(f)
 
 
+def portfolio_tickers(cfg: dict) -> list[str]:
+    """Todos os ativos da carteira: ETFs de acumulação, ações e eToro (sem repetir, na ordem do arquivo)."""
+    return list(dict.fromkeys(cfg["etf_acumulacao"] + cfg.get("acoes", []) + cfg.get("etoro", [])))
+
+
 def load_my_tickers() -> list[str]:
     with open("config/portfolio.json") as f:
         cfg = json.load(f)
-    return list(set(cfg.get("etoro", []) + cfg["etf_acumulacao"]))
+    return portfolio_tickers(cfg)
 
 
 def load_watchlist() -> list[str]:

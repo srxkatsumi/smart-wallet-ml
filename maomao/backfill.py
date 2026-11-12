@@ -213,10 +213,10 @@ if __name__ == "__main__":
     sys.path.insert(0, str(ROOT))
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-    from data.storage import load_portfolio_config, load_my_tickers, load_watchlist, build_ticker_order
+    from data.storage import load_portfolio_config, load_my_tickers, load_watchlist, build_ticker_order, portfolio_tickers
     from maomao.state import save_state, load_state, PORTFOLIO_STATE_FILE, MARKET_STATE_FILE
 
-    portfolio = load_portfolio_config()["etf_acumulacao"]
+    portfolio = portfolio_tickers(load_portfolio_config())
     final_state = run(portfolio)
     save_state(final_state, PORTFOLIO_STATE_FILE)
     print(f"\n[Carteira] Estado final gravado em {PORTFOLIO_STATE_FILE}")

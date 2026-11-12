@@ -1,3 +1,4 @@
 {
-  "etf_acumulacao": ["ICGA.DE", "PPFB.DE", "SGLN.L", "EXUS.MI", "LYP6.DE", "IS3N.DE", "EUNN.DE"]
+  "etf_acumulacao": ["ICGA.DE", "PPFB.DE", "SGLN.L", "EXUS.MI", "LYP6.DE", "IS3N.DE", "EUNN.DE"],
+  "acoes": ["AFRM"]
 }

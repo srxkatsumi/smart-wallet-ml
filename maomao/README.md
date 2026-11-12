@@ -9,7 +9,7 @@ do que aconteceu depois, não da previsão de direção do ensemble.
 
 | | Carteira | Mercado |
 |---|---|---|
-| Vê | Só os 7 ETFs que você tem investidos de verdade | O watchlist inteiro (500+ tickers) |
+| Vê | Só os ativos que você tem investidos de verdade (7 ETFs e a AFRM) | O watchlist inteiro (500+ tickers) |
 | Estado | `output/maomao_state.json` | `output/maomao_market_state.json` |
 | Orquestração | `maomao.daily.run_daily_step` | `maomao.daily.run_market_step` |
 | `ANOMALY` vem de | `anomalia.json["alerta"]` (VIX **ou** um ETF específico rompendo o próprio ATR) | só o VIX (`anomalia.json["market"]`) — uma queda isolada de 1 ETF da carteira não é "o mercado" |
@@ -71,16 +71,16 @@ output/anomalia.json                                              │
 Calculados a partir dos artefactos que o pipeline principal já gera — não reimplementa nenhuma lógica de
 deteção, só lê. `compute_sensors` (carteira) e `compute_market_sensors` (mercado) compartilham o mesmo
 núcleo (`compute_sensors_core`), só trocando de onde vêm `RET_UP/DOWN`, `STREAK_*` e `DISAGREEMENT` —
-carteira sobre os 7 ETFs, mercado sobre o watchlist inteiro:
+carteira sobre os ativos da carteira, mercado sobre o watchlist inteiro:
 
 | Canal | Carteira | Mercado |
 |---|---|---|
-| `RET_UP` / `RET_DOWN` | Retorno real médio dos 7 ETFs (`actual_price`/`ref_price`) | Retorno real médio do watchlist inteiro |
-| `VOL_SPIKE` | Maior múltiplo de ATR do dia, entre os 7 ETFs (`anomalia.json`) | O mesmo número da carteira — aproximação, ver "Limitações do backfill" |
+| `RET_UP` / `RET_DOWN` | Retorno real médio dos ativos da carteira (`actual_price`/`ref_price`) | Retorno real médio do watchlist inteiro |
+| `VOL_SPIKE` | Maior múltiplo de ATR do dia, entre os ativos da carteira (`anomalia.json`) | O mesmo número da carteira — aproximação, ver "Limitações do backfill" |
 | `VIX_SPIKE` | Variação do VIX no dia | Igual — é sempre o mesmo VIX, não é específico de carteira nem mercado |
 | `STREAK_UP` / `STREAK_DOWN` | Sequência de dias consecutivos de alta/baixa real, carteira | Idem, watchlist inteiro |
 | `ANOMALY` | `anomalia.json["alerta"]` (VIX ou um ETF específico) | Só VIX (`anomalia.json["market"]`) |
-| `DISAGREEMENT` | Fração dos 7 ETFs onde RF/GB/SGD discordam | Fração do watchlist inteiro |
+| `DISAGREEMENT` | Fração dos ativos da carteira onde RF/GB/SGD discordam | Fração do watchlist inteiro |
 | `CALM_STREAK` | Sequência de dias sem alerta de carteira | Sequência de dias sem alerta de mercado |
 
 ### Pools de humor (`maomao/brain.py`)

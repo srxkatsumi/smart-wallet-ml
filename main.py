@@ -31,7 +31,7 @@ def main():
     from data.storage import (
         ensure_dirs, load_predictions_log, load_ensemble_weights,
         load_portfolio_config, load_my_tickers, load_watchlist,
-        build_ticker_order, save_public_log,
+        build_ticker_order, save_public_log, portfolio_tickers,
     )
     ensure_dirs()
     df_log          = load_predictions_log()
@@ -43,6 +43,7 @@ def main():
 
     etoro      = portfolio_cfg.get("etoro", [])
     etf_acumul = portfolio_cfg["etf_acumulacao"]
+    carteira   = portfolio_tickers(portfolio_cfg)  # ETFs + ações
 
     # ── FX rates ──────────────────────────────────────────────────────────
     from data.downloader import load_fx_rates, download_context, download_prices
@@ -118,7 +119,7 @@ def main():
     # ── Deteção de anomalia (email separado, só dispara em evento fora do normal) ─
     try:
         from evaluation.anomaly import detect_anomaly, save_anomaly
-        anomaly = detect_anomaly(context_data, featured_data, etf_acumul)
+        anomaly = detect_anomaly(context_data, featured_data, carteira)
         save_anomaly(anomaly)
         if anomaly.get("alerta"):
             from reports.email_report_alerta import build_html_alerta, save_html_alerta
@@ -133,7 +134,7 @@ def main():
     # inteiro) ──────────────────────────────────────────────────────────────
     try:
         from maomao.daily import run_daily_step
-        run_daily_step(df_log, anomaly, etf_acumul)
+        run_daily_step(df_log, anomaly, carteira)
     except Exception as e:
         logger.warning("MaoMao (carteira) falhou (não bloqueia): %s", e)
 
@@ -162,13 +163,19 @@ def main():
     resultados_ml = train_all(training_data, ensemble_weights, MODELS_DIR)
     save_model_metadata(resultados_ml, my_tickers)
 
+    # Ações da carteira em dólar aparecem em euro no email (moeda em que você compra);
+    # o modelo continua prevendo o preço em USD da bolsa americana.
+    for t_ in carteira:
+        if t_ in resultados_ml and "." not in t_ and EUR_USD:
+            resultados_ml[t_]["close_eur"] = resultados_ml[t_]["close_now"] / EUR_USD
+
     # ── Research pipeline: só relatório, não altera as previsões de produção ──
     research_data = None
     try:
         from research.runner import run_research
         _rd_features   = {t: res["df"] for t, res in resultados_ml.items() if "df" in res}
         _rd_prices     = {t: res["close_now"] for t, res in resultados_ml.items()}
-        _research_tickers = list(etoro) if etoro else list(etf_acumul)
+        _research_tickers = list(carteira)
         research_data  = run_research(_rd_features, _research_tickers, _rd_prices)
     except Exception as e:
         logger.warning("Research pipeline falhou (não bloqueia): %s", e)
@@ -259,7 +266,7 @@ def main():
         from features.engineering import FEATURE_COLS
         _xai_dir = _Path("output/xai")
         _xai_dir.mkdir(parents=True, exist_ok=True)
-        portfolio_set = set(etoro) | set(etf_acumul)
+        portfolio_set = set(carteira)
         _shap_count = 0
         for ticker in portfolio_set:
             res = resultados_ml.get(ticker)

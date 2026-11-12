@@ -14,7 +14,7 @@ PORTFOLIO_FILE = Path(__file__).resolve().parent.parent / "config" / "portfolio.
 
 def _portfolio_tickers() -> list[str]:
     cfg = json.loads(PORTFOLIO_FILE.read_text())
-    return cfg.get("etoro", []) + cfg.get("etf_acumulacao", [])
+    return cfg.get("etoro", []) + cfg.get("etf_acumulacao", []) + cfg.get("acoes", [])
 
 
 def test_portfolio_tickers_have_asset_class():
