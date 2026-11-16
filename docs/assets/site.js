@@ -31,6 +31,19 @@ function setActiveNav(page) {
   });
 }
 
+// Badge do card Carteira: em coleta até MIN_DIAS dias alinhados, depois o veredito do teste.
+function significanceBadge(acc, lang = 'en') {
+  const pt = lang === 'pt';
+  const est = Object.values(acc.estado || {});
+  if (!est.length) return `<span class="badge badge-quiet">${pt ? 'sem significância comprovada' : 'no proven significance'}</span>`;
+  if (est.some(e => !e.ready)) {
+    const dias = Math.max(...est.map(e => e.n_dias));
+    return `<span class="badge badge-quiet">${pt ? 'em coleta' : 'collecting'}: ${dias} ${pt ? 'de' : 'of'} ${acc.min_dias} ${pt ? 'dias para o teste' : 'days for the test'}</span>`;
+  }
+  if (est.some(e => e.sig)) return `<span class="badge badge-up">${pt ? 'significância comprovada' : 'proven significance'}</span>`;
+  return `<span class="badge badge-quiet">${pt ? 'sem significância comprovada' : 'no proven significance'}</span>`;
+}
+
 // ✅ predicted ▲ and it rose · 📉 predicted ▼ and it fell · ❌ missed yesterday's D+1 call
 function acertouOntemIcon(status) {
   if (status === 'up_correct')   return '✅';
@@ -39,14 +52,15 @@ function acertouOntemIcon(status) {
   return '';
 }
 
-function trendHtml(delta, { positiveIsGood = true, digits = 1 } = {}) {
+function trendHtml(delta, { positiveIsGood = true, digits = 1, lang = 'en' } = {}) {
+  const pt = lang === 'pt';
   if (delta === null || delta === undefined) {
-    return '<span style="color:var(--ink-ghost);font-size:11px">no comparable prior period</span>';
+    return `<span style="color:var(--ink-ghost);font-size:11px">${pt ? 'sem período anterior comparável' : 'no comparable prior period'}</span>`;
   }
   const good = positiveIsGood ? delta >= 0 : delta <= 0;
   const arrow = delta >= 0 ? '↑' : '↓';
   const color = good ? 'var(--up)' : 'var(--down)';
-  return `<span style="color:${color};font-size:11px;font-weight:600">${arrow} ${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(digits)}pp vs. prior period</span>`;
+  return `<span style="color:${color};font-size:11px;font-weight:600">${arrow} ${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(digits)}pp ${pt ? 'vs. período anterior' : 'vs. prior period'}</span>`;
 }
 
 // ── General chart component: plain SVG, no library.

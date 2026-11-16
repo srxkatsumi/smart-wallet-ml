@@ -182,7 +182,7 @@
           <td style="padding:2px 0;font-family:var(--mono);font-weight:600">${fmtPct(acc.d3)}</td></tr>
     </table>
     <div style="margin:8px 0">${tend.estado === 'ok' ? trendHtml(tend.delta_vs_periodo_anterior) : `<span style="font-size:11px;color:var(--ink-ghost)">still collecting data (n=${tend.n})</span>`}</div>
-    <span class="badge badge-quiet">no proven significance</span>
+    ${significanceBadge(acc, 'en')}
   `;
 
   const exp = SITE_DATA.experimentos;

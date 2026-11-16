@@ -32,10 +32,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      # No workflow_run, head_sha é o commit em que a execução diária COMEÇOU,
+      # antes do commit automático com os dados novos; publicar esse commit
+      # deixava o site um dia atrasado. O main já tem o commit do bot.
       - name: 📥 Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.sha }}
 
       - name: ⚙️ Configurar Pages
         uses: actions/configure-pages@v5

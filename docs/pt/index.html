@@ -181,8 +181,8 @@
       <tr><td style="padding:2px 12px 2px 0;color:var(--ink-faint);font-size:12px">D+3</td>
           <td style="padding:2px 0;font-family:var(--mono);font-weight:600">${fmtPct(acc.d3)}</td></tr>
     </table>
-    <div style="margin:8px 0">${tend.estado === 'ok' ? trendHtml(tend.delta_vs_periodo_anterior) : `<span style="font-size:11px;color:var(--ink-ghost)">ainda em coleta (n=${tend.n})</span>`}</div>
-    <span class="badge badge-quiet">sem significância comprovada</span>
+    <div style="margin:8px 0">${tend.estado === 'ok' ? trendHtml(tend.delta_vs_periodo_anterior, { lang: 'pt' }) : `<span style="font-size:11px;color:var(--ink-ghost)">ainda em coleta (n=${tend.n})</span>`}</div>
+    ${significanceBadge(acc, 'pt')}
   `;
 
   const exp = SITE_DATA.experimentos;

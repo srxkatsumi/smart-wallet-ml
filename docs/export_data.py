@@ -65,6 +65,33 @@ def _load_json(path, default=None):
     return json.loads(p.read_text(encoding="utf-8"))
 
 
+def accuracy_por_horizonte(df_log: pd.DataFrame, sig: dict, n_total: int) -> dict:
+    """
+    Acurácia por horizonte sobre as mesmas linhas da significância (aligned_rows).
+    Enquanto o teste não está pronto (menos de MIN_DIAS dias), a significância não
+    traz `acc`; aqui a acurácia bruta é calculada mesmo assim, para o site mostrar
+    o número junto com "em coleta", em vez de um traço.
+    """
+    from evaluation.significance import MIN_DIAS
+    validadas = aligned_rows(df_log[df_log["correct"].notna()])
+    out = {"n_total": n_total, "min_dias": MIN_DIAS, "estado": {}}
+    for day in [1, 2, 3]:
+        key = f"d{day}"
+        s = sig.get(key, {})
+        sub = validadas[validadas["horizon"] == day]["correct"].astype(float)
+        acc = s.get("acc")
+        if acc is None and len(sub):
+            acc = round(float(sub.mean()), 4)
+        out[key] = acc
+        out["estado"][key] = {
+            "ready": bool(s.get("ready", False)),
+            "sig": bool(s.get("sig", False)),
+            "n": int(s.get("n", len(sub))),
+            "n_dias": int(s.get("n_dias", 0)),
+        }
+    return out
+
+
 def calcular_tendencia(df_log: pd.DataFrame, tickers: list) -> dict:
     """Espelha reports/email_report.py:_calcular_tendencia: 30 dias úteis vs. os 30 anteriores."""
     validadas = aligned_rows(df_log[
@@ -455,10 +482,7 @@ def main():
 
     out = {
         "last_update": str(last_date.date()),
-        "accuracy": {
-            "d1": sig["d1"].get("acc"), "d2": sig["d2"].get("acc"), "d3": sig["d3"].get("acc"),
-            "n_total": n_total,
-        },
+        "accuracy": accuracy_por_horizonte(log, sig, n_total),
         "tendencia": tendencia,
         "favoritos": favoritos,
         "correlacao": correlacao,
