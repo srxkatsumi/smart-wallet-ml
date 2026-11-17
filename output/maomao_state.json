@@ -1,5 +1,5 @@
 {
-  "last_processed_date": "2026-11-13",
+  "last_processed_date": "2026-11-16",
   "learned": {
     "FEARFUL": {
       "RET_UP": 0.16140030472334255,
@@ -24,9 +24,24 @@
       "CALM_STREAK": -0.050566831893919625
     }
   },
-  "pending": [],
+  "pending": [
+    {
+      "date": "2026-11-16",
+      "pool": "FEARFUL",
+      "eligibility": {
+        "RET_UP": 0.0,
+        "RET_DOWN": 0.12516043489747275,
+        "VOL_SPIKE": 0.26,
+        "VIX_SPIKE": 0.6233333333333334,
+        "STREAK_UP": 0.0,
+        "STREAK_DOWN": 0.6,
+        "ANOMALY": 1.0,
+        "DISAGREEMENT": 0.5,
+        "CALM_STREAK": 0.6
+      }
+    }
+  ],
   "recent_alertas": [
-    false,
     false,
     false,
     false,
@@ -40,18 +55,10 @@
     false,
     false,
     false,
-    false
+    false,
+    true
   ],
   "mood_history": [
-    {
-      "date": "2026-10-02",
-      "mood": {
-        "CALM": 0.27290508056313273,
-        "FEARFUL": 0.35399171247704597,
-        "EUPHORIC": 0.3064898014365669,
-        "CONFUSED": 0.0
-      }
-    },
     {
       "date": "2026-10-05",
       "mood": {
@@ -311,6 +318,15 @@
         "FEARFUL": 0.22127846789844396,
         "EUPHORIC": 0.0,
         "CONFUSED": 0.26362483547220333
+      }
+    },
+    {
+      "date": "2026-11-16",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.6945362664104135,
+        "EUPHORIC": 0.0,
+        "CONFUSED": 0.2605204458355026
       }
     }
   ]
