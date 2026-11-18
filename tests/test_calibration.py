@@ -191,3 +191,40 @@ def test_monthly_refresh_refits_and_persists_when_due(monkeypatch, tmp_path):
     assert "confidence_calibrated" in out_df.columns
     assert out_df["confidence_calibrated"].notna().all()
     assert "df" in saved  # save_predictions_log was called to persist the reapplied column
+
+
+# ── encolhimento (antes de haver dias para a curva isotônica) ────────────────
+
+def _poucos_dias(well_calibrated: bool, dias: int = 8) -> pd.DataFrame:
+    df = _validated_rows(n_per_horizon=1500, well_calibrated=well_calibrated)
+    datas = pd.bdate_range("2026-11-02", periods=dias).strftime("%Y-%m-%d")
+    df["target_date"] = np.resize(datas, len(df))
+    df["ref_date"] = df["target_date"]
+    return df
+
+
+def test_encolhimento_vai_a_zero_quando_a_confianca_e_ruido():
+    curves = fit_calibration(_poucos_dias(well_calibrated=False))
+    for k in ["d1", "d2", "d3"]:
+        assert curves[k]["tipo"] == "encolhimento" and curves[k]["lambda"] < 0.15
+        assert apply_calibration(0.9, int(k[1]), curves) == pytest.approx(0.5, abs=0.07)
+
+
+def test_encolhimento_preserva_sinal_quando_existe():
+    curves = fit_calibration(_poucos_dias(well_calibrated=True))
+    assert curves["d1"]["lambda"] > 0.7
+    assert curves["d1"]["brier_calibrated"] <= curves["d1"]["brier_raw"] + 1e-9
+
+
+def test_encolhimento_reajusta_todo_dia():
+    ontem = (pd.Timestamp.today() - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+    hoje = pd.Timestamp.today().strftime("%Y-%m-%d")
+    enc = {"tipo": "encolhimento", "lambda": 0.1}
+    assert needs_refit({"updated": ontem, "d1": enc}) is True
+    assert needs_refit({"updated": hoje, "d1": enc}) is False
+
+
+def test_apply_to_log_com_encolhimento():
+    df = pd.DataFrame({"horizon": [1, 1], "confidence": [0.9, 0.6]})
+    out = apply_to_log(df, {"d1": {"tipo": "encolhimento", "lambda": 0.5}})
+    assert out["confidence_calibrated"].tolist() == pytest.approx([0.7, 0.55])

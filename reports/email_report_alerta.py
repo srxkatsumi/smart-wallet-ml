@@ -1,6 +1,6 @@
 import logging
-from datetime import datetime, timezone, timedelta
-from config.settings import ALERTA_HTML_REPORT, BARCELONA_UTC_OFFSET
+from datetime import datetime
+from config.settings import ALERTA_HTML_REPORT, BARCELONA_TZ
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ def _ticker_row(ticker: str, r: dict) -> str:
 
 
 def build_html_alerta(anomaly: dict) -> str:
-    tz    = timezone(timedelta(hours=BARCELONA_UTC_OFFSET))
+    tz    = BARCELONA_TZ
     agora = datetime.now(tz)
     data_str = f"{_DIAS_PT[agora.weekday()]} · {agora.day} de {_MESES_PT[agora.month-1]} de {agora.year}"
 

@@ -112,6 +112,12 @@ def validate_past_predictions(df_log: pd.DataFrame,
 
 def update_ensemble_weights(df_log: pd.DataFrame,
                              ensemble_weights: dict) -> dict:
+    """
+    Diagnóstico: peso de cada modelo pela acurácia recente. Desde 18/11/2026 a
+    produção combina os modelos por média simples (models/ensemble.py), porque
+    estes pesos não mudavam nenhum voto; o arquivo segue salvo para acompanhar
+    se algum modelo começa a se destacar de verdade.
+    """
     def calc_horizon(row):
         try:
             return (pd.to_datetime(row["target_date"]) - pd.to_datetime(row["pred_date"])).days
@@ -183,8 +189,11 @@ def update_ensemble_weights(df_log: pd.DataFrame,
 
 
 def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
-                         today: pd.Timestamp, calib_curves: dict | None = None) -> pd.DataFrame:
+                         today: pd.Timestamp, calib_curves: dict | None = None,
+                         rastreio: dict | None = None) -> pd.DataFrame:
     from models.calibration import apply_calibration
+    from evaluation.rastreio import contexto_execucao, hash_dados
+    rastreio = rastreio or contexto_execucao(calib_curves)
 
     hoje_str       = today.strftime("%Y-%m-%d")
     novas_previsoes= []
@@ -205,6 +214,7 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
             logger.warning("%s: última barra de %s, sem dados frescos, sem previsão hoje", ticker, ref_date.date())
             continue
         ref_date_str = ref_date.strftime("%Y-%m-%d")
+        h_dados = hash_dados(df_ticker)
 
         tdates = target_dates(ref_date, ticker)
         for day, (direction, pred_price, conf) in res["preds_dict"].items():
@@ -241,6 +251,10 @@ def save_new_predictions(df_log: pd.DataFrame, resultados_ml: dict,
                 "model_sgd":         h_data["preds_ind"].get("sgd", ""),
                 "confidence_calibrated": round(apply_calibration(conf, day, calib_curves or {}), 4),
                 "ref_date":          ref_date_str,
+                "versao_codigo":     rastreio["versao_codigo"],
+                "versao_calibracao": rastreio["calibracao"].get(day, ""),
+                "hash_dados":        h_dados,
+                "executado_em":      rastreio["executado_em"],
             })
 
     if novas_previsoes:

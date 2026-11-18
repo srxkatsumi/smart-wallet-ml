@@ -236,45 +236,39 @@ Um segundo email diário, totalmente separado ("Carteira BOT Experimentos"), rod
 
 ---
 
-## Email diário
+## Emails
 
-O email HTML é desenhado para ser lido em telemóvel. Tem quatro secções:
+São quatro emails, todos em HTML pensado para telemóvel.
 
-### 1 — Tabela ML de previsões
+### 1. Email diário "Carteira Inteligente" (dias úteis)
 
-| Coluna | Conteúdo |
-|--------|---------|
-| Ativo | Ticker + nome do ativo |
-| Preço | Preço de fecho atual (em EUR onde aplicável via câmbio) |
-| Var% | Variação fecho-a-fecho do dia anterior |
-| D+1 | Previsão direcional + confiança |
-| D+2 | Previsão direcional + confiança |
-| D+3 | Previsão direcional + confiança |
-| Consenso | BULLISH / BEARISH / MISTO |
+Por ordem, de cima para baixo:
 
-Cada linha é prefixada com ✅ ou ❌ — se a previsão D+1 de ontem foi correta ou errada.
+| Bloco | O que mostra |
+|---|---|
+| Cabeçalho | Ativos, ETFs, previsões validadas (alinhadas, D+1 a D+3) e acurácia da carteira em todo o período |
+| Saúde do sistema | ✅ OK, ⚠️ atenção (uma etapa secundária falhou) ou ⛔ dados inconsistentes (ativo sem previsão ou com barra velha). As etapas que falham sem bloquear deixaram de ficar só no log |
+| Eventos nas próximas 3 sessões | Fed, BCE, Banco do Japão, CPI dos EUA (`config/eventos_macro.json`, fontes oficiais) e resultados trimestrais das ações da carteira e das mega caps (yfinance), com o aviso de que o modelo não os vê |
+| Risco hoje | VIX, juro de 10 anos dos EUA, EUR/USD e ouro; por ativo, em euro: oscilação esperada amanhã (EWMA), volatilidade de 20 dias contra a de 1 ano, queda desde o pico e VaR de 1 dia; nível geral (baixo, normal, elevado). Nada depende de quanto está investido |
+| Previsões de curto prazo | D+1, D+2 e D+3 por ativo. O número principal é a confiança **calibrada** contra os acertos reais (50 = sem vantagem demonstrada), com a bruta em letra pequena e a linha "13F" com o consenso das famílias (≠ quando discordam) |
+| Ensemble ampliado | Desafiante: produção + 13 famílias com pesos encolhidos, com placar contra a produção |
+| Acurácia do modelo | D+1 da carteira nos últimos 30 dias úteis, com IC 95% (dia como unidade), referência "sempre ▲" e precisão por direção com p-valor |
+| Drift das features | Ranking de importância de hoje contra os dias anteriores, com o motivo quando acusa drift (ρ < 0,70 ou a feature nº 1 mudou) |
+| Correlação de retornos | Matriz dos últimos 120 dias úteis |
+| 13 famílias | Acurácia D+1 por família com N e janela, e consenso de D+1 por ativo ("X de 13 a favor · Y% ponderado") |
+| Rodapé | Versão do código, data dos dados e regra de calibração de cada horizonte |
 
-**Legenda:** ✅ acertou a previsão D+1 do dia anterior · ❌ errou a previsão D+1 do dia anterior
+### 2. Email semanal "Carteira BOT Semanal" (sábado)
 
-### 2 — Tabela ETFs de acumulação
+Sai com a execução do último pregão da semana, no calendário real da bolsa (na semana do Natal, sai antes do feriado). Traz a leitura mais longa: a semana da carteira e dos fatores, acurácia da produção na semana e no acumulado com IC, as 13 famílias com IC e p corrigido (Benjamini-Hochberg), confiança dita × acerto real com Brier e BSS, drift, diversificação (correlação de 60 contra 120 dias) e os placares dos desafiantes (ensemble ampliado, regime e volatilidade).
 
-Projeções de longo prazo para os ETFs de acumulação a 1 / 3 / 5 / 10 anos nos cenários pessimista / base / optimista. Valores em EUR.
+### 3. Email "Carteira BOT Experimentos" (dias úteis)
 
-### 3 — Painel de acurácia
+O desafiante de regressão (retorno e preço com intervalo de 90%) contra o campeão. Ver a secção do experimento de regressão acima.
 
-Acurácia direcional cumulativa **apenas para os tickers da carteira**, nos últimos 30 dias úteis. Com gráfico por ativo e figura global de carteira.
+### 4. Email "Carteira BOT Alerta" (só em dias de anomalia)
 
-### 4 — Gráficos
-
-Um gráfico por ativo da carteira com os últimos 120 dias úteis:
-- Preço + SMA20 + SMA50 + Bandas de Bollinger
-- Linha de preço de abertura de posição
-- Setas de previsão D+1 / D+2 / D+3 (datas por calendário de bolsa)
-- RSI (14 dias)
-- MACD + histograma
-- Curva de acurácia cumulativa D+1 (depois de ≥ 3 validações disponíveis)
-
-Os marcadores de validação nos gráficos mostram **apenas D+1**: ● para previsão correta e × para errada. D+2 e D+3 são treinados separadamente e aparecem na tabela do email, mas não são plotados no gráfico para evitar sobreposição de marcadores na mesma data-alvo.
+VIX entrando no regime alto ou variando 15% ou mais num dia, ou um ativo da carteira movendo-se 2,5 vezes ou mais o próprio ATR.
 
 ---
 
@@ -293,27 +287,26 @@ A sincronização corre como step 8 do workflow GitHub Actions. Clona o repo pú
 
 ## Carteira coberta
 
-**eToro (ações):**
+Definida em `config/portfolio.json`. Todos os preços aparecem em euro: as ações americanas são convertidas pelo EUR/USD de cada dia.
+
+**ETFs de acumulação:**
 
 | Ticker | Ativo |
 |--------|-------|
-| LLY | Eli Lilly & Co |
-| NVDA | NVIDIA Corporation |
-| ALV.DE | Allianz SE |
-| BTC-USD | Bitcoin |
-| BABA | Alibaba Group ADR |
-| DHER.DE | Delivery Hero SE |
+| ICGA.DE | iShares MSCI China |
+| PPFB.DE | iShares Physical Gold ETC (Xetra, EUR) |
+| EXUS.MI | MSCI World ex USA |
+| LYP6.DE | Stoxx Europe 600 |
+| IS3N.DE | iShares Core MSCI EM IMI |
+| EUNN.DE | iShares Core MSCI Japan IMI |
 
-**ETFs de acumulação (longo prazo):**
+**Ações:**
 
 | Ticker | Ativo |
 |--------|-------|
-| EXUS.L | MSCI World ex USA ETF |
-| ICGA.DE | MSCI China ETF |
-| SGLN.L | Physical Gold ETC |
-| EMIM.AS | iShares Core MSCI EM IMI ETF |
-| MEUD.PA | Core Stoxx Europe 600 |
-| SJPA.MI | iShares Core MSCI Japan IMI ETF |
+| AFRM | Affirm Holdings (Nasdaq, USD convertido para EUR) |
+
+O SGLN.L é o mesmo ETC de ouro do PPFB.DE, negociado em Londres em pence. Saiu da carteira em 18/11/2026 para o ouro não contar a dobrar nas métricas, na MaoMao e nos alertas, e ficou na watchlist como controle de consistência.
 
 ### Watchlist ML (universo de contexto macroeconómico)
 
@@ -326,7 +319,7 @@ A watchlist expande o universo de treinamento além da carteira pessoal. Os mode
 | Blue Chips Suíças | NESN.SW NOVN.SW ROG.SW | Sinal europeu defensivo |
 | Farmacêuticas / Saúde | NVO LLY JNJ PFE AZN MRK ABBV UNH IBB XBI | Contexto setorial para a LLY |
 | Ações Alemãs | ALV.DE SIE.DE BMW.DE BAS.DE | Proxy do macro europeu |
-| ETFs da carteira | EXUS.L ICGA.DE SGLN.L EMIM.AS MEUD.PA SJPA.MI | Cobertura direta da carteira |
+| ETFs da carteira | ICGA.DE PPFB.DE EXUS.MI LYP6.DE IS3N.DE EUNN.DE (e SGLN.L como controle) | Cobertura direta da carteira |
 | ETFs de índice global | VWCE.DE IWDA.AS CSPX.L | Regime amplo do mercado |
 | Cripto | BTC-USD ETH-USD | Regime do mercado cripto |
 | EM tech / recursos | BABA TSM BHP RIO VALE | Sinal macro de emergentes |
@@ -513,6 +506,18 @@ O git push usa um loop de até 3 tentativas. Se um push é rejeitado, primeiro v
 
 Histórico mais antigo e detalhado em `README_Errors.md`. Resumo dos incidentes desta fase (experimento de regressão + auditoria de pontos fracos):
 
+#### 2026-11-12 a 2026-11-18: revisão do email, calibração honesta e desafiantes de volatilidade
+
+- **Carteira:** a AFRM (Affirm) entrou como primeira ação individual, com preço em euro. O SGLN.L saiu da carteira por ser o mesmo ETC do PPFB.DE e ficou na watchlist.
+- **Site:** o deploy disparado pela execução diária publicava o commit anterior aos dados novos, deixando o site um dia atrasado (ERR-016). O card de acurácia mostrava "-" enquanto a significância não tinha 20 dias.
+- **Revisão externa do email (ERR-018):** contadores sem universo nem janela, "Consenso dos 25 modelos" (são 13), contagem do consenso invertida, legenda do drift sem o segundo critério e a seção das famílias rotulada como semanal. Tudo corrigido e rotulado.
+- **Confiança:** um estudo de 2 anos mostrou que a confiança direcional não tem relação com o acerto em nenhum recorte (ativo, horizonte, regime do VIX, acordo entre modelos), e que "sempre ▲" acerta 2 a 7 pontos mais. A confiança passou a ser calibrada por encolhimento até haver 20 dias para a curva isotônica; hoje λ = 0, e o email mostra 50 com a bruta ao lado.
+- **Pesos do ensemble:** os pesos adaptativos davam exatamente o mesmo voto que a média simples em ~54 mil previsões por horizonte. A produção passou a usar a média simples.
+- **Volatilidade:** o tamanho do movimento é previsível onde a direção não é. A EWMA bateu a variância histórica (QLIKE 5% a 10% menor); GARCH e HAR não bateram a EWMA; a logística para "movimento grande amanhã" teve AUC 0,61 e BSS +1,4% contra a taxa de base, sem passar na correção múltipla. A oscilação esperada entrou no email; a logística e a EWMA correm como desafiantes ao vivo.
+- **Novo no email:** saúde do sistema, eventos das próximas sessões, risco, IC, referência "sempre ▲", HLN no Diebold-Mariano, rodapé com versões e o email semanal. Fuso de Barcelona com horário de verão automático (ERR-017).
+- **Rastreabilidade:** cada previsão grava `versao_codigo`, `versao_calibracao`, `hash_dados` e `executado_em`.
+- **Watchlist:** clicar num ativo abre os mesmos gráficos dos Favoritos (preço com SMA e Bollinger, RSI, MACD, acurácia e previsões). Entraram 88 tickers (616 no total): 11 ETFs UCITS de acumulação na Xetra, 29 ações europeias (Alemanha, França, Holanda, Itália, Suíça), 8 espanholas do IBEX, 7 britânicas pelos ADRs americanos, 11 japonesas em Tóquio, 7 chinesas em Hong Kong, 8 chinesas listadas nos EUA, concorrentes da AFRM (KLAR, XYZ, TOST, SEZL) e 3 ETFs de mineradoras de ouro. Tickers novos herdam o calendário da bolsa pelo sufixo (.MC, .PA, .AS, .DE, .T, .HK...), a página converte iene e dólar de Hong Kong para euro, e o cache de moeda e dividendos busca na hora os que faltam.
+
 #### 2026-08-17: Lacunas silenciosas encontradas numa revisão de pontos fracos do projeto
 
 Não foi um incidente único — uma auditoria deliberada encontrou três coisas erradas em silêncio, sem nunca lançar erro:
@@ -691,6 +696,21 @@ Os 25 modelos originais estão implementados e testados. As camadas transversais
 | 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ✅ |
 | 19 | Incerteza calibrada | Conformal Prediction (MAPIE) | ✅ |
 | 20 | Detecção de drift | ADWIN, Page-Hinkley | ✅ |
+
+
+### Novembro de 2026: honestidade estatística e volatilidade
+
+| # | Item | Estado |
+|---|------|--------|
+| 1 | Confiança calibrada no email (encolhimento até 20 dias, depois isotônica) | ✅ / ⏳ isotônica por volta de 4/12 |
+| 2 | IC, referência "sempre ▲", p-valores e HLN em todas as leituras | ✅ |
+| 3 | Saúde do sistema, eventos e risco no email diário | ✅ |
+| 4 | Email semanal | ✅ |
+| 5 | Rastreabilidade das previsões | ✅ |
+| 6 | Ensemble ampliado e desafiante de regime no Jinshi | ⏳ por volta de 4/12 |
+| 7 | Desafiantes de volatilidade no Jinshi | ⏳ por volta de 16/12 |
+| 8 | Email mensal (veredito do Jinshi, Diebold-Mariano, mudanças) | ⬜ |
+| 9 | Consistência do ouro (PPFB.DE × SGLN.L) e inflação da zona do euro no calendário | ⬜ |
 
 ---
 

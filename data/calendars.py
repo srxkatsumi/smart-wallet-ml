@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 import pandas_market_calendars as mcal
-from config.settings import TICKER_CALENDAR, HORIZONS
+from config.settings import calendar_for, HORIZONS
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def _get_cal(name: str):
 
 def last_completed_session(ticker: str, now: pd.Timestamp | None = None) -> pd.Timestamp | None:
     """Data do último pregão já encerrado no calendário do ticker."""
-    cal = _get_cal(TICKER_CALENDAR.get(ticker, "NYSE"))
+    cal = _get_cal(calendar_for(ticker))
     now = pd.Timestamp.now(tz="UTC") if now is None else now
     sched = cal.schedule(start_date=(now - pd.Timedelta(days=10)).date(), end_date=now.date())
     closed = sched[sched["market_close"] <= now]
@@ -25,7 +25,7 @@ def last_completed_session(ticker: str, now: pd.Timestamp | None = None) -> pd.T
 
 def target_dates(base: pd.Timestamp, ticker: str) -> dict[int, pd.Timestamp]:
     """Return {1: date_d1, 2: date_d2, 3: date_d3} respecting the ticker's market calendar."""
-    cal_name = TICKER_CALENDAR.get(ticker, "NYSE")
+    cal_name = calendar_for(ticker)
     try:
         cal   = _get_cal(cal_name)
         start = (base + pd.Timedelta(days=1)).strftime("%Y-%m-%d")

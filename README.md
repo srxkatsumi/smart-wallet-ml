@@ -230,71 +230,64 @@ A second, fully separate daily email ("Carteira BOT Experimentos") runs an exper
 
 ---
 
-## Email report
+## Email reports
 
-The daily HTML email is designed to be read on mobile. It contains four sections:
+Four HTML emails, all designed for mobile.
 
-### 1. ML forecasts table
+### 1. Daily email "Carteira Inteligente" (business days)
 
-| Column | Content |
-|--------|---------|
-| Ativo | Ticker + asset name |
-| Preço | Current closing price (EUR where applicable via FX) |
-| Var% | Previous-day close-to-close change |
-| D+1 | Directional forecast + confidence |
-| D+2 | Directional forecast + confidence |
-| D+3 | Directional forecast + confidence |
-| Consenso | BULLISH / BEARISH / MISTO |
+Top to bottom:
 
-Each asset row is prefixed with ✅ or ❌ reflecting whether yesterday's D+1 forecast was correct.
+| Block | What it shows |
+|---|---|
+| Header | Assets, ETFs, validated predictions (aligned, D+1 to D+3) and portfolio accuracy over the whole period |
+| System health | ✅ OK, ⚠️ attention (a secondary step failed) or ⛔ inconsistent data (asset with no prediction or a stale bar). Non-blocking failures no longer live only in the log |
+| Events in the next 3 sessions | Fed, ECB, Bank of Japan, US CPI (`config/eventos_macro.json`, official sources) and quarterly results for portfolio stocks and mega caps (yfinance), flagged as invisible to the model |
+| Risk today | VIX, US 10-year yield, EUR/USD and gold; per asset, in EUR: expected move tomorrow (EWMA), 20-day vs 1-year volatility, drawdown from the peak and 1-day VaR; overall level (low, normal, high). Nothing depends on position sizes |
+| Short-term forecasts | D+1, D+2, D+3 per asset. The main number is the confidence **calibrated** against real hits (50 = no demonstrated edge), with the raw value in small print and a "13F" line with the families' consensus (≠ when they disagree) |
+| Extended ensemble | Challenger: production + 13 families with shrunk weights, scored against production |
+| Model accuracy | Portfolio D+1 over the last 30 business days, with a 95% CI (day as the unit), the "always ▲" baseline and per-direction precision with p-values |
+| Feature drift | Today's importance ranking vs previous days, with the reason when drift fires (ρ < 0.70 or the #1 feature changed) |
+| Return correlation | Matrix over the last 120 business days |
+| 13 families | D+1 accuracy per family with N and window, and per-asset D+1 consensus ("X of 13 in favour · Y% weighted") |
+| Footer | Code version, data date and the calibration rule per horizon |
 
-**Legend:** ✅ = yesterday's D+1 prediction was correct · ❌ = yesterday's D+1 prediction was wrong
+### 2. Weekly email "Carteira BOT Semanal" (Saturday)
 
-### 2. ETF accumulation table
+Sent with the run for the last trading session of the week, on the real exchange calendar. Longer read: the week for the portfolio and its factors, production accuracy for the week and cumulative with CIs, the 13 families with CIs and Benjamini-Hochberg-corrected p-values, stated confidence vs real hit rate with Brier and BSS, drift, diversification (60-day vs 120-day correlation) and the challengers' scoreboards (extended ensemble, regime, volatility).
 
-Long-term projections for accumulation ETFs at 1 / 3 / 5 / 10 years under pessimistic / base / optimistic growth scenarios. Values in EUR.
+### 3. "Carteira BOT Experimentos" (business days)
 
-### 3. Accuracy panel
+The regression challenger (return and price with a 90% interval) vs the champion. See the regression experiment section above.
 
-Cumulative directional accuracy for **portfolio tickers only**, over the last 30 business days. Displayed with a chart-by-chart breakdown and a portfolio-level headline figure.
+### 4. "Carteira BOT Alerta" (anomaly days only)
 
-### 4. Charts
-
-One chart per portfolio asset, showing the last 120 trading days of price history with:
-- Price + SMA20 + SMA50 + Bollinger Bands
-- Entry price line (opening position)
-- D+1 / D+2 / D+3 prediction arrows (calendar-aware dates)
-- RSI (14-day)
-- MACD + histogram
-- Cumulative D+1 accuracy curve (once ≥ 3 validations are available)
-
-Validation markers on charts show **D+1 only**: a ● for a correct prediction and an × for a wrong one. D+2 and D+3 are trained separately and shown in the email table, but are not plotted on the chart to avoid stacking multiple markers on the same target date.
+VIX entering the high regime or moving 15% or more in a day, or a portfolio asset moving 2.5x or more its own ATR.
 
 ---
 
 ## Portfolio covered
 
-**eToro equities:**
+Defined in `config/portfolio.json`. All prices are shown in EUR: US stocks are converted with each day's EUR/USD.
+
+**Accumulation ETFs:**
 
 | Ticker | Name |
 |--------|------|
-| LLY | Eli Lilly & Co |
-| NVDA | NVIDIA Corporation |
-| ALV.DE | Allianz SE |
-| BTC-USD | Bitcoin |
-| BABA | Alibaba Group ADR |
-| DHER.DE | Delivery Hero SE |
+| ICGA.DE | iShares MSCI China |
+| PPFB.DE | iShares Physical Gold ETC (Xetra, EUR) |
+| EXUS.MI | MSCI World ex USA |
+| LYP6.DE | Stoxx Europe 600 |
+| IS3N.DE | iShares Core MSCI EM IMI |
+| EUNN.DE | iShares Core MSCI Japan IMI |
 
-**Accumulation ETFs (long-term):**
+**Stocks:**
 
 | Ticker | Name |
 |--------|------|
-| EXUS.L | MSCI World ex USA ETF |
-| ICGA.DE | MSCI China ETF |
-| SGLN.L | Physical Gold ETC |
-| EMIM.AS | iShares Core MSCI EM IMI ETF |
-| MEUD.PA | Core Stoxx Europe 600 |
-| SJPA.MI | iShares Core MSCI Japan IMI ETF |
+| AFRM | Affirm Holdings (Nasdaq, USD converted to EUR) |
+
+SGLN.L is the same gold ETC as PPFB.DE, listed in London in pence. It left the portfolio on 2026-11-18 so gold would not count twice in metrics, MaoMao and alerts, and stays in the watchlist as a consistency control.
 
 ### ML watchlist (macro context universe)
 
@@ -307,7 +300,7 @@ The watchlist expands the training universe beyond the personal portfolio. Model
 | Swiss Blue Chip | NESN.SW NOVN.SW ROG.SW | Defensive European signal |
 | Pharma / Health | NVO LLY JNJ PFE AZN MRK ABBV UNH IBB XBI | Sector context for LLY |
 | German equities | ALV.DE SIE.DE BMW.DE BAS.DE | European macro proxy |
-| Portfolio ETFs | EXUS.L ICGA.DE SGLN.L EMIM.AS MEUD.PA SJPA.MI | Direct portfolio coverage |
+| Portfolio ETFs | ICGA.DE PPFB.DE EXUS.MI LYP6.DE IS3N.DE EUNN.DE (and SGLN.L as a control) | Direct portfolio coverage |
 | Global index ETFs | VWCE.DE IWDA.AS CSPX.L | Broad market regime |
 | Crypto | BTC-USD ETH-USD | Crypto market regime |
 | EM tech / resources | BABA TSM BHP RIO VALE | Emerging market macro signal |
@@ -491,6 +484,18 @@ Git push uses a retry loop: up to 3 attempts. On a rejected push, it first check
 ## Changelog
 
 ### Incidents & fixes
+
+#### 2026-11-12 to 2026-11-18: email review, honest calibration and volatility challengers
+
+- **Portfolio:** AFRM (Affirm) joined as the first individual stock, priced in EUR. SGLN.L left the portfolio (same ETC as PPFB.DE) and stays in the watchlist.
+- **Site:** the deploy triggered by the daily run published the commit from before the new data, leaving the site a day behind (ERR-016). The accuracy card showed "-" while significance had fewer than 20 days.
+- **External email review (ERR-018):** counters with no universe or window, "25 models consensus" (it is 13), inverted consensus count, drift legend missing its second criterion and the families section labelled as weekly. All fixed and labelled.
+- **Confidence:** a 2-year study showed directional confidence has no relation to hits in any slice (asset, horizon, VIX regime, model agreement), and "always ▲" beats the model by 2 to 7 points. Confidence is now calibrated by shrinkage until there are 20 days for the isotonic curve; today λ = 0 and the email shows 50 with the raw value beside it.
+- **Ensemble weights:** adaptive weights gave exactly the same vote as a simple mean across ~54k predictions per horizon. Production now uses the simple mean.
+- **Volatility:** move size is predictable where direction is not. EWMA beat the historical variance (QLIKE 5% to 10% lower); GARCH and HAR did not beat EWMA; the logistic model for "big move tomorrow" reached AUC 0.61 and BSS +1.4% vs the base rate without surviving multiple-testing correction. The expected move is now in the email; the logistic model and EWMA run as live challengers.
+- **New in the email:** system health, upcoming events, risk, CIs, "always ▲" baseline, HLN in Diebold-Mariano, version footer and the weekly email. Barcelona time zone with automatic DST (ERR-017).
+- **Traceability:** every prediction stores `versao_codigo`, `versao_calibracao`, `hash_dados` and `executado_em`.
+- **Watchlist:** clicking an asset opens the same charts as Favorites (price with SMA and Bollinger, RSI, MACD, accuracy and forecasts). 88 tickers added (616 in total): 11 UCITS accumulating ETFs on Xetra, 29 European stocks (Germany, France, Netherlands, Italy, Switzerland), 8 Spanish IBEX stocks, 7 UK stocks via US ADRs, 11 Japanese stocks in Tokyo, 7 Chinese stocks in Hong Kong, 8 US-listed Chinese stocks, AFRM peers (KLAR, XYZ, TOST, SEZL) and 3 gold-miner ETFs. New tickers inherit their exchange calendar from the suffix (.MC, .PA, .AS, .DE, .T, .HK...), the page converts yen and Hong Kong dollars to EUR, and the currency/dividend cache fetches missing tickers immediately.
 
 #### 2026-08-17: Silent gaps found during a project-wide weak-point review
 
@@ -689,6 +694,21 @@ All 25 original models are implemented and tested. Transversal layers (phases 9-
 | 18 | Foundation Models (2023-2024) | Chronos (Amazon), TimesFM (Google), Moirai (Salesforce) | ✅ |
 | 19 | Calibrated uncertainty | Conformal Prediction (MAPIE) | ✅ |
 | 20 | Drift detection | ADWIN, Page-Hinkley | ✅ |
+
+
+### November 2026: statistical honesty and volatility
+
+| # | Item | Status |
+|---|------|--------|
+| 1 | Calibrated confidence in the email (shrinkage until 20 days, then isotonic) | ✅ / ⏳ isotonic around 2026-12-04 |
+| 2 | CIs, "always ▲" baseline, p-values and HLN in every reading | ✅ |
+| 3 | System health, events and risk in the daily email | ✅ |
+| 4 | Weekly email | ✅ |
+| 5 | Prediction traceability | ✅ |
+| 6 | Extended ensemble and regime challenger through Jinshi | ⏳ around 2026-12-04 |
+| 7 | Volatility challengers through Jinshi | ⏳ around 2026-12-16 |
+| 8 | Monthly email (Jinshi verdict, Diebold-Mariano, changes) | ⬜ |
+| 9 | Gold consistency (PPFB.DE × SGLN.L) and euro-area inflation in the calendar | ⬜ |
 
 ---
 

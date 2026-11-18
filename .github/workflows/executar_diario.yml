@@ -190,6 +190,13 @@ jobs:
           echo "alerta=$ALERTA" >> "$GITHUB_OUTPUT"
           echo "Anomalia detetada hoje: $ALERTA"
 
+      # 4c-1b — Email semanal: o HTML só existe quando esta execução é a do
+      # último pregão da semana (não vai para o git, então nunca sobra de outra)
+      - name: 📅 Verificar email semanal
+        id: semanal
+        run: |
+          if [ -f output/resumo_semanal.html ]; then echo "semanal=true" >> "$GITHUB_OUTPUT"; else echo "semanal=false" >> "$GITHUB_OUTPUT"; fi
+
       # 4c-2 — Atualizar os dados do site público (docs/) com os resultados
       # frescos deste run. Roda sempre, como o step de anomalia acima, pra o
       # site nunca ficar desatualizado silenciosamente. export_watchlist.py
@@ -239,6 +246,9 @@ jobs:
           # output/charts/*.png — publicado como artefacto do run, não vai mais para git
           git add output/xai/                       2>/dev/null || true
           git add output/predictions_research_log.csv 2>/dev/null || true
+          git add output/predictions_ampliado_log.csv 2>/dev/null || true
+          git add output/predictions_regime_log.csv 2>/dev/null || true
+          git add output/predictions_volatilidade_log.csv 2>/dev/null || true
           git add output/wfv_log.csv                2>/dev/null || true
           git add output/wfv_results.json           2>/dev/null || true
           git add output/significance.json          2>/dev/null || true
@@ -368,6 +378,24 @@ jobs:
           to: ${{ secrets.GMAIL_TO }}
           from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
           html_body: file://output/resumo_alerta.html
+          convert_markdown: false
+
+      # 7e — Email semanal (só na execução do último pregão da semana)
+      - name: 📅 Enviar email semanal
+        id: send_email_semanal
+        if: success() && steps.semanal.outputs.semanal == 'true' && (github.event_name == 'schedule' || github.event.inputs.enviar_email == 'true')
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@4226df7daafa6fc901a43789c49bf7ab309066e7 # v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "Carteira BOT Semanal · ${{ steps.resumo.outputs.date }}"
+          to: ${{ secrets.GMAIL_TO }}
+          from: CarteiraBOT <${{ secrets.GMAIL_USER }}>
+          html_body: file://output/resumo_semanal.html
           convert_markdown: false
 
       # 7b — Telegram diário com tendência dos modelos

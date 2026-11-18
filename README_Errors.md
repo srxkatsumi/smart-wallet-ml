@@ -209,8 +209,8 @@ Não foi um incidente. Uma auditoria do código achou o preço do SGLN.L no site
 **Efeito no histórico**
 O log foi mantido como auditoria. Métricas, pesos e a calibração usam só linhas com `ref_date` (`data/storage.py:aligned_rows`), então a acurácia recomeça do zero e só é reportada com 100 previsões em 20 dias. As conclusões anteriores do ERR-013 e sobre as 13 famílias precisam ser medidas de novo com os dados alinhados.
 
-**Ainda aberto**
-`confidence_calibrated` continua sem aparecer no site ou no email: a decisão fica para depois de ter 20 dias alinhados.
+**Ainda aberto (atualizado em 18/11)**
+Desde 18/11 o email mostra a confiança calibrada: por encolhimento até haver 20 dias alinhados, depois pela curva isotônica. Ver ERR-018.
 
 ---
 
@@ -229,6 +229,56 @@ Também saíram da watchlist 15 tickers sem nenhuma previsão nos últimos 10 di
 
 ---
 
+## ERR-016: Site publicado sempre um dia atrasado (2026-11-13)
+
+**Sintoma**
+A AFRM entrou na carteira em 12/11, mas não aparecia no site no dia seguinte, embora estivesse no `docs/assets/data.js` do repositório.
+
+**Causa raiz**
+O `deploy-pages.yml` disparado por `workflow_run` fazia checkout de `github.event.workflow_run.head_sha`, que é o commit em que a execução diária **começou**, antes do commit automático com os dados novos. O site publicava sempre os dados da véspera, desde que esse deploy foi configurado. O email não era afetado.
+
+**Correção**
+No `workflow_run`, o deploy faz checkout do `main`, que já tem o commit do bot. Corrigido em 16/11 (commit `032675e83`).
+
+---
+
+## ERR-017: Hora do email com offset fixo (2026-11-18)
+
+**Sintoma**
+Desde a mudança para o horário de inverno (25/10), os três emails mostravam a hora de Barcelona com uma hora a mais.
+
+**Causa raiz**
+`BARCELONA_UTC_OFFSET = 2` fixo, que precisava ser trocado à mão em outubro e março.
+
+**Correção**
+`BARCELONA_TZ = ZoneInfo("Europe/Madrid")`, com horário de verão automático.
+
+---
+
+## ERR-018: Revisão externa do email e da qualidade estatística (2026-11-17 a 2026-11-18)
+
+**Sintoma**
+Não foi um incidente: uma revisão externa do email diário, do de experimentos e do de alerta listou inconsistências e lacunas de rigor.
+
+**O que estava errado e foi corrigido**
+- **Ativo em dobro:** PPFB.DE e SGLN.L são o mesmo ETC de ouro em duas bolsas. Convertidos para euro, a razão de preço entre eles é 1,000 ± 0,003, mas o modelo deu direções diferentes em 1 de cada 3 previsões. O SGLN.L saiu da carteira e ficou na watchlist como controle.
+- **Contadores sem universo:** "532 ativos" contava a watchlist inteira numa tabela de 8; "110 mil validadas" somava todos os tickers sem alinhamento. Agora cada número diz o universo e a janela.
+- **Consenso:** o título dizia "25 modelos" (são 13 famílias) e "BAIXA 1/13" mostrava quantas votaram ALTA. Agora mostra quantas apoiam a direção indicada e o percentual ponderado.
+- **Drift:** o alerta também dispara quando a feature mais importante muda, o que não estava na legenda (foi o caso do ⚠️ com ρ = 0,91: ATR14 → BB_width). Agora o motivo aparece no alerta.
+- **Seção das famílias rotulada como "semanal":** atualiza todo dia; agora diz isso, com N e janela.
+- **Diebold-Mariano:** já usava h−1 lags na média diária; faltava a correção de amostra pequena de Harvey, Leybourne e Newbold e a t(T−1). Acrescentadas; o Jinshi usa a mesma correção.
+- **Card de acurácia do site em branco:** a significância só traz a acurácia com 20 dias; o site passou a calcular a acurácia das previsões alinhadas, com o selo "em coleta".
+- **Confiança:** a tabela confiança dita × acerto real mostrou o D+1 a 70-80% acertando 48,7%. Um estudo de 2 anos (`scripts/estudo_vantagem.py`) confirmou que a confiança não tem relação com o acerto em nenhum recorte e que o Brier fica pior que dizer sempre 50%. A calibração passou a valer já, por encolhimento (λ estimado pelo Brier; hoje 0), com a bruta ao lado no email.
+- **Pesos adaptativos:** davam exatamente o mesmo voto que a média simples em ~54 mil previsões por horizonte (`scripts/ablation_ensemble_weights.py`). A produção passou a usar a média simples; os pesos ficam como diagnóstico.
+
+**Acrescentado**
+Saúde do sistema, eventos das próximas sessões, risco por ativo sem depender de valores investidos, IC e referência "sempre ▲", email semanal, rastreabilidade (`versao_codigo`, `versao_calibracao`, `hash_dados`, `executado_em`) e desafiantes ao vivo (ensemble ampliado, regime e volatilidade).
+
+**Ainda aberto**
+Curva isotônica e veredito do Jinshi para os desafiantes quando houver 20 dias alinhados; email mensal.
+
+---
+
 ## Validações em produção (estado atual)
 
 | Validação | Onde | O que deteta |
@@ -241,7 +291,10 @@ Também saíram da watchlist 15 tickers sem nenhuma previsão nos últimos 10 di
 | Pre-commit hook CHECK 1 | Local | Bloqueia commit de predictions_log.csv com dados intraday |
 | Pre-commit hook CHECK 2 | Local | Bloqueia commit se testes relacionados falharem |
 | `permissions: contents: write` | Workflows | Garante que o push nunca falha por falta de permissão |
+| Saúde do sistema no email | `evaluation/saude.py` | Ativo da carteira sem previsão ou com barra mais velha que o último pregão do seu calendário; etapas que falharam sem bloquear |
+| Rastreabilidade | `evaluation/rastreio.py` | Cada previsão grava código, calibração, hash da barra e horário: qualquer número do email pode ser reproduzido |
+| Aviso de calendário macro | `evaluation/eventos.py` | O email avisa quando faltam menos de 60 dias para o fim de `config/eventos_macro.json` |
 
 ---
 
-*Última actualização: 2026-11-05*
+*Última actualização: 2026-11-18*

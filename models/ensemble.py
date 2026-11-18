@@ -150,8 +150,12 @@ def _train_horizon(df: pd.DataFrame, target_col: str, weights: dict,
     }
     preds_ind = {name: "up" if p > 0.5 else "down" for name, p in probs.items()}
 
-    total_w   = sum(weights.values())
-    prob_ens  = sum(probs[k] * weights.get(k, 1.0) for k in probs) / total_w
+    # Média simples dos três modelos. Os pesos adaptativos (models/validator.py:
+    # update_ensemble_weights) continuam calculados como diagnóstico, mas não
+    # entram aqui: ficavam entre 0,91 e 1,11 e, nas ~54 mil previsões por
+    # horizonte do log, deram exatamente o mesmo voto que a média simples
+    # (scripts/ablation_ensemble_weights.py, 18/11/2026).
+    prob_ens  = sum(probs.values()) / len(probs)
     direction = "up" if prob_ens > 0.5 else "down"
     confidence= max(prob_ens, 1 - prob_ens)
 

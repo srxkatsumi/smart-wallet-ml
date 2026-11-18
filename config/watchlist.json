@@ -25,6 +25,41 @@
       "NESN.SW", "NOVN.SW"
     ],
 
+    "European Accumulation ETFs (UCITS)": [
+      "SXR8.DE", "SXRV.DE", "SXRT.DE", "IUSN.DE", "ZPRV.DE", "IS3Q.DE",
+      "IS3R.DE", "QDV5.DE", "VVSM.DE", "IQQH.DE", "IBCI.DE"
+    ],
+
+    "European Stocks": [
+      "MC.PA", "TTE.PA", "AIR.PA", "SU.PA", "RHM.DE", "IFX.DE", "ADYEN.AS",
+      "DTE.DE", "MBG.DE", "VOW3.DE", "MUV2.DE", "DB1.DE", "ADS.DE",
+      "BNP.PA", "OR.PA", "RMS.PA", "SAN.PA", "SAF.PA", "EL.PA",
+      "PRX.AS", "INGA.AS", "PHIA.AS",
+      "ENEL.MI", "UCG.MI", "ISP.MI", "RACE.MI",
+      "UBSG.SW", "ZURN.SW", "ABBN.SW"
+    ],
+
+    "UK Stocks (US ADRs)": [
+      "HSBC", "UL", "DEO", "RELX", "BTI", "BCS", "LYG"
+    ],
+
+    "Japanese Stocks (Tokyo)": [
+      "8035.T", "6857.T", "6861.T", "9984.T", "7974.T", "6501.T",
+      "8058.T", "4063.T", "9983.T", "6098.T", "4502.T"
+    ],
+
+    "Chinese Stocks (Hong Kong)": [
+      "3690.HK", "1810.HK", "1211.HK", "2318.HK", "0939.HK", "2020.HK", "0883.HK"
+    ],
+
+    "Spanish Stocks (IBEX)": [
+      "ITX.MC", "IBE.MC", "SAN.MC", "BBVA.MC", "CABK.MC", "TEF.MC", "REP.MC", "AMS.MC"
+    ],
+
+    "Gold Miners ETFs": [
+      "GDX", "GDXJ", "SIL"
+    ],
+
     "Global Accumulation ETFs": [
       "VWCE.DE", "IWDA.AS", "CSPX.L", "EMIM.AS", "MEUD.PA", "SJPA.MI", "ICGA.DE", "EXUS.MI"
     ],
@@ -277,7 +312,8 @@
     ],
 
     "Fintech Stocks": [
-      "HOOD", "SOFI", "AFRM", "UPST", "NU", "MELI", "STNE", "VTEX"
+      "HOOD", "SOFI", "AFRM", "UPST", "NU", "MELI", "STNE", "VTEX",
+      "KLAR", "XYZ", "TOST", "SEZL"
     ],
 
     "Auto & Mobility Stocks": [
@@ -298,7 +334,8 @@
 
     "Chinese Stocks (US-listed)": [
       "BIDU", "JD", "PDD", "NTES", "TCEHY",
-      "BEKE", "NIO", "XPEV", "LI", "VNET"
+      "BEKE", "NIO", "XPEV", "LI", "VNET",
+      "YUMC", "BILI", "TME", "ZTO", "FUTU", "TAL", "EDU", "HTHT"
     ],
 
     "International ADRs": [

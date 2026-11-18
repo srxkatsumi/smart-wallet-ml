@@ -137,12 +137,13 @@
       </div>
       <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
         <p style="margin:0">
-          Cada modelo produz uma probabilidade calibrada, e a previsão final é uma média ponderada das três, não
-          um simples voto por maioria. O peso de cada modelo é a sua própria acurácia recente, medida sobre os
-          últimos 30 dias de negociação distintos e decaída exponencialmente para que os dias mais recentes contem
-          mais, sem deixar um único dia ruidoso dominar a estimativa. Cada previsão validada atualiza estes pesos
-          antes da previsão do dia seguinte ser feita, então um modelo que tem falhado ultimamente perde
-          influência, e um que tem acertado ganha.
+          Cada modelo produz uma probabilidade, e a previsão final é a média simples das três. Até 18/11/2026 a
+          média era ponderada pela acurácia recente de cada modelo, mas, medido em cerca de 54 mil previsões por
+          horizonte, esses pesos (sempre entre 0,91 e 1,11) davam exatamente o mesmo voto que a média simples. Eles
+          continuam sendo calculados, só como diagnóstico. A confiança mostrada no email é depois calibrada contra
+          os acertos reais: enquanto não há 20 dias para uma curva completa, ela é encolhida em direção a 50% na
+          medida que os dados justificam. Em novembro de 2026 isso deu 50%, porque a confiança bruta não tinha
+          relação com o acerto.
         </p>
       </div>
     </div>

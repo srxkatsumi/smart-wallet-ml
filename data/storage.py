@@ -89,6 +89,7 @@ _PUBLIC_COLS = [
     "asset_type", "pred_date", "target_date", "horizon",
     "direction", "confidence", "actual_change_pct", "correct",
     "model_rf", "model_gb", "model_sgd",
+    "confidence_calibrated", "versao_codigo", "versao_calibracao",
 ]
 
 _PUBLIC_DELAY_BDAYS = 10

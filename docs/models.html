@@ -135,12 +135,12 @@
       </div>
       <div class="card-body" style="font-size:12px;color:var(--ink-muted);line-height:1.85">
         <p style="margin:0">
-          Each model outputs a calibrated probability, and the final forecast is a weighted average of the three,
-          not a simple majority vote. The weight given to each model is its own recent accuracy, measured over the
-          last 30 distinct trading days and decayed exponentially so more recent days count for more, without
-          letting a single noisy day dominate the estimate. Every validated prediction updates these weights before
-          the next day's forecast is made, so a model that's been off lately loses influence and one that's been
-          reliable gains it.
+          Each model outputs a probability, and the final forecast is the simple mean of the three. Until 2026-11-18
+          the mean was weighted by each model's recent accuracy, but across ~54k predictions per horizon those weights
+          (always between 0.91 and 1.11) gave exactly the same vote as the simple mean. They are still computed, as a
+          diagnostic only. The confidence shown in the email is then calibrated against real hits: until there are 20
+          days for a full curve, it is shrunk toward 50% as far as the data justify. In November 2026 that gave 50%,
+          because the raw confidence had no relation to hits.
         </p>
       </div>
     </div>

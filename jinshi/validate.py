@@ -62,7 +62,7 @@ def validate_signal(name: str, errors_candidate: np.ndarray, errors_baseline: np
 
     # Estatística negativa = candidato com erro menor.
     dm = diebold_mariano(candidate_pct, baseline_pct, loss="absolute")
-    p_one_sided = float(stats.norm.cdf(dm["statistic"]))
+    p_one_sided = float(stats.t.cdf(dm["statistic"], dm.get("df", len(candidate_pct) - 1)))
 
     (a1, b1), (a2, b2) = _halves(candidate_pct, baseline_pct)
     half1_better = np.mean(np.abs(a1)) < np.mean(np.abs(b1))

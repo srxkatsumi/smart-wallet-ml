@@ -26,6 +26,7 @@ def main():
     # fossem de hoje, e fazendo o "verificar" do workflow pular o próximo
     # dia real por achar que ele já tinha corrido.
     hoje = pd.Timestamp.now().normalize()
+    falhas: list[tuple[str, str]] = []   # etapas que falharam sem bloquear, para o bloco de saúde do email
 
     # ── Storage setup ─────────────────────────────────────────────────────
     from data.storage import (
@@ -105,6 +106,7 @@ def main():
         save_significance(sig)
     except Exception as e:
         logger.warning("Cálculo de significância falhou (não bloqueia): %s", e)
+        falhas.append(("Significância", str(e)))
 
     # ── Calibração de confiança (ERR-013): reajusta a curva isotônica contra
     # o histórico validado e reaplica a todo o log quando é hora de reajustar
@@ -115,6 +117,7 @@ def main():
         df_log, calib_curves = monthly_calibration_refresh(df_log)
     except Exception as e:
         logger.warning("Calibração de confiança falhou (não bloqueia): %s", e)
+        falhas.append(("Calibração", str(e)))
 
     # ── Deteção de anomalia (email separado, só dispara em evento fora do normal) ─
     try:
@@ -126,6 +129,7 @@ def main():
             save_html_alerta(build_html_alerta(anomaly))
     except Exception as e:
         logger.warning("Deteção de anomalia falhou (não bloqueia): %s", e)
+        falhas.append(("Anomalia", str(e)))
         anomaly = {}
 
     # ── MaoMao: rede neural pulsada do pet do site, evolui com o mercado real
@@ -137,12 +141,14 @@ def main():
         run_daily_step(df_log, anomaly, carteira)
     except Exception as e:
         logger.warning("MaoMao (carteira) falhou (não bloqueia): %s", e)
+        falhas.append(("MaoMao carteira", str(e)))
 
     try:
         from maomao.daily import run_market_step
         run_market_step(df_log, anomaly, all_tickers)
     except Exception as e:
         logger.warning("MaoMao (mercado) falhou (não bloqueia): %s", e)
+        falhas.append(("MaoMao mercado", str(e)))
 
     # ── ML training (uses today's updated weights) ────────────────────────
     from config.settings import MODELS_DIR
@@ -179,10 +185,45 @@ def main():
         research_data  = run_research(_rd_features, _research_tickers, _rd_prices)
     except Exception as e:
         logger.warning("Research pipeline falhou (não bloqueia): %s", e)
+        falhas.append(("13 famílias", str(e)))
 
     # ── Save today's predictions ─────────────────────────────────────────
-    df_log = save_new_predictions(df_log, resultados_ml, hoje, calib_curves)
+    from evaluation.rastreio import contexto_execucao
+    rastreio = contexto_execucao(calib_curves)
+    df_log = save_new_predictions(df_log, resultados_ml, hoje, calib_curves, rastreio)
     save_public_log(df_log, my_tickers)
+
+    # ── Ensemble ampliado (desafiante): produção + 13 famílias com pesos
+    # encolhidos. Só registra e confere; não muda as previsões do email ──────
+    ampliado = None
+    try:
+        from research.ampliado import run_ampliado
+        _ref_dates = {t: str(pd.Timestamp(resultados_ml[t]["last_date"]).date())
+                      for t in carteira if t in resultados_ml and "last_date" in resultados_ml[t]}
+        ampliado = run_ampliado(df_log, carteira, _ref_dates, str(hoje.date()))
+    except Exception as e:
+        logger.warning("Ensemble ampliado falhou (não bloqueia): %s", e)
+        falhas.append(("Ensemble ampliado", str(e)))
+
+    # ── Desafiante de regime: produção + VIX/VIX3M, juro 10a e dólar. Só
+    # registra e confere; não muda as previsões do email ─────────────────
+    regime = None
+    try:
+        from research.regime import run_regime
+        regime = run_regime(resultados_ml, carteira, df_log, str(hoje.date()))
+    except Exception as e:
+        logger.warning("Desafiante de regime falhou (não bloqueia): %s", e)
+        falhas.append(("Desafiante de regime", str(e)))
+
+    # ── Desafiantes de volatilidade: movimento grande (logística) e EWMA.
+    # Só registram e conferem; não mudam nada do que o email afirma ──────
+    volat = None
+    try:
+        from research.volatilidade import run_volatilidade
+        volat = run_volatilidade(resultados_ml, carteira, str(hoje.date()))
+    except Exception as e:
+        logger.warning("Desafiantes de volatilidade falharam (não bloqueia): %s", e)
+        falhas.append(("Volatilidade", str(e)))
 
     # ── Experimento de regressão (desafiante vs. campeão, email separado) ──
     # Isolado do pipeline principal: qualquer falha aqui não afeta a carteira.
@@ -218,6 +259,7 @@ def main():
         save_html_experimentos(html_exp)
     except Exception as e:
         logger.warning("Experimento de regressão falhou (não bloqueia): %s", e)
+        falhas.append(("Experimento", str(e)))
 
     # ── MLflow: registar runs diários ────────────────────────────────────
     try:
@@ -257,6 +299,7 @@ def main():
         logger.info("MLflow: runs registados para %d ativos", len(my_tickers))
     except Exception as e:
         logger.warning("MLflow logging falhou (nao bloqueia): %s", e)
+        falhas.append(("MLflow", str(e)))
 
     # ── SHAP: portfolio tickers, D+1, modelo RF ───────────────────────────
     try:
@@ -300,6 +343,7 @@ def main():
         logger.info("SHAP: gerado para %d ativos", _shap_count)
     except Exception as e:
         logger.warning("SHAP falhou (nao bloqueia): %s", e)
+        falhas.append(("SHAP", str(e)))
 
     # ── Charts (publicados como artefacto do run, não persistem entre execuções —
     # checkout é sempre novo, então não há gráficos antigos a limpar aqui) ──────
@@ -315,15 +359,57 @@ def main():
         run_portfolio_wfv(wfv_featured, my_tickers, run_date=hoje.date())
     except Exception as e:
         logger.warning("Walk-Forward Validation falhou (não bloqueia): %s", e)
+        falhas.append(("Walk-forward", str(e)))
 
     # ── Email report ──────────────────────────────────────────────────────
     logger.info("DEBUG my_tickers (%d): %s", len(my_tickers), sorted(my_tickers))
     logger.info("DEBUG resultados_ml (%d): %s", len(resultados_ml), sorted(resultados_ml.keys())[:15])
     logger.info("DEBUG intersecção: %d", len([t for t in my_tickers if t in resultados_ml]))
     from reports.email_report import build_html, save_html
+    # ── Email semanal: sai com o último pregão da semana (chega no sábado) ──
+    try:
+        from reports.email_report_semanal import (
+            e_fim_de_semana_de_pregao, build_html_semanal, save_html_semanal,
+        )
+        _ultimas = [pd.Timestamp(resultados_ml[t]["last_date"]) for t in carteira
+                    if t in resultados_ml and "last_date" in resultados_ml[t]]
+        if _ultimas and e_fim_de_semana_de_pregao(max(_ultimas), etf_acumul[0]):
+            from research.runner import RESEARCH_LOG as _rlog_path
+            _rlog = pd.read_csv(_rlog_path, low_memory=False) if _rlog_path.exists() else pd.DataFrame()
+            save_html_semanal(build_html_semanal(df_log, _rlog, carteira, resultados_ml,
+                                                 context_data, max(_ultimas), ampliado, regime, rastreio,
+                                                 volat))
+    except Exception as e:
+        logger.warning("Email semanal falhou (não bloqueia): %s", e)
+        falhas.append(("Email semanal", str(e)))
+
+    # ── Saúde do sistema e eventos das próximas sessões (topo do email) ──
+    saude, eventos = None, None
+    try:
+        from evaluation.saude import avaliar_saude
+        saude = avaliar_saude(carteira, resultados_ml, falhas, ctx_warnings)
+    except Exception as e:
+        logger.warning("Saúde do sistema falhou (não bloqueia): %s", e)
+    risco = None
+    try:
+        from evaluation.risco import contexto_mercado, risco_carteira
+        _ctx = contexto_mercado(context_data)
+        risco = {"contexto": _ctx,
+                 "carteira": risco_carteira(resultados_ml, carteira, (_ctx.get("vix") or (None,))[0])}
+    except Exception as e:
+        logger.warning("Risco da carteira falhou (não bloqueia): %s", e)
+        falhas.append(("Risco", str(e)))
+    try:
+        from evaluation.eventos import proximos_eventos
+        eventos = proximos_eventos(hoje, portfolio_cfg.get("acoes", []))
+    except Exception as e:
+        logger.warning("Calendário de eventos falhou (não bloqueia): %s", e)
+
     html = build_html(resultados_ml, etf_acumul, df_log, my_tickers, ensemble_weights,
                       research_data=research_data,
-                      context_warnings=ctx_warnings)
+                      context_warnings=ctx_warnings,
+                      ampliado=ampliado, saude=saude, eventos=eventos, risco=risco,
+                      calib_curves=calib_curves, rastreio=rastreio)
     save_html(html)
 
     logger.info("=== Completed successfully ===")

@@ -6,8 +6,10 @@ Testes implementados:
 Diebold-Mariano (Harvey, Leybourne & Newbold, 1997 — Journal of Business &
   Economic Statistics):
   Testa H0: dois modelos de previsão têm igual acurácia preditiva.
-  Statistic DM = mean(d) / sqrt(var(d)/T), onde d_t = L(e1_t) - L(e2_t).
-  Sob H0: DM ~ N(0, 1). p < 0.05 rejeita igualdade.
+  Statistic DM = mean(d) / sqrt(V/T), onde d_t = L(e1_t) - L(e2_t) e V é a
+  variância de longo prazo com h-1 lags. Correção de amostra pequena de
+  Harvey, Leybourne & Newbold (1997): DM* = DM * sqrt((T+1-2h+h(h-1)/T)/T),
+  comparado com uma t de Student com T-1 graus de liberdade (não com a normal).
 
 McNemar (McNemar, 1947 — Psychometrika):
   Testa H0: dois classificadores têm igual taxa de erro.
@@ -73,7 +75,12 @@ def dm_from_loss_diff(d: np.ndarray, h: int = 1) -> dict:
                 "conclusion": "Sem variância suficiente para o teste."}
 
     dm  = mu / np.sqrt(long_run_var)
-    p   = 2 * (1 - stats.norm.cdf(abs(dm)))
+    # Harvey, Leybourne & Newbold (1997): com poucas observações (aqui, dias) a
+    # normal exagera a significância; o fator e a t(T-1) corrigem isso.
+    hln = (T + 1 - 2 * h + h * (h - 1) / T) / T
+    dm  = dm * np.sqrt(hln) if hln > 0 else dm
+    df  = max(T - 1, 1)
+    p   = 2 * stats.t.sf(abs(dm), df)
 
     if p < 0.05:
         winner = "modelo 1" if dm < 0 else "modelo 2"
@@ -81,7 +88,7 @@ def dm_from_loss_diff(d: np.ndarray, h: int = 1) -> dict:
     else:
         conc = f"Sem diferença significativa entre os modelos (p={p:.4f})."
 
-    return {"statistic": float(dm), "p_value": float(p), "conclusion": conc}
+    return {"statistic": float(dm), "p_value": float(p), "df": int(df), "conclusion": conc}
 
 
 # ── McNemar ───────────────────────────────────────────────────────────────

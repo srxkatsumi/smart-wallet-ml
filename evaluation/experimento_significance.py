@@ -32,7 +32,8 @@ def compute_experimento_significance(df_log: pd.DataFrame) -> dict:
         dias   = subset["target_date"].nunique() if n else 0
 
         if n < MIN_N_EXPERIMENTO or dias < MIN_DIAS:
-            results[key] = {"ready": False, "n": n, "needed": max(MIN_N_EXPERIMENTO - n, MIN_DIAS - dias, 0)}
+            results[key] = {"ready": False, "n": n, "n_dias": int(dias),
+                            "needed": max(MIN_N_EXPERIMENTO - n, MIN_DIAS - dias, 0)}
             continue
 
         actual_ret     = subset["actual_ret"].values.astype(float)

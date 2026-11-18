@@ -37,6 +37,21 @@ logger = logging.getLogger(__name__)
 
 _GRID = np.linspace(0.5, 1.0, 51)  # confidence só existe em [0.5, 1.0] (é max(p, 1-p))
 
+# Encolhimento: enquanto não há dias para a curva isotônica (MIN_DAYS_CALIBRATION),
+# a confiança é puxada para 50% na medida que os dados justificam:
+#   calibrada = 0,5 + λ (bruta − 0,5),  λ em [0, 1] minimizando o Brier.
+# λ = 0 quer dizer "a confiança bruta não carrega informação": o email mostra 50%.
+# É reajustado a cada execução até a curva isotônica assumir.
+MIN_N_SHRINK    = 300
+MIN_DAYS_SHRINK = 5
+
+
+def _fit_shrink(subset: pd.DataFrame) -> float:
+    d = subset["confidence"].values - 0.5
+    y = subset["correct"].values - 0.5
+    den = float((d * d).sum())
+    return float(np.clip((d * y).sum() / den, 0.0, 1.0)) if den > 0 else 0.0
+
 
 def _fit_curve(subset: pd.DataFrame) -> np.ndarray | None:
     # Agrupa em bins de frequência igual antes do fit isotônico. Ajustar
@@ -91,8 +106,23 @@ def fit_calibration(df_log: pd.DataFrame) -> dict:
         if n < MIN_N_CALIBRATION:
             logger.info("Calibração D+%d: histórico insuficiente (%d/%d)", day, n, MIN_N_CALIBRATION)
             continue
-        if "target_date" in subset.columns and subset["target_date"].nunique() < MIN_DAYS_CALIBRATION:
-            logger.info("Calibração D+%d: poucos dias (%d/%d)", day, subset["target_date"].nunique(), MIN_DAYS_CALIBRATION)
+        n_dias = subset["target_date"].nunique() if "target_date" in subset.columns else MIN_DAYS_CALIBRATION
+        if n_dias < MIN_DAYS_CALIBRATION:
+            if n >= MIN_N_SHRINK and n_dias >= MIN_DAYS_SHRINK:
+                lam = _fit_shrink(subset)
+                c, yv = subset["confidence"].values, subset["correct"].values
+                curves[key] = {
+                    "tipo": "encolhimento",
+                    "lambda": round(lam, 4),
+                    "n": n,
+                    "n_dias": int(n_dias),
+                    "brier_raw": round(float(np.mean((c - yv) ** 2)), 4),
+                    "brier_calibrated": round(float(np.mean((0.5 + lam * (c - 0.5) - yv) ** 2)), 4),
+                }
+                logger.info("Calibração D+%d: encolhimento λ=%.2f (%d dias, curva isotônica com %d)",
+                            day, lam, n_dias, MIN_DAYS_CALIBRATION)
+            else:
+                logger.info("Calibração D+%d: poucos dias (%d/%d)", day, n_dias, MIN_DAYS_CALIBRATION)
             continue
 
         y = _fit_curve(subset)
@@ -107,6 +137,7 @@ def fit_calibration(df_log: pd.DataFrame) -> dict:
         brier_cal = float(np.mean((calibrated_test - test_part["correct"].values) ** 2))
 
         curves[key] = {
+            "tipo": "isotonica",
             "x": _GRID.tolist(),
             "y": [round(float(v), 4) for v in y],
             "n": n,
@@ -147,6 +178,9 @@ def needs_refit(curves: dict, days: int = CONFIDENCE_CALIB_DAYS) -> bool:
     updated = curves.get("updated")
     if not updated:
         return True
+    # Encolhimento é provisório: reajusta todo dia até a curva isotônica ter dias suficientes.
+    if any(isinstance(v, dict) and v.get("tipo") == "encolhimento" for v in curves.values()):
+        return pd.Timestamp(updated).normalize() < pd.Timestamp.today().normalize()
     return (pd.Timestamp.today() - pd.Timestamp(updated)).days >= days
 
 
@@ -161,6 +195,8 @@ def apply_calibration(confidence: float, day: int, curves: dict) -> float:
     curve = curves.get(f"d{day}")
     if not curve:
         return confidence
+    if "lambda" in curve:
+        return float(0.5 + curve["lambda"] * (confidence - 0.5))
     return float(np.interp(confidence, curve["x"], curve["y"]))
 
 
@@ -176,9 +212,9 @@ def apply_to_log(df_log: pd.DataFrame, curves: dict) -> pd.DataFrame:
         mask = df_log["horizon"] == day
         if not mask.any():
             continue
-        df_log.loc[mask, "confidence_calibrated"] = np.round(
-            np.interp(df_log.loc[mask, "confidence"].astype(float), curve["x"], curve["y"]), 4
-        )
+        raw = df_log.loc[mask, "confidence"].astype(float)
+        cal = (0.5 + curve["lambda"] * (raw - 0.5)) if "lambda" in curve else np.interp(raw, curve["x"], curve["y"])
+        df_log.loc[mask, "confidence_calibrated"] = np.round(cal, 4)
     return df_log
 
 

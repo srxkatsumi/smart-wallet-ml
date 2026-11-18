@@ -1,0 +1,61 @@
+{
+  "_nota": "Datas do dia da DECISÃO (ou da divulgação), conferidas nas fontes oficiais em 18/11/2026. As do Fed para 2027 são provisórias até a reunião anterior confirmar. Atualizar quando o email avisar que o calendário está acabando.",
+  "fontes": {
+    "fed": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    "bce": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+    "boj": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+    "cpi_eua": "https://www.bls.gov/schedule/news_release/cpi.htm"
+  },
+  "tipos": {
+    "fed":     {"nome": "Decisão de juros do Fed (EUA)",       "afeta": "todos"},
+    "bce":     {"nome": "Decisão de juros do BCE",             "afeta": "todos"},
+    "boj":     {"nome": "Decisão de juros do Banco do Japão",  "afeta": ["EUNN.DE"]},
+    "cpi_eua": {"nome": "Inflação dos EUA (CPI)",              "afeta": "todos"}
+  },
+  "eventos": [
+    {"data": "2026-12-09", "tipo": "fed"},
+    {"data": "2027-01-27", "tipo": "fed"},
+    {"data": "2027-03-17", "tipo": "fed"},
+    {"data": "2027-04-28", "tipo": "fed"},
+    {"data": "2027-06-09", "tipo": "fed"},
+    {"data": "2027-07-28", "tipo": "fed"},
+    {"data": "2027-09-15", "tipo": "fed"},
+    {"data": "2027-10-27", "tipo": "fed"},
+    {"data": "2027-11-17", "tipo": "fed"},
+
+    {"data": "2026-12-17", "tipo": "bce"},
+    {"data": "2027-02-04", "tipo": "bce"},
+    {"data": "2027-03-18", "tipo": "bce"},
+    {"data": "2027-04-29", "tipo": "bce"},
+    {"data": "2027-06-10", "tipo": "bce"},
+    {"data": "2027-07-22", "tipo": "bce"},
+    {"data": "2027-09-09", "tipo": "bce"},
+    {"data": "2027-10-28", "tipo": "bce"},
+    {"data": "2027-12-16", "tipo": "bce"},
+
+    {"data": "2026-12-18", "tipo": "boj"},
+    {"data": "2027-01-22", "tipo": "boj"},
+    {"data": "2027-03-18", "tipo": "boj"},
+    {"data": "2027-04-28", "tipo": "boj"},
+    {"data": "2027-06-11", "tipo": "boj"},
+    {"data": "2027-07-22", "tipo": "boj"},
+    {"data": "2027-09-22", "tipo": "boj"},
+    {"data": "2027-10-29", "tipo": "boj"},
+    {"data": "2027-12-17", "tipo": "boj"},
+
+    {"data": "2026-12-10", "tipo": "cpi_eua"},
+    {"data": "2027-01-13", "tipo": "cpi_eua"},
+    {"data": "2027-02-11", "tipo": "cpi_eua"},
+    {"data": "2027-03-10", "tipo": "cpi_eua"},
+    {"data": "2027-04-13", "tipo": "cpi_eua"},
+    {"data": "2027-05-12", "tipo": "cpi_eua"},
+    {"data": "2027-06-10", "tipo": "cpi_eua"},
+    {"data": "2027-07-14", "tipo": "cpi_eua"},
+    {"data": "2027-08-11", "tipo": "cpi_eua"},
+    {"data": "2027-09-14", "tipo": "cpi_eua"},
+    {"data": "2027-10-14", "tipo": "cpi_eua"},
+    {"data": "2027-11-10", "tipo": "cpi_eua"},
+    {"data": "2027-12-10", "tipo": "cpi_eua"}
+  ],
+  "resultados_empresas": ["NVDA", "AAPL", "MSFT", "AMZN", "GOOGL", "META"]
+}

@@ -916,6 +916,8 @@ vwap_dist = (Close − VWAP_20d) / VWAP_20d
 
 ## 6. Como os pesos adaptativos funcionam
 
+> **Atualização de 18/11/2026:** os pesos adaptativos continuam sendo calculados, mas a produção passou a usar a **média simples** dos três modelos. Medindo em cerca de 54 mil previsões por horizonte, os pesos (sempre entre 0,91 e 1,11) davam exatamente o mesmo voto que a média simples. Quando uma complicação não muda nenhum resultado, ela só torna o sistema mais difícil de auditar. Ver a seção 14.
+
 Cada modelo do ensemble recebe um peso. Esse peso determina quanto a voz daquele modelo vale na decisão final.
 
 No início, todos os modelos têm peso igual: RF = 1.0, GB = 1.0, SGD = 1.0. Após as primeiras validações, os pesos começam a se diferenciar com base em quem acertou mais recentemente.
@@ -1285,6 +1287,8 @@ Se amanhã sai uma notícia de que a NVDA ganhou um contrato bilionário com o g
 
 Semanas de divulgação de resultados trimestrais são estatisticamente mais voláteis. Mas o modelo trata um dia de earnings igual a qualquer outro dia. Previsões feitas um dia antes de earnings têm uma incerteza muito maior do que o modelo assume.
 
+Desde 18/11/2026 o email avisa: o bloco "Eventos nas próximas 3 sessões" lista resultados trimestrais e decisões de bancos centrais, com a nota de que o modelo não os vê. O caso que motivou foi a AFRM em 05/11: o modelo previu alta com 72% a 76% de confiança no dia do resultado, e as 6 previsões erraram.
+
 **O modelo não distingue uma queda de 0.1% de uma de 8%.**
 
 A previsão é binária: UP ou DOWN. Se o ativo cai 0.01%, é DOWN. Se cai 8%, também é DOWN. Uma previsão correta de UP num dia onde o ativo sobe 0.02% vale o mesmo que uma previsão correta de UP num dia onde sobe 5%. Isso distorce a avaliação real do sistema.
@@ -1415,6 +1419,53 @@ Corrigido, nos dados que tínhamos até então: o resultado de D+3 passou de "n�
 ### E se o desafiante ganhar de vez?
 
 Ainda não decidimos "trocar tudo de uma vez" pra usar o modelo de regressão na carteira principal, mesmo que ele venha a ganhar significância estatística. O livro descreve rollouts graduais de produto (1% dos usuários, depois 10%, depois 100%) exatamente pra limitar o dano de uma mudança que parecia boa nos testes mas não é. A versão disto pro nosso caso, se algum dia chegarmos lá, seria misturar o desafiante só nalguns ativos ou horizontes primeiro, observando os guardrails, em vez de substituir a heurística ATR de uma vez em tudo. Isto ainda não foi construído — é só o próximo passo natural, se e quando for merecido.
+
+---
+
+## 14. O que os dados mostraram em novembro de 2026
+
+Em meados de novembro o projeto fez uma pergunta incômoda: **a confiança que o email mostra quer dizer alguma coisa?** A resposta, medida com cuidado, foi não. Esta seção conta como se chega a essa conclusão sem se enganar, porque é a parte mais útil do projeto para quem trabalha com dados.
+
+**Passo 1: comparar o que o modelo promete com o que acontece.** Se o modelo diz 80%, deveria acertar perto de 80% das vezes. Agrupando as previsões por faixa de confiança:
+
+| Confiança dita (D+1) | Acerto real |
+|---|---|
+| 50-60% | 55% |
+| 60-70% | 53% |
+| 70-80% | 49% |
+| 80-90% | 51% |
+
+A confiança sobe e o acerto não acompanha. O **Brier score** (o erro quadrático entre a probabilidade e o resultado) ficou perto de 0,29, pior que os 0,25 de quem diz sempre 50%.
+
+**Passo 2: procurar onde ela funciona antes de desistir.** Talvez a média esconda casos bons: um ativo, um horizonte, um regime do VIX, os dias em que os três modelos concordam. Foram 57 recortes em 2 anos de walk-forward. Nenhum ganhou da melhor regra fixa do próprio recorte ("sempre ▲" ou "sempre ▼") depois da correção para múltiplas comparações. Com 57 testes, alguns parecem bons por sorte; a correção de Benjamini-Hochberg existe exatamente para isso. Pior: quando os três modelos concordam, a confiança sobe e o acerto não, porque eles erram juntos.
+
+**Passo 3: dizer a verdade no email.** A confiança passou a ser **calibrada**. Enquanto não há 20 dias para uma curva completa, ela é encolhida em direção a 50%:
+
+```
+calibrada = 0,5 + λ × (bruta − 0,5)
+```
+
+O λ é escolhido pelos próprios dados, minimizando o Brier. Com os dados de novembro, λ = 0: o email mostra 50, com a confiança bruta em letra pequena ao lado. É menos bonito que 80%, mas é o número que os acertos sustentam.
+
+**Passo 4: mudar a pergunta.** Se a direção de amanhã não é previsível, talvez o **tamanho** do movimento seja. A volatilidade tem memória: dias agitados costumam vir seguidos de dias agitados. O teste, com a mesma disciplina:
+
+| Pergunta | Resultado |
+|---|---|
+| A volatilidade prevista pela EWMA bate a média histórica do ativo? | Sim: QLIKE 5% a 10% menor, nas duas metades do período |
+| Modelos mais sofisticados (GARCH, HAR) batem a EWMA? | Não |
+| Dá para prever "movimento grande amanhã" (mais de 1 ATR)? | Talvez: AUC 0,61, bem calibrado, mas sem passar na correção múltipla |
+
+A lição: **o modelo mais simples que resolve o problema costuma ser o melhor**, e uma métrica só vale contra a referência certa. Para a direção, a referência é "sempre ▲", não 50%. Para "movimento grande", é a taxa de base do próprio ativo.
+
+## 15. Os blocos novos do email, em linguagem simples
+
+- **Saúde do sistema:** antes de olhar qualquer previsão, saber se os dados de hoje chegaram. ⛔ quer dizer que algum ativo foi previsto com dados velhos.
+- **Eventos nas próximas 3 sessões:** o que pode mexer com o mercado e que o modelo não enxerga.
+- **Risco hoje:** cada ativo comparado com ele mesmo. "Esperado amanhã ±1,2%" quer dizer que, em cerca de 2 de cada 3 dias, o movimento fica dentro dessa faixa. "Agitado" quer dizer que os últimos 20 dias estão 30% mais voláteis que o último ano. Nada disso depende de quanto você tem investido.
+- **IC 95%:** a faixa em que a acurácia verdadeira provavelmente está. Com poucos dias ela é larga, e isso é honesto: 50% com IC de 13% a 72% quer dizer "ainda não sabemos".
+- **"Sempre ▲" acertaria X%:** a régua certa. Num período de alta, prever sempre alta acerta mais de 50% sem modelo nenhum.
+- **Rodapé com versões:** qual código e qual regra de calibração geraram aqueles números, para qualquer previsão poder ser explicada depois.
+- **Email semanal (sábado):** a leitura longa, com as famílias, a calibração e os desafiantes, sem pesar o email do dia a dia.
 
 ---
 

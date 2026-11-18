@@ -385,3 +385,16 @@ td {
   table { display: block; overflow-x: auto; }
   .pet-widget { padding: 12px 16px; }
 }
+
+/* ── Detalhe de ativo da Watchlist (janela por cima da página) ── */
+.wl-open { color: var(--brand); text-decoration: none; border-bottom: 1px dotted var(--brand-accent-2); cursor: pointer; }
+.wl-open:hover { border-bottom-style: solid; }
+.mover-tile { cursor: pointer; }
+.wd-backdrop { position: fixed; inset: 0; background: rgba(26, 23, 64, 0.45); display: none; z-index: 50;
+  align-items: flex-start; justify-content: center; overflow-y: auto; padding: 32px 16px; }
+.wd-backdrop.open { display: flex; }
+.wd-box { background: var(--card); border-radius: 6px; width: 100%; max-width: 760px; box-shadow: 0 12px 40px -12px rgba(38, 33, 92, 0.35); }
+.wd-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 18px 20px 6px; }
+.wd-close { background: none; border: 1px solid #e6e3dc; border-radius: 4px; font-size: 16px; line-height: 1; padding: 6px 10px; cursor: pointer; color: var(--ink-muted); }
+.wd-body { padding: 8px 20px 20px; }
+@media (max-width: 600px) { .wd-backdrop { padding: 0; } .wd-box { border-radius: 0; min-height: 100%; } }

@@ -1,7 +1,8 @@
 import logging
 import pandas as pd
-from datetime import datetime, timezone, timedelta
-from config.settings import EXPERIMENTO_HTML_REPORT, BARCELONA_UTC_OFFSET, MIN_N_EXPERIMENTO
+from datetime import datetime
+from config.settings import EXPERIMENTO_HTML_REPORT, BARCELONA_TZ, MIN_N_EXPERIMENTO
+from evaluation.significance import MIN_DIAS
 
 logger = logging.getLogger(__name__)
 
@@ -74,8 +75,14 @@ def _build_previsoes_html(resultados_exp: dict, resultados_ml: dict, my_tickers:
     </div>
     <div style="margin-top:12px;font-size:10.5px;color:#a8a39a;line-height:1.7">
       Retorno % previsto pelo desafiante (regressão) · preço-alvo e intervalo de 90% entre colchetes ·
-      "campeão" = heurística ATR já usada no email principal, para comparação.
+      "campeão" = preço de hoje ± 0,5 × ATR × √horizonte, no sentido da direção prevista no email principal.
+      Não é uma previsão de valor: quando a direção muda entre horizontes, o alvo muda de lado junto.
     </div>"""
+
+
+def _pt_int(n: int) -> str:
+    """Milhar com ponto, como no resto do email (2.656)."""
+    return f"{n:,}".replace(",", ".")
 
 
 def _build_estado_experimento_html(sig: dict) -> str:
@@ -84,11 +91,12 @@ def _build_estado_experimento_html(sig: dict) -> str:
         r = sig.get(f"d{day}", {})
         if not r.get("ready"):
             n = r.get("n", 0)
+            dias = r.get("n_dias", 0)
             rows += (
                 f'<tr style="border-bottom:1px solid #f0ede4">'
                 f'<td style="padding:8px 6px;font-size:12px;font-weight:600;color:#1a1740">D+{day}</td>'
                 f'<td colspan="4" style="padding:8px 6px;font-size:11px;color:#a8a39a">'
-                f'⏳ coletando dados — N={n}/{MIN_N_EXPERIMENTO}</td></tr>'
+                f'⏳ coletando dados: N={_pt_int(n)} (mínimo {MIN_N_EXPERIMENTO}) · {dias} de {MIN_DIAS} dias com horizonte alinhado</td></tr>'
             )
             continue
         veredito = ("🏆 desafiante venceu" if r["challenger_wins"] else
@@ -110,7 +118,8 @@ def _build_estado_experimento_html(sig: dict) -> str:
     </table>
     <div style="margin-top:12px;font-size:10.5px;color:#a8a39a;line-height:1.7">
       OEC: teste de Diebold-Mariano no erro quadrático pareado (desafiante vs. campeão), N mínimo = {MIN_N_EXPERIMENTO}
-      por horizonte antes de qualquer veredito — sem espiar resultados prematuros.
+      e {MIN_DIAS} dias por horizonte antes de qualquer veredito, para não espiar resultados prematuros.
+      O dia é a unidade do teste (média das diferenças de perda entre os ativos), com h−1 lags em D+2 e D+3.
       Guardrail: MAE do desafiante não pode ser &gt;20% pior que o campeão (⚠️ se violado).
     </div>"""
 
@@ -141,18 +150,18 @@ def _build_backtest_html(backtest: dict) -> str:
     </table>
     <div style="margin-top:10px;font-size:10.5px;color:#a8a39a;line-height:1.7">
       D+1, expanding window sobre 2 anos de histórico. Baseline "naive" = prever retorno zero
-      (proxy simplificado do campeão para esta leitura retrospectiva — não é a heurística ATR exata).
+      (proxy simplificado do campeão para esta leitura retrospectiva, <strong>não</strong> é a heurística ATR exata).
       R² &gt; 0 significa que o modelo bate o baseline ingênuo.
     </div>"""
 
 
 def build_html_experimentos(resultados_exp: dict, resultados_ml: dict, df_exp_log: pd.DataFrame,
                              sig: dict, backtest: dict, my_tickers: list) -> str:
-    tz    = timezone(timedelta(hours=BARCELONA_UTC_OFFSET))
+    tz    = BARCELONA_TZ
     agora = datetime.now(tz)
     data_str = f"{_DIAS_PT[agora.weekday()]} · {agora.day} de {_MESES_PT[agora.month-1]} de {agora.year}"
 
-    n_ativos    = len(resultados_exp)
+    n_ativos    = len([t for t in my_tickers if t in resultados_exp])  # os que aparecem na tabela
     n_validadas = int((df_exp_log["validated"] == True).sum()) if not df_exp_log.empty else 0
 
     previsoes_html = _build_previsoes_html(resultados_exp, resultados_ml, my_tickers)
@@ -208,7 +217,7 @@ def build_html_experimentos(resultados_exp: dict, resultados_ml: dict, df_exp_lo
 
   <!-- ESTADO DO EXPERIMENTO -->
   <div style="padding:28px 36px;border-top:1px solid #efece4;background:#f6f3eb">
-    <div style="font-size:10px;font-weight:600;color:#a89e85;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Estado do experimento (ao vivo) — {n_validadas} previsões validadas</div>
+    <div style="font-size:10px;font-weight:600;color:#a89e85;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px">Estado do experimento (ao vivo) · {_pt_int(n_validadas)} previsões validadas em todo o universo (carteira e watchlist)</div>
     {estado_html}
   </div>
 

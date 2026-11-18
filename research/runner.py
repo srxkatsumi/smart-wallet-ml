@@ -526,6 +526,8 @@ def _build_comparison(log: pd.DataFrame, today_str: str) -> list[dict]:
             "family":   family,
             "accuracy": round(float(acc), 3),
             "n":        n,
+            "n_dias":   int(stats["n_dias"]),
+            "desde":    str(fam_rows["ref_date" if "ref_date" in fam_rows else "week_date"].astype(str).min()),
             "vs_acaso": round(float(acc) - 0.5, 3),
             "p":        round(stats["p"], 4),
         })

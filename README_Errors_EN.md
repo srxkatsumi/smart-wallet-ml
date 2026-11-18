@@ -207,8 +207,8 @@ Not an incident. A code audit found SGLN.L on the site at €0.84 (real: ~€70)
 **Effect on history**
 The log is kept as an audit trail. Metrics, weights and calibration use only rows with `ref_date` (`data/storage.py:aligned_rows`), so accuracy restarts from zero and is reported only after 100 forecasts over 20 days. Earlier conclusions in ERR-013 and about the 13 families must be re-measured on aligned data.
 
-**Still open**
-`confidence_calibrated` still does not appear on the site or in the email: that decision waits for 20 aligned days.
+**Still open (updated 2026-11-18)**
+Since 2026-11-18 the email shows the calibrated confidence: by shrinkage until there are 20 aligned days, then by the isotonic curve. See ERR-018.
 
 ---
 
@@ -227,6 +227,56 @@ When the last completed session in the ticker's calendar is missing, `data/downl
 
 ---
 
+## ERR-016: Published site always a day behind (2026-11-13)
+
+**Symptom**
+AFRM joined the portfolio on 2026-11-12 but was missing from the site the next day, even though it was in the repository's `docs/assets/data.js`.
+
+**Root cause**
+`deploy-pages.yml`, when triggered by `workflow_run`, checked out `github.event.workflow_run.head_sha`: the commit the daily run **started** from, before the bot's commit with the new data. The site always published the previous day's data, ever since this deploy was set up. The email was not affected.
+
+**Fix**
+On `workflow_run`, the deploy checks out `main`, which already has the bot's commit. Fixed on 2026-11-16 (commit `032675e83`).
+
+---
+
+## ERR-017: Email time with a fixed offset (2026-11-18)
+
+**Symptom**
+Since the switch to winter time (2026-10-25), all three emails showed Barcelona time one hour ahead.
+
+**Root cause**
+A fixed `BARCELONA_UTC_OFFSET = 2` that had to be changed by hand in October and March.
+
+**Fix**
+`BARCELONA_TZ = ZoneInfo("Europe/Madrid")`, with automatic DST.
+
+---
+
+## ERR-018: External review of the email and statistical quality (2026-11-17 to 2026-11-18)
+
+**Symptom**
+Not an incident: an external review of the daily, experiments and alert emails listed inconsistencies and gaps in rigour.
+
+**What was wrong and was fixed**
+- **Duplicate asset:** PPFB.DE and SGLN.L are the same gold ETC on two exchanges. Converted to EUR, their price ratio is 1.000 ± 0.003, yet the model gave different directions in 1 of every 3 predictions. SGLN.L left the portfolio and stays in the watchlist as a control.
+- **Counters without a universe:** "532 assets" counted the whole watchlist in an 8-row table; "110k validated" summed every ticker without alignment. Every number now states its universe and window.
+- **Consensus:** the title said "25 models" (there are 13 families) and "DOWN 1/13" showed how many voted UP. It now shows how many support the stated direction and the weighted share.
+- **Drift:** the alert also fires when the top feature changes, which was missing from the legend (the ⚠️ at ρ = 0.91: ATR14 → BB_width). The reason now appears in the alert.
+- **Families section labelled "weekly":** it updates daily; it now says so, with N and window.
+- **Diebold-Mariano:** already used h−1 lags on the daily mean; it lacked the Harvey-Leybourne-Newbold small-sample correction and the t(T−1). Both added; Jinshi uses the same correction.
+- **Blank accuracy card on the site:** significance only reports accuracy after 20 days; the site now computes accuracy over aligned predictions with a "collecting" badge.
+- **Confidence:** the stated-vs-real table showed D+1 at 70-80% hitting 48.7%. A 2-year study (`scripts/estudo_vantagem.py`) confirmed confidence has no relation to hits in any slice and that the Brier score is worse than always saying 50%. Calibration now applies immediately by shrinkage (λ fitted on Brier; currently 0), with the raw value beside it in the email.
+- **Adaptive weights:** gave exactly the same vote as a simple mean across ~54k predictions per horizon (`scripts/ablation_ensemble_weights.py`). Production now uses the simple mean; the weights remain as a diagnostic.
+
+**Added**
+System health, upcoming events, per-asset risk independent of position sizes, CIs and the "always ▲" baseline, the weekly email, traceability (`versao_codigo`, `versao_calibracao`, `hash_dados`, `executado_em`) and live challengers (extended ensemble, regime and volatility).
+
+**Still open**
+Isotonic curve and Jinshi verdict for the challengers once there are 20 aligned days; monthly email.
+
+---
+
 ## Production validations (current state)
 
 | Validation | Where | What it catches |
@@ -239,7 +289,10 @@ When the last completed session in the ticker's calendar is missing, `data/downl
 | Pre-commit hook CHECK 1 | Local | Blocks committing predictions_log.csv with intraday data |
 | Pre-commit hook CHECK 2 | Local | Blocks commit if related tests are failing |
 | `permissions: contents: write` | Workflows | Ensures push never fails due to missing permission |
+| Email system health | `evaluation/saude.py` | Portfolio asset with no prediction or a bar older than its calendar's last session; steps that failed without blocking |
+| Traceability | `evaluation/rastreio.py` | Each prediction stores code, calibration, bar hash and timestamp: any number in the email can be reproduced |
+| Macro calendar warning | `evaluation/eventos.py` | The email warns when `config/eventos_macro.json` ends in less than 60 days |
 
 ---
 
-*Last updated: 2026-08-17*
+*Last updated: 2026-11-18*

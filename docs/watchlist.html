@@ -134,6 +134,19 @@
   </div>
 </footer>
 
+
+<div class="wd-backdrop" id="wd-backdrop" role="dialog" aria-modal="true" aria-labelledby="wd-title">
+  <div class="wd-box">
+    <div class="wd-head">
+      <div>
+        <div class="card-title" id="wd-title"></div>
+        <div id="wd-sub" style="font-size:12px;color:var(--ink-faint);margin-top:2px"></div>
+      </div>
+      <button class="wd-close" id="wd-close" aria-label="Close">×</button>
+    </div>
+    <div class="wd-body" id="wd-body"></div>
+  </div>
+</div>
 <script src="assets/watchlist_data.js"></script>
 <script src="assets/site.js"></script>
 <script>
@@ -164,7 +177,7 @@
   document.getElementById('movers-strip').innerHTML = movers.map(t => {
     const color = t.var_1d >= 0 ? 'var(--up)' : 'var(--down)';
     const arrow = t.var_1d >= 0 ? '▲' : '▼';
-    return `<div class="mover-tile">
+    return `<div class="mover-tile" data-t="${t.ticker}">
       <div style="font-size:11px;font-weight:700;color:var(--brand)">${t.ticker}</div>
       <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:${color};margin-top:4px">${arrow} ${Math.abs(t.var_1d).toFixed(2)}%</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--ink-muted);margin-top:2px">${t.price !== null ? '€' + fmtPrice(t.price) : '-'}</div>
@@ -211,7 +224,7 @@
 
     document.getElementById('wl-tbody').innerHTML = rows.map(t => `
       <tr>
-        <td style="font-weight:600;color:var(--brand);font-family:var(--mono)">${t.ticker}</td>
+        <td style="font-weight:600;color:var(--brand);font-family:var(--mono)"><a class="wl-open" href="#${t.ticker}" data-t="${t.ticker}">${t.ticker}</a></td>
         <td style="font-size:11px;color:var(--ink-muted)">${t.sector}</td>
         <td style="font-size:11px;color:var(--ink-muted)">${t.asset_type}${t.distribution ? ` · ${t.distribution === 'Distributing' ? 'Dist.' : 'Acc.'}` : ''}</td>
         <td style="text-align:right;font-family:var(--mono)">${t.price !== null ? '€' + fmtPrice(t.price) : '-'}</td>
@@ -244,6 +257,48 @@
   document.getElementById('wl-frequency').addEventListener('change', render);
 
   render();
+
+  // ── Detalhe do ativo: os mesmos gráficos dos Favoritos, carregados no primeiro clique ──
+  let _seriesPromise = null;
+  function loadSeries() {
+    if (!_seriesPromise) _seriesPromise = fetch('assets/watchlist_series.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    return _seriesPromise;
+  }
+  const wdBackdrop = document.getElementById('wd-backdrop');
+  function closeDetail() {
+    wdBackdrop.classList.remove('open');
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  }
+  async function openDetail(ticker) {
+    const t = all.find(x => x.ticker === ticker);
+    if (!t) return;
+    document.getElementById('wd-title').textContent = ticker;
+    const varTxt = t.var_1d !== null ? ` · <span style="color:${t.var_1d >= 0 ? 'var(--up)' : 'var(--down)'}">${t.var_1d >= 0 ? '+' : ''}${t.var_1d.toFixed(2)}%</span>` : '';
+    document.getElementById('wd-sub').innerHTML = `${t.sector} · <span style="font-family:var(--mono);font-weight:600;color:var(--brand)">${t.price !== null ? '€' + fmtPrice(t.price) : '-'}</span>${varTxt}`;
+    const body = document.getElementById('wd-body');
+    body.innerHTML = '<p style="font-size:12px;color:var(--ink-ghost)">Loading charts…</p>';
+    wdBackdrop.classList.add('open');
+    if (location.hash !== '#' + ticker) history.replaceState(null, '', '#' + ticker);
+    try {
+      const data = await loadSeries();
+      const d = data.t[ticker];
+      if (!d) { body.innerHTML = '<p style="font-size:12px;color:var(--ink-ghost)">No price series for this asset in this run.</p>'; return; }
+      renderTickerDetail(body, data.base, d, false);
+    } catch (e) {
+      body.innerHTML = '<p style="font-size:12px;color:var(--down)">Could not load the charts.</p>';
+    }
+  }
+  document.getElementById('wl-tbody').addEventListener('click', e => {
+    const a = e.target.closest('.wl-open'); if (!a) return;
+    e.preventDefault(); openDetail(a.dataset.t);
+  });
+  document.getElementById('movers-strip').addEventListener('click', e => {
+    const tile = e.target.closest('.mover-tile'); if (tile) openDetail(tile.dataset.t);
+  });
+  document.getElementById('wd-close').addEventListener('click', closeDetail);
+  wdBackdrop.addEventListener('click', e => { if (e.target === wdBackdrop) closeDetail(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && wdBackdrop.classList.contains('open')) closeDetail(); });
+  if (location.hash) openDetail(decodeURIComponent(location.hash.slice(1)));
 </script>
 
 </body>

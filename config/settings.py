@@ -108,7 +108,10 @@ DEFAULT_RESEARCH_WEIGHTS = {
 }
 
 # ── Email timezone (Barcelona) ────────────────────────────────────────────
-BARCELONA_UTC_OFFSET = 2  # CEST (verão); alterar para 1 em outubro (CET)
+# Fuso com horário de verão automático (CET no inverno, CEST no verão).
+# Antes era um offset fixo (+2) que precisava ser trocado à mão em outubro e março.
+from zoneinfo import ZoneInfo
+BARCELONA_TZ = ZoneInfo("Europe/Madrid")
 
 # ── Asset class per ticker ────────────────────────────────────────────────
 # 0 = individual stock  1 = equity ETF  2 = crypto  3 = commodity ETF
@@ -119,12 +122,35 @@ ASSET_CLASSES: dict[str, int] = {
     "EMIM.AS": 1, "EXUS.MI": 1, "IWDA.AS": 1, "MEUD.PA": 1,
     "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
     "LYP6.DE": 1, "IS3N.DE": 1, "EUNN.DE": 1,
-    "SGLN.L":  3, "PPFB.DE": 3,  # iShares Physical Gold ETC (Xetra)
+    "SGLN.L":  3, "PPFB.DE": 3,  # iShares Physical Gold ETC: PPFB.DE (Xetra, EUR) é a da carteira; SGLN.L (Londres, GBp) é a mesma, só na watchlist
     "AFRM":    0,  # Affirm Holdings (Nasdaq), ação da carteira
+    # ETFs UCITS de acumulação (Xetra) e ETFs de mineradoras, adicionados em 18/11/2026
+    "SXR8.DE": 1, "SXRV.DE": 1, "SXRT.DE": 1, "IUSN.DE": 1, "ZPRV.DE": 1, "IS3Q.DE": 1,
+    "IS3R.DE": 1, "QDV5.DE": 1, "VVSM.DE": 1, "IQQH.DE": 1, "IBCI.DE": 1,
+    "GDX":     1, "GDXJ":    1, "SIL":     1,
 }
 
 # ── Market calendar mapping (pandas-market-calendars) ────────────────────
 # Tickers not listed here default to NYSE.
+# Sufixo do Yahoo → calendário da bolsa, para tickers que não estão no dict abaixo.
+# Sem isto, um ticker novo de Madri ou Paris cairia no calendário da NYSE e os
+# alvos D+1..D+3 seriam contados com os feriados americanos.
+CALENDAR_BY_SUFFIX: dict[str, str] = {
+    ".DE": "XETR", ".PA": "XPAR", ".AS": "XAMS", ".MC": "XMAD", ".MI": "XMIL",
+    ".L": "LSE", ".SW": "SIX", ".CO": "XCSE", ".T": "XTKS", ".HK": "XHKG",
+}
+
+
+def calendar_for(ticker: str) -> str:
+    """Calendário da bolsa do ticker: o dict explícito, depois o sufixo, por fim a NYSE."""
+    if ticker in TICKER_CALENDAR:
+        return TICKER_CALENDAR[ticker]
+    for suf, cal in CALENDAR_BY_SUFFIX.items():
+        if ticker.endswith(suf):
+            return cal
+    return "NYSE"
+
+
 TICKER_CALENDAR: dict[str, str] = {
     # Nasdaq segue o calendário da NYSE
     "AFRM":    "NYSE",
