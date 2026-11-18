@@ -1,17 +1,17 @@
 {
   "d1": {
     "ready": false,
-    "n": 3190,
-    "needed": 13
+    "n": 3722,
+    "needed": 11
   },
   "d2": {
     "ready": false,
-    "n": 2661,
+    "n": 3190,
     "needed": 13
   },
   "d3": {
     "ready": false,
-    "n": 2127,
-    "needed": 14
+    "n": 2661,
+    "needed": 13
   }
 }
