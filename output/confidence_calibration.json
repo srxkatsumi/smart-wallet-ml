@@ -1,0 +1,27 @@
+{
+  "d1": {
+    "tipo": "encolhimento",
+    "lambda": 0.0,
+    "n": 4254,
+    "n_dias": 10,
+    "brier_raw": 0.2959,
+    "brier_calibrated": 0.25
+  },
+  "d2": {
+    "tipo": "encolhimento",
+    "lambda": 0.0,
+    "n": 3722,
+    "n_dias": 9,
+    "brier_raw": 0.2974,
+    "brier_calibrated": 0.25
+  },
+  "d3": {
+    "tipo": "encolhimento",
+    "lambda": 0.0,
+    "n": 3190,
+    "n_dias": 7,
+    "brier_raw": 0.3028,
+    "brier_calibrated": 0.25
+  },
+  "updated": "2026-11-19"
+}
