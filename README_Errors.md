@@ -232,7 +232,7 @@ Também saíram da watchlist 15 tickers sem nenhuma previsão nos últimos 10 di
 ## ERR-016: Site publicado sempre um dia atrasado (2026-11-13)
 
 **Sintoma**
-A AFRM entrou na carteira em 12/11, mas não aparecia no site no dia seguinte, embora estivesse no `docs/assets/data.js` do repositório.
+Uma mudança na carteira feita em 12/11 não aparecia no site no dia seguinte, embora já estivesse no `docs/assets/data.js` do repositório.
 
 **Causa raiz**
 O `deploy-pages.yml` disparado por `workflow_run` fazia checkout de `github.event.workflow_run.head_sha`, que é o commit em que a execução diária **começou**, antes do commit automático com os dados novos. O site publicava sempre os dados da véspera, desde que esse deploy foi configurado. O email não era afetado.

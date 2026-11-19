@@ -44,7 +44,7 @@
 <header class="page-header">
   <div class="wrap">
     <h1 class="page-title">Watchlist</h1>
-    <div class="page-subtitle">The broader research universe: context and browsing, not personal holdings</div>
+    <div class="page-subtitle">The broader research universe: context and browsing, not personal holdings · forecast % is confidence calibrated against real hits (50% = no demonstrated edge), raw value below</div>
     <div class="status-strip" id="status-strip"><!-- JS --></div>
   </div>
 </header>
@@ -189,7 +189,7 @@
 
   function directionCell(t) {
     if (!t.direction) return '-';
-    return dirCell(t.direction, t.confidence);
+    return dirCellCal(t.direction, t.confidence, t.confidence_raw);
   }
 
   function render() {

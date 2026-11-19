@@ -17,6 +17,11 @@ logging.basicConfig(
 logger = logging.getLogger("main")
 
 
+def load_privados_cedo() -> list[str]:
+    from data.storage import load_privados
+    return load_privados()
+
+
 def main():
     logger.info("=== Carteira Inteligente — %s ===", date.today())
 
@@ -40,11 +45,16 @@ def main():
     portfolio_cfg   = load_portfolio_config()
     my_tickers      = load_my_tickers()
     watchlist       = load_watchlist()
-    all_tickers     = build_ticker_order(my_tickers, watchlist)
+    all_tickers     = build_ticker_order(list(dict.fromkeys(my_tickers + load_privados_cedo())), watchlist)
 
     etoro      = portfolio_cfg.get("etoro", [])
     etf_acumul = portfolio_cfg["etf_acumulacao"]
-    carteira   = portfolio_tickers(portfolio_cfg)  # ETFs + ações
+    carteira   = portfolio_tickers(portfolio_cfg)  # carteira PÚBLICA: tudo o que é publicado usa esta
+    # Ativos privados (secret PORTFOLIO_PRIVADO): só nos emails, nunca em nada commitado ou no site.
+    from data.storage import load_privados
+    privados         = [t for t in load_privados() if t not in carteira]
+    carteira_email   = carteira + privados
+    my_tickers_email = list(dict.fromkeys(my_tickers + privados))
 
     # ── FX rates ──────────────────────────────────────────────────────────
     from data.downloader import load_fx_rates, download_context, download_prices
@@ -72,7 +82,7 @@ def main():
 
     # Retry portfolio tickers ausentes: se algum falhou no build_all_features
     # (ex: amostras insuficientes após limpeza de NaN), tenta sem mínimo de amostras
-    missing_portfolio = [t for t in my_tickers if t not in featured_data and t in raw_data]
+    missing_portfolio = [t for t in my_tickers_email if t not in featured_data and t in raw_data]
     if missing_portfolio:
         logger.warning("Portfolio tickers ausentes de featured_data — retry com min_samples=1: %s",
                        missing_portfolio)
@@ -122,11 +132,13 @@ def main():
     # ── Deteção de anomalia (email separado, só dispara em evento fora do normal) ─
     try:
         from evaluation.anomaly import detect_anomaly, save_anomaly
-        anomaly = detect_anomaly(context_data, featured_data, carteira)
+        from evaluation.anomaly import versao_publica
+        anomaly_email = detect_anomaly(context_data, featured_data, carteira_email)
+        anomaly = versao_publica(anomaly_email, privados)   # a que é commitada e alimenta a MaoMao
         save_anomaly(anomaly)
-        if anomaly.get("alerta"):
+        if anomaly_email.get("alerta"):
             from reports.email_report_alerta import build_html_alerta, save_html_alerta
-            save_html_alerta(build_html_alerta(anomaly))
+            save_html_alerta(build_html_alerta(anomaly_email))
     except Exception as e:
         logger.warning("Deteção de anomalia falhou (não bloqueia): %s", e)
         falhas.append(("Anomalia", str(e)))
@@ -171,7 +183,7 @@ def main():
 
     # Ações da carteira em dólar aparecem em euro no email (moeda em que você compra);
     # o modelo continua prevendo o preço em USD da bolsa americana.
-    for t_ in carteira:
+    for t_ in carteira_email:
         if t_ in resultados_ml and "." not in t_ and EUR_USD:
             resultados_ml[t_]["close_eur"] = resultados_ml[t_]["close_now"] / EUR_USD
 
@@ -254,7 +266,7 @@ def main():
         backtest_exp = run_backtest_experimento(training_data, my_tickers)
 
         html_exp = build_html_experimentos(
-            resultados_exp, resultados_ml, df_exp_log, sig_exp, backtest_exp, my_tickers,
+            resultados_exp, resultados_ml, df_exp_log, sig_exp, backtest_exp, my_tickers_email,
         )
         save_html_experimentos(html_exp)
     except Exception as e:
@@ -371,12 +383,12 @@ def main():
         from reports.email_report_semanal import (
             e_fim_de_semana_de_pregao, build_html_semanal, save_html_semanal,
         )
-        _ultimas = [pd.Timestamp(resultados_ml[t]["last_date"]) for t in carteira
+        _ultimas = [pd.Timestamp(resultados_ml[t]["last_date"]) for t in carteira_email
                     if t in resultados_ml and "last_date" in resultados_ml[t]]
         if _ultimas and e_fim_de_semana_de_pregao(max(_ultimas), etf_acumul[0]):
             from research.runner import RESEARCH_LOG as _rlog_path
             _rlog = pd.read_csv(_rlog_path, low_memory=False) if _rlog_path.exists() else pd.DataFrame()
-            save_html_semanal(build_html_semanal(df_log, _rlog, carteira, resultados_ml,
+            save_html_semanal(build_html_semanal(df_log, _rlog, carteira_email, resultados_ml,
                                                  context_data, max(_ultimas), ampliado, regime, rastreio,
                                                  volat))
     except Exception as e:
@@ -387,7 +399,7 @@ def main():
     saude, eventos = None, None
     try:
         from evaluation.saude import avaliar_saude
-        saude = avaliar_saude(carteira, resultados_ml, falhas, ctx_warnings)
+        saude = avaliar_saude(carteira_email, resultados_ml, falhas, ctx_warnings)
     except Exception as e:
         logger.warning("Saúde do sistema falhou (não bloqueia): %s", e)
     risco = None
@@ -395,17 +407,17 @@ def main():
         from evaluation.risco import contexto_mercado, risco_carteira
         _ctx = contexto_mercado(context_data)
         risco = {"contexto": _ctx,
-                 "carteira": risco_carteira(resultados_ml, carteira, (_ctx.get("vix") or (None,))[0])}
+                 "carteira": risco_carteira(resultados_ml, carteira_email, (_ctx.get("vix") or (None,))[0])}
     except Exception as e:
         logger.warning("Risco da carteira falhou (não bloqueia): %s", e)
         falhas.append(("Risco", str(e)))
     try:
         from evaluation.eventos import proximos_eventos
-        eventos = proximos_eventos(hoje, portfolio_cfg.get("acoes", []))
+        eventos = proximos_eventos(hoje, list(dict.fromkeys(portfolio_cfg.get("acoes", []) + privados)))
     except Exception as e:
         logger.warning("Calendário de eventos falhou (não bloqueia): %s", e)
 
-    html = build_html(resultados_ml, etf_acumul, df_log, my_tickers, ensemble_weights,
+    html = build_html(resultados_ml, etf_acumul, df_log, my_tickers_email, ensemble_weights,
                       research_data=research_data,
                       context_warnings=ctx_warnings,
                       ampliado=ampliado, saude=saude, eventos=eventos, risco=risco,

@@ -33,7 +33,7 @@
 <header class="page-header">
   <div class="wrap">
     <h1 class="page-title">Favorites</h1>
-    <div class="page-subtitle">The portfolio assets tracked daily: price, technicals, forecast and accuracy per asset</div>
+    <div class="page-subtitle">The portfolio assets tracked daily: price, technicals, forecast and accuracy per asset · forecast % is confidence calibrated against real hits (50% = no demonstrated edge), raw value below</div>
     <div class="status-strip" id="status-strip"><!-- JS --></div>
   </div>
 </header>
@@ -147,9 +147,9 @@
         </div>
 
         <div class="tile-forecasts" style="margin-top:18px;gap:24px">
-          <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
-          <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
-          <div><span class="dir-label">D+3</span>${dirCell(f.horizons.d3.direction, f.horizons.d3.confidence)}</div>
+          <div><span class="dir-label">D+1</span>${dirCellCal(f.horizons.d1.direction, f.horizons.d1.confidence, f.horizons.d1.confidence_raw)}</div>
+          <div><span class="dir-label">D+2</span>${dirCellCal(f.horizons.d2.direction, f.horizons.d2.confidence, f.horizons.d2.confidence_raw)}</div>
+          <div><span class="dir-label">D+3</span>${dirCellCal(f.horizons.d3.direction, f.horizons.d3.confidence, f.horizons.d3.confidence_raw)}</div>
         </div>
       </div>
     </div>

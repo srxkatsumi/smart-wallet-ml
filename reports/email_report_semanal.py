@@ -105,7 +105,7 @@ def _html_semana(sem: dict) -> str:
     corpo = f"""
     <table style="border-collapse:collapse;width:100%;max-width:320px">{linhas}</table>
     <div style="margin-top:12px;font-size:11px;color:#5a5a5a;line-height:1.7">Mercado na semana: {fat}{vix}</div>
-    <div style="margin-top:6px;font-size:10.5px;color:#a8a39a">Retorno das últimas 5 sessões em euro (a AFRM convertida pelo EUR/USD de cada dia). Os fatores de mercado ficam na moeda deles.</div>"""
+    <div style="margin-top:6px;font-size:10.5px;color:#a8a39a">Retorno das últimas 5 sessões em euro (ações em dólar convertidas pelo EUR/USD de cada dia). Os fatores de mercado ficam na moeda deles.</div>"""
     return _secao("A semana da carteira", "Retorno de cada ativo e dos fatores que mais pesam nela", corpo)
 
 

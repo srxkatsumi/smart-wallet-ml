@@ -33,7 +33,7 @@
 <header class="page-header">
   <div class="wrap">
     <h1 class="page-title">Favoritos</h1>
-    <div class="page-subtitle">Os ativos da carteira acompanhados todo dia: preço, técnicos, previsão e acurácia por ativo</div>
+    <div class="page-subtitle">Os ativos da carteira acompanhados todo dia: preço, técnicos, previsão e acurácia por ativo · a % das previsões é a confiança calibrada contra os acertos reais (50% = sem vantagem demonstrada), com a bruta embaixo</div>
     <div class="status-strip" id="status-strip"><!-- JS --></div>
   </div>
 </header>
@@ -148,9 +148,9 @@
         </div>
 
         <div class="tile-forecasts" style="margin-top:18px;gap:24px">
-          <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
-          <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
-          <div><span class="dir-label">D+3</span>${dirCell(f.horizons.d3.direction, f.horizons.d3.confidence)}</div>
+          <div><span class="dir-label">D+1</span>${dirCellCal(f.horizons.d1.direction, f.horizons.d1.confidence, f.horizons.d1.confidence_raw)}</div>
+          <div><span class="dir-label">D+2</span>${dirCellCal(f.horizons.d2.direction, f.horizons.d2.confidence, f.horizons.d2.confidence_raw)}</div>
+          <div><span class="dir-label">D+3</span>${dirCellCal(f.horizons.d3.direction, f.horizons.d3.confidence, f.horizons.d3.confidence_raw)}</div>
         </div>
       </div>
     </div>

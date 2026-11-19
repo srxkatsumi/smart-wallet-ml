@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import pandas as pd
+import yfinance as yf
 
 from data.storage import aligned_rows, save_predictions_log, save_ensemble_weights
 from data.calendars import target_dates

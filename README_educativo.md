@@ -9,7 +9,7 @@ Desenvolvido em Python com GitHub Actions como único orquestrador: sem infraest
 
 ---
 
-> Escrito por **Vicky Costa** — Analista de Dados e estudante de Ciência de Dados
+> Escrito por **Vicky Costa**, Analista de Dados
 > Este arquivo explica o projeto em linguagem acessível, para quem tem conhecimentos básicos de programação mas não tem background em Machine Learning ou finanças.
 
 ---
@@ -837,6 +837,9 @@ Os indicadores técnicos clássicos (`ret_1d`, `ret_5d`) capturam apenas o que a
 
 **Por que incluí:** o "January effect" (pequenas capitalizações sobem mais em Janeiro), o "Sell in May and go away" (fraqueza sazonal de Maio a Outubro) e o "Santa Claus rally" (alta em Dezembro) são padrões sazonais documentados. O modelo pode aprender quais meses tendem a ser favoráveis a cada ativo específico da carteira.
 
+
+> **Cuidado com estes efeitos.** Eles aparecem na literatura, mas tendem a enfraquecer ou desaparecer depois de publicados, porque os investidores passam a explorá-los (McLean & Pontiff, *Journal of Finance*, 2016). Aqui entram como candidatos que o modelo pode usar ou ignorar, não como fatos garantidos, e nada nos resultados deste projeto mostra que funcionem.
+
 ---
 
 ### 29. is_options_expiry — Semana de expiração de opções
@@ -1287,7 +1290,7 @@ Se amanhã sai uma notícia de que a NVDA ganhou um contrato bilionário com o g
 
 Semanas de divulgação de resultados trimestrais são estatisticamente mais voláteis. Mas o modelo trata um dia de earnings igual a qualquer outro dia. Previsões feitas um dia antes de earnings têm uma incerteza muito maior do que o modelo assume.
 
-Desde 18/11/2026 o email avisa: o bloco "Eventos nas próximas 3 sessões" lista resultados trimestrais e decisões de bancos centrais, com a nota de que o modelo não os vê. O caso que motivou foi a AFRM em 05/11: o modelo previu alta com 72% a 76% de confiança no dia do resultado, e as 6 previsões erraram.
+Desde 18/11/2026 o email avisa: o bloco "Eventos nas próximas 3 sessões" lista resultados trimestrais e decisões de bancos centrais, com a nota de que o modelo não os vê. O caso que motivou foi uma ação da carteira em 05/11, dia de resultado trimestral: o modelo previu alta com 72% a 76% de confiança no dia do resultado, e as 6 previsões erraram.
 
 **O modelo não distingue uma queda de 0.1% de uma de 8%.**
 
@@ -1471,7 +1474,7 @@ A lição: **o modelo mais simples que resolve o problema costuma ser o melhor**
 
 ## Sobre
 
-Construído por **Vicky Costa** — Analista de Dados, estudante de Ciência de Dados
+Construído por **Vicky Costa**, Analista de Dados
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycostasanches/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)

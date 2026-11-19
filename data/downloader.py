@@ -119,9 +119,15 @@ def download_context(period: str = PRICE_PERIOD) -> tuple[dict, list[str]]:
                 df.columns = df.columns.get_level_values(0)
             df.index = pd.to_datetime(df.index).normalize()
             df = df.sort_index()
+            # Mesmo tratamento dos ativos: linha sem Close sai, e o último pregão
+            # encerrado que faltar é montado pelos candles de 1h. Antes, a linha
+            # vazia era preenchida com a véspera (SPY e GLD em 18/11/2026), e isso
+            # entrava nas features de contexto de todos os ativos.
+            df = df[df["Close"].notna()]
+            df = _fill_missing_sessions(df, ctx_ticker)
             series = df["Close"].rename(ctx_name)
 
-            # Forward fill any NaN in the last 3 days; warn if applied
+            # Se mesmo assim faltar dado recente, usa a véspera e avisa no email
             nan_recent = series.tail(3)
             nan_dates  = nan_recent[nan_recent.isna()].index
             if len(nan_dates) > 0:
@@ -131,6 +137,15 @@ def download_context(period: str = PRICE_PERIOD) -> tuple[dict, list[str]]:
                 warnings.append(msg)
                 logger.warning(msg)
 
+            try:
+                esperado = last_completed_session(ctx_ticker)
+                if esperado is not None and series.index[-1] < esperado:
+                    msg = (f"{ctx_ticker}: sem o pregão de {esperado.strftime('%Y-%m-%d')} "
+                           f"(nem diário nem 1h), último dado de {series.index[-1].strftime('%Y-%m-%d')}")
+                    warnings.append(msg)
+                    logger.warning(msg)
+            except Exception:
+                pass
             context_data[ctx_name] = series
             logger.info("%s: %d dias | último=%.2f", ctx_ticker, len(df), df["Close"].iloc[-1])
         except Exception as e:

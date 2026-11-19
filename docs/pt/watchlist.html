@@ -44,7 +44,7 @@
 <header class="page-header">
   <div class="wrap">
     <h1 class="page-title">Watchlist</h1>
-    <div class="page-subtitle">O universo mais amplo de investigação: contexto e navegação, não a carteira pessoal</div>
+    <div class="page-subtitle">O universo mais amplo de investigação: contexto e navegação, não a carteira pessoal · a % das previsões é a confiança calibrada contra os acertos reais (50% = sem vantagem demonstrada), com a bruta embaixo</div>
     <div class="status-strip" id="status-strip"><!-- JS --></div>
   </div>
 </header>
@@ -191,7 +191,7 @@
 
   function directionCell(t) {
     if (!t.direction) return '-';
-    return dirCell(t.direction, t.confidence);
+    return dirCellCal(t.direction, t.confidence, t.confidence_raw);
   }
 
   function render() {

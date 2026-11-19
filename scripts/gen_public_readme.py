@@ -195,7 +195,7 @@ No prices, tickers, or portfolio weights are included.
 *Charts contain no financial advice, no portfolio positions, and no entry prices.
 This is a personal data science project — not an investment product.*
 
-Built by **Vicky Costa** — Data Analyst & Data Science student
+Built by **Vicky Costa**, Data Analyst
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-vickycosta-blue)](https://www.linkedin.com/in/vickycostasanches/)
 [![Blog](https://img.shields.io/badge/Blog-vickycosta.com-purple)](https://www.vickycosta.com)
 """

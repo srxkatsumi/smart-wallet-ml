@@ -9,7 +9,7 @@ do que aconteceu depois, não da previsão de direção do ensemble.
 
 | | Carteira | Mercado |
 |---|---|---|
-| Vê | Só os ativos que você tem investidos de verdade (6 ETFs e a AFRM) | O watchlist inteiro (500+ tickers) |
+| Vê | Só os ativos que você tem investidos de verdade (os ETFs da carteira) | O watchlist inteiro (500+ tickers) |
 | Estado | `output/maomao_state.json` | `output/maomao_market_state.json` |
 | Orquestração | `maomao.daily.run_daily_step` | `maomao.daily.run_market_step` |
 | `ANOMALY` vem de | `anomalia.json["alerta"]` (VIX **ou** um ETF específico rompendo o próprio ATR) | só o VIX (`anomalia.json["market"]`) — uma queda isolada de 1 ETF da carteira não é "o mercado" |

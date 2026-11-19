@@ -17,6 +17,3 @@ pred_date,ticker,ref_date,horizon,direction,prob_up,actual_change_pct,correct
 2026-11-19,EUNN.DE,2026-11-18,1,up,0.7185,,
 2026-11-19,EUNN.DE,2026-11-18,2,up,0.8207,,
 2026-11-19,EUNN.DE,2026-11-18,3,down,0.3527,,
-2026-11-19,AFRM,2026-11-18,1,up,0.5466,,
-2026-11-19,AFRM,2026-11-18,2,down,0.2499,,
-2026-11-19,AFRM,2026-11-18,3,up,0.7436,,

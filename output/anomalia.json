@@ -46,12 +46,6 @@
       "atr_pct": 0.0183,
       "multiplo_atr": 0.05,
       "alerta": false
-    },
-    "AFRM": {
-      "retorno_1d": -0.0093,
-      "atr_pct": 0.0664,
-      "multiplo_atr": 0.14,
-      "alerta": false
     }
   },
   "motivos": []

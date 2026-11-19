@@ -8,8 +8,8 @@ Duas fontes:
   - yfinance: próxima data de resultado das ações da carteira e das mega caps
     listadas em "resultados_empresas" (elas mexem com o mercado todo).
 
-O caso que motivou: AFRM em 05/11/2026, resultado trimestral no mesmo dia da
-venda forte de tecnologia; o modelo previu alta com 72-76% e errou as 6.
+O caso que motivou: uma ação da carteira com resultado trimestral em 05/11/2026,
+no mesmo dia de uma venda forte de tecnologia; o modelo previu alta com 72-76% e errou as 6.
 """
 import json
 import logging

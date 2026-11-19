@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 import logging
 import numpy as np
 import pandas as pd
@@ -172,6 +173,29 @@ def load_portfolio_config() -> dict:
 def portfolio_tickers(cfg: dict) -> list[str]:
     """Todos os ativos da carteira: ETFs de acumulação, ações e eToro (sem repetir, na ordem do arquivo)."""
     return list(dict.fromkeys(cfg["etf_acumulacao"] + cfg.get("acoes", []) + cfg.get("etoro", [])))
+
+
+def load_privados() -> list[str]:
+    """
+    Ativos da carteira que NÃO podem aparecer em nada público (repositório, site,
+    arquivos que o bot commita): só entram nos emails. Vêm do secret do GitHub
+    PORTFOLIO_PRIVADO no Actions, ou de config/portfolio_privado.json localmente
+    (ignorado pelo git). Formato: {"acoes": ["XXX"]} ou ["XXX"].
+    """
+    import os
+    bruto = os.environ.get("PORTFOLIO_PRIVADO", "").strip()
+    if not bruto:
+        caminho = Path("config/portfolio_privado.json")
+        bruto = caminho.read_text(encoding="utf-8") if caminho.exists() else ""
+    if not bruto:
+        return []
+    try:
+        dado = json.loads(bruto)
+    except Exception:
+        logger.warning("PORTFOLIO_PRIVADO inválido, ignorado")
+        return []
+    lista = dado.get("acoes", []) + dado.get("etf_acumulacao", []) if isinstance(dado, dict) else list(dado)
+    return [str(t).strip() for t in lista if str(t).strip()]
 
 
 def load_my_tickers() -> list[str]:

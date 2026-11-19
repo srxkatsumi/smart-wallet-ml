@@ -7,6 +7,13 @@ function dirCell(direction, confidence) {
   return `<span class="dir ${cls}">${arrow} ${Math.round(confidence * 100)}%</span>`;
 }
 
+// Confiança calibrada (a principal, igual ao email) com a bruta em letra pequena.
+function dirCellCal(direction, conf, raw) {
+  const extra = (raw !== undefined && raw !== null && Math.abs(raw - conf) >= 0.005)
+    ? `<div style="font-size:9.5px;color:var(--ink-ghost);font-family:var(--mono);margin-top:2px">${document.documentElement.lang === 'pt' ? 'bruta' : 'raw'} ${Math.round(raw * 100)}</div>` : '';
+  return dirCell(direction, conf) + extra;
+}
+
 function fmtPrice(v) {
   return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -275,7 +282,7 @@ function renderTickerDetail(root, base, d, pt = true) {
     ? { price: 'Preço · SMA20 · SMA50 · Bandas de Bollinger (EUR)', rsi: 'RSI (14)', macd: 'MACD', acc: 'Acurácia D+1 (janela de 15)', p: 'Preço', s: 'Sinal', h: 'Histograma', ob: 'sobrecomprado', os: 'sobrevendido', rnd: 'aleatório', none: 'Ainda sem histórico validado suficiente.' }
     : { price: 'Price · SMA20 · SMA50 · Bollinger Bands (EUR)', rsi: 'RSI (14)', macd: 'MACD', acc: 'D+1 accuracy (15-window)', p: 'Price', s: 'Signal', h: 'Histogram', ob: 'overbought', os: 'oversold', rnd: 'random', none: 'Not enough validated history yet.' };
   const h = d.h || {};
-  const prev = ['d1', 'd2', 'd3'].map(k => `<div><span class="dir-label">D+${k[1]}</span>${h[k] ? dirCell(h[k][0], h[k][1]) : '-'}</div>`).join('');
+  const prev = ['d1', 'd2', 'd3'].map(k => `<div><span class="dir-label">D+${k[1]}</span>${h[k] ? dirCellCal(h[k][0], h[k][1], h[k][2]) : '-'}</div>`).join('');
   root.innerHTML = `
     <div class="panel-label">${L.price}</div><div class="wd-price"></div>
     <div class="panel-grid">

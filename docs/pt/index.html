@@ -227,9 +227,9 @@
       <div class="tile-ticker">${ticker} <span style="float:right">${acertouOntemIcon(f.acertou_ontem)}</span></div>
       <div class="tile-price">€${fmtPrice(f.price)}</div>
       <div class="tile-forecasts">
-        <div><span class="dir-label">D+1</span>${dirCell(f.horizons.d1.direction, f.horizons.d1.confidence)}</div>
-        <div><span class="dir-label">D+2</span>${dirCell(f.horizons.d2.direction, f.horizons.d2.confidence)}</div>
-        <div><span class="dir-label">D+3</span>${dirCell(f.horizons.d3.direction, f.horizons.d3.confidence)}</div>
+        <div><span class="dir-label">D+1</span>${dirCellCal(f.horizons.d1.direction, f.horizons.d1.confidence, f.horizons.d1.confidence_raw)}</div>
+        <div><span class="dir-label">D+2</span>${dirCellCal(f.horizons.d2.direction, f.horizons.d2.confidence, f.horizons.d2.confidence_raw)}</div>
+        <div><span class="dir-label">D+3</span>${dirCellCal(f.horizons.d3.direction, f.horizons.d3.confidence, f.horizons.d3.confidence_raw)}</div>
       </div>
     </a>
   `).join('');

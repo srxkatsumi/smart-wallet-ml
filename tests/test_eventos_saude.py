@@ -22,9 +22,9 @@ def test_evento_macro_na_janela_e_sessao_certa():
 
 
 def test_resultado_da_acao_da_carteira_aparece_e_fora_da_janela_nao():
-    datas = {"AFRM": pd.Timestamp("2026-11-20"), "NVDA": pd.Timestamp("2026-12-30")}
-    r = ev.proximos_eventos(pd.Timestamp("2026-11-18"), ["AFRM"], buscar_resultado=lambda t: datas.get(t))
-    assert [e["afeta"] for e in r["eventos"]] == ["AFRM"]
+    datas = {"ACAO": pd.Timestamp("2026-11-20"), "NVDA": pd.Timestamp("2026-12-30")}
+    r = ev.proximos_eventos(pd.Timestamp("2026-11-18"), ["ACAO"], buscar_resultado=lambda t: datas.get(t))
+    assert [e["afeta"] for e in r["eventos"]] == ["ACAO"]
     assert r["eventos"][0]["sessao"] == 2
 
 
@@ -37,9 +37,9 @@ def test_saude_ok_problema_e_atencao():
     now = pd.Timestamp("2026-11-18 03:00", tz="UTC")       # último pregão encerrado: 17/11
     fresco = {"last_date": pd.Timestamp("2026-11-17")}
     velho  = {"last_date": pd.Timestamp("2026-11-13")}
-    assert avaliar_saude(["AFRM"], {"AFRM": fresco}, [], now=now)["estado"] == "ok"
-    s = avaliar_saude(["AFRM", "PPFB.DE"], {"AFRM": fresco, "PPFB.DE": velho}, [], now=now)
+    assert avaliar_saude(["ACAO"], {"ACAO": fresco}, [], now=now)["estado"] == "ok"
+    s = avaliar_saude(["ACAO", "PPFB.DE"], {"ACAO": fresco, "PPFB.DE": velho}, [], now=now)
     assert s["estado"] == "problema" and s["n_ok"] == 1
-    s = avaliar_saude(["AFRM"], {"AFRM": fresco}, [("SHAP", "boom")], now=now)
+    s = avaliar_saude(["ACAO"], {"ACAO": fresco}, [("SHAP", "boom")], now=now)
     assert s["estado"] == "atencao"
-    assert avaliar_saude(["AFRM"], {}, [], now=now)["estado"] == "problema"
+    assert avaliar_saude(["ACAO"], {}, [], now=now)["estado"] == "problema"

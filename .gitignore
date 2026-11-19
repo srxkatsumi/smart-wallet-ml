@@ -40,3 +40,10 @@ output/resumo_diario.html
 # Outros projectos e config privada (excluídos do repositório público)
 test_ml/
 .claude/
+
+# Corpos dos emails (podem conter ativos privados) e a carteira privada local
+output/resumo_diario.html
+output/resumo_experimentos.html
+output/resumo_alerta.html
+output/resumo_semanal.html
+config/portfolio_privado.json

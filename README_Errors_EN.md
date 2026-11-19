@@ -230,7 +230,7 @@ When the last completed session in the ticker's calendar is missing, `data/downl
 ## ERR-016: Published site always a day behind (2026-11-13)
 
 **Symptom**
-AFRM joined the portfolio on 2026-11-12 but was missing from the site the next day, even though it was in the repository's `docs/assets/data.js`.
+A portfolio change made on 2026-11-12 was missing from the site the next day, even though it was already in the repository's `docs/assets/data.js`.
 
 **Root cause**
 `deploy-pages.yml`, when triggered by `workflow_run`, checked out `github.event.workflow_run.head_sha`: the commit the daily run **started** from, before the bot's commit with the new data. The site always published the previous day's data, ever since this deploy was set up. The email was not affected.

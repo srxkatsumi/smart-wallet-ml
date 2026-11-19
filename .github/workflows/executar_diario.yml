@@ -156,6 +156,9 @@ jobs:
       - name: 🚀 Executar main.py
         run: python main.py
         env:
+          # Ativos que só podem aparecer nos emails (nunca no repositório nem no site)
+          PORTFOLIO_PRIVADO: ${{ secrets.PORTFOLIO_PRIVADO }}
+        env:
           PYTHONUNBUFFERED: "1"
 
       # 4b — Validar que os dados foram gerados correctamente
@@ -186,7 +189,9 @@ jobs:
       - name: 🔎 Verificar anomalia
         id: anomalia
         run: |
-          ALERTA=$(python -c "import json; print(str(json.load(open('output/anomalia.json')).get('alerta', False)).lower())" 2>/dev/null || echo false)
+          # O HTML do alerta só é gerado nos dias com alerta (e não vai para o git), incluindo
+          # alertas de ativos privados, que o anomalia.json público não mostra.
+          if [ -f output/resumo_alerta.html ]; then ALERTA=true; else ALERTA=false; fi
           echo "alerta=$ALERTA" >> "$GITHUB_OUTPUT"
           echo "Anomalia detetada hoje: $ALERTA"
 
@@ -260,13 +265,11 @@ jobs:
 
           # Experimento de regressão (email separado — não afeta a carteira)
           git add output/predictions_experimentos_log.csv 2>/dev/null || true
-          git add output/resumo_experimentos.html          2>/dev/null || true
           git add output/significance_experimentos.json   2>/dev/null || true
           git add output/backtest_experimentos.json        2>/dev/null || true
 
           # Alerta de anomalia (email separado — só existe HTML nos dias com alerta)
           git add output/anomalia.json      2>/dev/null || true
-          git add output/resumo_alerta.html 2>/dev/null || true
 
           # Site público (docs/) — dados exportados no step "🌐 Atualizar dados do site"
           git add docs/assets/ 2>/dev/null || true

@@ -119,6 +119,22 @@ def detect_anomaly(context_data: dict, featured_data: dict, portfolio_tickers: l
     }
 
 
+def versao_publica(result: dict, privados: list[str]) -> dict:
+    """
+    O anomalia.json é commitado (público): tira os ativos privados dos tickers e
+    dos motivos, e o 'alerta' passa a refletir só o que é público. O email de
+    alerta continua a usar o resultado completo.
+    """
+    if not privados:
+        return result
+    priv = set(privados)
+    tickers = {t: r for t, r in result.get("tickers", {}).items() if t not in priv}
+    motivos = [m for m in result.get("motivos", []) if m.split(":")[0] not in priv]
+    market = result.get("market", {})
+    alerta = bool(market.get("transicao") or market.get("spike") or any(r.get("alerta") for r in tickers.values()))
+    return {**result, "tickers": tickers, "motivos": motivos, "alerta": alerta}
+
+
 def save_anomaly(result: dict) -> None:
     ALERTA_FILE.parent.mkdir(parents=True, exist_ok=True)
     ALERTA_FILE.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")

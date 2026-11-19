@@ -208,7 +208,7 @@ def export_series(tickers: list, log: pd.DataFrame, dividends: dict, fx_rates: d
     Arquivo separado e carregado só no primeiro clique, para não pesar a página.
     Datas como deslocamento em dias a partir de "base", para caber em ~1 MB.
     """
-    from export_data import accuracy_curve
+    from export_data import accuracy_curve, confianca_exibida
     print(f"Baixando {len(tickers)} séries de preço para o detalhe da Watchlist...")
     raw = yf.download(tickers, period="1y", interval="1d", auto_adjust=True, progress=False, threads=True)
     closes = raw["Close"] if isinstance(raw.columns, pd.MultiIndex) else raw[["Close"]].rename(columns={"Close": tickers[0]})
@@ -237,7 +237,7 @@ def export_series(tickers: list, log: pd.DataFrame, dividends: dict, fx_rates: d
         c_eur = c * pence / taxa
         h = {}
         for _, r in ult[ult["ticker"] == t].iterrows():
-            h[f"d{int(r['horizon'])}"] = [r["direction"], round(float(r["confidence"]), 4)]
+            h[f"d{int(r['horizon'])}"] = [r["direction"], confianca_exibida(r), round(float(r["confidence"]), 4)]
         acc = accuracy_curve(log, t)
         out[t] = {
             "o": [int((d - base).days) for d in c.index],
@@ -250,6 +250,7 @@ def export_series(tickers: list, log: pd.DataFrame, dividends: dict, fx_rates: d
 
 
 def main():
+    from export_data import confianca_exibida
     refresh = "--refresh" in sys.argv
     sector_map = load_sector_map()
     tickers = sorted(sector_map.keys())
@@ -327,7 +328,8 @@ def main():
             "price": price,
             "var_1d": var_1d,
             "direction": r["direction"],
-            "confidence": round(float(r["confidence"]), 4),
+            "confidence": confianca_exibida(r),
+            "confidence_raw": round(float(r["confidence"]), 4),
             "acc_recent": acc,
             "n_recent": len(val),
             "pays_dividends": div["pays_dividends"],

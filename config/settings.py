@@ -123,7 +123,6 @@ ASSET_CLASSES: dict[str, int] = {
     "CSPX.L":  1, "VWCE.DE": 1, "SJPA.MI": 1, "ICGA.DE": 1,
     "LYP6.DE": 1, "IS3N.DE": 1, "EUNN.DE": 1,
     "SGLN.L":  3, "PPFB.DE": 3,  # iShares Physical Gold ETC: PPFB.DE (Xetra, EUR) é a da carteira; SGLN.L (Londres, GBp) é a mesma, só na watchlist
-    "AFRM":    0,  # Affirm Holdings (Nasdaq), ação da carteira
     # ETFs UCITS de acumulação (Xetra) e ETFs de mineradoras, adicionados em 18/11/2026
     "SXR8.DE": 1, "SXRV.DE": 1, "SXRT.DE": 1, "IUSN.DE": 1, "ZPRV.DE": 1, "IS3Q.DE": 1,
     "IS3R.DE": 1, "QDV5.DE": 1, "VVSM.DE": 1, "IQQH.DE": 1, "IBCI.DE": 1,
@@ -152,8 +151,6 @@ def calendar_for(ticker: str) -> str:
 
 
 TICKER_CALENDAR: dict[str, str] = {
-    # Nasdaq segue o calendário da NYSE
-    "AFRM":    "NYSE",
     # London Stock Exchange
     "EXUS.MI": "XMIL",   # Borsa Italiana (EUR)
     "SGLN.L":  "LSE",

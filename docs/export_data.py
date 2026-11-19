@@ -34,7 +34,7 @@ PENCE_LOG_THRESHOLD = 500
 
 
 def is_usd_ticker(ticker: str) -> bool:
-    """Tickers americanos não têm sufixo de bolsa (AFRM); os europeus têm (.DE, .MI, .L)."""
+    """Tickers americanos não têm sufixo de bolsa (ex.: NVDA); os europeus têm (.DE, .MI, .L)."""
     return "." not in ticker
 
 
@@ -51,6 +51,15 @@ def log_price_to_eur(price: float, ticker: str, gbp_eur_rate: float,
     if usd_eur_rate is not None and is_usd_ticker(ticker):
         return price * usd_eur_rate
     return price
+
+
+def confianca_exibida(r) -> float:
+    """
+    A confiança que o site mostra é a calibrada contra os acertos reais (a mesma do
+    email); a bruta vai ao lado. Linhas antigas, de antes da calibração, ficam com a bruta.
+    """
+    cal = r.get("confidence_calibrated") if hasattr(r, "get") else None
+    return round(float(cal if cal is not None and pd.notna(cal) else r["confidence"]), 4)
 
 
 def latest_rows_per_ticker(df: pd.DataFrame) -> pd.DataFrame:
@@ -434,7 +443,9 @@ def main():
         price = log_price_to_eur(float(rows.iloc[0]["ref_price"]), t, gbp_eur_rate,
                                  usd_eur_on(usd_eur_hist, rows.iloc[0]["pred_date"]))
         horizons = {
-            f"d{int(r['horizon'])}": {"direction": r["direction"], "confidence": round(float(r["confidence"]), 4)}
+            f"d{int(r['horizon'])}": {"direction": r["direction"],
+                                      "confidence": confianca_exibida(r),
+                                      "confidence_raw": round(float(r["confidence"]), 4)}
             for _, r in rows.iterrows()
         }
         sub = val[val["ticker"] == t].tail(15)
