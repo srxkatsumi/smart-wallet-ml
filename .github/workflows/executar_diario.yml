@@ -156,10 +156,9 @@ jobs:
       - name: 🚀 Executar main.py
         run: python main.py
         env:
+          PYTHONUNBUFFERED: "1"
           # Ativos que só podem aparecer nos emails (nunca no repositório nem no site)
           PORTFOLIO_PRIVADO: ${{ secrets.PORTFOLIO_PRIVADO }}
-        env:
-          PYTHONUNBUFFERED: "1"
 
       # 4b — Validar que os dados foram gerados correctamente
       - name: ✅ Validar dados gerados
