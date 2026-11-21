@@ -1,19 +1,19 @@
 {
   "d1": {
     "ready": false,
-    "n": 4873,
+    "n": 5472,
     "n_dias": 11,
     "needed": 9
   },
   "d2": {
     "ready": false,
-    "n": 4254,
+    "n": 4850,
     "n_dias": 10,
     "needed": 10
   },
   "d3": {
     "ready": false,
-    "n": 3722,
+    "n": 4249,
     "n_dias": 9,
     "needed": 11
   }

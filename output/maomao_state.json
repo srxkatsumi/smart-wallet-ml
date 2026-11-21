@@ -1,15 +1,15 @@
 {
-  "last_processed_date": "2026-11-19",
+  "last_processed_date": "2026-11-20",
   "learned": {
     "FEARFUL": {
       "RET_UP": 0.16140030472334255,
-      "RET_DOWN": -0.3848933910406453,
-      "VOL_SPIKE": -0.04661918206352405,
-      "VIX_SPIKE": 0.09396855785927195,
+      "RET_DOWN": -0.3489134945377877,
+      "VOL_SPIKE": -0.022172568483568043,
+      "VIX_SPIKE": 0.10796499865890725,
       "STREAK_UP": 0.08263873716469715,
-      "STREAK_DOWN": -0.17554185069656833,
-      "ANOMALY": 0.4358125113943514,
-      "DISAGREEMENT": 0.015074573358788238,
+      "STREAK_DOWN": -0.14536084627686957,
+      "ANOMALY": 0.47353876691897484,
+      "DISAGREEMENT": 0.04336926500225583,
       "CALM_STREAK": 0.05295387726669537
     },
     "EUPHORIC": {
@@ -26,21 +26,6 @@
   },
   "pending": [
     {
-      "date": "2026-11-17",
-      "pool": "FEARFUL",
-      "eligibility": {
-        "RET_UP": 0.0,
-        "RET_DOWN": 0.9537097176096354,
-        "VOL_SPIKE": 0.648,
-        "VIX_SPIKE": 0.371,
-        "STREAK_UP": 0.0,
-        "STREAK_DOWN": 0.8,
-        "ANOMALY": 1.0,
-        "DISAGREEMENT": 0.75,
-        "CALM_STREAK": 0.0
-      }
-    },
-    {
       "date": "2026-11-19",
       "pool": "FEARFUL",
       "eligibility": {
@@ -54,13 +39,27 @@
         "DISAGREEMENT": 0.5,
         "CALM_STREAK": 0.1
       }
+    },
+    {
+      "date": "2026-11-20",
+      "pool": "FEARFUL",
+      "eligibility": {
+        "RET_UP": 0.0,
+        "RET_DOWN": 1.0,
+        "VOL_SPIKE": 0.712,
+        "VIX_SPIKE": 0.8733333333333334,
+        "STREAK_UP": 0.0,
+        "STREAK_DOWN": 1.0,
+        "ANOMALY": 1.0,
+        "DISAGREEMENT": 0.8333333333333334,
+        "CALM_STREAK": 0.0
+      }
     }
   ],
   "recent_alertas": [
     false,
     false,
     false,
-    false,
     true,
     false,
     false,
@@ -71,18 +70,10 @@
     true,
     true,
     false,
+    true,
     true
   ],
   "mood_history": [
-    {
-      "date": "2026-10-08",
-      "mood": {
-        "CALM": 0.31702240866332027,
-        "FEARFUL": 0.3627074675780511,
-        "EUPHORIC": 0.0,
-        "CONFUSED": 0.0
-      }
-    },
     {
       "date": "2026-10-09",
       "mood": {
@@ -342,6 +333,15 @@
         "FEARFUL": 0.7587800808136657,
         "EUPHORIC": 0.0,
         "CONFUSED": 0.27444691587269676
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.7615941559557649,
+        "EUPHORIC": 0.0,
+        "CONFUSED": 0.4660402984777151
       }
     }
   ]
