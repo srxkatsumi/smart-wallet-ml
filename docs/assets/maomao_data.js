@@ -5,15 +5,6 @@ const MAOMAO_DATA = {
   "portfolio": {
     "mood_history": [
       {
-        "date": "2026-10-09",
-        "mood": {
-          "CALM": 0.2021757576967395,
-          "FEARFUL": 0.41087764327973625,
-          "EUPHORIC": 0.21651806149302882,
-          "CONFUSED": 0.0
-        }
-      },
-      {
         "date": "2026-10-12",
         "mood": {
           "CALM": 0.38563872440840596,
@@ -273,6 +264,15 @@ const MAOMAO_DATA = {
           "EUPHORIC": 0.0,
           "CONFUSED": 0.4660402984777151
         }
+      },
+      {
+        "date": "2026-11-23",
+        "mood": {
+          "CALM": 0.0,
+          "FEARFUL": 0.487924982649516,
+          "EUPHORIC": 0.17646657848119193,
+          "CONFUSED": 0.5286958646657428
+        }
       }
     ],
     "learned": {
@@ -302,15 +302,6 @@ const MAOMAO_DATA = {
   },
   "market": {
     "mood_history": [
-      {
-        "date": "2026-10-05",
-        "mood": {
-          "CALM": 0.4647346081124835,
-          "FEARFUL": 0.0,
-          "EUPHORIC": 0.37709322676595913,
-          "CONFUSED": 0.27444691587269676
-        }
-      },
       {
         "date": "2026-10-07",
         "mood": {
@@ -571,18 +562,27 @@ const MAOMAO_DATA = {
           "EUPHORIC": 0.0,
           "CONFUSED": 0.41087764327973625
         }
+      },
+      {
+        "date": "2026-11-23",
+        "mood": {
+          "CALM": 0.0,
+          "FEARFUL": 0.42872485898211177,
+          "EUPHORIC": 0.1586485042974989,
+          "CONFUSED": 0.4025318347877246
+        }
       }
     ],
     "learned": {
       "FEARFUL": {
         "RET_UP": -0.00020101470012293205,
-        "RET_DOWN": 0.044758376662093396,
-        "VOL_SPIKE": 0.028477743983186345,
+        "RET_DOWN": 0.04766126814252443,
+        "VOL_SPIKE": 0.03553738573564976,
         "VIX_SPIKE": 0.03829952232878998,
         "STREAK_UP": -0.00192002046035894,
-        "STREAK_DOWN": 0.046838833422934836,
+        "STREAK_DOWN": 0.059267780170229586,
         "ANOMALY": 0.07043312426809706,
-        "DISAGREEMENT": 0.03720903693518722,
+        "DISAGREEMENT": 0.04487199658389526,
         "CALM_STREAK": 0.03045481581954127
       },
       "EUPHORIC": {
