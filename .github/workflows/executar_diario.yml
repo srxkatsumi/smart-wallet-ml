@@ -5,19 +5,23 @@ env:
 
 on:
   # Barcelona = UTC+2 (verão CEST) / UTC+1 (inverno CET)
-  # Objetivo: executar por volta das 22h Barcelona, com folga após o fecho
-  # dos mercados. NYSE/NASDAQ fecham às 20h00 UTC — 20h30 UTC dá 30 min de
-  # folga pros dados de fecho assentarem antes de baixar.
-  # NOTA: como o cron do GitHub Actions é sempre em UTC (não segue o horário
-  # de verão de Barcelona), este horário representa ~22h30 Barcelona no
-  # verão (CEST) e ~21h30 no inverno (CET) — se quiser manter fixo em 22h
-  # o ano todo, ajuste manualmente este cron em outubro/março.
-  # Repo público → minutos ilimitados no GitHub Actions
-  # A verificação no job 'verificar' garante que só corre uma vez por dia
+  # Objetivo: emails por volta das 5h30 em Barcelona. A execução leva ~75 min,
+  # então começa perto das 03:00 UTC (04:00 em Barcelona no inverno, CET).
+  # O cron do GitHub é sempre em UTC: no horário de verão (CEST) os emails
+  # chegam uma hora mais tarde (~6h30), a menos que este bloco seja ajustado
+  # em março (03:07 → 02:07 e assim por diante).
+  # Dias 2-6 (terça a sábado UTC): a madrugada de terça processa o pregão de
+  # segunda, e a de sábado o de sexta (essa gera também o email semanal).
+  # Minutos "quebrados" de propósito: o GitHub atrasa ou descarta agendamentos
+  # nos minutos :00 e :30, os mais disputados (em 23/11 os três disparos foram
+  # descartados). As tentativas extras só rodam se nenhuma anterior rodou: o
+  # job 'verificar' salta quando já há execução em curso ou concluída no dia.
+  # Repo público → minutos ilimitados no GitHub Actions.
   schedule:
-    - cron: '30 20 * * 1-5'  # tentativa 1 — 20h30 UTC (~22h30 Barcelona CEST)
-    - cron: '0 21 * * 1-5'   # tentativa 2 — 21h00 UTC (fallback)
-    - cron: '30 21 * * 1-5'  # tentativa 3 — 21h30 UTC (fallback)
+    - cron: '7 3 * * 2-6'    # tentativa 1: 03:07 UTC (04:07 Barcelona no inverno) → emails ~05:25
+    - cron: '37 3 * * 2-6'   # tentativa 2: 03:37 UTC (reserva)
+    - cron: '13 4 * * 2-6'   # tentativa 3: 04:13 UTC (reserva)
+    - cron: '17 6 * * 2-6'   # tentativa 4: 06:17 UTC (rede de segurança se o GitHub descartar as anteriores)
 
   workflow_dispatch:
     inputs:

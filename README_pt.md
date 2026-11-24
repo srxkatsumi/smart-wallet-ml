@@ -142,7 +142,7 @@ As features de calendário entram como candidatas, não como fatos estabelecidos
 
 ## Automação e confiabilidade
 
-- **Horário.** O workflow está agendado para as 20h30 UTC nos dias úteis (21h30 em Barcelona no inverno, 22h30 no verão), com dois disparos de reserva. O GitHub costuma começar mais tarde; uma execução completa leva cerca de 75 minutos.
+- **Horário.** O workflow roda na madrugada depois de cada pregão, às 03:07 UTC de terça a sábado, para os emails chegarem por volta das 5h30 em Barcelona no inverno (6h30 no verão). Uma execução completa leva cerca de 75 minutos. Três disparos de reserva mais tarde, às 03:37, 04:13 e 06:17 UTC, cobrem agendamentos descartados. Todos evitam os minutos :00 e :30, onde o GitHub mais atrasa ou descarta agendamentos. Uma execução é pulada se outra já rodou no mesmo dia.
 - **Antes da execução.** 271 testes em 41 arquivos rodam primeiro e param o pipeline se falharem. Os 8 testes dos modelos clássicos rodam em processo separado, porque o XGBoost e o PyTorch entram em conflito no mesmo processo no macOS.
 - **Durante a execução.**
   - Toda etapa que pode falhar sem bloquear fica registrada e aparece no bloco de saúde do email.

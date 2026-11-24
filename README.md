@@ -142,7 +142,7 @@ The calendar features are included as candidates, not as established facts. Docu
 
 ## Automation and reliability
 
-- **Schedule.** The workflow is scheduled at 20:30 UTC on weekdays (21:30 in Barcelona in winter, 22:30 in summer), with two fallback triggers. GitHub often starts it later; a full run takes about 75 minutes.
+- **Schedule.** The workflow runs in the early morning after each trading day, at 03:07 UTC from Tuesday to Saturday, so the emails arrive around 05:30 in Barcelona in winter (06:30 in summer). A full run takes about 75 minutes. Three later fallback triggers, at 03:37, 04:13 and 06:17 UTC, cover dropped schedules. All of them avoid the :00 and :30 minutes, where GitHub delays or drops scheduled runs most often. A run is skipped if another one already ran that day.
 - **Before the run.** 271 tests in 41 files run first and stop the pipeline on failure. The 8 tests for the classical models run in a separate process because XGBoost and PyTorch conflict in the same process on macOS.
 - **During the run.**
   - Every step that can fail without blocking is recorded and shown in the email's health block.
