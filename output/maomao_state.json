@@ -1,16 +1,16 @@
 {
-  "last_processed_date": "2026-11-23",
+  "last_processed_date": "2026-11-24",
   "learned": {
     "FEARFUL": {
       "RET_UP": 0.16140030472334255,
-      "RET_DOWN": -0.3489134945377877,
-      "VOL_SPIKE": -0.022172568483568043,
-      "VIX_SPIKE": 0.10796499865890725,
+      "RET_DOWN": -0.34296275943544374,
+      "VOL_SPIKE": -0.01709263844780781,
+      "VIX_SPIKE": 0.1159275874054362,
       "STREAK_UP": 0.08263873716469715,
-      "STREAK_DOWN": -0.14536084627686957,
-      "ANOMALY": 0.47353876691897484,
-      "DISAGREEMENT": 0.04336926500225583,
-      "CALM_STREAK": 0.05295387726669537
+      "STREAK_DOWN": -0.130242006884726,
+      "ANOMALY": 0.4886576063111184,
+      "DISAGREEMENT": 0.050928684698327606,
+      "CALM_STREAK": 0.05446576120590973
     },
     "EUPHORIC": {
       "RET_UP": 0.02181505192011323,
@@ -26,21 +26,6 @@
   },
   "pending": [
     {
-      "date": "2026-11-19",
-      "pool": "FEARFUL",
-      "eligibility": {
-        "RET_UP": 0.0,
-        "RET_DOWN": 0.39359734884386877,
-        "VOL_SPIKE": 0.33599999999999997,
-        "VIX_SPIKE": 0.5266666666666667,
-        "STREAK_UP": 0.0,
-        "STREAK_DOWN": 1.0,
-        "ANOMALY": 1.0,
-        "DISAGREEMENT": 0.5,
-        "CALM_STREAK": 0.1
-      }
-    },
-    {
       "date": "2026-11-20",
       "pool": "FEARFUL",
       "eligibility": {
@@ -54,11 +39,25 @@
         "DISAGREEMENT": 0.8333333333333334,
         "CALM_STREAK": 0.0
       }
+    },
+    {
+      "date": "2026-11-24",
+      "pool": "FEARFUL",
+      "eligibility": {
+        "RET_UP": 0.0,
+        "RET_DOWN": 0.9525162077305804,
+        "VOL_SPIKE": 0.42400000000000004,
+        "VIX_SPIKE": 0.5513333333333333,
+        "STREAK_UP": 0.0,
+        "STREAK_DOWN": 0.2,
+        "ANOMALY": 1.0,
+        "DISAGREEMENT": 0.33333333333333337,
+        "CALM_STREAK": 0.1
+      }
     }
   ],
   "recent_alertas": [
     false,
-    false,
     true,
     false,
     false,
@@ -71,18 +70,10 @@
     false,
     true,
     true,
-    false
+    false,
+    true
   ],
   "mood_history": [
-    {
-      "date": "2026-10-12",
-      "mood": {
-        "CALM": 0.38563872440840596,
-        "FEARFUL": 0.19096002056749656,
-        "EUPHORIC": 0.0,
-        "CONFUSED": 0.0
-      }
-    },
     {
       "date": "2026-10-13",
       "mood": {
@@ -342,6 +333,15 @@
         "FEARFUL": 0.487924982649516,
         "EUPHORIC": 0.17646657848119193,
         "CONFUSED": 0.5286958646657428
+      }
+    },
+    {
+      "date": "2026-11-24",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.7390275854437349,
+        "EUPHORIC": 0.0,
+        "CONFUSED": 0.16189621029691695
       }
     }
   ]

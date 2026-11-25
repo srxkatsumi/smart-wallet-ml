@@ -1,16 +1,16 @@
 {
-  "last_processed_date": "2026-11-23",
+  "last_processed_date": "2026-11-24",
   "learned": {
     "FEARFUL": {
       "RET_UP": -0.00020101470012293205,
-      "RET_DOWN": 0.04766126814252443,
-      "VOL_SPIKE": 0.03553738573564976,
-      "VIX_SPIKE": 0.03829952232878998,
+      "RET_DOWN": 0.045991495653780044,
+      "VOL_SPIKE": 0.03483852665471248,
+      "VIX_SPIKE": 0.037204088451923994,
       "STREAK_UP": -0.00192002046035894,
-      "STREAK_DOWN": 0.059267780170229586,
-      "ANOMALY": 0.07043312426809706,
-      "DISAGREEMENT": 0.04487199658389526,
-      "CALM_STREAK": 0.03045481581954127
+      "STREAK_DOWN": 0.05718784242934481,
+      "ANOMALY": 0.06835318652721228,
+      "DISAGREEMENT": 0.04361781485641823,
+      "CALM_STREAK": 0.030246822045452794
     },
     "EUPHORIC": {
       "RET_UP": 0.0008816266576020695,
@@ -26,21 +26,6 @@
   },
   "pending": [
     {
-      "date": "2026-11-19",
-      "pool": "FEARFUL",
-      "eligibility": {
-        "RET_UP": 0.0,
-        "RET_DOWN": 0.8027992645751464,
-        "VOL_SPIKE": 0.33599999999999997,
-        "VIX_SPIKE": 0.5266666666666667,
-        "STREAK_UP": 0.0,
-        "STREAK_DOWN": 1.0,
-        "ANOMALY": 1.0,
-        "DISAGREEMENT": 0.6029900332225914,
-        "CALM_STREAK": 0.1
-      }
-    },
-    {
       "date": "2026-11-20",
       "pool": "FEARFUL",
       "eligibility": {
@@ -54,6 +39,21 @@
         "DISAGREEMENT": 0.6865912762520194,
         "CALM_STREAK": 0.0
       }
+    },
+    {
+      "date": "2026-11-24",
+      "pool": "FEARFUL",
+      "eligibility": {
+        "RET_UP": 0.06335987474573312,
+        "RET_DOWN": 0.0,
+        "VOL_SPIKE": 0.42400000000000004,
+        "VIX_SPIKE": 0.5513333333333333,
+        "STREAK_UP": 0.4,
+        "STREAK_DOWN": 0.0,
+        "ANOMALY": 1.0,
+        "DISAGREEMENT": 0.6229508196721312,
+        "CALM_STREAK": 0.1
+      }
     }
   ],
   "recent_alertas": [
@@ -65,24 +65,15 @@
     false,
     false,
     false,
-    false,
     true,
     true,
     false,
     true,
     true,
-    false
+    false,
+    true
   ],
   "mood_history": [
-    {
-      "date": "2026-10-07",
-      "mood": {
-        "CALM": 0.4699451989330376,
-        "FEARFUL": 0.0,
-        "EUPHORIC": 0.34961054516462703,
-        "CONFUSED": 0.2244462390995883
-      }
-    },
     {
       "date": "2026-10-08",
       "mood": {
@@ -342,6 +333,15 @@
         "FEARFUL": 0.42872485898211177,
         "EUPHORIC": 0.1586485042974989,
         "CONFUSED": 0.4025318347877246
+      }
+    },
+    {
+      "date": "2026-11-24",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.6593521627123083,
+        "EUPHORIC": 0.0033333209877091908,
+        "CONFUSED": 0.3510726459789084
       }
     }
   ]
