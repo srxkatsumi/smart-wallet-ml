@@ -25,11 +25,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  # Empacotar e publicar em jobs separados (o modelo dos workflows do próprio
+  # GitHub) e publicar com novas tentativas: desde 24/11/2026 o deploy-pages
+  # falha com 'No artifacts named "github-pages" were found' mesmo com o upload
+  # concluído, porque procura o artefato uma vez só e a listagem do GitHub ainda
+  # não o mostra. Só a publicação é repetida: um segundo upload criaria dois
+  # artefatos e quebraria a busca. Remover as tentativas quando a correção do
+  # actions/deploy-pages sair (PR 455).
+  build:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       # No workflow_run, head_sha é o commit em que a execução diária COMEÇOU,
@@ -48,6 +52,40 @@ jobs:
         with:
           path: 'docs'
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url || steps.retry1.outputs.page_url || steps.retry2.outputs.page_url || steps.retry3.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: 🚀 Publicar
         id: deployment
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: ⏳ Esperar e tentar de novo (1/3)
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 10
+      - name: 🚀 Publicar (tentativa 2)
+        id: retry1
+        if: steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: ⏳ Esperar e tentar de novo (2/3)
+        if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure'
+        run: sleep 30
+      - name: 🚀 Publicar (tentativa 3)
+        id: retry2
+        if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: ⏳ Esperar e tentar de novo (3/3)
+        if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure' && steps.retry2.outcome == 'failure'
+        run: sleep 90
+      - name: 🚀 Publicar (última tentativa)
+        id: retry3
+        if: steps.deployment.outcome == 'failure' && steps.retry1.outcome == 'failure' && steps.retry2.outcome == 'failure'
         uses: actions/deploy-pages@v4

@@ -1,6 +1,6 @@
 # Smart Wallet ML: an honest test of short-term market forecasting
 
-An automated pipeline that runs every weekday after the close, forecasts the 1 to 3 day direction of a real ETF portfolio and a 616-asset watchlist, logs every forecast **before** the outcome, checks it against the official close, and asks one question with statistical discipline: **is any of this better than chance?**
+An automated pipeline that runs every weekday after the close, forecasts the 1 to 3 day direction of a real ETF portfolio and a 615-asset watchlist, logs every forecast **before** the outcome, checks it against the official close, and asks one question with statistical discipline: **is any of this better than chance?**
 
 The answer so far is the most useful part of the project: **short-term direction shows no demonstrated edge, while the size of the move (volatility) is predictable.** Both results are measured, documented and reproducible below.
 
@@ -33,7 +33,7 @@ A well-measured negative result is a result. The project keeps the direction for
 ```
 GitHub Actions (weekdays, after the close)
   │
-  ├─ Download: 616 tickers + VIX, SPY, BTC, GLD (yfinance); a missing last session
+  ├─ Download: 615 tickers + VIX, SPY, BTC, GLD (yfinance); a missing last session
   │             is rebuilt from hourly candles (European and Asian exchanges lag)
   ├─ Validate: every past forecast whose target date arrived is checked against
   │             the official close of its reference bar
@@ -126,7 +126,7 @@ The calendar features are included as candidates, not as established facts. Docu
 
 **Site** ([srxkatsumi.github.io/smart-wallet-ml](https://srxkatsumi.github.io/smart-wallet-ml/), English and Portuguese):
 - **Home and Favorites:** charts and forecasts for the portfolio.
-- **Watchlist:** 616 assets; click any of them for the same charts.
+- **Watchlist:** 615 assets; click any of them for the same charts.
 - **Models, Experiments and Alerts.**
 
 **Logs.** `output/predictions_log.csv` is append-only and never rewritten. Every row stores the code version, calibration rule, a hash of the input bar and the run time, so any number in an email can be traced back.
@@ -136,7 +136,7 @@ The calendar features are included as candidates, not as established facts. Docu
 ## Universe
 
 - **Portfolio (public):** 6 accumulating ETFs: ICGA.DE, PPFB.DE, EXUS.MI, LYP6.DE, IS3N.DE, EUNN.DE. Holdings that must stay private are read from a GitHub secret (`PORTFOLIO_PRIVADO`) and only ever appear in the emails, never in the repository or on the site.
-- **Watchlist:** 616 tickers across US, European, Spanish, Japanese, Hong Kong and US-listed Chinese stocks, UCITS and US ETFs, bonds, commodities and crypto (`config/watchlist.json`). All prices are shown in EUR, converted with each day's exchange rate.
+- **Watchlist:** 615 tickers across US, European, Spanish, Japanese, Hong Kong and US-listed Chinese stocks, UCITS and US ETFs, bonds, commodities and crypto (`config/watchlist.json`). All prices are shown in EUR, converted with each day's exchange rate.
 
 ---
 
@@ -158,7 +158,7 @@ The calendar features are included as candidates, not as established facts. Docu
 
 ```
 main.py                 daily pipeline
-config/                 portfolio, watchlist (616), settings, macro event calendar
+config/                 portfolio, watchlist (615), settings, macro event calendar
 data/                   download, exchange calendars, storage and log migrations
 features/               the 33 features
 models/                 production ensemble, calibration, validator, research families

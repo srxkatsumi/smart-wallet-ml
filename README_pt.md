@@ -1,6 +1,6 @@
 # Carteira Inteligente: um teste honesto de previsão de mercado de curto prazo
 
-Um pipeline automático que roda todos os dias úteis depois do fechamento, prevê a direção de 1 a 3 dias de uma carteira real de ETFs e de uma watchlist de 616 ativos, registra cada previsão **antes** do resultado, confere com o fechamento oficial e faz uma pergunta com disciplina estatística: **alguma coisa aqui é melhor que o acaso?**
+Um pipeline automático que roda todos os dias úteis depois do fechamento, prevê a direção de 1 a 3 dias de uma carteira real de ETFs e de uma watchlist de 615 ativos, registra cada previsão **antes** do resultado, confere com o fechamento oficial e faz uma pergunta com disciplina estatística: **alguma coisa aqui é melhor que o acaso?**
 
 A resposta até agora é a parte mais útil do projeto: **a direção de curto prazo não tem vantagem demonstrada, mas o tamanho do movimento (volatilidade) é previsível.** Os dois resultados estão medidos, documentados e reproduzíveis abaixo.
 
@@ -33,7 +33,7 @@ Um resultado negativo bem medido é um resultado. O projeto mantém as previsõe
 ```
 GitHub Actions (dias úteis, depois do fechamento)
   │
-  ├─ Download: 616 tickers + VIX, SPY, BTC, GLD (yfinance); o último pregão que
+  ├─ Download: 615 tickers + VIX, SPY, BTC, GLD (yfinance); o último pregão que
   │             faltar é montado pelos candles de 1 hora (bolsas europeias e asiáticas atrasam)
   ├─ Validação: cada previsão cuja data-alvo chegou é conferida contra o
   │             fechamento oficial da barra de referência
@@ -126,7 +126,7 @@ As features de calendário entram como candidatas, não como fatos estabelecidos
 
 **Site** ([srxkatsumi.github.io/smart-wallet-ml](https://srxkatsumi.github.io/smart-wallet-ml/pt/), em português e inglês):
 - **Início e Favoritos:** gráficos e previsões da carteira.
-- **Watchlist:** 616 ativos; clicar em qualquer um abre os mesmos gráficos.
+- **Watchlist:** 615 ativos; clicar em qualquer um abre os mesmos gráficos.
 - **Modelos, Experimentos e Alertas.**
 
 **Logs.** O `output/predictions_log.csv` só recebe linhas novas e nunca é reescrito. Cada linha guarda a versão do código, a regra de calibração, um hash da barra de entrada e o horário da execução, para que qualquer número do email possa ser rastreado.
@@ -136,7 +136,7 @@ As features de calendário entram como candidatas, não como fatos estabelecidos
 ## Universo
 
 - **Carteira (pública):** 6 ETFs de acumulação: ICGA.DE, PPFB.DE, EXUS.MI, LYP6.DE, IS3N.DE, EUNN.DE. Posições que precisam ficar privadas vêm de um secret do GitHub (`PORTFOLIO_PRIVADO`) e só aparecem nos emails, nunca no repositório nem no site.
-- **Watchlist:** 616 tickers entre ações americanas, europeias, espanholas, japonesas, de Hong Kong e chinesas listadas nos EUA, ETFs UCITS e americanos, títulos, commodities e cripto (`config/watchlist.json`). Todos os preços aparecem em euro, convertidos pelo câmbio de cada dia.
+- **Watchlist:** 615 tickers entre ações americanas, europeias, espanholas, japonesas, de Hong Kong e chinesas listadas nos EUA, ETFs UCITS e americanos, títulos, commodities e cripto (`config/watchlist.json`). Todos os preços aparecem em euro, convertidos pelo câmbio de cada dia.
 
 ---
 
@@ -158,7 +158,7 @@ As features de calendário entram como candidatas, não como fatos estabelecidos
 
 ```
 main.py                 pipeline diário
-config/                 carteira, watchlist (616), configurações, calendário macro
+config/                 carteira, watchlist (615), configurações, calendário macro
 data/                   download, calendários das bolsas, armazenamento e migrações do log
 features/               as 33 features
 models/                 ensemble de produção, calibração, validador, famílias de pesquisa

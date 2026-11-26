@@ -70,3 +70,20 @@ def test_returns_default_when_insufficient_history():
     df_log = pd.DataFrame(_rows("2026-01-10", 1, "rf"))  # 1 row, below MIN_VALIDATIONS_WEIGHT
     weights = update_ensemble_weights(df_log, {k: dict(v) for k, v in _DEFAULT.items()})
     assert weights["d1"] == _DEFAULT["d1"]
+
+
+def test_nao_busca_ticker_fora_da_watchlist_com_pendencia_antiga(monkeypatch):
+    import numpy as np
+    import models.validator as v
+    chamados = []
+    monkeypatch.setattr(v.yf, "download", lambda t, **k: chamados.append(t) or pd.DataFrame())
+    monkeypatch.setattr(v, "save_predictions_log", lambda *a, **k: None)
+    hoje = pd.Timestamp.now().normalize()
+    log = pd.DataFrame([
+        {"ticker": "VELHO", "pred_date": "2026-01-01", "target_date": (hoje - pd.Timedelta(days=40)).strftime("%Y-%m-%d"),
+         "horizon": 1, "direction": "up", "ref_price": 10.0, "actual_price": np.nan, "correct": np.nan},
+        {"ticker": "RECENTE", "pred_date": "2026-01-01", "target_date": (hoje - pd.Timedelta(days=2)).strftime("%Y-%m-%d"),
+         "horizon": 1, "direction": "up", "ref_price": 10.0, "actual_price": np.nan, "correct": np.nan},
+    ])
+    v.validate_past_predictions(log, {})
+    assert chamados == ["RECENTE"]

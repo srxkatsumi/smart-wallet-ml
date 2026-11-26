@@ -12,6 +12,8 @@ from config.settings import (
 
 logger = logging.getLogger(__name__)
 
+MAX_DIAS_PENDENTE_AUSENTE = 15
+
 
 def validate_past_predictions(df_log: pd.DataFrame,
                                featured_data: dict) -> pd.DataFrame:
@@ -23,7 +25,20 @@ def validate_past_predictions(df_log: pd.DataFrame,
     # Fetch data for tickers that left the portfolio but still have open predictions
     tickers_ativos    = set(featured_data.keys())
     tickers_pendentes = set(df_log.loc[df_log["actual_price"].isna(), "ticker"].unique())
-    tickers_ausentes  = tickers_pendentes - tickers_ativos
+    # Só busca tickers ausentes com previsão pendente recente: os que saíram da
+    # watchlist por não terem mais dados no Yahoo (ROG.SW, WBD...) gerariam o
+    # mesmo erro todo dia, para sempre, poluindo o log.
+    pend = df_log[df_log["actual_price"].isna() & ~df_log["ticker"].isin(tickers_ativos)]
+    if not pend.empty:
+        alvo = pd.to_datetime(pend["target_date"], errors="coerce")
+        recentes = pend[alvo >= pd.Timestamp.now().normalize() - pd.Timedelta(days=MAX_DIAS_PENDENTE_AUSENTE)]
+        tickers_ausentes = set(recentes["ticker"].unique())
+        desistidos = set(pend["ticker"].unique()) - tickers_ausentes
+        if desistidos:
+            logger.info("Sem buscar %d ticker(s) fora da watchlist com pendências de mais de %d dias: %s",
+                        len(desistidos), MAX_DIAS_PENDENTE_AUSENTE, ", ".join(sorted(desistidos)))
+    else:
+        tickers_ausentes = set()
 
     for ticker in tickers_ausentes:
         try:
