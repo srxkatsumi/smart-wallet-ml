@@ -1,15 +1,15 @@
 {
-  "last_processed_date": "2026-11-24",
+  "last_processed_date": "2026-11-26",
   "learned": {
     "FEARFUL": {
       "RET_UP": 0.16140030472334255,
-      "RET_DOWN": -0.34296275943544374,
-      "VOL_SPIKE": -0.01709263844780781,
-      "VIX_SPIKE": 0.1159275874054362,
+      "RET_DOWN": -0.3614067925693002,
+      "VOL_SPIKE": -0.030224790039113603,
+      "VIX_SPIKE": 0.09981979846853489,
       "STREAK_UP": 0.08263873716469715,
-      "STREAK_DOWN": -0.130242006884726,
-      "ANOMALY": 0.4886576063111184,
-      "DISAGREEMENT": 0.050928684698327606,
+      "STREAK_DOWN": -0.14868604001858246,
+      "ANOMALY": 0.4702135731772619,
+      "DISAGREEMENT": 0.03555865708678056,
       "CALM_STREAK": 0.05446576120590973
     },
     "EUPHORIC": {
@@ -25,21 +25,6 @@
     }
   },
   "pending": [
-    {
-      "date": "2026-11-20",
-      "pool": "FEARFUL",
-      "eligibility": {
-        "RET_UP": 0.0,
-        "RET_DOWN": 1.0,
-        "VOL_SPIKE": 0.712,
-        "VIX_SPIKE": 0.8733333333333334,
-        "STREAK_UP": 0.0,
-        "STREAK_DOWN": 1.0,
-        "ANOMALY": 1.0,
-        "DISAGREEMENT": 0.8333333333333334,
-        "CALM_STREAK": 0.0
-      }
-    },
     {
       "date": "2026-11-24",
       "pool": "FEARFUL",
@@ -57,7 +42,6 @@
     }
   ],
   "recent_alertas": [
-    false,
     true,
     false,
     false,
@@ -71,18 +55,10 @@
     true,
     true,
     false,
-    true
+    true,
+    false
   ],
   "mood_history": [
-    {
-      "date": "2026-10-13",
-      "mood": {
-        "CALM": 0.36415399728173453,
-        "FEARFUL": 0.28519991856540566,
-        "EUPHORIC": 0.0,
-        "CONFUSED": 0.0
-      }
-    },
     {
       "date": "2026-10-14",
       "mood": {
@@ -342,6 +318,15 @@
         "FEARFUL": 0.7390275854437349,
         "EUPHORIC": 0.0,
         "CONFUSED": 0.16189621029691695
+      }
+    },
+    {
+      "date": "2026-11-26",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.2913126124515909,
+        "EUPHORIC": 0.07817350493279135,
+        "CONFUSED": 0.45156680604154353
       }
     }
   ]

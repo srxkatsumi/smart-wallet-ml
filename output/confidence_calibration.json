@@ -2,26 +2,26 @@
   "d1": {
     "tipo": "encolhimento",
     "lambda": 0.0,
-    "n": 6711,
-    "n_dias": 14,
-    "brier_raw": 0.2949,
+    "n": 7328,
+    "n_dias": 15,
+    "brier_raw": 0.2929,
     "brier_calibrated": 0.25
   },
   "d2": {
     "tipo": "encolhimento",
     "lambda": 0.0,
-    "n": 6156,
-    "n_dias": 13,
-    "brier_raw": 0.3046,
+    "n": 6706,
+    "n_dias": 14,
+    "brier_raw": 0.3027,
     "brier_calibrated": 0.25
   },
   "d3": {
     "tipo": "encolhimento",
     "lambda": 0.0,
-    "n": 5546,
-    "n_dias": 12,
-    "brier_raw": 0.3321,
+    "n": 6156,
+    "n_dias": 13,
+    "brier_raw": 0.3185,
     "brier_calibrated": 0.25
   },
-  "updated": "2026-11-25"
+  "updated": "2026-11-26"
 }

@@ -1,15 +1,15 @@
 {
-  "last_processed_date": "2026-11-24",
+  "last_processed_date": "2026-11-25",
   "learned": {
     "FEARFUL": {
       "RET_UP": -0.00020101470012293205,
-      "RET_DOWN": 0.045991495653780044,
-      "VOL_SPIKE": 0.03483852665471248,
-      "VIX_SPIKE": 0.037204088451923994,
+      "RET_DOWN": 0.02015701782552887,
+      "VOL_SPIKE": 0.016444378440997644,
+      "VIX_SPIKE": 0.014641977815251301,
       "STREAK_UP": -0.00192002046035894,
-      "STREAK_DOWN": 0.05718784242934481,
-      "ANOMALY": 0.06835318652721228,
-      "DISAGREEMENT": 0.04361781485641823,
+      "STREAK_DOWN": 0.03135336460109364,
+      "ANOMALY": 0.042518708698961113,
+      "DISAGREEMENT": 0.02588008775301476,
       "CALM_STREAK": 0.030246822045452794
     },
     "EUPHORIC": {
@@ -25,21 +25,6 @@
     }
   },
   "pending": [
-    {
-      "date": "2026-11-20",
-      "pool": "FEARFUL",
-      "eligibility": {
-        "RET_UP": 0.0,
-        "RET_DOWN": 1.0,
-        "VOL_SPIKE": 0.712,
-        "VIX_SPIKE": 0.8733333333333334,
-        "STREAK_UP": 0.0,
-        "STREAK_DOWN": 1.0,
-        "ANOMALY": 1.0,
-        "DISAGREEMENT": 0.6865912762520194,
-        "CALM_STREAK": 0.0
-      }
-    },
     {
       "date": "2026-11-24",
       "pool": "FEARFUL",
@@ -64,25 +49,16 @@
     false,
     false,
     false,
-    false,
     true,
     true,
     false,
     true,
     true,
     false,
-    true
+    true,
+    false
   ],
   "mood_history": [
-    {
-      "date": "2026-10-08",
-      "mood": {
-        "CALM": 0.45685804812230446,
-        "FEARFUL": 0.0,
-        "EUPHORIC": 0.04829573112443868,
-        "CONFUSED": 0.2667237739579079
-      }
-    },
     {
       "date": "2026-10-09",
       "mood": {
@@ -342,6 +318,15 @@
         "FEARFUL": 0.6593521627123083,
         "EUPHORIC": 0.0033333209877091908,
         "CONFUSED": 0.3510726459789084
+      }
+    },
+    {
+      "date": "2026-11-25",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.20537067595698338,
+        "EUPHORIC": 0.2181060202015403,
+        "CONFUSED": 0.2651749895152386
       }
     }
   ]
