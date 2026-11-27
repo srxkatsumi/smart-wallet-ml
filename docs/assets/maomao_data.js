@@ -5,15 +5,6 @@ const MAOMAO_DATA = {
   "portfolio": {
     "mood_history": [
       {
-        "date": "2026-10-14",
-        "mood": {
-          "CALM": 0.3110131519461215,
-          "FEARFUL": 0.44490784028706626,
-          "EUPHORIC": 0.0,
-          "CONFUSED": 0.0
-        }
-      },
-      {
         "date": "2026-10-15",
         "mood": {
           "CALM": 0.2775263502976838,
@@ -272,6 +263,15 @@ const MAOMAO_DATA = {
           "FEARFUL": 0.2913126124515909,
           "EUPHORIC": 0.07817350493279135,
           "CONFUSED": 0.45156680604154353
+        }
+      },
+      {
+        "date": "2026-11-27",
+        "mood": {
+          "CALM": 0.0,
+          "FEARFUL": 0.4150249862772832,
+          "EUPHORIC": 0.2682711820216014,
+          "CONFUSED": 0.40671322483972966
         }
       }
     ],
