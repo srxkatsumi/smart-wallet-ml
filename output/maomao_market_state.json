@@ -1,5 +1,5 @@
 {
-  "last_processed_date": "2026-11-25",
+  "last_processed_date": "2026-11-27",
   "learned": {
     "FEARFUL": {
       "RET_UP": -0.00020101470012293205,
@@ -48,7 +48,6 @@
     false,
     false,
     false,
-    false,
     true,
     true,
     false,
@@ -56,18 +55,10 @@
     true,
     false,
     true,
+    false,
     false
   ],
   "mood_history": [
-    {
-      "date": "2026-10-09",
-      "mood": {
-        "CALM": 0.4699451989330376,
-        "FEARFUL": 0.0,
-        "EUPHORIC": 0.2620733186346372,
-        "CONFUSED": 0.22760927389961674
-      }
-    },
     {
       "date": "2026-10-12",
       "mood": {
@@ -327,6 +318,15 @@
         "FEARFUL": 0.20537067595698338,
         "EUPHORIC": 0.2181060202015403,
         "CONFUSED": 0.2651749895152386
+      }
+    },
+    {
+      "date": "2026-11-27",
+      "mood": {
+        "CALM": 0.0,
+        "FEARFUL": 0.41364444218713514,
+        "EUPHORIC": 0.38563872440840596,
+        "CONFUSED": 0.40392751069209876
       }
     }
   ]

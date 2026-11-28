@@ -3,31 +3,31 @@
 const SITE_DATA = {
   "last_update": "2026-11-27",
   "accuracy": {
-    "n_total": 173055,
+    "n_total": 174652,
     "min_dias": 20,
     "estado": {
       "d1": {
         "ready": false,
         "sig": false,
-        "n": 7418,
+        "n": 7950,
         "n_dias": 16
       },
       "d2": {
         "ready": false,
         "sig": false,
-        "n": 6793,
+        "n": 7326,
         "n_dias": 15
       },
       "d3": {
         "ready": false,
         "sig": false,
-        "n": 6174,
+        "n": 6706,
         "n_dias": 14
       }
     },
-    "d1": 0.5032,
-    "d2": 0.4756,
-    "d3": 0.4721
+    "d1": 0.4995,
+    "d2": 0.4876,
+    "d3": 0.4746
   },
   "tendencia": {
     "estado": "ok",
@@ -762,7 +762,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 70.28
+            "value": 70.38
           }
         ],
         "sma20": [
@@ -1124,7 +1124,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 70.071
+            "value": 70.076
           }
         ],
         "sma50": [
@@ -1486,7 +1486,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 72.3124
+            "value": 72.3144
           }
         ],
         "bb_upper": [
@@ -1848,7 +1848,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 73.0397
+            "value": 73.0465
           }
         ],
         "bb_lower": [
@@ -2210,7 +2210,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 67.1023
+            "value": 67.1055
           }
         ],
         "rsi14": [
@@ -2572,7 +2572,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 50.0365
+            "value": 50.3983
           }
         ],
         "macd": [
@@ -2934,7 +2934,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.9841
+            "value": -0.9761
           }
         ],
         "macd_sig": [
@@ -3296,7 +3296,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.9925
+            "value": -0.9909
           }
         ],
         "macd_hist": [
@@ -3658,7 +3658,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 0.0084
+            "value": 0.0148
           }
         ]
       },
@@ -4503,7 +4503,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 39.79
+            "value": 39.9
           }
         ],
         "sma20": [
@@ -4865,7 +4865,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 40.0912
+            "value": 40.0967
           }
         ],
         "sma50": [
@@ -5227,7 +5227,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 40.151
+            "value": 40.1532
           }
         ],
         "bb_upper": [
@@ -5589,7 +5589,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 41.7038
+            "value": 41.7057
           }
         ],
         "bb_lower": [
@@ -5951,7 +5951,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 38.4787
+            "value": 38.4878
           }
         ],
         "rsi14": [
@@ -6313,7 +6313,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 43.0391
+            "value": 44.0833
           }
         ],
         "macd": [
@@ -6675,7 +6675,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.3073
+            "value": -0.2985
           }
         ],
         "macd_sig": [
@@ -7037,7 +7037,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.1995
+            "value": -0.1977
           }
         ],
         "macd_hist": [
@@ -7399,7 +7399,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.1078
+            "value": -0.1008
           }
         ]
       },
@@ -8276,7 +8276,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 4.478
+            "value": 4.5
           }
         ],
         "sma20": [
@@ -8638,7 +8638,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 4.5493
+            "value": 4.5504
           }
         ],
         "sma50": [
@@ -9000,7 +9000,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 4.6369
+            "value": 4.6373
           }
         ],
         "bb_upper": [
@@ -9362,7 +9362,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 4.8724
+            "value": 4.8726
           }
         ],
         "bb_lower": [
@@ -9724,7 +9724,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 4.2261
+            "value": 4.2281
           }
         ],
         "rsi14": [
@@ -10086,7 +10086,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 36.8866
+            "value": 38.3187
           }
         ],
         "macd": [
@@ -10448,7 +10448,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.0821
+            "value": -0.0803
           }
         ],
         "macd_sig": [
@@ -10810,7 +10810,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.0643
+            "value": -0.0639
           }
         ],
         "macd_hist": [
@@ -11172,7 +11172,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.0178
+            "value": -0.0164
           }
         ]
       },
@@ -11945,7 +11945,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 43.409
+            "value": 43.495
           }
         ],
         "sma20": [
@@ -12307,7 +12307,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 43.7527
+            "value": 43.757
           }
         ],
         "sma50": [
@@ -12669,7 +12669,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 46.1153
+            "value": 46.117
           }
         ],
         "bb_upper": [
@@ -13031,7 +13031,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 46.635
+            "value": 46.6374
           }
         ],
         "bb_lower": [
@@ -13393,7 +13393,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 40.8704
+            "value": 40.8766
           }
         ],
         "rsi14": [
@@ -13755,7 +13755,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 46.5995
+            "value": 46.8982
           }
         ],
         "macd": [
@@ -14117,7 +14117,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -1.0535
+            "value": -1.0467
           }
         ],
         "macd_sig": [
@@ -14479,7 +14479,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -1.022
+            "value": -1.0206
           }
         ],
         "macd_hist": [
@@ -14841,7 +14841,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.0315
+            "value": -0.0261
           }
         ]
       },
@@ -15614,7 +15614,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 317.7
+            "value": 318.8
           }
         ],
         "sma20": [
@@ -15976,7 +15976,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 320.2525
+            "value": 320.3075
           }
         ],
         "sma50": [
@@ -16338,7 +16338,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 317.038
+            "value": 317.06
           }
         ],
         "bb_upper": [
@@ -16700,7 +16700,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 332.243
+            "value": 332.2588
           }
         ],
         "bb_lower": [
@@ -17062,7 +17062,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 308.262
+            "value": 308.3562
           }
         ],
         "rsi14": [
@@ -17424,7 +17424,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 42.2093
+            "value": 43.6508
           }
         ],
         "macd": [
@@ -17786,7 +17786,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -1.1843
+            "value": -1.0966
           }
         ],
         "macd_sig": [
@@ -18148,7 +18148,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.1384
+            "value": -0.1209
           }
         ],
         "macd_hist": [
@@ -18510,7 +18510,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -1.0459
+            "value": -0.9757
           }
         ]
       },
@@ -19283,7 +19283,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 64.845
+            "value": 64.34
           }
         ],
         "sma20": [
@@ -19645,7 +19645,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 67.16
+            "value": 67.1348
           }
         ],
         "sma50": [
@@ -20007,7 +20007,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 69.6884
+            "value": 69.6783
           }
         ],
         "bb_upper": [
@@ -20369,7 +20369,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 73.2871
+            "value": 73.306
           }
         ],
         "bb_lower": [
@@ -20731,7 +20731,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 61.0329
+            "value": 60.9635
           }
         ],
         "rsi14": [
@@ -21093,7 +21093,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": 34.4518
+            "value": 32.8016
           }
         ],
         "macd": [
@@ -21455,7 +21455,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -1.9648
+            "value": -2.0051
           }
         ],
         "macd_sig": [
@@ -21817,7 +21817,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -1.6115
+            "value": -1.6196
           }
         ],
         "macd_hist": [
@@ -22179,7 +22179,7 @@ const SITE_DATA = {
           },
           {
             "date": "2026-11-27",
-            "value": -0.3533
+            "value": -0.3856
           }
         ]
       },
@@ -22509,19 +22509,19 @@ const SITE_DATA = {
   "experimentos": {
     "d1": {
       "ready": false,
-      "n": 7417,
+      "n": 7949,
       "n_dias": 16,
       "needed": 4
     },
     "d2": {
       "ready": false,
-      "n": 6793,
+      "n": 7325,
       "n_dias": 15,
       "needed": 5
     },
     "d3": {
       "ready": false,
-      "n": 6174,
+      "n": 6706,
       "n_dias": 14,
       "needed": 6
     }
@@ -22530,157 +22530,157 @@ const SITE_DATA = {
     "ICGA.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.01007,
-        "mae_model": 0.009862,
-        "mse_naive": 0.000171,
-        "mse_model": 0.000166,
-        "r2": 0.0281
+        "mae_naive": 0.010207,
+        "mae_model": 0.009999,
+        "mse_naive": 0.000182,
+        "mse_model": 0.000175,
+        "r2": 0.038
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.013794,
-        "mae_model": 0.013563,
-        "mse_naive": 0.000318,
-        "mse_model": 0.00031,
-        "r2": 0.0248
+        "mae_naive": 0.013933,
+        "mae_model": 0.013702,
+        "mse_naive": 0.000333,
+        "mse_model": 0.000327,
+        "r2": 0.0183
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.016727,
-        "mae_model": 0.016626,
-        "mse_naive": 0.000424,
-        "mse_model": 0.000392,
-        "r2": 0.0762
+        "mae_naive": 0.016863,
+        "mae_model": 0.016763,
+        "mse_naive": 0.000433,
+        "mse_model": 0.000397,
+        "r2": 0.0814
       }
     },
     "PPFB.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.01172,
-        "mae_model": 0.012034,
-        "mse_naive": 0.000263,
-        "mse_model": 0.000285,
-        "r2": -0.0842
+        "mae_naive": 0.011552,
+        "mae_model": 0.011866,
+        "mse_naive": 0.000255,
+        "mse_model": 0.000273,
+        "r2": -0.0717
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.014955,
-        "mae_model": 0.016025,
-        "mse_naive": 0.000436,
-        "mse_model": 0.000468,
-        "r2": -0.0743
+        "mae_naive": 0.014782,
+        "mae_model": 0.015852,
+        "mse_naive": 0.000416,
+        "mse_model": 0.00045,
+        "r2": -0.0819
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.018288,
-        "mae_model": 0.019247,
-        "mse_naive": 0.000542,
-        "mse_model": 0.000617,
-        "r2": -0.1381
+        "mae_naive": 0.01812,
+        "mae_model": 0.019079,
+        "mse_naive": 0.000534,
+        "mse_model": 0.000611,
+        "r2": -0.1447
       }
     },
     "EXUS.MI": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.007223,
-        "mae_model": 0.007321,
-        "mse_naive": 7.8e-05,
-        "mse_model": 8.5e-05,
-        "r2": -0.0841
+        "mae_naive": 0.007272,
+        "mae_model": 0.00737,
+        "mse_naive": 7.9e-05,
+        "mse_model": 8.6e-05,
+        "r2": -0.0827
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.008361,
-        "mae_model": 0.008511,
-        "mse_naive": 0.000129,
-        "mse_model": 0.000136,
-        "r2": -0.0563
+        "mae_naive": 0.008411,
+        "mae_model": 0.00856,
+        "mse_naive": 0.000132,
+        "mse_model": 0.000139,
+        "r2": -0.0543
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.008812,
-        "mae_model": 0.009434,
-        "mse_naive": 0.00015,
-        "mse_model": 0.000168,
-        "r2": -0.1188
+        "mae_naive": 0.008861,
+        "mae_model": 0.009483,
+        "mse_naive": 0.000152,
+        "mse_model": 0.00017,
+        "r2": -0.1157
       }
     },
     "LYP6.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.007072,
-        "mae_model": 0.007083,
+        "mae_naive": 0.007114,
+        "mae_model": 0.007125,
         "mse_naive": 7.7e-05,
-        "mse_model": 7.8e-05,
-        "r2": -0.0195
+        "mse_model": 7.9e-05,
+        "r2": -0.0187
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.008881,
-        "mae_model": 0.009205,
-        "mse_naive": 0.000133,
-        "mse_model": 0.000147,
-        "r2": -0.1035
+        "mae_naive": 0.008924,
+        "mae_model": 0.009248,
+        "mse_naive": 0.000135,
+        "mse_model": 0.000149,
+        "r2": -0.0995
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.009467,
-        "mae_model": 0.010483,
-        "mse_naive": 0.000158,
-        "mse_model": 0.000188,
-        "r2": -0.1883
+        "mae_naive": 0.009509,
+        "mae_model": 0.010526,
+        "mse_naive": 0.000159,
+        "mse_model": 0.000189,
+        "r2": -0.1854
       }
     },
     "IS3N.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.014343,
-        "mae_model": 0.014848,
-        "mse_naive": 0.000366,
-        "mse_model": 0.00042,
-        "r2": -0.1473
+        "mae_naive": 0.014449,
+        "mae_model": 0.014954,
+        "mse_naive": 0.000371,
+        "mse_model": 0.000428,
+        "r2": -0.1535
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.018195,
-        "mae_model": 0.021385,
-        "mse_naive": 0.000543,
-        "mse_model": 0.000749,
-        "r2": -0.3787
+        "mae_naive": 0.018305,
+        "mae_model": 0.021495,
+        "mse_naive": 0.000557,
+        "mse_model": 0.000771,
+        "r2": -0.3829
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.021775,
-        "mae_model": 0.024596,
-        "mse_naive": 0.000623,
-        "mse_model": 0.000852,
-        "r2": -0.366
+        "mae_naive": 0.021881,
+        "mae_model": 0.024702,
+        "mse_naive": 0.00063,
+        "mse_model": 0.000859,
+        "r2": -0.3644
       }
     },
     "EUNN.DE": {
       "d1": {
         "n": 60,
-        "mae_naive": 0.009799,
-        "mae_model": 0.009674,
-        "mse_naive": 0.000166,
-        "mse_model": 0.000165,
-        "r2": 0.0091
+        "mae_naive": 0.009888,
+        "mae_model": 0.009763,
+        "mse_naive": 0.00017,
+        "mse_model": 0.000168,
+        "r2": 0.0113
       },
       "d2": {
         "n": 60,
-        "mae_naive": 0.012582,
-        "mae_model": 0.013433,
-        "mse_naive": 0.000244,
-        "mse_model": 0.000279,
-        "r2": -0.1454
+        "mae_naive": 0.012673,
+        "mae_model": 0.013524,
+        "mse_naive": 0.00025,
+        "mse_model": 0.000284,
+        "r2": -0.1346
       },
       "d3": {
         "n": 60,
-        "mae_naive": 0.013882,
-        "mae_model": 0.015674,
-        "mse_naive": 0.000302,
-        "mse_model": 0.000408,
-        "r2": -0.3489
+        "mae_naive": 0.013973,
+        "mae_model": 0.015764,
+        "mse_naive": 0.000308,
+        "mse_model": 0.000415,
+        "r2": -0.3475
       }
     }
   },
@@ -22843,52 +22843,52 @@ const SITE_DATA = {
     }
   },
   "anomalia": {
-    "date": "2026-11-27",
+    "date": "2026-11-28",
     "alerta": false,
     "market": {
-      "vix_hoje": 25.21,
+      "vix_hoje": 23.81,
       "vix_ontem": 26.8,
-      "regime_hoje": 2,
+      "regime_hoje": 1,
       "regime_ontem": 2,
-      "variacao_1d": -0.0593,
+      "variacao_1d": -0.1116,
       "transicao": false,
       "spike": false
     },
     "tickers": {
       "ICGA.DE": {
-        "retorno_1d": 0.0387,
-        "atr_pct": 0.0186,
-        "multiplo_atr": 2.09,
+        "retorno_1d": 0.0438,
+        "atr_pct": 0.0188,
+        "multiplo_atr": 2.33,
         "alerta": false
       },
       "PPFB.DE": {
-        "retorno_1d": 0.0272,
-        "atr_pct": 0.0267,
-        "multiplo_atr": 1.02,
+        "retorno_1d": 0.0192,
+        "atr_pct": 0.0269,
+        "multiplo_atr": 0.71,
         "alerta": false
       },
       "EXUS.MI": {
-        "retorno_1d": 0.0102,
+        "retorno_1d": 0.0129,
         "atr_pct": 0.0136,
-        "multiplo_atr": 0.75,
+        "multiplo_atr": 0.95,
         "alerta": false
       },
       "LYP6.DE": {
-        "retorno_1d": 0.0073,
+        "retorno_1d": 0.0108,
         "atr_pct": 0.0129,
-        "multiplo_atr": 0.57,
+        "multiplo_atr": 0.84,
         "alerta": false
       },
       "IS3N.DE": {
-        "retorno_1d": 0.0239,
+        "retorno_1d": 0.0259,
         "atr_pct": 0.0329,
-        "multiplo_atr": 0.73,
+        "multiplo_atr": 0.79,
         "alerta": false
       },
       "EUNN.DE": {
-        "retorno_1d": 0.0193,
-        "atr_pct": 0.0195,
-        "multiplo_atr": 0.99,
+        "retorno_1d": 0.0207,
+        "atr_pct": 0.0196,
+        "multiplo_atr": 1.06,
         "alerta": false
       }
     },
